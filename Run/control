@@ -1,0 +1,4 @@
+relax       0.1
+m           100
+q_per_dof   1
+nopt        50
