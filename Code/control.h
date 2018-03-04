@@ -54,7 +54,7 @@ using namespace std;
 class Control {
 public:
   Control          ();
-  Control          (char* ctrlFile);
+  Control          (const char* ctrlFile);
   ~Control         ();
   void   read      ();
   bool   exists    (string key);

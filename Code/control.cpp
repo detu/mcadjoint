@@ -22,7 +22,7 @@ Control::Control() {};
 /**
  * ctor: control object from filename
  */
-Control::Control(char* file) {
+Control::Control(const char* file) {
   _file = file;                     // record path of control file
   string path = "";                 // (all other files are considered relative to that)
   int i = _file.find_last_of('/');

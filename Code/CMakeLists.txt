@@ -18,5 +18,5 @@ add_executable(MCAdjoint
         gnuplot_i.cpp
         gnuplot_i.h
         main.cpp
-        randomgeneral.h)
+        randomgeneral.h gnuPlotSetTerminal.cpp gnuPlotSetTerminal.hpp)
 target_link_libraries(MCAdjoint INTERFACE stefCommonHeaders)
