@@ -14,6 +14,8 @@
 #include "gnuplot_i.h"
 #include "control.h"
 #include "gnuPlotSetTerminal.hpp"
+#include <stefCommonHeaders/assert.h>
+#include <cmath>
 
 using namespace std;
 
@@ -39,9 +41,9 @@ void Driver::solve_Burger() {
     const int n = 100;
     const int npar = n;
     // dx: meshwidth for 1D Burger
-    double dx = 1.0 / double(n);
+    const double dx = 1.0 / double(n);
     // dt: timestep for 1D Burger
-    double dt = dx;
+    const double dt = dx;
 
     RandomGeneral rand;
     Control control("control");
@@ -54,25 +56,15 @@ void Driver::solve_Burger() {
     nopt = control.getInt("nopt");
     relax = control.getDouble("relax");
 
-    Matrix<double, n, 1> b_loc, u0, u, uo, utarget;
-    Matrix<double, n, n> A_dia, A_off, I_loc, P_off, w_off;
-    Matrix<double, n, npar> c_loc;
-    Matrix<double, npar, 1> E_D;
+    VectorXd b_loc(VectorXd::Zero(n)), u0(VectorXd::Zero(n)), u(VectorXd::Zero(n)), uo(VectorXd::Zero(n)), utarget(VectorXd::Zero(n));
+    MatrixXd A_dia(MatrixXd::Zero(n, n)), A_off(MatrixXd::Zero(n, n)), I_loc(MatrixXd::Zero(n, n)), P_off(MatrixXd::Zero(n, n)), w_off(n, n);
+    MatrixXd c_loc(MatrixXd::Zero(n, npar));
+    VectorXd E_D(VectorXd::Zero(npar));
 
-    b_loc *= 0.0;
-    c_loc *= 0.0;
-    I_loc *= 0.0;
-    A_dia *= 0.0;
-    A_off *= 0.0;
-    P_off *= 0.0;
-    w_off *= 0.0;
-    E_D *= 0.0;
 
-    int q = q_per_dof * n * npar;                      // number of random walks in total
-    double* W;
-    int* alpha_k;
-    W = new double[q];
-    alpha_k = new int[q];
+    const int q = q_per_dof * n * npar;                      // number of random walks in total
+    Eigen::VectorXd W(Eigen::VectorXd::Constant(q, 1, NAN));
+    Eigen::VectorXi alpha_k(Eigen::VectorXi::Constant(q, 1, -1));
 
     /******
      * target final solution and initialization of initial solution solution
@@ -172,8 +164,11 @@ void Driver::solve_Burger() {
             /******
              * HERE GOES THE COMPUTATION OF THE DIAGONAL JACOBIAN BLOCK
              ******/
+
+            // ASK
             A_dia = I_loc;
-            A_dia = I_loc - A_dia;
+            A_dia = I_loc - A_dia; // here A_dia will always be zero
+            ASSERT(A_dia.isZero());
             A_off = -A_off;
             /******
              * do this except for the last time step
@@ -199,11 +194,10 @@ void Driver::solve_Burger() {
              ******/
             for (int p = 0; p < q; p++) {                               // do the following for q random walks
                 int alpha_k0 = p / (q_per_dof * npar);                      // start row index
-                int jm0 = alpha_k0 / n;                              // first time step of random wal p
+                int jm0 = alpha_k0 / n;                              // first time step of random walk p
                 int jpar = p % npar;                                  // parameter index
                 if (jm >= jm0) {
-                    if (jm ==
-                        jm0) {                                        // do this only for the first step of random walk p
+                    if (jm == jm0) {                                        // do this only for the first step of random walk p
                         alpha_k[p] = alpha_k0;                                  // initial c component of random walk p
                         W[p] = c_loc(alpha_k0 - jm0 * n, jpar) * double(n);            // initial W of random walk p
                         E_D[jpar] += W[p] * b_loc(alpha_k0 - jm0 * n);                // contribution to estimator
@@ -251,7 +245,6 @@ void Driver::solve_Burger() {
     /******
      * end of optimization loop
      ******/
-    delete W;
     cout << "done\n";
     pause();
     return;
