@@ -226,18 +226,19 @@ void Driver::solve_Burger() {
              ******/
             for (int p = 0; p < q; p++) {     // do the following for q random walks
                 int alpha_k0 = p / (q_per_dof * npar);                      // start row index
-                int jm0 = alpha_k0 / n;                              // first time step of random walk p
+                int jm0 = alpha_k0 / n;                              // first time step of random walk p. jm0 == p/q
                 int jpar = p % npar;                                  // parameter index
                 if (jm >= jm0) {
-                    if (jm ==
-                            jm0) {                                        // do this only for the first step of random walk p
+                    // this random walk has already started
+                    if (jm == jm0) {
+                        // this random walk has started just at this timestep
+                        // do this only for the first step of random walk p
                         alpha_k[p] = alpha_k0;                                  // initial c component of random walk p
                         W[p] = c_loc(alpha_k0 - jm0 * n, jpar) * double(
                                    n);            // initial W of random walk p. Here the birth probability is 1/n for all states
                         E_D[jpar] += W[p] * b_loc(alpha_k0 - jm0 * n);                // contribution to estimator
                     }
-                    if (jm < m -
-                            1) {                                         // do the following for time steps larger than jm0-1 and smaller than m-1
+                    if (jm < m - 1) {                                         // do the following for time steps larger than jm0-1 and smaller than m-1
                         double r = rand.equal();                                // random column index
                         int alpha_kp1 = n * m;                                 // ..
                         double cum = 0.0;                                 // ..
