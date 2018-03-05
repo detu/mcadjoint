@@ -53,28 +53,28 @@ using namespace std;
  */
 class Control {
 public:
-  Control          ();
-  Control          (const char* ctrlFile);
-  ~Control         ();
-  void   read      ();
-  bool   exists    (string key);
-  int    getInt    (string key, int tok = 0);
-  bool   getBool   (string key, int tok = 0);
-  double getDouble (string key, int tok = 0);
-  string getString (string key, int tok = 0);
-  static void   findKey     (istream& istr, string key);
-  static bool   openFile    (ifstream& file, string name, string key);
-  static double readWithUnit(const char *timestr);
+    Control();
+    Control(const char* ctrlFile);
+    ~Control();
+    void   read();
+    bool   exists(string key);
+    int    getInt(string key, int tok = 0);
+    bool   getBool(string key, int tok = 0);
+    double getDouble(string key, int tok = 0);
+    string getString(string key, int tok = 0);
+    static void   findKey(istream& istr, string key);
+    static bool   openFile(ifstream& file, string name, string key);
+    static double readWithUnit(const char* timestr);
 protected:
-  void   addEntry  (string key, string val, void* ptr = NULL);
-  void   addPointer(string key, void* ptr, string val = "");
-	string getToken  (string key, int tok = 0);
-  struct ControlPair {
-    string _val;
-    void*  _ptr;
-  };
-  map<string,ControlPair> _ctrl;
-  string _file;  
+    void   addEntry(string key, string val, void* ptr = NULL);
+    void   addPointer(string key, void* ptr, string val = "");
+    string getToken(string key, int tok = 0);
+    struct ControlPair {
+        string _val;
+        void*  _ptr;
+    };
+    map<string, ControlPair> _ctrl;
+    string _file;
 };
 
 #endif

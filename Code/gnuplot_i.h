@@ -1,13 +1,13 @@
 ////////////////////////////////////////////
 //
-// A C++ interface to gnuplot. 
+// A C++ interface to gnuplot.
 //
 // This is a direct translation from the C interface
 // written by N. Devillard (which is available from
 // http://ndevilla.free.fr/gnuplot/).
 //
 // As in the C interface this uses pipes and so wont
-// run on a system that does'nt have POSIX pipe 
+// run on a system that does'nt have POSIX pipe
 // support
 //
 // Rajarshi Guha
@@ -45,83 +45,81 @@
 
 using namespace std;
 
-class GnuplotException : public runtime_error
-{
-    public:
-        GnuplotException(const string &msg) : runtime_error(msg){}
+class GnuplotException : public runtime_error {
+public:
+    GnuplotException(const string& msg) : runtime_error(msg) {}
 };
 
-class Gnuplot
-{
-    private:
-        FILE            *gnucmd;
-        string           pstyle;
-        vector<string>   to_delete;
-        int              nplots;
-        bool             get_program_path(const string);
-        bool             valid;
-    public:
-        Gnuplot();
+class Gnuplot {
+private:
+    FILE*            gnucmd;
+    string           pstyle;
+    vector<string>   to_delete;
+    int              nplots;
+    bool             get_program_path(const string);
+    bool             valid;
+public:
+    Gnuplot();
 
-        // set a style during construction
-        Gnuplot(const string &);
-        
-        // The equivilant of gnuplot_plot_once, the two forms
-        // allow you to plot either (x,y) pairs or just a single
-        // vector at one go
-        Gnuplot(const string &, // title
-                const string &, // style
-                const string &, // xlabel
-                const string &, // ylabel
-                vector<double>, vector<double>);
-        
-        Gnuplot(const string &, //title
-                const string &, //style
-                const string &, //xlabel
-                const string &, //ylabel
-                vector<double>);
-        
-        ~Gnuplot();
+    // set a style during construction
+    Gnuplot(const string&);
 
-        // send a command to gnuplot
-        void cmd(const char*, ...);
+    // The equivilant of gnuplot_plot_once, the two forms
+    // allow you to plot either (x,y) pairs or just a single
+    // vector at one go
+    Gnuplot(const string&,  // title
+            const string&,  // style
+            const string&,  // xlabel
+            const string&,  // ylabel
+            vector<double>, vector<double>);
 
-        // set line style
-        void set_style(const string &);
+    Gnuplot(const string&,  //title
+            const string&,  //style
+            const string&,  //xlabel
+            const string&,  //ylabel
+            vector<double>);
 
-        // set y and x axis labels
-        void set_ylabel(const string &);
-        void set_xlabel(const string &);
+    ~Gnuplot();
 
-        // plot a single vector
-        void plot_x(vector<double>, 
-                const string & // title
+    // send a command to gnuplot
+    void cmd(const char*, ...);
+
+    // set line style
+    void set_style(const string&);
+
+    // set y and x axis labels
+    void set_ylabel(const string&);
+    void set_xlabel(const string&);
+
+    // plot a single vector
+    void plot_x(vector<double>,
+                const string&  // title
+               );
+
+    // plot x,y pairs
+    void plot_xy(vector<double>, vector<double>,
+                 const string&   // title
                 );
 
-        // plot x,y pairs
-        void plot_xy(vector<double>, vector<double>, 
-                const string  & // title
-                );
+    // plot an equation of the form: y = ax + b
+    // You supply a and b
+    void plot_slope(
+        double, // a
+        double, // b
+        const string&  // title
+    );
 
-        // plot an equation of the form: y = ax + b
-        // You supply a and b
-        void plot_slope(
-                double, // a
-                double, // b 
-                const string & // title
-                );
+    // plot an equation supplied as a string
+    void plot_equation(
+        const string&,  // equation
+        const string&   // title
+    );
 
-        // plot an equation supplied as a string
-        void plot_equation(
-                const string &, // equation 
-                const string &  // title
-                );
+    // if multiple plots are present it will clear the plot area
+    void reset_plot(void);
 
-        // if multiple plots are present it will clear the plot area
-        void reset_plot(void);
+    bool is_valid(void);
 
-        bool is_valid(void);
-        
 };
 
 #endif

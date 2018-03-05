@@ -15,9 +15,15 @@
     <list default="true" id="f12b3f9c-0694-4c6d-9598-0f0d14f40053" name="Default" comment="">
       <change beforePath="" afterPath="$PROJECT_DIR$/thirdParty/stefcommonheaders/Makefile" />
       <change beforePath="" afterPath="$PROJECT_DIR$/thirdParty/stefcommonheaders/cmake_install.cmake" />
+      <change beforePath="$PROJECT_DIR$/control.cpp" afterPath="$PROJECT_DIR$/control.cpp" />
+      <change beforePath="$PROJECT_DIR$/control.h" afterPath="$PROJECT_DIR$/control.h" />
+      <change beforePath="$PROJECT_DIR$/driver.h" afterPath="$PROJECT_DIR$/driver.h" />
       <change beforePath="$PROJECT_DIR$/driverBurger.cpp" afterPath="$PROJECT_DIR$/driverBurger.cpp" />
+      <change beforePath="$PROJECT_DIR$/gnuplot_i.cpp" afterPath="$PROJECT_DIR$/gnuplot_i.cpp" />
+      <change beforePath="$PROJECT_DIR$/gnuplot_i.h" afterPath="$PROJECT_DIR$/gnuplot_i.h" />
+      <change beforePath="$PROJECT_DIR$/main.cpp" afterPath="$PROJECT_DIR$/main.cpp" />
+      <change beforePath="$PROJECT_DIR$/randomgeneral.h" afterPath="$PROJECT_DIR$/randomgeneral.h" />
       <change beforePath="$PROJECT_DIR$/thirdParty/stefcommonheaders" afterPath="$PROJECT_DIR$/thirdParty/stefcommonheaders" />
-      <change beforePath="$PROJECT_DIR$/../Run/out" afterPath="$PROJECT_DIR$/../Run/out" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/../Build/Debug/" />
@@ -57,11 +63,9 @@
       <file leaf-file-name="driverBurger.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/driverBurger.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="173">
-              <caret line="209" column="33" lean-forward="false" selection-start-line="209" selection-start-column="33" selection-end-line="209" selection-end-column="33" />
-              <folding>
-                <marker date="1520257017000" expanded="true" signature="6344:6444" ph="/**...*/" />
-              </folding>
+            <state relative-caret-position="-1673">
+              <caret line="93" column="14" lean-forward="true" selection-start-line="93" selection-start-column="14" selection-end-line="93" selection-end-column="14" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -89,8 +93,8 @@
       <file leaf-file-name="control.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/control.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1845">
-              <caret line="127" column="13" lean-forward="false" selection-start-line="127" selection-start-column="13" selection-end-line="127" selection-end-column="13" />
+            <state relative-caret-position="1965">
+              <caret line="135" column="13" lean-forward="false" selection-start-line="135" selection-start-column="13" selection-end-line="135" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -109,9 +113,11 @@
       <file leaf-file-name="gnuplot_i.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/gnuplot_i.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="399">
-              <caret line="120" column="30" lean-forward="false" selection-start-line="120" selection-start-column="30" selection-end-line="120" selection-end-column="30" />
-              <folding />
+            <state relative-caret-position="564">
+              <caret line="118" column="26" lean-forward="false" selection-start-line="118" selection-start-column="26" selection-end-line="118" selection-end-column="26" />
+              <folding>
+                <marker date="1520257529000" expanded="true" signature="2925:2927" ph="{...}" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -294,23 +300,24 @@
       <updated>1520194011115</updated>
       <workItem from="1520194012858" duration="26000" />
       <workItem from="1520194171835" duration="477000" />
-      <workItem from="1520195636553" duration="8935000" />
+      <workItem from="1520195636553" duration="9312000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="9438000" />
+    <option name="totallyTimeSpent" value="9815000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="796" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.29388404" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3281027" sideWeight="0.46465448" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3281027" sideWeight="0.49166006" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.43509272" sideWeight="0.5353455" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32952926" sideWeight="0.4940429" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.43509272" sideWeight="0.46465448" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32952926" sideWeight="0.50913423" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32952926" sideWeight="0.49086577" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.43509272" sideWeight="0.46465448" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -349,9 +356,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/gnuplot_i.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="399">
-          <caret line="120" column="30" lean-forward="false" selection-start-line="120" selection-start-column="30" selection-end-line="120" selection-end-column="30" />
-          <folding />
+        <state relative-caret-position="564">
+          <caret line="118" column="26" lean-forward="false" selection-start-line="118" selection-start-column="26" selection-end-line="118" selection-end-column="26" />
+          <folding>
+            <marker date="1520257529000" expanded="true" signature="2925:2927" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -407,8 +416,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/control.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1845">
-          <caret line="127" column="13" lean-forward="false" selection-start-line="127" selection-start-column="13" selection-end-line="127" selection-end-column="13" />
+        <state relative-caret-position="1965">
+          <caret line="135" column="13" lean-forward="false" selection-start-line="135" selection-start-column="13" selection-end-line="135" selection-end-column="13" />
           <folding />
         </state>
       </provider>
@@ -423,11 +432,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/driverBurger.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="209" column="33" lean-forward="false" selection-start-line="209" selection-start-column="33" selection-end-line="209" selection-end-column="33" />
-          <folding>
-            <marker date="1520257017000" expanded="true" signature="6344:6444" ph="/**...*/" />
-          </folding>
+        <state relative-caret-position="-1673">
+          <caret line="93" column="14" lean-forward="true" selection-start-line="93" selection-start-column="14" selection-end-line="93" selection-end-column="14" />
+          <folding />
         </state>
       </provider>
     </entry>

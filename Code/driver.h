@@ -11,7 +11,7 @@
 
 class Driver {
 public:
-  void solve_Burger ();
+    void solve_Burger();
 //void solve_NS     ();
 };
 

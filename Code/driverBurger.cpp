@@ -56,8 +56,10 @@ void Driver::solve_Burger() {
     nopt = control.getInt("nopt");
     relax = control.getDouble("relax");
 
-    VectorXd b_loc(VectorXd::Zero(n)), u0(VectorXd::Zero(n)), u(VectorXd::Zero(n)), uo(VectorXd::Zero(n)), utarget(VectorXd::Zero(n));
-    MatrixXd A_dia(MatrixXd::Zero(n, n)), A_off(MatrixXd::Zero(n, n)), I_loc(MatrixXd::Zero(n, n)), P_off(MatrixXd::Zero(n, n)), w_off(n, n);
+    VectorXd b_loc(VectorXd::Zero(n)), u0(VectorXd::Zero(n)), u(VectorXd::Zero(n)), uo(VectorXd::Zero(n)), utarget(
+        VectorXd::Zero(n));
+    MatrixXd A_dia(MatrixXd::Zero(n, n)), A_off(MatrixXd::Zero(n, n)), I_loc(MatrixXd::Zero(n, n)), P_off(
+        MatrixXd::Zero(n, n)), w_off(n, n);
     MatrixXd c_loc(MatrixXd::Zero(n, npar));
     VectorXd E_D(VectorXd::Zero(npar));
 
@@ -77,7 +79,6 @@ void Driver::solve_Burger() {
     /******
      * optimization loop
      ******/
-    FILE* file;
     Gnuplot g = Gnuplot("gp");                                // setting up gnuplot process
     setTerminal(g);
     for (int k = 0; k < nopt; k++) {
@@ -102,37 +103,59 @@ void Driver::solve_Burger() {
                 if (jm < m - 1) {
 
                     double vl = u(i);
-                    if (i > 0) vl += u(i - 1);
+                    if (i > 0) {
+                        vl += u(i - 1);
+                    }
                     double vr = u(i);
-                    if (i < n - 1) vr += u(i + 1);
+                    if (i < n - 1) {
+                        vr += u(i + 1);
+                    }
 
                     double aa, bb, cc; // the factors below equation (34) on pg. 6198
 
                     // a_i^(t)
-                    if (vl > 0) aa = -1.0;
-                    else aa = 0.0;
+                    if (vl > 0) {
+                        aa = -1.0;
+                    } else {
+                        aa = 0.0;
+                    }
 
                     // b_i^(t)
-                    if ((vl > 0) && (vr > 0)) bb = 1.0;
-                    else if ((vl <= 0) && (vr <= 0)) bb = -1.0;
-                    else bb = 0.0;
+                    if ((vl > 0) && (vr > 0)) {
+                        bb = 1.0;
+                    } else if ((vl <= 0) && (vr <= 0)) {
+                        bb = -1.0;
+                    } else {
+                        bb = 0.0;
+                    }
 
                     // c_i^(t)
-                    if (vr < 0) cc = 1.0;
-                    else cc = 0.0;
+                    if (vr < 0) {
+                        cc = 1.0;
+                    } else {
+                        cc = 0.0;
+                    }
 
 
                     //  uo: u at old timelevel
                     u(i) = uo(i) - dt / dx * bb * 0.5 * uo(i) * uo(i);
-                    if (i > 0) u(i) -= dt / dx * aa * 0.5 * uo(i - 1) * uo(i - 1);
-                    if (i < n - 1) u(i) -= dt / dx * cc * 0.5 * uo(i + 1) * uo(i + 1);
+                    if (i > 0) {
+                        u(i) -= dt / dx * aa * 0.5 * uo(i - 1) * uo(i - 1);
+                    }
+                    if (i < n - 1) {
+                        u(i) -= dt / dx * cc * 0.5 * uo(i + 1) * uo(i + 1);
+                    }
                     /******
                      * HERE GOES THE COMPUTATION OF THE OFF-DIAGONAL JACOBIAN BLOCK
                      ******/
                     // Equations (34) on pg. 6198
-                    if (i > 0) A_off(i - 1, i) = aa * dt / dx * u(i - 1);
+                    if (i > 0) {
+                        A_off(i - 1, i) = aa * dt / dx * u(i - 1);
+                    }
                     A_off(i, i) = bb * dt / dx * u(i) - 1.0;
-                    if (i < n - 1) A_off(i + 1, i) = cc * dt / dx * u(i + 1);
+                    if (i < n - 1) {
+                        A_off(i + 1, i) = cc * dt / dx * u(i + 1);
+                    }
                     /******
                      * HERE GOES THE COMPUTATION OF THE B-VECTOR
                      ******/
@@ -154,8 +177,12 @@ void Driver::solve_Burger() {
                         // our parameters here are just the values of the initial solution u0 at the grid points
 
                         // we can reuse the formulas in equation (34) on pg. 6198 with t = 1
-                        if (i > 0) c_loc(i, i - 1) = aa * dt / dx * u0(i - 1);
-                        if (i < n - 1) c_loc(i, i + 1) = cc * dt / dx * u0(i + 1);
+                        if (i > 0) {
+                            c_loc(i, i - 1) = aa * dt / dx * u0(i - 1);
+                        }
+                        if (i < n - 1) {
+                            c_loc(i, i + 1) = cc * dt / dx * u0(i + 1);
+                        }
                         c_loc(i, i) = bb * dt / dx * u0(i) - 1.0;
                     }
                 }
@@ -202,12 +229,15 @@ void Driver::solve_Burger() {
                 int jm0 = alpha_k0 / n;                              // first time step of random walk p
                 int jpar = p % npar;                                  // parameter index
                 if (jm >= jm0) {
-                    if (jm == jm0) {                                        // do this only for the first step of random walk p
+                    if (jm ==
+                            jm0) {                                        // do this only for the first step of random walk p
                         alpha_k[p] = alpha_k0;                                  // initial c component of random walk p
-                        W[p] = c_loc(alpha_k0 - jm0 * n, jpar) * double(n);            // initial W of random walk p. Here the birth probability is 1/n for all states
+                        W[p] = c_loc(alpha_k0 - jm0 * n, jpar) * double(
+                                   n);            // initial W of random walk p. Here the birth probability is 1/n for all states
                         E_D[jpar] += W[p] * b_loc(alpha_k0 - jm0 * n);                // contribution to estimator
                     }
-                    if (jm < m - 1) {                                         // do the following for time steps larger than jm0-1 and smaller than m-1
+                    if (jm < m -
+                            1) {                                         // do the following for time steps larger than jm0-1 and smaller than m-1
                         double r = rand.equal();                                // random column index
                         int alpha_kp1 = n * m;                                 // ..
                         double cum = 0.0;                                 // ..
@@ -218,7 +248,9 @@ void Driver::solve_Burger() {
                                 break;                      // ..
                             }                                                     // ..
                         }
-                        if (alpha_kp1 == n * m) break;                        // stop random walk, if absorbed
+                        if (alpha_kp1 == n * m) {
+                            break;    // stop random walk, if absorbed
+                        }
                         W[p] *= w_off(alpha_k[p] - jm * n, alpha_kp1 - (jm + 1) * n);  // update W
                         E_D[jpar] += W[p] * b_loc(alpha_kp1 - (jm + 1) * n);        // contribution to estimator
                         alpha_k[p] = alpha_kp1;                             // new row index becomes old column index
@@ -237,7 +269,7 @@ void Driver::solve_Burger() {
         /******
          * output for testing with gnuplot visualization
          ******/
-        file = fopen("out", "w");
+        FILE* file = fopen("out", "w");
         for (int i = 0; i < n; i++) {
             fprintf(file, "%le %le %le %le\n", double(i + 1) * double(n - i) * dx * dx, u0(i), u(i), utarget(i));
         }

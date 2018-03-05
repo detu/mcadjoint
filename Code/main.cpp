@@ -11,11 +11,10 @@
 
 using namespace std;
 
-int main(int argc, char** argv)
-{
-  Driver d;
-  d.solve_Burger();
+int main(int argc, char** argv) {
+    Driver d;
+    d.solve_Burger();
 //d.solve_NS    ();
-  cout << "\ndone\n";
-  return 0;
+    cout << "\ndone\n";
+    return 0;
 }
