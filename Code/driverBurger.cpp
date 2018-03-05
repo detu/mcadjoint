@@ -19,6 +19,22 @@ using namespace std;
 
 using namespace Eigen;
 
+
+// PROBLEM
+// -------------------------------------------
+// You are given a discretization of the Burgers equation
+// \partial_t u + \partial_x (u^2/2) = 0
+// u(x, 0) = u0(x)
+// with forward euler and upwind.
+// The corresponding residual is
+// R_i^(t) := u_i^(t) - u_i^(t-1) + timestep / weshwidth * (f_(i+0.5)^(t-1) - f(i-0.5)^(t-1))
+// where f_(i+0.5)^(t) = 0.5(u_i^(t))^2 if 0.5*(u_i^(t) + u_(i+1)^(t)) >= 0
+//                       0.5(u_i+1^(t))^2 otherwise
+// is the upwind flux.
+// Given this discretization, find an initial vector u0_1, u0_n
+// such that the solution closely matches a prescribed target solution utarget at a certain timestep T.
+// Do this by minimizing
+// F(u0) := 0.5 * sum over all cell indices i (u_i^(T) - utarget_i)^2
 void Driver::solve_Burger() {
     const int n = 100;
     const int npar = n;
@@ -144,6 +160,8 @@ void Driver::solve_Burger() {
                         // c_loc is a matrix whose columns are the c vectors in c dot \psi used in the Monte Carlo approach.
                         // To compute the sensitivity, we want this matrix to be \partial Residual R / \partial parameters eta
                         // our parameters here are just the values of the initial solution u0 at the grid points
+
+                        // we can reuse the formulas in equation (34) on pg. 6198 with t = 1
                         if (i > 0) c_loc(i, i - 1) = aa * dt / dx * u0(i - 1);
                         if (i < n - 1) c_loc(i, i + 1) = cc * dt / dx * u0(i + 1);
                         c_loc(i, i) = bb * dt / dx * u0(i) - 1.0;

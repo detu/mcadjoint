@@ -47,8 +47,8 @@
       <file leaf-file-name="driverBurger.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/driverBurger.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="145" column="102" lean-forward="false" selection-start-line="145" selection-start-column="102" selection-end-line="145" selection-end-column="102" />
+            <state relative-caret-position="-13">
+              <caret line="163" column="92" lean-forward="false" selection-start-line="163" selection-start-column="92" selection-end-line="163" selection-end-column="92" />
               <folding>
                 <element signature="e#139#158#0" expanded="true" />
               </folding>
@@ -120,11 +120,9 @@
     </option>
   </component>
   <component name="OCFindUsagesOptions" text="false" ivars="false" properties="true" derivedClasses="false" />
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="107" />
-    <option name="y" value="10" />
-    <option name="width" value="1920" />
-    <option name="height" value="1075" />
+  <component name="ProjectFrameBounds">
+    <option name="width" value="1280" />
+    <option name="height" value="796" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -215,15 +213,15 @@
       <updated>1520194011115</updated>
       <workItem from="1520194012858" duration="26000" />
       <workItem from="1520194171835" duration="477000" />
-      <workItem from="1520195636553" duration="3312000" />
+      <workItem from="1520195636553" duration="4521000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3815000" />
+    <option name="totallyTimeSpent" value="5024000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1280" height="796" extended-state="6" />
+    <frame x="0" y="0" width="1280" height="796" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.29388404" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -329,8 +327,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/driverBurger.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="145" column="102" lean-forward="false" selection-start-line="145" selection-start-column="102" selection-end-line="145" selection-end-column="102" />
+        <state relative-caret-position="-13">
+          <caret line="163" column="92" lean-forward="false" selection-start-line="163" selection-start-column="92" selection-end-line="163" selection-end-column="92" />
           <folding>
             <element signature="e#139#158#0" expanded="true" />
           </folding>
