@@ -22,7 +22,9 @@ using namespace Eigen;
 void Driver::solve_Burger() {
     const int n = 100;
     const int npar = n;
+    // dx: meshwidth for 1D Burger
     double dx = 1.0 / double(n);
+    // dt: timestep for 1D Burger
     double dt = dx;
 
     RandomGeneral rand;
@@ -57,7 +59,7 @@ void Driver::solve_Burger() {
     alpha_k = new int[q];
 
     /******
-     * targer final solution and initialization of initial solution solution
+     * target final solution and initialization of initial solution solution
      ******/
     for (int i = 0; i < n; i++) {
         I_loc(i, i) = 1.0;
@@ -76,9 +78,10 @@ void Driver::solve_Burger() {
         /******
          * time step loop
          ******/
+        // m: number of timesteps
         for (int jm = 0; jm < m; jm++) {                            // time step loop
             /******
-             * HERE GOES DHE COMPUTATION OF THE DIAGONAL JACOBIAN BLOCK
+             * HERE GOES THE COMPUTATION OF THE DIAGONAL JACOBIAN BLOCK
              *
              * A_dia = (\partial R(t)/\partial u(t))^T
              ******/
@@ -89,37 +92,58 @@ void Driver::solve_Burger() {
                  * compute solution u at new time level using upwind explicit Euler
                  ******/
                 if (jm < m - 1) {
+
                     double vl = u(i);
                     if (i > 0) vl += u(i - 1);
                     double vr = u(i);
                     if (i < n - 1) vr += u(i + 1);
-                    double aa, bb, cc;
+
+                    double aa, bb, cc; // the factors below equation (34) on pg. 6198
+
+                    // a_i^(t)
                     if (vl > 0) aa = -1.0;
                     else aa = 0.0;
-                    if (vr < 0) cc = 1.0;
-                    else cc = 0.0;
+
+                    // b_i^(t)
                     if ((vl > 0) && (vr > 0)) bb = 1.0;
                     else if ((vl <= 0) && (vr <= 0)) bb = -1.0;
                     else bb = 0.0;
+
+                    // c_i^(t)
+                    if (vr < 0) cc = 1.0;
+                    else cc = 0.0;
+
+
+                    //  uo: u at old timelevel
                     u(i) = uo(i) - dt / dx * bb * 0.5 * uo(i) * uo(i);
                     if (i > 0) u(i) -= dt / dx * aa * 0.5 * uo(i - 1) * uo(i - 1);
                     if (i < n - 1) u(i) -= dt / dx * cc * 0.5 * uo(i + 1) * uo(i + 1);
                     /******
-                     * HERE GOES DHE COMPUTATION OF THE OFF-DIAGONAL JACOBIAN BLOCK
+                     * HERE GOES THE COMPUTATION OF THE OFF-DIAGONAL JACOBIAN BLOCK
                      ******/
+                    // Equations (34) on pg. 6198
                     if (i > 0) A_off(i - 1, i) = aa * dt / dx * u(i - 1);
-                    if (i < n - 1) A_off(i + 1, i) = cc * dt / dx * u(i + 1);
                     A_off(i, i) = bb * dt / dx * u(i) - 1.0;
+                    if (i < n - 1) A_off(i + 1, i) = cc * dt / dx * u(i + 1);
                     /******
-                     * HERE GOES DHE COMPUTATION OF THE B-VECTOR
+                     * HERE GOES THE COMPUTATION OF THE B-VECTOR
                      ******/
+
+                    // jm: timestep index
+                    // m: number of timesteps
+                    // b_loc = \partial F / \partial u
+                    // F = sum over all k of (utarget(j, (m-2) * dt) - u(j, (m-2) * dt))^2
+                    // b_loc(i) = \partial F / partial u_i
                     if (jm == m - 2) {
                         b_loc(i) = 2.0 * (utarget(i) - u(i));
                     }
                     /******
-                     * HERE GOES DHE COMPUTATION OF THE C-BLOCK
+                     * HERE GOES THE COMPUTATION OF THE C-BLOCK
                      ******/
                     if (jm == 0) {
+                        // c_loc is a matrix whose columns are the c vectors in c dot \psi used in the Monte Carlo approach.
+                        // To compute the sensitivity, we want this matrix to be \partial Residual R / \partial parameters eta
+                        // our parameters here are just the values of the initial solution u0 at the grid points
                         if (i > 0) c_loc(i, i - 1) = aa * dt / dx * u0(i - 1);
                         if (i < n - 1) c_loc(i, i + 1) = cc * dt / dx * u0(i + 1);
                         c_loc(i, i) = bb * dt / dx * u0(i) - 1.0;
@@ -128,7 +152,7 @@ void Driver::solve_Burger() {
             }
             uo = u;
             /******
-             * HERE GOES DHE COMPUTATION OF THE DIAGONAL JACOBIAN BLOCK
+             * HERE GOES THE COMPUTATION OF THE DIAGONAL JACOBIAN BLOCK
              ******/
             A_dia = I_loc;
             A_dia = I_loc - A_dia;
@@ -162,13 +186,13 @@ void Driver::solve_Burger() {
                 if (jm >= jm0) {
                     if (jm ==
                         jm0) {                                        // do this only for the first step of random walk p
-                        alpha_k[p] = alpha_k0;                                  // initial c componant of random walk p
+                        alpha_k[p] = alpha_k0;                                  // initial c component of random walk p
                         W[p] = c_loc(alpha_k0 - jm0 * n, jpar) * double(n);            // initial W of random walk p
                         E_D[jpar] += W[p] * b_loc(alpha_k0 - jm0 * n);                // contribution to estimator
                     }
                     if (jm < m -
                              1) {                                         // do the following for time steps larger than jm0-1 and smaller than m-1
-                        double r = rand.equal();                                // random colomn index
+                        double r = rand.equal();                                // random column index
                         int alpha_kp1 = n * m;                                 // ..
                         double cum = 0.0;                                 // ..
                         for (int h = 0; h < n; h++) {                               // ..
@@ -181,7 +205,7 @@ void Driver::solve_Burger() {
                         if (alpha_kp1 == n * m) break;                        // stop random walk, if absorbed
                         W[p] *= w_off(alpha_k[p] - jm * n, alpha_kp1 - (jm + 1) * n);  // update W
                         E_D[jpar] += W[p] * b_loc(alpha_kp1 - (jm + 1) * n);        // contribution to estimator
-                        alpha_k[p] = alpha_kp1;                             // new row index becomes old colomn index
+                        alpha_k[p] = alpha_kp1;                             // new row index becomes old column index
                     }
                 }
             }
