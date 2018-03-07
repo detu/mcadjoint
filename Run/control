@@ -2,3 +2,6 @@ relax       0.1
 m           100
 q_per_dof   1
 nopt        500
+// matchfinal: find initial solution which matches the given final solution
+// findviscosity: find viscosity which causes the burgers equation to match a given set of data
+problem     matchfinal

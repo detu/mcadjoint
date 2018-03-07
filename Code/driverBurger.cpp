@@ -16,6 +16,7 @@
 #include "gnuPlotSetTerminal.hpp"
 #include <stefCommonHeaders/assert.h>
 #include <cmath>
+#include <stdexcept>
 
 using namespace std;
 
@@ -56,6 +57,17 @@ void Driver::solve_Burger() {
     nopt = control.getInt("nopt");
     relax = control.getDouble("relax");
 
+    const std::string problem = control.getString("problem");
+    const bool wantToMatchFinal = problem == "matchfinal";
+    const bool wantToFindViscosity = problem == "findviscosity";
+
+    if (!wantToMatchFinal && !wantToFindViscosity) {
+        throw std::runtime_error("The parameter \"problem\" must be either matchfinal or findviscosity!");
+    }
+
+    cout << "Solving problem " << problem << "\n";
+
+
     VectorXd b_loc(VectorXd::Zero(n)), u0(VectorXd::Zero(n)), u(VectorXd::Zero(n)), uo(VectorXd::Zero(n)), utarget(
         VectorXd::Zero(n));
     MatrixXd A_dia(MatrixXd::Zero(n, n)), A_off(MatrixXd::Zero(n, n)), I_loc(MatrixXd::Zero(n, n)), P_off(
@@ -68,13 +80,16 @@ void Driver::solve_Burger() {
     Eigen::VectorXd W(Eigen::VectorXd::Constant(q, 1, NAN));
     Eigen::VectorXi alpha_k(Eigen::VectorXi::Constant(q, 1, -1));
 
+    double currentGuessForViscosity = 0;
     /******
      * target final solution and initialization of initial solution solution
      ******/
     for (int i = 0; i < n; i++) {
         I_loc(i, i) = 1.0;
         u0(i) = double(i + 1) * double(n - i) * dx * dx;
-        utarget(i) = u0(i) * 1.1;
+        if (wantToMatchFinal) {
+            utarget(i) = u0(i) * 1.1;
+        }
     }
     /******
      * optimization loop
