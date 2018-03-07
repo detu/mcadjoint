@@ -28,6 +28,7 @@ using namespace Eigen;
 // You are given a discretization of the Burgers equation
 // \partial_t u + \partial_x (u^2/2) = 0
 // u(x, 0) = u0(x)
+// with zero Dirichlet boundary conditions at the boundaries 0, 1
 // with forward euler and upwind.
 // The corresponding residual is
 // R_i^(t) := u_i^(t) - u_i^(t-1) + timestep / weshwidth * (f_(i+0.5)^(t-1) - f(i-0.5)^(t-1))
@@ -40,7 +41,6 @@ using namespace Eigen;
 // F(u0) := 0.5 * sum over all cell indices i (u_i^(T) - utarget_i)^2
 void Driver::solve_Burger() {
     const int n = 100;
-    const int npar = n;
     // dx: meshwidth for 1D Burger
     const double dx = 1.0 / double(n);
     // dt: timestep for 1D Burger
@@ -64,6 +64,9 @@ void Driver::solve_Burger() {
     if (!wantToMatchFinal && !wantToFindViscosity) {
         throw std::runtime_error("The parameter \"problem\" must be either matchfinal or findviscosity!");
     }
+
+    int npar = n;
+
 
     cout << "Solving problem " << problem << "\n";
 
@@ -98,7 +101,7 @@ void Driver::solve_Burger() {
     setTerminal(g);
     for (int k = 0; k < nopt; k++) {
         uo = u0;
-        E_D *= 0.0;                                             // initialize estimator
+        E_D.setZero();                                           // initialize estimator
         /******
          * time step loop
          ******/
@@ -160,10 +163,33 @@ void Driver::solve_Burger() {
                     if (i < n - 1) {
                         u(i) -= dt / dx * cc * 0.5 * uo(i + 1) * uo(i + 1);
                     }
+
+                    double secondDerivative = NAN;
+                    if (wantToFindViscosity) {
+                        // Boundary conditions are zero dirichlet
+                        double gradientLeft;
+                        if (i > 0) {
+                            gradientLeft = (u(i) - u(i-1)) / dx;
+                        } else {
+                            gradientLeft = u(0) / dx;
+                        }
+
+                        double gradientRight;
+                        if (i < n-1) {
+                            gradientRight = (u(i+1) - u(i)) / dx;
+                        } else {
+                            gradientRight = -u(i) / dx;
+                        }
+
+                        secondDerivative = (gradientRight - gradientLeft) / dx;
+                        const double viscousTerm = secondDerivative * currentGuessForViscosity;
+                        u(i) += dt * viscousTerm;
+                    }
                     /******
                      * HERE GOES THE COMPUTATION OF THE OFF-DIAGONAL JACOBIAN BLOCK
                      ******/
                     // Equations (34) on pg. 6198
+
                     if (i > 0) {
                         A_off(i - 1, i) = aa * dt / dx * u(i - 1);
                     }
@@ -171,9 +197,21 @@ void Driver::solve_Burger() {
                     if (i < n - 1) {
                         A_off(i + 1, i) = cc * dt / dx * u(i + 1);
                     }
+
+                    if (wantToFindViscosity) {
+                        const double viscousCorrection = currentGuessForViscosity * dt /(dx * dx);
+                        if (i > 0) {
+                            A_off(i-1, i) -= viscousCorrection;
+                        }
+                        A_off(i, i) += 2 * viscousCorrection;
+                        if (i < n-1) {
+                            A_off(i+1, i) -= viscousCorrection;
+                        }
+                    }
                     /******
                      * HERE GOES THE COMPUTATION OF THE B-VECTOR
                      ******/
+                    // TODO for viscosity!
 
                     // jm: timestep index
                     // m: number of timesteps
@@ -192,13 +230,22 @@ void Driver::solve_Burger() {
                         // our parameters here are just the values of the initial solution u0 at the grid points
 
                         // we can reuse the formulas in equation (34) on pg. 6198 with t = 1
-                        if (i > 0) {
-                            c_loc(i, i - 1) = aa * dt / dx * u0(i - 1);
+
+                        if (wantToMatchFinal) {
+                            if (i > 0) {
+                                c_loc(i, i - 1) = aa * dt / dx * u0(i - 1);
+                            }
+                            c_loc(i, i) = bb * dt / dx * u0(i) - 1.0;
+                            if (i < n - 1) {
+                                c_loc(i, i + 1) = cc * dt / dx * u0(i + 1);
+                            }
+                        } else if (wantToFindViscosity) {
+                            // we have just one parameter, the viscosity ==> c_loc is an n x 1 vector
+                            ASSERT(npar == 1);
+                            ASSERT(c_loc.cols() == 1);
+                            c_loc(i, 0) = -secondDerivative * dt;
+
                         }
-                        if (i < n - 1) {
-                            c_loc(i, i + 1) = cc * dt / dx * u0(i + 1);
-                        }
-                        c_loc(i, i) = bb * dt / dx * u0(i) - 1.0;
                     }
                 }
             }
