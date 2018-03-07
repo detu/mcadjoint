@@ -74,7 +74,7 @@ void Driver::solve_Burger() {
     for (int i = 0; i < n; i++) {
         I_loc(i, i) = 1.0;
         u0(i) = double(i + 1) * double(n - i) * dx * dx;
-        utarget(i) = u0(i) * 2.0;
+        utarget(i) = u0(i) * 1.1;
     }
     /******
      * optimization loop
@@ -199,7 +199,7 @@ void Driver::solve_Burger() {
              ******/
             if (jm < m - 1) {
                 /******
-                 * transition probabilities and wights
+                 * transition probabilities and weights
                  ******/
                 // Here P = A with scaled rows such that they sum to 1.
                 // ASK: Why not the optimal choice of equation (28) on pg. 6195?
@@ -265,8 +265,10 @@ void Driver::solve_Burger() {
         /******
          * end of time step loop
          ******/
-        E_D /= double(q / npar);                                    // average estimator
+        E_D /= double(q / npar); // average estimator
+        // optimize by steepest descent
         u0 -= E_D * relax;
+        cout << "||E_D|| = " << E_D.norm() << "\n";
         /******
          * output for testing with gnuplot visualization
          ******/
