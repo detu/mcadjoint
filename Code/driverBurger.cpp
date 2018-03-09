@@ -15,8 +15,13 @@
 #include "control.h"
 #include "gnuPlotSetTerminal.hpp"
 #include <stefCommonHeaders/assert.h>
+#include <stefCommonHeaders/stefFenv.h>
+
 #include <cmath>
 #include <stdexcept>
+#include <map>
+#include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -39,7 +44,10 @@ using namespace Eigen;
 // such that the solution closely matches a prescribed target solution utarget at a certain timestep T.
 // Do this by minimizing
 // F(u0) := 0.5 * sum over all cell indices i (u_i^(T) - utarget_i)^2
+
+
 void Driver::solve_Burger() {
+    StefFenv_CrashOnFPEs(FE_ALL_EXCEPT & ~~FE_INVALID);
     const int n = 100;
     // dx: meshwidth for 1D Burger
     const double dx = 1.0 / double(n);
@@ -65,7 +73,13 @@ void Driver::solve_Burger() {
         throw std::runtime_error("The parameter \"problem\" must be either matchfinal or findviscosity!");
     }
 
-    int npar = n;
+    int npar;
+
+    if (wantToMatchFinal) {
+        npar = n;
+    } else if (wantToFindViscosity) {
+        npar = 1;
+    }
 
 
     cout << "Solving problem " << problem << "\n";
@@ -84,6 +98,10 @@ void Driver::solve_Burger() {
     Eigen::VectorXi alpha_k(Eigen::VectorXi::Constant(q, 1, -1));
 
     double currentGuessForViscosity = 0;
+
+    if (wantToFindViscosity) {
+
+    }
     /******
      * target final solution and initialization of initial solution solution
      ******/
@@ -92,6 +110,8 @@ void Driver::solve_Burger() {
         u0(i) = double(i + 1) * double(n - i) * dx * dx;
         if (wantToMatchFinal) {
             utarget(i) = u0(i) * 1.1;
+        } else if (wantToFindViscosity) {
+            utarget(i) = u0(i) * 0.5;
         }
     }
     /******
@@ -193,6 +213,7 @@ void Driver::solve_Burger() {
                     if (i > 0) {
                         A_off(i - 1, i) = aa * dt / dx * u(i - 1);
                     }
+                    //cout << u(i)<< "\n";
                     A_off(i, i) = bb * dt / dx * u(i) - 1.0;
                     if (i < n - 1) {
                         A_off(i + 1, i) = cc * dt / dx * u(i + 1);
@@ -287,8 +308,9 @@ void Driver::solve_Burger() {
              * loop over random walks
              ******/
             for (int p = 0; p < q; p++) {     // do the following for q random walks
-                int alpha_k0 = p / (q_per_dof * npar);                      // start row index
-                int jm0 = alpha_k0 / n;                              // first time step of random walk p. jm0 == p/q
+                int alpha_k0 = /*p / (q_per_dof * npar)*/ double(p) / double(q) * n;                      // start row index
+                int jm0 = 0/*alpha_k0 / n*/ /*double(p) / double(q) * m*/;                              // first time step of random walk p. jm0 == p/q
+                //ASSERT(jm0 == 0);
                 int jpar = p % npar;                                  // parameter index
                 if (jm >= jm0) {
                     // this random walk has already started
@@ -296,26 +318,29 @@ void Driver::solve_Burger() {
                         // this random walk has started just at this timestep
                         // do this only for the first step of random walk p
                         alpha_k[p] = alpha_k0;                                  // initial c component of random walk p
-                        W[p] = c_loc(alpha_k0 - jm0 * n, jpar) * double(
-                                   n);            // initial W of random walk p. Here the birth probability is 1/n for all states
-                        E_D[jpar] += W[p] * b_loc(alpha_k0 - jm0 * n);                // contribution to estimator
+                        W[p] = c_loc(alpha_k0 /*- jm0 * n*/, jpar) * double(n);            // initial W of random walk p. Here the birth probability is 1/n for all states
+                        E_D[jpar] += W[p] * b_loc(alpha_k0  /* -jm0 * n*/);                // contribution to estimator
                     }
                     if (jm < m - 1) {                                         // do the following for time steps larger than jm0-1 and smaller than m-1
                         double r = rand.equal();                                // random column index
-                        int alpha_kp1 = n * m;                                 // ..
+                        int alpha_kp1 = n+1/*n * m*/;                                 // ..
                         double cum = 0.0;                                 // ..
-                        for (int h = 0; h < n; h++) {                               // ..
-                            cum += P_off(alpha_k[p] - jm * n, h);                      // ..
-                            if (r < cum) {                                          // ..
-                                alpha_kp1 = h + (jm + 1) * n;
+                        for (int h = 0; h < n; h++) {
+                            // ..
+                            // Why -jm * n?
+                            cum += P_off(alpha_k[p] /*- jm * n*/, h);                      // ..
+                            if (r < cum) {
+                                // Why  +(jm + 1) * n?
+                                alpha_kp1 = h; //+ (jm + 1) * n;
                                 break;                      // ..
                             }                                                     // ..
                         }
-                        if (alpha_kp1 == n * m) {
+                        if (alpha_kp1 == n+1) {
                             break;    // stop random walk, if absorbed
                         }
-                        W[p] *= w_off(alpha_k[p] - jm * n, alpha_kp1 - (jm + 1) * n);  // update W
-                        E_D[jpar] += W[p] * b_loc(alpha_kp1 - (jm + 1) * n);        // contribution to estimator
+                        W[p] *= w_off(alpha_k[p] /* -jm * n */, alpha_kp1  /*- (jm + 1) * n */);  // update W
+                        E_D[jpar] += W[p] * b_loc(alpha_kp1 /*- (jm + 1) * n */);        // contribution to estimator
+                        // advance state of
                         alpha_k[p] = alpha_kp1;                             // new row index becomes old column index
                     }
                 }
@@ -329,18 +354,40 @@ void Driver::solve_Burger() {
          ******/
         E_D /= double(q / npar); // average estimator
         // optimize by steepest descent
-        u0 -= E_D * relax;
+
+        if (wantToMatchFinal) {
+            u0 -= E_D * relax;
+        } else if (wantToFindViscosity) {
+            currentGuessForViscosity -= E_D[0] * relax;
+        }
         cout << "||E_D|| = " << E_D.norm() << "\n";
         /******
          * output for testing with gnuplot visualization
          ******/
         FILE* file = fopen("out", "w");
-        for (int i = 0; i < n; i++) {
-            fprintf(file, "%le %le %le %le\n", double(i + 1) * double(n - i) * dx * dx, u0(i), u(i), utarget(i));
-        }
-        fclose(file);
 
-        g.cmd("p[0:100][0:1]'out'u 1 w l,'out'u 2 w l,'out'u 3 w l,'out'u 4 w l");
+        if (wantToMatchFinal) {
+            for (int i = 0; i < n; i++) {
+                fprintf(file, "%le %le %le %le\n", double(i + 1) * double(n - i) * dx * dx, u0(i), u(i), utarget(i));
+            }
+
+            fclose(file);
+
+            g.cmd("p[0:100][0:1]'out'u 1 w l,'out'u 2 w l,'out'u 3 w l,'out'u 4 w l");
+
+
+
+        } else if (wantToFindViscosity) {
+            for (int i = 0; i < n; i++) {
+                fprintf(file, "%le %le %le\n", double(i + 1) * double(n - i) * dx * dx, u(i), utarget(i));
+            }
+
+            fclose(file);
+
+            g.cmd("p[0:100][0:1]'out'u 1 w l,'out'u 2 w l,'out'u 3 w l");
+
+        }
+
         cout << "optimization step " << k << " completed\n";
     }
     /******
