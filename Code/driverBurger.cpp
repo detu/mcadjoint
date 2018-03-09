@@ -47,7 +47,7 @@ using namespace Eigen;
 
 
 void Driver::solve_Burger() {
-    StefFenv_CrashOnFPEs(FE_ALL_EXCEPT & ~~FE_INVALID);
+    StefFenv_CrashOnFPEs(FE_ALL_EXCEPT & ~FE_INEXACT);
     const int n = 100;
     // dx: meshwidth for 1D Burger
     const double dx = 1.0 / double(n);
