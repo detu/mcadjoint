@@ -23,6 +23,7 @@
 #include <string>
 #include <sstream>
 #include "problemSelection.hpp"
+#include "sparseDataSelection.hpp"
 
 using namespace std;
 using namespace Eigen;
@@ -68,14 +69,14 @@ void Driver::solve_Burger() {
     const std::string problemDescription = control.getString("problem");
     const Problem problem = getProblemFromDescription(problemDescription);
 
+    const std::string sparseDataDescription = control.getString("sparsedata");
+
 
     int npar;
 
 
     switch (problem) {
-        case Problem::MATCH_FINAL_WITH_INITIAL: {
-            
-        }
+        case Problem::MATCH_FINAL_WITH_INITIAL:
         case Problem::MATCH_DATA_WITH_INITIAL: {
             npar = n;
             break;
@@ -87,7 +88,7 @@ void Driver::solve_Burger() {
     cout << "Solving problem " << problemDescription << "\n";
 
 
-    VectorXd b_loc(VectorXd::Zero(n)), u0(VectorXd::Zero(n)), u(VectorXd::Zero(n)), uo(VectorXd::Zero(n));
+    VectorXd b_loc(VectorXd::Zero(n)), u(VectorXd::Zero(n)), uo(VectorXd::Zero(n));
     MatrixXd A_dia(MatrixXd::Zero(n, n)), A_off(MatrixXd::Zero(n, n)), I_loc(MatrixXd::Identity(n, n)), P_off(
         MatrixXd::Zero(n, n)), w_off(n, n);
     MatrixXd c_loc(MatrixXd::Zero(n, npar));
@@ -95,26 +96,29 @@ void Driver::solve_Burger() {
 
 
     const int q = q_per_dof * n * npar;                      // number of random walks in total
-    Eigen::VectorXd W(Eigen::VectorXd::Constant(q, 1, NAN));
-    Eigen::VectorXi alpha_k(Eigen::VectorXi::Constant(q, 1, -1));
+    VectorXd W(VectorXd::Constant(q, 1, NAN));
+    VectorXi alpha_k(VectorXi::Constant(q, 1, -1));
 
     double currentGuessForViscosity = 0;
-
-
+    
+    
+    VectorXd u0(VectorXd::Zero(n));
     // First guess at initial solution
     for (int i = 0; i < n; i++) {
         u0(i) = double(i + 1) * double(n - i) * dx * dx;
     }
 
-
-
+    Eigen::VectorXd utargetFinal;
+    SparseData sparseData;
     switch (problem) {
         case Problem::MATCH_FINAL_WITH_INITIAL: {
-            Eigen::VectorXd utargetFinal
-            utargetFinal(i) = u0(i) * 1.1;
+            utargetFinal.resizeLike(u0);
+            utargetFinal = u0 * 1.1;
+            break;
         }
         case Problem::MATCH_DATA_WITH_INITIAL: {
-
+            sparseData = getSparseDataFromDescription(sparseDataDescription);
+            break;
         }
     }
     /******
@@ -188,7 +192,7 @@ void Driver::solve_Burger() {
                     }
 
                     double secondDerivative = NAN;
-                    if (wantToMatchSparseDataWithInitialCondition) {
+                    if (currentGuessForViscosity > 0) {
                         // Boundary conditions are zero dirichlet
                         double gradientLeft;
                         if (i > 0) {
@@ -222,7 +226,7 @@ void Driver::solve_Burger() {
                         A_off(i + 1, i) = cc * dt / dx * u(i + 1);
                     }
 
-                    if (wantToMatchSparseDataWithInitialCondition) {
+                    if (currentGuessForViscosity > 0) {
                         const double viscousCorrection = currentGuessForViscosity * dt /(dx * dx);
                         if (i > 0) {
                             A_off(i-1, i) -= viscousCorrection;
@@ -235,16 +239,28 @@ void Driver::solve_Burger() {
                     /******
                      * HERE GOES THE COMPUTATION OF THE B-VECTOR
                      ******/
-                    // TODO for viscosity!
+
+                    // TODO: compute b vector for sparse data!
 
                     // jm: timestep index
                     // m: number of timesteps
                     // b_loc = \partial F / \partial u
                     // F = sum over all k of (utarget(j, (m-2) * dt) - u(j, (m-2) * dt))^2
                     // b_loc(i) = \partial F / partial u_i
-                    if (jm == m - 2) {
-                        b_loc(i) = 2.0 * (utargetFinal(i) - u(i));
+
+                    switch (problem) {
+                        case Problem::MATCH_FINAL_WITH_INITIAL: {
+                            if (jm == m - 2) {
+                                b_loc(i) = 2.0 * (utargetFinal(i) - u(i));
+                            }
+                            break;
+                        }
+
+                        default: {
+                            throw std::logic_error("Not implemented!");
+                        }
                     }
+
                     /******
                      * HERE GOES THE COMPUTATION OF THE C-BLOCK
                      ******/
@@ -255,21 +271,28 @@ void Driver::solve_Burger() {
 
                         // we can reuse the formulas in equation (34) on pg. 6198 with t = 1
 
-                        if (wantToMatchFinal) {
-                            if (i > 0) {
-                                c_loc(i, i - 1) = aa * dt / dx * u0(i - 1);
+                        switch (problem) {
+                            case Problem::MATCH_DATA_WITH_INITIAL:
+                            case Problem::MATCH_FINAL_WITH_INITIAL: {
+                                if (i > 0) {
+                                    c_loc(i, i - 1) = aa * dt / dx * u0(i - 1);
+                                }
+                                c_loc(i, i) = bb * dt / dx * u0(i) - 1.0;
+                                if (i < n - 1) {
+                                    c_loc(i, i + 1) = cc * dt / dx * u0(i + 1);
+                                }
+                                break;
                             }
-                            c_loc(i, i) = bb * dt / dx * u0(i) - 1.0;
-                            if (i < n - 1) {
-                                c_loc(i, i + 1) = cc * dt / dx * u0(i + 1);
-                            }
-                        } else if (wantToMatchSparseDataWithInitialCondition) {
-                            // we have just one parameter, the viscosity ==> c_loc is an n x 1 vector
-                            ASSERT(npar == 1);
-                            ASSERT(c_loc.cols() == 1);
-                            c_loc(i, 0) = -secondDerivative * dt;
 
+                            case Problem::MATCH_DATA_WITH_VISCOSITY: {
+                                // we have just one parameter, the viscosity ==> c_loc is an n x 1 vector
+                                ASSERT(npar == 1);
+                                ASSERT(c_loc.cols() == 1);
+                                c_loc(i, 0) = -secondDerivative * dt;
+                                break;
+                            }
                         }
+
                     }
                 }
             }
@@ -312,8 +335,7 @@ void Driver::solve_Burger() {
              ******/
             for (int p = 0; p < q; p++) {     // do the following for q random walks
                 int alpha_k0 = /*p / (q_per_dof * npar)*/ double(p) / double(q) * n;                      // start row index
-                int jm0 = 0/*alpha_k0 / n*/ /*double(p) / double(q) * m*/;                              // first time step of random walk p. jm0 == p/q
-                //ASSERT(jm0 == 0);
+                int jm0 = alpha_k0 / n;                              // first time step of random walk p. jm0 == p/q
                 int jpar = p % npar;                                  // parameter index
                 if (jm >= jm0) {
                     // this random walk has already started
@@ -321,8 +343,8 @@ void Driver::solve_Burger() {
                         // this random walk has started just at this timestep
                         // do this only for the first step of random walk p
                         alpha_k[p] = alpha_k0;                                  // initial c component of random walk p
-                        W[p] = c_loc(alpha_k0 /*- jm0 * n*/, jpar) * double(n);            // initial W of random walk p. Here the birth probability is 1/n for all states
-                        E_D[jpar] += W[p] * b_loc(alpha_k0  /* -jm0 * n*/);                // contribution to estimator
+                        W[p] = c_loc(alpha_k0, jpar) * double(n);            // initial W of random walk p. Here the birth probability is 1/n for all states
+                        E_D[jpar] += W[p] * b_loc(alpha_k0);                // contribution to estimator
                     }
                     if (jm < m - 1) {                                         // do the following for time steps larger than jm0-1 and smaller than m-1
                         double r = rand.equal();                                // random column index
@@ -330,11 +352,9 @@ void Driver::solve_Burger() {
                         double cum = 0.0;                                 // ..
                         for (int h = 0; h < n; h++) {
                             // ..
-                            // Why -jm * n?
-                            cum += P_off(alpha_k[p] /*- jm * n*/, h);                      // ..
+                            cum += P_off(alpha_k[p], h);                      // ..
                             if (r < cum) {
-                                // Why  +(jm + 1) * n?
-                                alpha_kp1 = h; //+ (jm + 1) * n;
+                                alpha_kp1 = h;
                                 break;                      // ..
                             }                                                     // ..
                         }
@@ -358,10 +378,15 @@ void Driver::solve_Burger() {
         E_D /= double(q / npar); // average estimator
         // optimize by steepest descent
 
-        if (wantToMatchFinal) {
-            u0 -= E_D * relax;
-        } else if (wantToMatchSparseDataWithInitialCondition) {
-            currentGuessForViscosity -= E_D[0] * relax;
+        switch (problem) {
+            case Problem::MATCH_FINAL_WITH_INITIAL:
+            case Problem::MATCH_DATA_WITH_INITIAL: {
+                u0 -= E_D * relax;
+                break;
+            }
+            case Problem::MATCH_DATA_WITH_VISCOSITY: {
+                currentGuessForViscosity -= E_D[0] * relax;
+            }
         }
         cout << "||E_D|| = " << E_D.norm() << "\n";
         /******
@@ -369,26 +394,29 @@ void Driver::solve_Burger() {
          ******/
         FILE* file = fopen("out", "w");
 
-        if (wantToMatchFinal) {
-            for (int i = 0; i < n; i++) {
-                fprintf(file, "%le %le %le %le\n", double(i + 1) * double(n - i) * dx * dx, u0(i), u(i), utargetFinal(i));
+
+        switch (problem) {
+            case Problem::MATCH_FINAL_WITH_INITIAL: {
+                for (int i = 0; i < n; i++) {
+                    fprintf(file, "%le %le %le %le\n", double(i + 1) * double(n - i) * dx * dx, u0(i), u(i), utargetFinal(i));
+                }
+
+                fclose(file);
+
+                g.cmd("p[0:100][0:1]'out'u 1 w l,'out'u 2 w l,'out'u 3 w l,'out'u 4 w l");
+                break;
             }
 
-            fclose(file);
+            case Problem::MATCH_DATA_WITH_VISCOSITY: {
+                for (int i = 0; i < n; i++) {
+                    fprintf(file, "%le %le %le\n", double(i + 1) * double(n - i) * dx * dx, u(i), utargetFinal(i));
+                }
 
-            g.cmd("p[0:100][0:1]'out'u 1 w l,'out'u 2 w l,'out'u 3 w l,'out'u 4 w l");
+                fclose(file);
 
-
-
-        } else if (wantToMatchSparseDataWithInitialCondition) {
-            for (int i = 0; i < n; i++) {
-                fprintf(file, "%le %le %le\n", double(i + 1) * double(n - i) * dx * dx, u(i), utargetFinal(i));
+                g.cmd("p[0:100][0:1]'out'u 1 w l,'out'u 2 w l,'out'u 3 w l");
+                break;
             }
-
-            fclose(file);
-
-            g.cmd("p[0:100][0:1]'out'u 1 w l,'out'u 2 w l,'out'u 3 w l");
-
         }
 
         cout << "optimization step " << k << " completed\n";

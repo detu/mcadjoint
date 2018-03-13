@@ -5,16 +5,15 @@
 #ifndef MCADJOINT_PROBLEMSELECTION_HPP
 #define MCADJOINT_PROBLEMSELECTION_HPP
 
-#include <map>
+#include <unordered_map>
 #include <string>
 
 enum class Problem {
     MATCH_FINAL_WITH_INITIAL,
-    MATCH_DATA_WITH_INITIAL
+    MATCH_DATA_WITH_INITIAL,
+    MATCH_DATA_WITH_VISCOSITY
 };
 
-extern const std::map<std::string, Problem> PROBLEM_DESCRIPTIONS;
-
-Problem getProblemFromDescription(const std::string& description);
+Problem getProblemFromDescription(std::string description);
 
 #endif //MCADJOINT_PROBLEMSELECTION_HPP

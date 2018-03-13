@@ -15,6 +15,8 @@ include_directories(. "${EIGEN3_INCLUDE_DIR}")
 
 
 add_executable(MCAdjoint
+        utils.hpp
+        utils.cpp
         control.cpp
         control.h
         driver.h
@@ -24,6 +26,6 @@ add_executable(MCAdjoint
         main.cpp
         randomgeneral.h
         gnuPlotSetTerminal.cpp
-        gnuPlotSetTerminal.hpp problemSelection.hpp problemSelection.cpp)
+        gnuPlotSetTerminal.hpp problemSelection.hpp problemSelection.cpp sparseDataSelection.cpp sparseDataSelection.hpp)
 target_link_libraries(MCAdjoint stefCommonHeaders)
 
