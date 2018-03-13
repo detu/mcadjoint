@@ -22,9 +22,9 @@
 #include <map>
 #include <string>
 #include <sstream>
+#include "problemSelection.hpp"
 
 using namespace std;
-
 using namespace Eigen;
 
 
@@ -65,29 +65,30 @@ void Driver::solve_Burger() {
     nopt = control.getInt("nopt");
     relax = control.getDouble("relax");
 
-    const std::string problem = control.getString("problem");
-    const bool wantToMatchFinal = problem == "matchfinal";
-    const bool wantToFindViscosity = problem == "findviscosity";
+    const std::string problemDescription = control.getString("problem");
+    const Problem problem = getProblemFromDescription(problemDescription);
 
-    if (!wantToMatchFinal && !wantToFindViscosity) {
-        throw std::runtime_error("The parameter \"problem\" must be either matchfinal or findviscosity!");
-    }
 
     int npar;
 
-    if (wantToMatchFinal) {
-        npar = n;
-    } else if (wantToFindViscosity) {
-        npar = 1;
+
+    switch (problem) {
+        case Problem::MATCH_FINAL_WITH_INITIAL: {
+            
+        }
+        case Problem::MATCH_DATA_WITH_INITIAL: {
+            npar = n;
+            break;
+        }
+
     }
 
 
-    cout << "Solving problem " << problem << "\n";
+    cout << "Solving problem " << problemDescription << "\n";
 
 
-    VectorXd b_loc(VectorXd::Zero(n)), u0(VectorXd::Zero(n)), u(VectorXd::Zero(n)), uo(VectorXd::Zero(n)), utarget(
-        VectorXd::Zero(n));
-    MatrixXd A_dia(MatrixXd::Zero(n, n)), A_off(MatrixXd::Zero(n, n)), I_loc(MatrixXd::Zero(n, n)), P_off(
+    VectorXd b_loc(VectorXd::Zero(n)), u0(VectorXd::Zero(n)), u(VectorXd::Zero(n)), uo(VectorXd::Zero(n));
+    MatrixXd A_dia(MatrixXd::Zero(n, n)), A_off(MatrixXd::Zero(n, n)), I_loc(MatrixXd::Identity(n, n)), P_off(
         MatrixXd::Zero(n, n)), w_off(n, n);
     MatrixXd c_loc(MatrixXd::Zero(n, npar));
     VectorXd E_D(VectorXd::Zero(npar));
@@ -99,19 +100,21 @@ void Driver::solve_Burger() {
 
     double currentGuessForViscosity = 0;
 
-    if (wantToFindViscosity) {
 
-    }
-    /******
-     * target final solution and initialization of initial solution solution
-     ******/
+    // First guess at initial solution
     for (int i = 0; i < n; i++) {
-        I_loc(i, i) = 1.0;
         u0(i) = double(i + 1) * double(n - i) * dx * dx;
-        if (wantToMatchFinal) {
-            utarget(i) = u0(i) * 1.1;
-        } else if (wantToFindViscosity) {
-            utarget(i) = u0(i) * 0.5;
+    }
+
+
+
+    switch (problem) {
+        case Problem::MATCH_FINAL_WITH_INITIAL: {
+            Eigen::VectorXd utargetFinal
+            utargetFinal(i) = u0(i) * 1.1;
+        }
+        case Problem::MATCH_DATA_WITH_INITIAL: {
+
         }
     }
     /******
@@ -185,7 +188,7 @@ void Driver::solve_Burger() {
                     }
 
                     double secondDerivative = NAN;
-                    if (wantToFindViscosity) {
+                    if (wantToMatchSparseDataWithInitialCondition) {
                         // Boundary conditions are zero dirichlet
                         double gradientLeft;
                         if (i > 0) {
@@ -219,7 +222,7 @@ void Driver::solve_Burger() {
                         A_off(i + 1, i) = cc * dt / dx * u(i + 1);
                     }
 
-                    if (wantToFindViscosity) {
+                    if (wantToMatchSparseDataWithInitialCondition) {
                         const double viscousCorrection = currentGuessForViscosity * dt /(dx * dx);
                         if (i > 0) {
                             A_off(i-1, i) -= viscousCorrection;
@@ -240,7 +243,7 @@ void Driver::solve_Burger() {
                     // F = sum over all k of (utarget(j, (m-2) * dt) - u(j, (m-2) * dt))^2
                     // b_loc(i) = \partial F / partial u_i
                     if (jm == m - 2) {
-                        b_loc(i) = 2.0 * (utarget(i) - u(i));
+                        b_loc(i) = 2.0 * (utargetFinal(i) - u(i));
                     }
                     /******
                      * HERE GOES THE COMPUTATION OF THE C-BLOCK
@@ -260,7 +263,7 @@ void Driver::solve_Burger() {
                             if (i < n - 1) {
                                 c_loc(i, i + 1) = cc * dt / dx * u0(i + 1);
                             }
-                        } else if (wantToFindViscosity) {
+                        } else if (wantToMatchSparseDataWithInitialCondition) {
                             // we have just one parameter, the viscosity ==> c_loc is an n x 1 vector
                             ASSERT(npar == 1);
                             ASSERT(c_loc.cols() == 1);
@@ -357,7 +360,7 @@ void Driver::solve_Burger() {
 
         if (wantToMatchFinal) {
             u0 -= E_D * relax;
-        } else if (wantToFindViscosity) {
+        } else if (wantToMatchSparseDataWithInitialCondition) {
             currentGuessForViscosity -= E_D[0] * relax;
         }
         cout << "||E_D|| = " << E_D.norm() << "\n";
@@ -368,7 +371,7 @@ void Driver::solve_Burger() {
 
         if (wantToMatchFinal) {
             for (int i = 0; i < n; i++) {
-                fprintf(file, "%le %le %le %le\n", double(i + 1) * double(n - i) * dx * dx, u0(i), u(i), utarget(i));
+                fprintf(file, "%le %le %le %le\n", double(i + 1) * double(n - i) * dx * dx, u0(i), u(i), utargetFinal(i));
             }
 
             fclose(file);
@@ -377,9 +380,9 @@ void Driver::solve_Burger() {
 
 
 
-        } else if (wantToFindViscosity) {
+        } else if (wantToMatchSparseDataWithInitialCondition) {
             for (int i = 0; i < n; i++) {
-                fprintf(file, "%le %le %le\n", double(i + 1) * double(n - i) * dx * dx, u(i), utarget(i));
+                fprintf(file, "%le %le %le\n", double(i + 1) * double(n - i) * dx * dx, u(i), utargetFinal(i));
             }
 
             fclose(file);

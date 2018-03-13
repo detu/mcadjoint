@@ -24,6 +24,6 @@ add_executable(MCAdjoint
         main.cpp
         randomgeneral.h
         gnuPlotSetTerminal.cpp
-        gnuPlotSetTerminal.hpp)
+        gnuPlotSetTerminal.hpp problemSelection.hpp problemSelection.cpp)
 target_link_libraries(MCAdjoint stefCommonHeaders)
 
