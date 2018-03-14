@@ -10,7 +10,8 @@
 enum class SparseData {
     ALWAYS_ZERO,
     HAT_PATTERN,
-    ZERO_DIAGONAL
+    ZERO_DIAGONAL,
+    LINEAR_OFFDIAGONAL
 };
 
 SparseData getSparseDataFromDescription(std::string description);

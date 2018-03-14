@@ -9,7 +9,8 @@
 
 const std::unordered_map<std::string, Problem> SPARSE_DATA_FROM_DESCRIPTION = {
       {"matchdatawithinitial", Problem::MATCH_DATA_WITH_INITIAL},
-      {"matchfinalwithinitial", Problem::MATCH_FINAL_WITH_INITIAL}
+      {"matchfinalwithinitial", Problem::MATCH_FINAL_WITH_INITIAL},
+      {"matchdatawithviscosity", Problem::MATCH_DATA_WITH_VISCOSITY}
 };
 
 Problem getProblemFromDescription(std::string description) {

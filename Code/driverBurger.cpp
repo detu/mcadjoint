@@ -76,10 +76,20 @@ void Driver::solve_Burger() {
     int npar;
 
 
+    double currentGuessForViscosity = 0;
+
+
     switch (problem) {
         case Problem::MATCH_FINAL_WITH_INITIAL:
         case Problem::MATCH_DATA_WITH_INITIAL: {
             npar = n;
+            break;
+        }
+
+        case Problem::MATCH_DATA_WITH_VISCOSITY: {
+            npar = 1;
+            currentGuessForViscosity = 0.01;
+            dt
             break;
         }
 
@@ -103,8 +113,7 @@ void Driver::solve_Burger() {
     VectorXd W(VectorXd::Constant(q, 1, NAN));
     VectorXi alpha_k(VectorXi::Constant(q, 1, -1));
 
-    double currentGuessForViscosity = 0;
-    
+
     
     VectorXd u0(VectorXd::Zero(n));
     // First guess at initial solution
@@ -120,6 +129,8 @@ void Driver::solve_Burger() {
             utargetFinal = u0 * 1.1;
             break;
         }
+
+        case Problem::MATCH_DATA_WITH_VISCOSITY:
         case Problem::MATCH_DATA_WITH_INITIAL: {
             sparseData = getSparseDataFromDescription(sparseDataDescription);
             break;
@@ -191,8 +202,7 @@ void Driver::solve_Burger() {
                     } else {
                         cc = 0.0;
                     }
-
-
+                    
                     //  uo: u at old timelevel
                     u(i) = uo(i) - dt / dx * bb * 0.5 * uo(i) * uo(i);
                     if (i > 0) {
@@ -297,6 +307,16 @@ void Driver::solve_Burger() {
                                     break;
                                 }
 
+                                case SparseData::LINEAR_OFFDIAGONAL: {
+                                    b_loc(i) = 0;
+                                    if (i == jm) {
+                                        const double x = dx * i;
+                                        b_loc(i) = 2 * (x - u(i));
+                                    }
+
+                                    break;
+                                }
+
                                 default: {
                                     throw std::logic_error("Not implemented!");
                                 }
@@ -339,6 +359,14 @@ void Driver::solve_Burger() {
                                 case SparseData::ZERO_DIAGONAL: {
                                     if (i == jm) {
                                         F += std::pow(u(i), 2);
+                                    }
+                                    break;
+                                }
+
+                                case SparseData::LINEAR_OFFDIAGONAL: {
+                                    if (i < n - 1 && i == jm+1) {
+                                        const double x = i * dx;
+                                        F += std::pow(u(i) - x, 2);
                                     }
                                     break;
                                 }
@@ -476,6 +504,7 @@ void Driver::solve_Burger() {
          * end of time step loop
          ******/
         E_D /= double(q / npar); // average estimator
+        DBG_PEXPR(E_D(0));
         // optimize by steepest descent
 
          switch (problem) {
@@ -486,6 +515,7 @@ void Driver::solve_Burger() {
             }
             case Problem::MATCH_DATA_WITH_VISCOSITY: {
                 currentGuessForViscosity -= E_D[0] * relax;
+                currentGuessForViscosity = max(0.0, currentGuessForViscosity);
                 break;
             }
 
@@ -517,12 +547,12 @@ void Driver::solve_Burger() {
 
             case Problem::MATCH_DATA_WITH_VISCOSITY: {
                 for (int i = 0; i < n; i++) {
-                    fprintf(file, "%le %le %le\n", double(i + 1) * double(n - i) * dx * dx, u(i), utargetFinal(i));
+                    fprintf(file, "%le %le\n", double(i + 1) * double(n - i) * dx * dx, u(i));
                 }
 
                 fclose(file);
 
-                g.cmd("p[0:100][0:1]'out'u 1 w l,'out'u 2 w l,'out'u 3 w l");
+                g.cmd("p[0:100][0:1]'out'u 1 w l,'out'u 2 w l");
                 break;
             }
 
