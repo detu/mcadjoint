@@ -202,7 +202,7 @@ void Driver::solve_Burger() {
                     } else {
                         cc = 0.0;
                     }
-                    
+
                     //  uo: u at old timelevel
                     u(i) = uo(i) - dt / dx * bb * 0.5 * uo(i) * uo(i);
                     if (i > 0) {
