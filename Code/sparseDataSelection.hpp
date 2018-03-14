@@ -8,7 +8,9 @@
 #include <string>
 
 enum class SparseData {
-    ALWAYS_ZERO
+    ALWAYS_ZERO,
+    HAT_PATTERN,
+    ZERO_DIAGONAL
 };
 
 SparseData getSparseDataFromDescription(std::string description);

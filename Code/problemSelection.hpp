@@ -7,8 +7,11 @@
 
 #include <unordered_map>
 #include <string>
+#include <cstdint>
 
-enum class Problem {
+
+
+enum class Problem: std::int64_t {
     MATCH_FINAL_WITH_INITIAL,
     MATCH_DATA_WITH_INITIAL,
     MATCH_DATA_WITH_VISCOSITY

@@ -16,6 +16,7 @@
 #include "gnuPlotSetTerminal.hpp"
 #include <stefCommonHeaders/assert.h>
 #include <stefCommonHeaders/stefFenv.h>
+#include <stefCommonHeaders/dbg.hpp>
 
 #include <cmath>
 #include <stdexcept>
@@ -82,6 +83,9 @@ void Driver::solve_Burger() {
             break;
         }
 
+        default: {
+            throw logic_error("Not implemented!");
+        }
     }
 
 
@@ -120,13 +124,20 @@ void Driver::solve_Burger() {
             sparseData = getSparseDataFromDescription(sparseDataDescription);
             break;
         }
+
+        default: {
+            throw std::logic_error("Not implemented!");
+        }
     }
     /******
      * optimization loop
      ******/
     Gnuplot g = Gnuplot("gp");                                // setting up gnuplot process
     setTerminal(g);
+
+    double F;
     for (int k = 0; k < nopt; k++) {
+        F = 0;
         uo = u0;
         E_D.setZero();                                           // initialize estimator
         /******
@@ -139,8 +150,8 @@ void Driver::solve_Burger() {
              *
              * A_dia = (\partial R(t)/\partial u(t))^T
              ******/
-            b_loc *= 0.0;
-            c_loc *= 0.0;
+            b_loc.setZero();
+            c_loc.setZero();
             for (int i = 0; i < n; i++) {
                 /******
                  * compute solution u at new time level using upwind explicit Euler
@@ -236,23 +247,107 @@ void Driver::solve_Burger() {
                             A_off(i+1, i) -= viscousCorrection;
                         }
                     }
+
+
                     /******
                      * HERE GOES THE COMPUTATION OF THE B-VECTOR
                      ******/
 
-                    // TODO: compute b vector for sparse data!
 
                     // jm: timestep index
                     // m: number of timesteps
-                    // b_loc = \partial F / \partial u
+                    // b_loc = -\partial F / \partial u
                     // F = sum over all k of (utarget(j, (m-2) * dt) - u(j, (m-2) * dt))^2
-                    // b_loc(i) = \partial F / partial u_i
+                    // b_loc(i) = -\partial F / partial u_i
 
                     switch (problem) {
                         case Problem::MATCH_FINAL_WITH_INITIAL: {
                             if (jm == m - 2) {
                                 b_loc(i) = 2.0 * (utargetFinal(i) - u(i));
+                            } else {
+                                b_loc(i) = 0;
                             }
+
+                            break;
+                        }
+
+                        case Problem::MATCH_DATA_WITH_VISCOSITY:
+                        case Problem::MATCH_DATA_WITH_INITIAL: {
+                            switch (sparseData) {
+                                case SparseData::ALWAYS_ZERO: {
+                                    b_loc(i) = -2 * u(i);
+                                    break;
+                                }
+
+                                case SparseData::HAT_PATTERN: {
+
+                                    b_loc(i) = 0;
+                                    if (2*i < n && (jm + 1 == i || jm + 1 == n - 1 - i)) {
+                                        b_loc(i) = 2 * (1 - u(i));
+                                    }
+                                    break;
+                                }
+
+                                case SparseData::ZERO_DIAGONAL: {
+                                    b_loc(i) = 0;
+                                    if (i == jm) {
+                                        b_loc(i) = -2 * u(i);
+                                    }
+
+                                    break;
+                                }
+
+                                default: {
+                                    throw std::logic_error("Not implemented!");
+                                }
+                            }
+
+                            break;
+                        }
+
+                        default: {
+                            throw std::logic_error("Not implemented!");
+                        }
+                    }
+
+                    // Compute F value
+                    switch (problem) {
+                        case Problem::MATCH_FINAL_WITH_INITIAL: {
+                            if (jm == m - 2) {
+                                F += pow(utargetFinal(i) - u(i), 2);
+                            }
+
+                            break;
+                        }
+
+                        case Problem::MATCH_DATA_WITH_VISCOSITY:
+                        case Problem::MATCH_DATA_WITH_INITIAL: {
+                            switch (sparseData) {
+                                case SparseData::ALWAYS_ZERO: {
+                                    F += pow(u(i), 2);
+                                    break;
+                                }
+
+                                case SparseData::HAT_PATTERN: {
+
+                                    if (2*i < n && (jm + 1 == i || jm + 1 == n - 1 - i)) {
+                                        F += std::pow(1 - u(i), 2);
+                                    }
+                                    break;
+                                }
+
+                                case SparseData::ZERO_DIAGONAL: {
+                                    if (i == jm) {
+                                        F += std::pow(u(i), 2);
+                                    }
+                                    break;
+                                }
+
+                                default: {
+                                    throw std::logic_error("Not implemented!");
+                                }
+                            }
+
                             break;
                         }
 
@@ -290,6 +385,10 @@ void Driver::solve_Burger() {
                                 ASSERT(c_loc.cols() == 1);
                                 c_loc(i, 0) = -secondDerivative * dt;
                                 break;
+                            }
+
+                            default: {
+                                throw std::logic_error("Not implemented!");
                             }
                         }
 
@@ -334,7 +433,7 @@ void Driver::solve_Burger() {
              * loop over random walks
              ******/
             for (int p = 0; p < q; p++) {     // do the following for q random walks
-                int alpha_k0 = /*p / (q_per_dof * npar)*/ double(p) / double(q) * n;                      // start row index
+                int alpha_k0 = p / (q_per_dof * npar);                    // start row index
                 int jm0 = alpha_k0 / n;                              // first time step of random walk p. jm0 == p/q
                 int jpar = p % npar;                                  // parameter index
                 if (jm >= jm0) {
@@ -348,7 +447,7 @@ void Driver::solve_Burger() {
                     }
                     if (jm < m - 1) {                                         // do the following for time steps larger than jm0-1 and smaller than m-1
                         double r = rand.equal();                                // random column index
-                        int alpha_kp1 = n+1/*n * m*/;                                 // ..
+                        int alpha_kp1 = n+1;                                 // ..
                         double cum = 0.0;                                 // ..
                         for (int h = 0; h < n; h++) {
                             // ..
@@ -361,8 +460,9 @@ void Driver::solve_Burger() {
                         if (alpha_kp1 == n+1) {
                             break;    // stop random walk, if absorbed
                         }
-                        W[p] *= w_off(alpha_k[p] /* -jm * n */, alpha_kp1  /*- (jm + 1) * n */);  // update W
-                        E_D[jpar] += W[p] * b_loc(alpha_kp1 /*- (jm + 1) * n */);        // contribution to estimator
+
+                        W[p] *= w_off(alpha_k[p], alpha_kp1);  // update W
+                        E_D[jpar] += W[p] * b_loc(alpha_kp1);        // contribution to estimator
                         // advance state of
                         alpha_k[p] = alpha_kp1;                             // new row index becomes old column index
                     }
@@ -378,7 +478,7 @@ void Driver::solve_Burger() {
         E_D /= double(q / npar); // average estimator
         // optimize by steepest descent
 
-        switch (problem) {
+         switch (problem) {
             case Problem::MATCH_FINAL_WITH_INITIAL:
             case Problem::MATCH_DATA_WITH_INITIAL: {
                 u0 -= E_D * relax;
@@ -386,13 +486,21 @@ void Driver::solve_Burger() {
             }
             case Problem::MATCH_DATA_WITH_VISCOSITY: {
                 currentGuessForViscosity -= E_D[0] * relax;
+                break;
+            }
+
+            default: {
+                throw std::logic_error("Not implemented!");
             }
         }
-        cout << "||E_D|| = " << E_D.norm() << "\n";
+        cout << "||E_D|| = " << E_D.norm() << "\nF = " << F <<  "\n";
+
+
         /******
          * output for testing with gnuplot visualization
          ******/
         FILE* file = fopen("out", "w");
+
 
 
         switch (problem) {
@@ -416,6 +524,22 @@ void Driver::solve_Burger() {
 
                 g.cmd("p[0:100][0:1]'out'u 1 w l,'out'u 2 w l,'out'u 3 w l");
                 break;
+            }
+
+            case Problem::MATCH_DATA_WITH_INITIAL: {
+
+                for (int i = 0; i < n; i++) {
+                    fprintf(file, "%le %le %le\n", double(i + 1) * double(n - i) * dx * dx, u0(i), u(i));
+                }
+
+                fclose(file);
+
+                g.cmd("p[0:100][0:1]'out'u 1 w l,'out'u 2 w l, 'out'u 3 w l");
+                break;
+            }
+
+            default: {
+                throw std::logic_error("Not implemented!");
             }
         }
 

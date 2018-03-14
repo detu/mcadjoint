@@ -1,11 +1,9 @@
-relax       0.1
+relax       0.01
 m           100
-q_per_dof   1
+q_per_dof   5
 nopt        500
-// matchfinal: find initial solution which matches the given final solution
-// sparsedataintitial: find initial solution which causes the burgers equation to match a given set of data
-problem     sparsedatainitial
-
-// Which sparse data to generate
-// alwayszero: constant zero sparse data
-sparsedata  alwayszero
+// matchfinalwithinitial: find initial solution which matches the given final solution
+// matchdatawithinitial: find initial solution which causes the burgers equation to match a given set of data
+// sparsedata:
+problem     matchdatawithinitial
+sparsedata  zerodiagonal

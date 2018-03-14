@@ -12,6 +12,8 @@
 
 const std::unordered_map<std::string, SparseData> SPARSE_DATA_FROM_DESCRIPTION = {
       {"alwayszero", SparseData::ALWAYS_ZERO},
+      {"hatpattern", SparseData::HAT_PATTERN},
+      {"zerodiagonal", SparseData::ZERO_DIAGONAL}
 };
 
 SparseData getSparseDataFromDescription(std::string description) {

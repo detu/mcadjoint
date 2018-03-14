@@ -14,6 +14,7 @@
 #include <cstring>
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
@@ -73,13 +74,23 @@ void Control::addPointer(string key, void* ptr, string val) {
  * read the control file
  */
 void Control::read() {
-    string key, val, dummy;
+    const static std::string comment = "//";
+    string key, val, dummy, line;
     ifstream file(_file.c_str());
     if (!file) {
         cout << "!! error opening file " << _file << endl;
     }
     while (file) {
+        const streampos posBeforeLine = file.tellg();
+        getline(file, line);
+        if (line.substr(0, comment.size()) == comment
+            || line.size() <= 1
+            || all_of(line.cbegin(), line.cend(), [](const char a) {return isspace(a); })) {
+            continue;
+        }
+        file.seekg(posBeforeLine);
         file >> key >> val;
+
         getline(file, dummy, '\n');
         addEntry(key, val + dummy);
     }
