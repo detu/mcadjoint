@@ -54,7 +54,7 @@ void Driver::solve_Burger() {
     // dx: meshwidth for 1D Burger
     const double dx = 1.0 / double(n);
     // dt: timestep for 1D Burger
-    const double dt = dx;
+    double dt = dx;
 
     RandomGeneral rand;
     Control control("control");
@@ -76,7 +76,6 @@ void Driver::solve_Burger() {
     int npar;
 
 
-    double currentGuessForViscosity = 0;
 
 
     switch (problem) {
@@ -88,8 +87,8 @@ void Driver::solve_Burger() {
 
         case Problem::MATCH_DATA_WITH_VISCOSITY: {
             npar = 1;
-            currentGuessForViscosity = 0.01;
-            dt
+            relax /= 10;
+            dt /= 1000;
             break;
         }
 
@@ -101,7 +100,7 @@ void Driver::solve_Burger() {
 
     cout << "Solving problem " << problemDescription << "\n";
 
-
+    double viscosity = 0;
     VectorXd b_loc(VectorXd::Zero(n)), u(VectorXd::Zero(n)), uo(VectorXd::Zero(n));
     MatrixXd A_dia(MatrixXd::Zero(n, n)), A_off(MatrixXd::Zero(n, n)), I_loc(MatrixXd::Identity(n, n)), P_off(
         MatrixXd::Zero(n, n)), w_off(n, n);
@@ -130,7 +129,11 @@ void Driver::solve_Burger() {
             break;
         }
 
-        case Problem::MATCH_DATA_WITH_VISCOSITY:
+        case Problem::MATCH_DATA_WITH_VISCOSITY: {
+            sparseData = getSparseDataFromDescription(sparseDataDescription);
+            viscosity = 1;
+            break;
+        }
         case Problem::MATCH_DATA_WITH_INITIAL: {
             sparseData = getSparseDataFromDescription(sparseDataDescription);
             break;
@@ -212,25 +215,20 @@ void Driver::solve_Burger() {
                         u(i) -= dt / dx * cc * 0.5 * uo(i + 1) * uo(i + 1);
                     }
 
-                    double secondDerivative = NAN;
-                    if (currentGuessForViscosity > 0) {
+                    double secondDerivative = 0;
+
+                    if (problem == Problem::MATCH_DATA_WITH_VISCOSITY) {
                         // Boundary conditions are zero dirichlet
-                        double gradientLeft;
-                        if (i > 0) {
-                            gradientLeft = (u(i) - u(i-1)) / dx;
+
+                        if (i == 0) {
+                            secondDerivative = (u(1) - 2 * u(0)) / (dx * dx);
+                        } else if (i == n-1) {
+                            secondDerivative = (-2 * u(n-1) + u(n-2)) / (dx * dx);
                         } else {
-                            gradientLeft = u(0) / dx;
+                            secondDerivative = (u(i+1) - 2 * u(i) - u(i-1)) / (dx * dx);
                         }
 
-                        double gradientRight;
-                        if (i < n-1) {
-                            gradientRight = (u(i+1) - u(i)) / dx;
-                        } else {
-                            gradientRight = -u(i) / dx;
-                        }
-
-                        secondDerivative = (gradientRight - gradientLeft) / dx;
-                        const double viscousTerm = secondDerivative * currentGuessForViscosity;
+                        const double viscousTerm = secondDerivative * viscosity;
                         u(i) += dt * viscousTerm;
                     }
                     /******
@@ -247,8 +245,8 @@ void Driver::solve_Burger() {
                         A_off(i + 1, i) = cc * dt / dx * u(i + 1);
                     }
 
-                    if (currentGuessForViscosity > 0) {
-                        const double viscousCorrection = currentGuessForViscosity * dt /(dx * dx);
+                    if (problem == Problem::MATCH_DATA_WITH_VISCOSITY) {
+                        const double viscousCorrection = viscosity * dt /(dx * dx);
                         if (i > 0) {
                             A_off(i-1, i) -= viscousCorrection;
                         }
@@ -408,9 +406,9 @@ void Driver::solve_Burger() {
                             }
 
                             case Problem::MATCH_DATA_WITH_VISCOSITY: {
-                                // we have just one parameter, the viscosity ==> c_loc is an n x 1 vector
-                                ASSERT(npar == 1);
-                                ASSERT(c_loc.cols() == 1);
+                                DBG_PEXPR(secondDerivative);
+                                DBG_PEXPR(dt);
+                                DBG_PEXPR(i);
                                 c_loc(i, 0) = -secondDerivative * dt;
                                 break;
                             }
@@ -469,9 +467,16 @@ void Driver::solve_Burger() {
                     if (jm == jm0) {
                         // this random walk has started just at this timestep
                         // do this only for the first step of random walk p
-                        alpha_k[p] = alpha_k0;                                  // initial c component of random walk p
+                        alpha_k[p] = alpha_k0;// initial c component of random walk p
+                        DBG_PEXPR(jpar);
+                        DBG_PEXPR(c_loc(alpha_k0, jpar));
                         W[p] = c_loc(alpha_k0, jpar) * double(n);            // initial W of random walk p. Here the birth probability is 1/n for all states
                         E_D[jpar] += W[p] * b_loc(alpha_k0);                // contribution to estimator
+                        DBG_PEXPR(W[p]);
+                        DBG_PEXPR(b_loc(alpha_k0));
+                        DBG_PEXPR(alpha_k0);
+                        DBG_PEXPR(p);
+                        ASSERT(!isnan(E_D[jpar]));
                     }
                     if (jm < m - 1) {                                         // do the following for time steps larger than jm0-1 and smaller than m-1
                         double r = rand.equal();                                // random column index
@@ -491,6 +496,8 @@ void Driver::solve_Burger() {
 
                         W[p] *= w_off(alpha_k[p], alpha_kp1);  // update W
                         E_D[jpar] += W[p] * b_loc(alpha_kp1);        // contribution to estimator
+                        ASSERT(!isnan(E_D[jpar]));
+
                         // advance state of
                         alpha_k[p] = alpha_kp1;                             // new row index becomes old column index
                     }
@@ -504,6 +511,7 @@ void Driver::solve_Burger() {
          * end of time step loop
          ******/
         E_D /= double(q / npar); // average estimator
+        ASSERT(!isnan(E_D[0]));
         DBG_PEXPR(E_D(0));
         // optimize by steepest descent
 
@@ -514,8 +522,8 @@ void Driver::solve_Burger() {
                 break;
             }
             case Problem::MATCH_DATA_WITH_VISCOSITY: {
-                currentGuessForViscosity -= E_D[0] * relax;
-                currentGuessForViscosity = max(0.0, currentGuessForViscosity);
+                viscosity -= E_D(0) * relax;
+                viscosity = max(viscosity, 0.0);
                 break;
             }
 
@@ -553,6 +561,7 @@ void Driver::solve_Burger() {
                 fclose(file);
 
                 g.cmd("p[0:100][0:1]'out'u 1 w l,'out'u 2 w l");
+                std::cout << "viscosity = " << viscosity << "\n";
                 break;
             }
 
