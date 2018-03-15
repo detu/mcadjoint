@@ -75,7 +75,7 @@ void Driver::solve_Burger() {
 
     int npar;
 
-
+    double viscosity = 0;
 
 
     switch (problem) {
@@ -87,8 +87,12 @@ void Driver::solve_Burger() {
 
         case Problem::MATCH_DATA_WITH_VISCOSITY: {
             npar = 1;
-            relax /= 10;
-            dt /= 1000;
+            //relax /= 10;
+            //dt /= 1000;
+            viscosity = 0.3;
+            if (viscosity > 0) {
+                dt = 0.5 * dx * dx * viscosity / 100;
+            }
             break;
         }
 
@@ -100,7 +104,6 @@ void Driver::solve_Burger() {
 
     cout << "Solving problem " << problemDescription << "\n";
 
-    double viscosity = 0;
     VectorXd b_loc(VectorXd::Zero(n)), u(VectorXd::Zero(n)), uo(VectorXd::Zero(n));
     MatrixXd A_dia(MatrixXd::Zero(n, n)), A_off(MatrixXd::Zero(n, n)), I_loc(MatrixXd::Identity(n, n)), P_off(
         MatrixXd::Zero(n, n)), w_off(n, n);
@@ -131,7 +134,6 @@ void Driver::solve_Burger() {
 
         case Problem::MATCH_DATA_WITH_VISCOSITY: {
             sparseData = getSparseDataFromDescription(sparseDataDescription);
-            viscosity = 1;
             break;
         }
         case Problem::MATCH_DATA_WITH_INITIAL: {
@@ -522,8 +524,12 @@ void Driver::solve_Burger() {
                 break;
             }
             case Problem::MATCH_DATA_WITH_VISCOSITY: {
+                const double oldViscosity = viscosity;
                 viscosity -= E_D(0) * relax;
                 viscosity = max(viscosity, 0.0);
+                if (viscosity > oldViscosity) {
+                    dt = 0.5 * dx * dx * viscosity / 100;
+                }
                 break;
             }
 
