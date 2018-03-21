@@ -1,0 +1,153 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{bm}
+\usepackage{hyperref}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+    
+    
+\DeclareMathOperator*{\argmin}{arg\,min}
+\newcommand*{\E}[1]{\ensuremath{\mathbb{E}\left[#1\right]}}
+\renewcommand*{\P}[2][]{\ensuremath{\mathbb{P}#1\left(#2\right)}}
+\newcommand*{\Var}[1]{\ensuremath{\text{Var}\left(#1\right)}}
+\newcommand*{\Cov}[2]{\ensuremath{\text{Cov}\left({#1}, {#2}\right)}}
+\newcommand*{\Corr}[1]{\ensuremath{\text{Corr}\left(#1\right)}}
+\newcommand*{\sd}[1]{\ensuremath{\sigma_{#1}}}
+\newcommand*{\card}[1]{\ensuremath{\lvert#1\rvert}}
+\newcommand*{\warn}[1]{\textcolor{OrangeRed}{#1}}
+\newcommand*{\important}[1]{\fcolorbox{BurntOrange}{BurntOrange!10!White}{\begin{varwidth}{\textwidth}
+#1
+\end{varwidth}}}
+\renewcommand*{\d}[1]{\ensuremath{\mathrm{d}#1}}
+\newcommand*{\dist}{\sim}
+\newcommand*{\reals}{\ensuremath{\mathbb{R}}}
+\newcommand*{\integers}{\ensuremath{\mathbb{Z}}}
+\newcommand*{\naturals}{\ensuremath{\mathbb{N}}}
+\newcommand*{\abs}[1]{\ensuremath{\left\lvert#1\right\rvert}}
+\newcommand*{\floor}[1]{\ensuremath{\lfloor#1\rfloor}}
+\newcommand*{\inclimg}[2][]{\begin{figure}[H]\centering\includegraphics[max width=0.9\textwidth,keepaspectratio]{#2}#1\end{figure}}
+\newcommand*{\diff}[2]{\ensuremath{\frac{\d}{\d{#2}}{#1}}}
+\newcommand*{\pdiff}[2]{\ensuremath{\frac{\partial}{\partial{#2}}{#1}}}
+
+\newcommand*{\mdiff}[3]{\ensuremath{\frac{\d{^{#3}}}{\d{#2}^{#3}}{#1}}}
+\newcommand*{\pmdiff}[3]{\ensuremath{\frac{\partial{^{#3}}}{\partial{#2}^{#3}}{#1}}}
+
+\newcommand*{\at}[1]{\ensuremath{\biggr\rvert_{#1}}}
+\renewcommand*{\i}{\ensuremath{\text{i}}}
+\newcommand{\distlike}{\ensuremath{\sim}}
+\newcommand{\normaldist}[2]{\ensuremath{\mathcal{N}\left(#1, #2\right)}}
+\newcommand{\asnormaldist}[2]{\distlike\normaldist{#1}{#2}}
+\renewcommand*{\vec}[1]{\ensuremath{{\bm{#1}}}}
+\newcommand*{\mat}[1]{\vec{#1}}
+\newcommand*{\transpose}[1]{{#1}^{\mkern-1.5mu\mathsf{T}}}
+\newcommand*{\invert}[1]{{#1}^{-1}}
+\newcommand*{\tvec}[1]{\transpose{\vec{#1}}}
+\newcommand*{\tmat}[1]{\tvec{#1}}
+\newcommand*{\rgramian}[1]{{#1}\transpose{#1}}
+\newcommand*{\lgramian}[1]{\transpose{#1}{#1}}
+\newcommand*{\indicator}[1]{\ensuremath{\mathbb{1}\left\{#1\right\}}}
+\newcommand*{\invmat}[1]{\ensuremath{\invert{\mat{#1}}}}
+\newcommand*{\iprod}[3]{\ensuremath{\ifstrempty{#1}{\transpose{#2} {#3}}{\transpose{#1} {#2} {#3}}}}
+\newcommand*{\ciprod}[2]{\ensuremath{\left\langle{#1},{#2}\right\rangle}}
+\newcommand*{\miprod}[2]{\iprod{#1}{#2}{#1}}
+\newcommand*{\enm}[1]{\left\langle{#1}\right\rangle}
+\newcommand*{\grad}{\mathrm{grad}}
+\renewcommand*{\div}{\mathrm{div}}
+\newcommand*{\bigO}[1]{\ensuremath{\mathcal{O}\left({#1}\right)}}
+\begin{document}
+
+\title{Report for the semester thesis ``Development of a Monte Carlo algorithm for optimal control problems''}
+
+\author{\IEEEauthorblockN{Stefano Weidmann}
+\IEEEauthorblockA{\textit{Institute of fluid dynamics} \\
+\textit{ETH Zurich}\\
+Zurich, Switzerland \\
+\href{mailto:stefanow@student.ethz.ch}{stefanow@student.ethz.ch}}}
+%\and
+%\IEEEauthorblockN{2\textsuperscript{nd} Given Name Surname}
+%\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+%\textit{name of organization (of Aff.)}\\
+%City, Country \\
+%email address}
+%\and
+%\IEEEauthorblockN{3\textsuperscript{rd} Given Name Surname}
+%\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+%\textit{name of organization (of Aff.)}\\
+%City, Country \\
+%email address}
+%\and
+%\IEEEauthorblockN{4\textsuperscript{th} Given Name Surname}
+%\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+%\textit{name of organization (of Aff.)}\\
+%City, Country \\
+%email address}
+%\and
+%\IEEEauthorblockN{5\textsuperscript{th} Given Name Surname}
+%\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+%\textit{name of organization (of Aff.)}\\
+%City, Country \\
+%email address}
+%\and
+%\IEEEauthorblockN{6\textsuperscript{th} Given Name Surname}
+%\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+%\textit{name of organization (of Aff.)}\\
+%City, Country \\
+%email address}
+%}
+
+\maketitle
+
+\begin{abstract}
+This document is a model and instructions for \LaTeX.
+This and the IEEEtran.cls file define the components of your paper [title, text, heads, etc.]. *CRITICAL: Do Not Use Symbols, Special Characters, Footnotes, 
+or Math in Paper Title or Abstract.
+\end{abstract}
+
+\begin{IEEEkeywords}
+a, b, c
+\end{IEEEkeywords}
+
+\section{Problem description}
+We model a cross section of an oil field as a two dimensional square $\Omega := [0, 1]^2.$ In the oilfield, there are two phases: water and oil. 
+At the lower left corner $(0, 0)$, we know the pressure $p(t)$. Opposite of that, at $(1, 1)$ a well is located.
+There we can measure the pressure $p_\text{well}(t)$ as well as the volumetric outflow ${Q}_\text{well}(t)$ per unit area.
+
+The flow rates for both phases are described by Darcy's law
+\begin{equation}
+\label{flowrateWater}
+\vec{q}_\text{w} = -\frac{k k_\text{rel, w}}{\mu_\text{w}} \grad(p),
+\end{equation}
+for water and
+\begin{equation}
+\label{flowrateOil}
+\vec{q}_\text{o} = -\frac{k k_\text{rel, o}}{\mu_\text{o}} \grad(p)
+\end{equation}
+for oil.
+Here, $p(\vec{x}, t)$ is the pressure, $\mu_\text{o}$,$\mu_\text{w}$ are dynamic viscosities for oil and water, $k(\vec{x}, t)$ is the permeability.
+$k_\text{rel, o}(S)$,$k_\text{rel, w}(S)$ are relative permeabilities and depend quadratically on the saturation of water $S \in [0, 1]$:
+\begin{align}
+k_\text{rel, o} &= (1 -S)^2\\
+k_\text{rel, w} &= S^2.
+\end{align}
+
+$\vec{q}_\text{o}(\vec{x}, t)$, $\vec{q}_\text{o}(\vec{x}, t)$ finally are the volumetric flow rates per unit area.
+
+The saturation $S$ is not assumed constant but instead is transported according to the equation
+\begin{equation}
+\label{stransp}
+\pdiff{\phi S}{t} + \div(\vec{q}_\text{w}) = Q_\text{well}\delta(\vec{x} - \begin{pmatrix}1\\1\end{pmatrix})
+\end{equation}
+
+The saturation 
+\begin{equation}
+\vec{q}_\text{tot}(, t) \overset{!}{=} q_\text{well}(t).
+\end{equation} 
+
+
+\end{document}

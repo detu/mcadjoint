@@ -1,11 +1,11 @@
 relax       0.01
 m           100
-q_per_dof   5
-nopt        1000
+q_per_dof   1
+nopt        10000
 // matchfinalwithinitial: find initial solution which matches the given final solution
 // matchdatawithinitial: find initial solution which causes the burgers equation to match a given set of data
 // matchdatawithviscosity
-problem     matchdatawithviscosity
+problem     matchdatawithinitial
 
 // which sparse data to use
 // zerodiagonal: zero prescribed on the diagonal of the space-time matrix
@@ -19,4 +19,4 @@ problem     matchdatawithviscosity
 //  |* 1 * * * 1 *
 //  +---------------> x
 // linearoffdiagonal: linear on an offdiagonal of the space-time matrix
-sparsedata  zerodiagonal
+sparsedata  linearoffdiagonal

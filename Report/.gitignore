@@ -1,0 +1,6 @@
+*.mod
+build/
+*.o
+thermoclinestorage
+*.dSYM
+
