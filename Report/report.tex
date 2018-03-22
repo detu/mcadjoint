@@ -13,6 +13,10 @@
     
     
 \DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\grad}{grad}
+\let\div\undefined
+\DeclareMathOperator*{\div}{div}
+
 \newcommand*{\E}[1]{\ensuremath{\mathbb{E}\left[#1\right]}}
 \renewcommand*{\P}[2][]{\ensuremath{\mathbb{P}#1\left(#2\right)}}
 \newcommand*{\Var}[1]{\ensuremath{\text{Var}\left(#1\right)}}
@@ -57,8 +61,8 @@
 \newcommand*{\ciprod}[2]{\ensuremath{\left\langle{#1},{#2}\right\rangle}}
 \newcommand*{\miprod}[2]{\iprod{#1}{#2}{#1}}
 \newcommand*{\enm}[1]{\left\langle{#1}\right\rangle}
-\newcommand*{\grad}{\mathrm{grad}}
-\renewcommand*{\div}{\mathrm{div}}
+%\newcommand*{\grad}{\mathrm{grad}}
+%\renewcommand*{\div}{\mathrm{div}}
 \newcommand*{\bigO}[1]{\ensuremath{\mathcal{O}\left({#1}\right)}}
 \begin{document}
 
@@ -116,38 +120,83 @@ a, b, c
 \section{Problem description}
 We model a cross section of an oil field as a two dimensional square $\Omega := [0, 1]^2.$ In the oilfield, there are two phases: water and oil. 
 At the lower left corner $(0, 0)$, we know the pressure $p(t)$. Opposite of that, at $(1, 1)$ a well is located.
-There we can measure the pressure $p_\text{well}(t)$ as well as the volumetric outflow ${Q}_\text{well}(t)$ per unit area.
+There we can measure the pressure $p_\text{well}(t)$ as well as the volumetric outflow ${Q}_\text{o}(t)$, ${Q}_\text{w}(t)$ per unit depth.
 
 The flow rates for both phases are described by Darcy's law
 \begin{equation}
 \label{flowrateWater}
-\vec{q}_\text{w} = -\frac{k k_\text{rel, w}}{\mu_\text{w}} \grad(p),
+\vec{v}_\text{w} = -\frac{k k_\text{rel, w}}{\mu_\text{w}} \grad(p),
 \end{equation}
 for water and
 \begin{equation}
 \label{flowrateOil}
-\vec{q}_\text{o} = -\frac{k k_\text{rel, o}}{\mu_\text{o}} \grad(p)
+\vec{v}_\text{o} = -\frac{k k_\text{rel, o}}{\mu_\text{o}} \grad(p)
 \end{equation}
 for oil.
-Here, $p(\vec{x}, t)$ is the pressure, $\mu_\text{o}$,$\mu_\text{w}$ are dynamic viscosities for oil and water, $k(\vec{x}, t)$ is the permeability.
-$k_\text{rel, o}(S)$,$k_\text{rel, w}(S)$ are relative permeabilities and depend quadratically on the saturation of water $S \in [0, 1]$:
+Here, $p(\vec{x}, t)$ is the pressure, $\mu_\text{o}$, $\mu_\text{w}$ are dynamic viscosities for oil and water, $k(\vec{x}, t)$ is the permeability.
+$k_\text{rel, o}(S)$, $k_\text{rel, w}(S)$ are relative permeabilities and are assumed to depend quadratically on the saturation of water $S_\text{w} \in [0, 1]$ and the saturation of oil $S_\text{o} \in [0, 1]$:
 \begin{align}
-k_\text{rel, o} &= (1 -S)^2\\
-k_\text{rel, w} &= S^2.
+k_\text{rel, o} &= S_\text{o}^2\\
+k_\text{rel, w} &= S_\text{w}^2.
 \end{align}
+The saturations are linked by the constitutive relation
+\begin{equation}
+S_\text{o} + S_\text{w} = 1.
+\end{equation}
 
-$\vec{q}_\text{o}(\vec{x}, t)$, $\vec{q}_\text{o}(\vec{x}, t)$ finally are the volumetric flow rates per unit area.
+$\vec{v}_\text{o}(\vec{x}, t)$, $\vec{v}_\text{w}(\vec{x}, t)$ finally are the volumetric flow rates per unit area (Darcy velocities).
 
 The saturation $S$ is not assumed constant but instead is transported according to the equation
 \begin{equation}
 \label{stransp}
-\pdiff{\phi S}{t} + \div(\vec{q}_\text{w}) = Q_\text{well}\delta(\vec{x} - \begin{pmatrix}1\\1\end{pmatrix})
+\pdiff{\phi S_\text{w}}{t} + \div(\vec{v}_\text{w}) = q_\text{w}.
+\end{equation}
+The term
+\begin{equation}
+q_\text{w} := Q_\text{w}\delta(\vec{x} - \begin{pmatrix}1\\1\end{pmatrix})
+\end{equation}
+describes a line sink of water located at the well.
+Similarly, we use
+\begin{align}
+q_\text{o} &:= Q_\text{o}\delta(\vec{x} - \begin{pmatrix}1\\1\end{pmatrix}) \\
+q_\text{tot} &:= q_\text{o} + q_\text{w}.
+\end{align}
+
+Conservation of the total mass then reads
+\begin{equation}
+\label{conservationOfMass}
+\div(\vec{v}_\text{tot}) = q_\text{tot},
+\end{equation}
+where
+\begin{equation}
+\vec{v}_\text{tot} := \vec{v}_\text{o} + \vec{v}_\text{w}
+\end{equation}
+is the total Darcy velocity.
+
+We then introduce some additional simplifications:
+We set
+\begin{equation}
+\mu_\text{w} {=} \mu_\text{o} =: \mu,
+\end{equation}
+and introduce the abbreviations
+\begin{align}
+\label{lambdas}
+\lambda_\text{o} &:= \frac{k k_\text{rel, o}}{\mu_\text{o}} \\
+\lambda_\text{w} &:= \frac{k k_\text{rel, w}}{\mu_\text{w}} \\
+\lambda_\text{tot} &:= \lambda_\text{o} + \lambda_\text{w}.
+\end{align}
+
+Substituting in the $\lambda$ from \eqref{lambdas} into Darcy's law \eqref{flowrateOil}, \eqref{flowrateWater} and adding both sides of the results we get the total Darcy's law
+\begin{equation}
+\label{flowrateTotal}
+\vec{v}_\text{tot} = - \lambda_\text{tot} \grad(p).
 \end{equation}
 
-The saturation 
+Plugging this \eqref{flowrateTotal} into the conservation of mass \eqref{conservationOfMass} leads to the pressure equation
 \begin{equation}
-\vec{q}_\text{tot}(, t) \overset{!}{=} q_\text{well}(t).
-\end{equation} 
+\div(\lambda_\text{tot}\grad(p)) = q_\text{tot}.
+\end{equation}
+
 
 
 \end{document}
