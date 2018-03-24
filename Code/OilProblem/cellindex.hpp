@@ -17,10 +17,6 @@ struct CellIndex {
         NORTH = 0, EAST = 1, WEST = 2, SOUTH = 3
     };
 
-    constexpr static int FIRST_DIRECTION = 0;
-    constexpr static int LAST_DIRECTION = 3;
-
-
     template <typename Derived>
     Real& operator()(Eigen::MatrixBase<Derived>& expression) const {
         return expression(i, j);

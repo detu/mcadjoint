@@ -16,4 +16,6 @@ CellIndex pressureToTransmissibilityIndex(
 
 SparseMatrix assembleTransmissibilityMatrix(ConstMatrixRef lambdas);
 
+Matrix solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstMatrixRef sources);
+
 #endif //STEFCOMMONHEADERS_OILPROBLEM_HPP
