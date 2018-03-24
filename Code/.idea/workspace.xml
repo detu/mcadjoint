@@ -13,12 +13,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f12b3f9c-0694-4c6d-9598-0f0d14f40053" name="Default" comment="">
+      <change beforePath="" afterPath="$PROJECT_DIR$/OilProblem/thirdParty/stefcommonheaders" />
       <change beforePath="" afterPath="$PROJECT_DIR$/thirdParty/stefcommonheaders/Makefile" />
       <change beforePath="" afterPath="$PROJECT_DIR$/thirdParty/stefcommonheaders/cmake_install.cmake" />
+      <change beforePath="$PROJECT_DIR$/../.gitmodules" afterPath="$PROJECT_DIR$/../.gitmodules" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/thirdParty/stefcommonheaders" afterPath="$PROJECT_DIR$/thirdParty/stefcommonheaders" />
-      <change beforePath="$PROJECT_DIR$/../Run/control" afterPath="$PROJECT_DIR$/../Run/control" />
-      <change beforePath="$PROJECT_DIR$/../Run/out" afterPath="$PROJECT_DIR$/../Run/out" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/../Build/Debug/" />
@@ -34,12 +35,12 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Release" />
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="driverBurger.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/driverBurger.cpp">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="241">
-              <caret line="525" column="54" lean-forward="true" selection-start-line="525" selection-start-column="54" selection-end-line="525" selection-end-column="54" />
+              <caret line="525" column="54" lean-forward="false" selection-start-line="525" selection-start-column="54" selection-end-line="525" selection-end-column="54" />
               <folding>
                 <element signature="e#139#158#0" expanded="true" />
               </folding>
@@ -62,7 +63,7 @@
       <file leaf-file-name="DenseCoeffsBase.h" pinned="false" current-in-tab="false">
         <entry file="file:///opt/local/include/eigen3/Eigen/src/Core/DenseCoeffsBase.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="922">
+            <state relative-caret-position="6360">
               <caret line="424" column="0" lean-forward="false" selection-start-line="424" selection-start-column="0" selection-end-line="424" selection-end-column="0" />
               <folding />
             </state>
@@ -72,7 +73,7 @@
       <file leaf-file-name="sparseDataSelection.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sparseDataSelection.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
+            <state relative-caret-position="240">
               <caret line="16" column="59" lean-forward="false" selection-start-line="16" selection-start-column="59" selection-end-line="16" selection-end-column="59" />
               <folding />
             </state>
@@ -92,7 +93,7 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
+            <state relative-caret-position="225">
               <caret line="15" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
               <folding />
             </state>
@@ -114,7 +115,7 @@
       <file leaf-file-name="control.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/control.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="922">
+            <state relative-caret-position="1305">
               <caret line="87" column="90" lean-forward="false" selection-start-line="87" selection-start-column="90" selection-end-line="87" selection-end-column="90" />
               <folding>
                 <element signature="e#170#190#0" expanded="true" />
@@ -126,7 +127,7 @@
       <file leaf-file-name="basic_string.h" pinned="false" current-in-tab="false">
         <entry file="file:///opt/local/include/gcc7/c++/bits/basic_string.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="46005">
+            <state relative-caret-position="94995">
               <caret line="6333" column="4" lean-forward="false" selection-start-line="6333" selection-start-column="4" selection-end-line="6333" selection-end-column="4" />
               <folding />
             </state>
@@ -307,6 +308,7 @@
       <workItem from="1520195636553" duration="24387000" />
       <workItem from="1520628214381" duration="16984000" />
       <workItem from="1521019957782" duration="7480000" />
+      <workItem from="1521895469340" duration="231000" />
     </task>
     <task id="LOCAL-00001" summary="More comments">
       <created>1520258218178</created>
@@ -319,17 +321,15 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="51196000" />
+    <option name="totallyTimeSpent" value="51427000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="796" extended-state="6" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19483939" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19459888" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.327551" sideWeight="0.33836377" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3281027" sideWeight="0.48848292" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.43509272" sideWeight="0.6425735" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32952926" sideWeight="0.48768863" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.43509272" sideWeight="0.35742652" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -337,10 +337,12 @@
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39942938" sideWeight="0.471803" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.327551" sideWeight="0.33836377" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32952926" sideWeight="0.48768863" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -389,7 +391,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
           <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -514,7 +515,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
           <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -604,7 +604,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="232">
           <caret line="71" column="20" lean-forward="false" selection-start-line="71" selection-start-column="11" selection-end-line="71" selection-end-column="20" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -612,13 +611,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file:///opt/local/include/gcc7/c++/bits/basic_string.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="46005">
+        <state relative-caret-position="94995">
           <caret line="6333" column="4" lean-forward="false" selection-start-line="6333" selection-start-column="4" selection-end-line="6333" selection-end-column="4" />
           <folding />
         </state>
@@ -626,7 +624,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/control.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="922">
+        <state relative-caret-position="1305">
           <caret line="87" column="90" lean-forward="false" selection-start-line="87" selection-start-column="90" selection-end-line="87" selection-end-column="90" />
           <folding>
             <element signature="e#170#190#0" expanded="true" />
@@ -636,7 +634,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
+        <state relative-caret-position="225">
           <caret line="15" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
           <folding />
         </state>
@@ -652,7 +650,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/sparseDataSelection.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
+        <state relative-caret-position="240">
           <caret line="16" column="59" lean-forward="false" selection-start-line="16" selection-start-column="59" selection-end-line="16" selection-end-column="59" />
           <folding />
         </state>
@@ -660,7 +658,7 @@
     </entry>
     <entry file="file:///opt/local/include/eigen3/Eigen/src/Core/DenseCoeffsBase.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="922">
+        <state relative-caret-position="6360">
           <caret line="424" column="0" lean-forward="false" selection-start-line="424" selection-start-column="0" selection-end-line="424" selection-end-column="0" />
           <folding />
         </state>
@@ -697,7 +695,7 @@
     <entry file="file://$PROJECT_DIR$/driverBurger.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="241">
-          <caret line="525" column="54" lean-forward="true" selection-start-line="525" selection-start-column="54" selection-end-line="525" selection-end-column="54" />
+          <caret line="525" column="54" lean-forward="false" selection-start-line="525" selection-start-column="54" selection-end-line="525" selection-end-column="54" />
           <folding>
             <element signature="e#139#158#0" expanded="true" />
           </folding>

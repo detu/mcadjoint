@@ -1,3 +1,6 @@
 [submodule "Code/thirdParty/stefcommonheaders"]
 	path = Code/thirdParty/stefcommonheaders
 	url = https://HansiMeier@bitbucket.org/HansiMeier/stefcommonheaders.git
+[submodule "Code/OilProblem/thirdParty/stefcommonheaders"]
+	path = Code/OilProblem/thirdParty/stefcommonheaders
+	url = https://HansiMeier@bitbucket.org/HansiMeier/stefcommonheaders.git
