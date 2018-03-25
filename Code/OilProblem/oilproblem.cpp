@@ -35,7 +35,7 @@ SparseMatrix assembleTransmissibilityMatrix(ConstMatrixRef lambdas) {
 
 
 
-    transmissibilities.reserve(Eigen::VectorXi::Constant(numberOfPairs, 4));
+    transmissibilities.reserve(Eigen::VectorXi::Constant(numberOfPairs, 5));
 
     CellIndex currentPressureCell = {0, 0};
 
