@@ -40,6 +40,15 @@ struct CellIndex {
     }
 
 
+    inline bool operator==(const CellIndex& other) {
+        return i == other.i && j == other.j;
+    }
+
+    inline bool operator!=(const CellIndex& other) {
+        return !(*this == other);
+    }
+
+
 
     inline CellIndex neighbor(const Direction direction) const {
         switch (direction) {

@@ -17,6 +17,7 @@ using MatrixRef = Eigen::Ref<Matrix>;
 using ConstMatrixRef = const Eigen::Ref<const Matrix>;
 
 using SparseMatrix = Eigen::SparseMatrix<Real, Eigen::ColMajor>;
+using SparseVector = Eigen::SparseVector<Real>;
 
 
 

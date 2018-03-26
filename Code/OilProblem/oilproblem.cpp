@@ -23,15 +23,18 @@ CellIndex pressureToTransmissibilityIndex(
     return {fromCell.linearIndex(numberOfRows), toCell.linearIndex(numberOfRows)};
 }
 
-SparseMatrix assembleTransmissibilityMatrix(ConstMatrixRef lambdas) {
+
+
+AssemblyOutput assembleTransmissibilityMatrix(ConstMatrixRef lambdas, const double pressureAtWell) {
 
     // TRANS MATRIX SINGULAR
-    const long numberOfRows = lambdas.rows();
-    const long numberOfCols = lambdas.cols();
+    const int numberOfRows = int(lambdas.rows());
+    const int numberOfCols = int(lambdas.cols());
 
 
     const long numberOfPairs = numberOfCols * numberOfCols;
-    SparseMatrix transmissibilities(numberOfPairs, numberOfPairs);
+    AssemblyOutput output {SparseMatrix(numberOfPairs-1, numberOfPairs-1), SparseVector(numberOfPairs-1)};
+    SparseMatrix transmissibilities;
 
 
 
@@ -39,8 +42,10 @@ SparseMatrix assembleTransmissibilityMatrix(ConstMatrixRef lambdas) {
 
     CellIndex currentPressureCell = {0, 0};
 
+    const CellIndex wellCellIndex = {0, numberOfCols-1};
 
-    // TODO Make pressure matrix regular
+
+
     for (currentPressureCell.j = 0; currentPressureCell.j < numberOfCols; ++currentPressureCell.j) {
         for (currentPressureCell.i = 0; currentPressureCell.i < numberOfRows; ++currentPressureCell.i) {
 
@@ -62,9 +67,15 @@ SparseMatrix assembleTransmissibilityMatrix(ConstMatrixRef lambdas) {
                 const CellIndex neighborToMe = meToNeighbor.transpose();
 
                 const Real currentTransmissibility = computeTransmissibility(lambdas, currentPressureCell, neighbor);
-                meToMyself(transmissibilities) += currentTransmissibility;
                 neighborToThemselves(transmissibilities) += currentTransmissibility;
                 meToNeighbor(transmissibilities) -= currentTransmissibility;
+
+                const bool iAmTheCellAtTheWell = currentPressureCell == wellCellIndex;
+
+                if (iAmTheCellAtTheWell) {
+                    meToMyself(transmissibilities) = 1;
+                }
+                meToMyself(transmissibilities) += currentTransmissibility;
                 neighborToMe(transmissibilities) -= currentTransmissibility;
             }
         }
