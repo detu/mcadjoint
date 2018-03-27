@@ -7,22 +7,28 @@
 
 #include "typedefs.hpp"
 #include "cellindex.hpp"
+
+#if !defined(__GNUC__) && !defined(__attribute__)
+    #define __attribute__(ignored)
+#endif
+
+__attribute__((pure))
 Real computeTransmissibility(ConstMatrixRef lambdas, const CellIndex& fromCell, const CellIndex& toCell);
 
+
+__attribute__((pure))
 CellIndex pressureToTransmissibilityIndex(
       const CellIndex& fromCell,
       const CellIndex& toCell,
-      const long numberOfRows);
+      const int numberOfRows);
 
 
-struct AssemblyOutput {
-    SparseMatrix transmissibilities;
-    SparseVector rhsCorrection;
-};
+__attribute__((pure))
+SparseMatrix assembleTransmissibilityMatrix(ConstMatrixRef lambdas);
 
-AssemblyOutput assembleTransmissibilityMatrix(ConstMatrixRef lambdas);
 
-Matrix solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstMatrixRef sources);
+__attribute__((pure))
+VectorToBeMappedAsMatrix solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstMatrixRef sources);
 
 
 

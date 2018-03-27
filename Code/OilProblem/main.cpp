@@ -7,7 +7,7 @@
 
 int main() {
     std::cout << "Test transmission matrix\n------------------------\n";
-    const int n = 5;
+    const int n = 20;
     std::cout << "n = " << n << "\n";
 
     Matrix lambdas(n, n);
@@ -15,7 +15,9 @@ int main() {
     lambdas.setRandom();
     lambdas.array() += 5;
 
-    std::cout << "lambdas = \n" << lambdas << "\n";
+    if (n <= 10) {
+        std::cout << "lambdas = \n" << lambdas << "\n";
+    }
 
     const Matrix transmissibilities = assembleTransmissibilityMatrix(lambdas);
 
@@ -24,8 +26,13 @@ int main() {
                   / svd.singularValues()(svd.singularValues().size()-1);
 
     std::cout << "cond = " << cond << "\n";
-    std::cout << "transmissibilities = \n" << transmissibilities;
+    std::cout << "eigenvalues = " << transmissibilities.eigenvalues() << "\n";
 
+    if (n <= 10) {
+        std::cout << "transmissibilities = \n" << transmissibilities;
+    } else {
+        std::cout << "too big, don't display transmissibilities\n";
+    }
     return 0;
 }
 

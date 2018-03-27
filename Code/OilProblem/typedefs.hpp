@@ -16,9 +16,26 @@ using Matrix = Eigen::Matrix<Real, Eigen::Dynamic, Eigen::Dynamic>;
 using MatrixRef = Eigen::Ref<Matrix>;
 using ConstMatrixRef = const Eigen::Ref<const Matrix>;
 
-using SparseMatrix = Eigen::SparseMatrix<Real, Eigen::ColMajor>;
 using SparseVector = Eigen::SparseVector<Real>;
 
+
+struct VectorToBeMappedAsMatrix {
+    Vector vec;
+    Eigen::Map<Matrix> map;
+
+    inline VectorToBeMappedAsMatrix(Vector&& input, const int matrixRows, const int matrixCols):
+          vec(input), map(vec.data(), matrixRows, matrixCols) {}
+};
+
+#ifdef USE_PARDISO
+#include <Eigen/PardisoSupport>
+using SparseMatrix = Eigen::SparseMatrix<Real, Eigen::RowMajor>;
+using SparseSolver = Eigen::PardisoLU<SparseMatrix>;
+#else
+using SparseMatrix = Eigen::SparseMatrix<Real, Eigen::ColMajor>;
+using SparseSolver = Eigen::SparseLU<SparseMatrix>;
+
+#endif
 
 
 #endif //STEFCOMMONHEADERS_TYPEDEFS_HPP

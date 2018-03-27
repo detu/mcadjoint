@@ -8,6 +8,10 @@
 #include "typedefs.hpp"
 #include <array>
 
+#if !defined(__GNUC__) && !defined(__attribute__)
+    #define __attribute__(ignored)
+#endif
+
 struct CellIndex {
     int i;
     int j;
@@ -16,6 +20,7 @@ struct CellIndex {
     enum class Direction {
         NORTH = 0, EAST = 1, WEST = 2, SOUTH = 3
     };
+
 
     template <typename Derived>
     Real& operator()(Eigen::MatrixBase<Derived>& expression) const {
@@ -40,11 +45,11 @@ struct CellIndex {
     }
 
 
-    inline bool operator==(const CellIndex& other) {
+    inline bool operator==(const CellIndex& other) const {
         return i == other.i && j == other.j;
     }
 
-    inline bool operator!=(const CellIndex& other) {
+    inline bool operator!=(const CellIndex& other) const {
         return !(*this == other);
     }
 
