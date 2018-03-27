@@ -4,15 +4,14 @@ project(OilProblem LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+
 include("thirdParty/stefcommonheaders/CMakeLists.txt")
 include(cotire)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}")
 
-
-
 set(baseLibHeaders control.h gnuplot_i.h utils.hpp)
 set(baseLibSources control.cpp gnuplot_i.cpp utils.cpp)
-set(oilLibHeaders oilproblem.hpp typedefs.hpp cellindex.hpp)
+set(oilLibHeaders oilproblem.hpp typedefs.hpp cellindex.hpp pressureInternal.hpp)
 set(oilLibSources pressure.cpp)
 set(mainSources main.cpp)
 set(testSources test.cpp)

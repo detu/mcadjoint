@@ -70,7 +70,7 @@ void testPressurePoisson() {
         }
     }
 
-    std::cout << "error = " << error << "\n";
+    //std::cout << "error = " << error << "\n";
     TEST_CHECK(error < 1e-5);
 }
 

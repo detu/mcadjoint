@@ -16,11 +16,6 @@ __attribute__((pure))
 Real computeTransmissibility(ConstMatrixRef lambdas, const CellIndex& fromCell, const CellIndex& toCell);
 
 
-__attribute__((pure))
-CellIndex pressureToTransmissibilityIndex(
-      const CellIndex& fromCell,
-      const CellIndex& toCell,
-      const int numberOfRows);
 
 
 __attribute__((pure))

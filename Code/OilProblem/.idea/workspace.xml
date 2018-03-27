@@ -25,14 +25,14 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Release" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="403">
-              <caret line="31" column="25" lean-forward="false" selection-start-line="31" selection-start-column="25" selection-end-line="31" selection-end-column="25" />
+            <state relative-caret-position="-47">
+              <caret line="0" column="34" lean-forward="false" selection-start-line="0" selection-start-column="34" selection-end-line="0" selection-end-column="34" />
               <folding />
             </state>
           </provider>
@@ -41,8 +41,8 @@
       <file leaf-file-name="test.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="463">
-              <caret line="73" column="0" lean-forward="false" selection-start-line="73" selection-start-column="0" selection-end-line="73" selection-end-column="0" />
+            <state relative-caret-position="850">
+              <caret line="72" column="6" lean-forward="false" selection-start-line="72" selection-start-column="6" selection-end-line="72" selection-end-column="6" />
               <folding>
                 <element signature="e#51#71#0" expanded="true" />
                 <element signature="e#2097#2279#0" expanded="true" />
@@ -51,34 +51,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FindMKL.cmake" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/FindMKL.cmake">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-331">
-              <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PardisoSupport.h" pinned="false" current-in-tab="false">
-        <entry file="file:///opt/local/include/eigen3/Eigen/src/PardisoSupport/PardisoSupport.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="178">
-              <caret line="268" column="0" lean-forward="false" selection-start-line="268" selection-start-column="0" selection-end-line="268" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pressure.cpp" pinned="false" current-in-tab="false">
+      <file leaf-file-name="pressure.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pressure.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="183">
-              <caret line="111" column="0" lean-forward="false" selection-start-line="111" selection-start-column="0" selection-end-line="111" selection-end-column="0" />
+            <state relative-caret-position="-44">
+              <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
               <folding>
-                <element signature="e#208#253#0" expanded="true" />
+                <element signature="e#51#76#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pressureInternal.hpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pressureInternal.hpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="150">
+              <caret line="10" column="14" lean-forward="false" selection-start-line="10" selection-start-column="14" selection-end-line="10" selection-end-column="14" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -95,11 +85,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="typedefs.hpp" pinned="false" current-in-tab="true">
+      <file leaf-file-name="typedefs.hpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/typedefs.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="30" column="0" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+            <state relative-caret-position="228">
+              <caret line="32" column="13" lean-forward="false" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
               <folding>
                 <element signature="e#129#152#0" expanded="true" />
                 <element signature="e#979#1095#0" expanded="true" />
@@ -125,10 +115,11 @@
       <file leaf-file-name="oilproblem.hpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/oilproblem.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="363">
-              <caret line="30" column="24" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="24" />
+            <state relative-caret-position="270">
+              <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
               <folding>
                 <element signature="e#134#157#0" expanded="true" />
+                <element signature="e#238#268#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -162,13 +153,14 @@
         <option value="$PROJECT_DIR$/pressureProblem.cpp" />
         <option value="$PROJECT_DIR$/oilproblem.cpp" />
         <option value="$PROJECT_DIR$/cellindex.hpp" />
-        <option value="$PROJECT_DIR$/oilproblem.hpp" />
         <option value="$PROJECT_DIR$/main.cpp" />
-        <option value="$PROJECT_DIR$/pressure.cpp" />
-        <option value="$PROJECT_DIR$/test.cpp" />
-        <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/FindMKL.cmake" />
         <option value="$PROJECT_DIR$/typedefs.hpp" />
+        <option value="$PROJECT_DIR$/oilproblem.hpp" />
+        <option value="$PROJECT_DIR$/pressure.cpp" />
+        <option value="$PROJECT_DIR$/pressureInternal.hpp" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/test.cpp" />
       </list>
     </option>
   </component>
@@ -290,12 +282,12 @@
       <workItem from="1521895541932" duration="15739000" />
       <workItem from="1522081211266" duration="1271000" />
       <workItem from="1522136613319" duration="2395000" />
-      <workItem from="1522139206374" duration="6902000" />
+      <workItem from="1522139206374" duration="9008000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="26307000" />
+    <option name="totallyTimeSpent" value="28413000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="460" y="159" width="1280" height="796" extended-state="0" />
@@ -355,7 +347,7 @@
         <state relative-caret-position="1290">
           <caret line="86" column="41" lean-forward="false" selection-start-line="86" selection-start-column="41" selection-end-line="86" selection-end-column="41" />
           <folding>
-            <element signature="e#208#253#0" expanded="true" />
+            <element signature="e#51#76#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -399,6 +391,7 @@
           <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
           <folding>
             <element signature="e#134#157#0" expanded="true" />
+            <element signature="e#238#268#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -486,6 +479,7 @@
           <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
           <folding>
             <element signature="e#134#157#0" expanded="true" />
+            <element signature="e#238#268#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -557,6 +551,7 @@
           <caret line="22" column="14" lean-forward="false" selection-start-line="22" selection-start-column="14" selection-end-line="22" selection-end-column="14" />
           <folding>
             <element signature="e#134#157#0" expanded="true" />
+            <element signature="e#238#268#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -591,6 +586,7 @@
           <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
           <folding>
             <element signature="e#134#157#0" expanded="true" />
+            <element signature="e#238#268#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -612,13 +608,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.cpp">
+    <entry file="file:///opt/local/include/eigen3/Eigen/src/PardisoSupport/PardisoSupport.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-83">
-          <caret line="9" column="20" lean-forward="false" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
-          <folding>
-            <element signature="e#51#76#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="178">
+          <caret line="268" column="0" lean-forward="false" selection-start-line="268" selection-start-column="0" selection-end-line="268" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -634,28 +628,58 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/oilproblem.hpp">
+    <entry file="file://$PROJECT_DIR$/typedefs.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="363">
-          <caret line="30" column="24" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="24" />
+        <state relative-caret-position="228">
+          <caret line="32" column="13" lean-forward="false" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
           <folding>
-            <element signature="e#134#157#0" expanded="true" />
+            <element signature="e#129#152#0" expanded="true" />
+            <element signature="e#979#1095#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-83">
+          <caret line="9" column="20" lean-forward="false" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
+          <folding>
+            <element signature="e#51#76#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FindMKL.cmake">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="222">
+          <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="403">
-          <caret line="31" column="25" lean-forward="false" selection-start-line="31" selection-start-column="25" selection-end-line="31" selection-end-column="25" />
+        <state relative-caret-position="-47">
+          <caret line="0" column="34" lean-forward="false" selection-start-line="0" selection-start-column="34" selection-end-line="0" selection-end-column="34" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/oilproblem.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+          <folding>
+            <element signature="e#134#157#0" expanded="true" />
+            <element signature="e#238#268#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="463">
-          <caret line="73" column="0" lean-forward="false" selection-start-line="73" selection-start-column="0" selection-end-line="73" selection-end-column="0" />
+        <state relative-caret-position="850">
+          <caret line="72" column="6" lean-forward="false" selection-start-line="72" selection-start-column="6" selection-end-line="72" selection-end-column="6" />
           <folding>
             <element signature="e#51#71#0" expanded="true" />
             <element signature="e#2097#2279#0" expanded="true" />
@@ -663,39 +687,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/pressureInternal.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="14" lean-forward="false" selection-start-line="10" selection-start-column="14" selection-end-line="10" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/pressure.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="111" column="0" lean-forward="false" selection-start-line="111" selection-start-column="0" selection-end-line="111" selection-end-column="0" />
+        <state relative-caret-position="-44">
+          <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
           <folding>
-            <element signature="e#208#253#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///opt/local/include/eigen3/Eigen/src/PardisoSupport/PardisoSupport.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="178">
-          <caret line="268" column="0" lean-forward="false" selection-start-line="268" selection-start-column="0" selection-end-line="268" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/FindMKL.cmake">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-331">
-          <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/typedefs.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="30" column="0" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
-          <folding>
-            <element signature="e#129#152#0" expanded="true" />
-            <element signature="e#979#1095#0" expanded="true" />
+            <element signature="e#51#76#0" expanded="true" />
           </folding>
         </state>
       </provider>
