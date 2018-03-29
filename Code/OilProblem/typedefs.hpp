@@ -27,8 +27,10 @@ struct VectorToBeMappedAsMatrix {
           vec(input), map(vec.data(), matrixRows, matrixCols) {}
 };
 
-enum class DerivativeDirection {
-    X, Y
+
+struct Point {
+    Real x;
+    Real y;
 };
 
 #ifdef USE_PARDISO

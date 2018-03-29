@@ -54,6 +54,45 @@ struct CellIndex {
     }
 
 
+    void shiftPoint(Point& point, const int numberOfRows, const int numberOfCols, const Real meshWidth) const {
+        point.x += Real(j) / Real(numberOfCols) * meshWidth;
+        point.y -= Real(i) / Real(numberOfRows) * meshWidth;
+    }
+
+    inline Point toCenterPoint(const int numberOfRows, const int numberOfCols, const Real meshWidth) const {
+        Point point = {meshWidth/2.0, 1.0 - meshWidth/2.0};
+        shiftPoint(point, numberOfRows, numberOfCols, meshWidth);
+        return point;
+    }
+
+    inline Point toEastWestBorderPoint(const int numberOfRows, const int numberOfCols, const Real meshWidth) const {
+        Point point = {0.0, 1.0 - meshWidth/2.0};
+
+        shiftPoint(point, numberOfRows, numberOfCols, meshWidth);
+        return point;
+    }
+
+    inline Point toNorthSouthBorderPoint(const int numberOfRows, const int numberOfCols, const Real meshWidth) const {
+        Point point = {meshWidth/2.0, 1.0};
+
+        shiftPoint(point, numberOfRows, numberOfCols, meshWidth);
+        return point;
+    }
+
+    inline Point toBorderPoint(const int numberOfRows, const int numberOfCols, const Real meshWidth, const CellIndex::Direction whichBorder) const {
+        switch (whichBorder) {
+            case CellIndex::Direction::NORTH:
+            case CellIndex::Direction::SOUTH: {
+                return toNorthSouthBorderPoint(numberOfRows, numberOfCols, meshWidth);
+            }
+
+            case CellIndex::Direction::EAST:
+            case CellIndex::Direction::WEST: {
+                return toEastWestBorderPoint(numberOfRows, numberOfCols, meshWidth);
+            }
+
+        }
+    }
 
     inline CellIndex neighbor(const Direction direction) const {
         switch (direction) {

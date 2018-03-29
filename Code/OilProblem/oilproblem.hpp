@@ -23,5 +23,23 @@ SparseMatrix assembleTransmissibilityMatrix(ConstMatrixRef totalMobilities);
 __attribute__((pure))
 VectorToBeMappedAsMatrix solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstMatrixRef sources);
 
+// Gradient zero at boundaries
+__attribute__((pure))
+Matrix computeXDerivative(ConstMatrixRef field, const Real meshWidth);
+
+__attribute__((pure))
+Matrix computeYDerivative(ConstMatrixRef field, const Real meshWidth);
+
+
+__attribute__((pure))
+Real getDerivativeAtCellBorder(CellIndex cell,
+                               ConstMatrixRef xDerivative, ConstMatrixRef yDerivative,
+                               const CellIndex::Direction whichBorder);
+
+__attribute__((pure))
+CellIndex pressureToTransmissibilityIndex(
+      const CellIndex& fromCell,
+      const CellIndex& toCell,
+      const int numberOfRows);
 
 #endif //STEFCOMMONHEADERS_OILPROBLEM_HPP
