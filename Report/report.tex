@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{bm}
+\usepackage{empheq}
 \usepackage{hyperref}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
@@ -108,8 +109,7 @@ Zurich, Switzerland \\
 \maketitle
 
 \begin{abstract}
-This document is a model and instructions for \LaTeX.
-This and the IEEEtran.cls file define the components of your paper [title, text, heads, etc.]. *CRITICAL: Do Not Use Symbols, Special Characters, Footnotes, 
+TODO *CRITICAL: Do Not Use Symbols, Special Characters, Footnotes, 
 or Math in Paper Title or Abstract.
 \end{abstract}
 
@@ -120,7 +120,7 @@ a, b, c
 \section{Problem description}
 We model a cross section of an oil field as a two dimensional square $\Omega := [0, 1]^2.$ In the oilfield, there are two phases: water and oil. 
 At the lower left corner $(0, 0)$, we know the pressure $p(t)$. Opposite of that, at $(1, 1)$ a well is located.
-There we can measure the pressure $p_\text{well}(t)$ as well as the volumetric outflow ${Q}_\text{o}(t)$, ${Q}_\text{w}(t)$ per unit depth.
+There we can measure the pressure $p_\text{well}(t)$ as well as the total volumetric outflow \[{Q}_\text{tot}(t) := {Q}_\text{o}(t) + {Q}_\text{w}(t)\] per unit depth.
 
 The flow rates for both phases are described by Darcy's law
 \begin{equation}
@@ -136,6 +136,7 @@ for oil.
 Here, $p(\vec{x}, t)$ is the pressure, $\mu_\text{o}$, $\mu_\text{w}$ are dynamic viscosities for oil and water, $k(\vec{x}, t)$ is the permeability.
 $k_\text{rel, o}(S)$, $k_\text{rel, w}(S)$ are relative permeabilities and are assumed to depend quadratically on the saturation of water $S_\text{w} \in [0, 1]$ and the saturation of oil $S_\text{o} \in [0, 1]$:
 \begin{align}
+\label{relativePermeabilityModel}
 k_\text{rel, o} &= S_\text{o}^2\\
 k_\text{rel, w} &= S_\text{w}^2.
 \end{align}
@@ -161,6 +162,7 @@ Similarly, we use
 q_\text{o} &:= Q_\text{o}\delta(\vec{x} - \begin{pmatrix}1\\1\end{pmatrix}) \\
 q_\text{tot} &:= q_\text{o} + q_\text{w}.
 \end{align}
+$\phi$ is the porosity of the rock which is assumed to be constant over the domain.
 
 Conservation of the total mass then reads
 \begin{equation}
@@ -187,16 +189,28 @@ and introduce the abbreviations
 \end{align}
 
 Substituting in the $\lambda$ from \eqref{lambdas} into Darcy's law \eqref{flowrateOil}, \eqref{flowrateWater} and adding both sides of the results we get the total Darcy's law
-\begin{equation}
+
+\begin{empheq}[box=\fbox]{equation}
 \label{flowrateTotal}
 \vec{v}_\text{tot} = - \lambda_\text{tot} \grad(p).
-\end{equation}
+\end{empheq}
 
 Plugging this \eqref{flowrateTotal} into the conservation of mass \eqref{conservationOfMass} leads to the pressure equation
 \begin{equation}
 \div(\lambda_\text{tot}\grad(p)) = q_\text{tot}.
 \end{equation}
 
+Comparing the total Darcy's law \eqref{flowrateTotal} and the Darcy's law for water \eqref{flowrateWater}, we see that
+\begin{equation}
+\vec{v}_\text{w} = \frac{\lambda_\text{w}}{\lambda_\text{tot}} \vec{v}_\text{tot}.
+\end{equation}
 
+We then plug in the model for the relative permeabilities in terms of the saturations \eqref{relativePermeabilityModel}, to get the final for of saturation transport equation
+
+\begin{empheq}[box=\fbox]{align}
+\pdiff{S_\text{w}}{t} + \div\left(\vec{F}(S, \vec{v}_\text{tot})\right) &= \frac{q_\text{w}}{\phi} \\
+\vec{F}(S, \vec{v}_\text{tot}) &:= \frac{1}{\phi} \frac{S_\text{w}^2}{S_\text{w}^2 + (1-S_\text{w})^2 \mu_\text{w} / \mu_\text{o}} \vec{v}_\text{tot},
+\end{empheq}
+where $\vec{F}$ is the flux function.
 
 \end{document}

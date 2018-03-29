@@ -10,14 +10,12 @@
 void testPressurePoisson() {
     const int n = 100;
 
-    const Matrix lambdas = Matrix::Random(n, n).unaryExpr([] (Real x) {return 10*x*x + 1;});
+    const Matrix lambdas = Matrix::Random(n, n).unaryExpr([] (Real x) {return 10 * std::abs(x) + 1;});
     if (!(lambdas.array() > 0).all()) {
         std::cerr << "Not all lambdas positive!\n";
         TEST_CHECK(false);
     }
-    Matrix sources(n, n);
-    sources.setZero();
-    sources(0, n-1) = 1;
+    Matrix sources(Matrix::Random(n, n));
 
     const SparseMatrix transmissibilities = assembleTransmissibilityMatrix(lambdas);
 
