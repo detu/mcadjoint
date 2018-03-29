@@ -13,18 +13,15 @@
 #endif
 
 __attribute__((pure))
-Real computeTransmissibility(ConstMatrixRef lambdas, const CellIndex& fromCell, const CellIndex& toCell);
-
-
+Real computeTransmissibility(ConstMatrixRef totalMobilities, const CellIndex& fromCell, const CellIndex& toCell);
 
 
 __attribute__((pure))
-SparseMatrix assembleTransmissibilityMatrix(ConstMatrixRef lambdas);
+SparseMatrix assembleTransmissibilityMatrix(ConstMatrixRef totalMobilities);
 
 
 __attribute__((pure))
 VectorToBeMappedAsMatrix solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstMatrixRef sources);
-
 
 
 #endif //STEFCOMMONHEADERS_OILPROBLEM_HPP

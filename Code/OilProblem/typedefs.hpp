@@ -27,6 +27,10 @@ struct VectorToBeMappedAsMatrix {
           vec(input), map(vec.data(), matrixRows, matrixCols) {}
 };
 
+enum class DerivativeDirection {
+    X, Y
+};
+
 #ifdef USE_PARDISO
 #include <Eigen/PardisoSupport>
 using SparseMatrix = Eigen::SparseMatrix<Real, Eigen::RowMajor>;

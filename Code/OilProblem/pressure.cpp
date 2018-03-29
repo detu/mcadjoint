@@ -2,7 +2,7 @@
 // Created by Stefano Weidmann on 27.03.18.
 //
 
-#include "oilproblem.hpp"
+#include "oilProblem.hpp"
 #include "pressureInternal.hpp"
 
 #ifdef __GNUC__
@@ -15,11 +15,11 @@
 
 
 
-Real computeTransmissibility(ConstMatrixRef lambdas, const CellIndex& fromCell, const CellIndex& toCell) {
-    // transmissibility is harmonic mean of lambda coefficients
+Real computeTransmissibility(ConstMatrixRef totalMobilities, const CellIndex& fromCell, const CellIndex& toCell) {
+    // transmissibility is harmonic mean of total mobility coefficients
 
-    const double lambdaFrom = fromCell(lambdas);
-    const double lambdaTo = toCell(lambdas);
+    const double lambdaFrom = fromCell(totalMobilities);
+    const double lambdaTo = toCell(totalMobilities);
 
     return 2.0 * lambdaFrom * lambdaTo / (lambdaFrom + lambdaTo);
 }
@@ -36,10 +36,10 @@ CellIndex pressureToTransmissibilityIndex(
 
 
 
-SparseMatrix assembleTransmissibilityMatrix(ConstMatrixRef lambdas) {
+SparseMatrix assembleTransmissibilityMatrix(ConstMatrixRef totalMobilities) {
 
-    const int numberOfRows = int(lambdas.rows());
-    const int numberOfCols = int(lambdas.cols());
+    const int numberOfRows = int(totalMobilities.rows());
+    const int numberOfCols = int(totalMobilities.cols());
 
 
     const int numberOfPairs = numberOfCols * numberOfCols;
@@ -75,7 +75,7 @@ SparseMatrix assembleTransmissibilityMatrix(ConstMatrixRef lambdas) {
                 const CellIndex meToNeighbor = pressureToTransmissibilityIndex(myself, neighbor, numberOfRows);
                 const CellIndex neighborToMe = meToNeighbor.transpose();
 
-                const Real currentTransmissibility = computeTransmissibility(lambdas, myself, neighbor);
+                const Real currentTransmissibility = computeTransmissibility(totalMobilities, myself, neighbor);
 
                 const bool iAmTheCellInTheWell = myself == wellCell;
 

@@ -3,21 +3,21 @@
 //
 
 #include <acutest.h>
-#include "oilproblem.hpp"
+#include "oilProblem.hpp"
 #include <iostream>
 
 
 void testPressurePoisson() {
     const int n = 100;
 
-    const Matrix lambdas = Matrix::Random(n, n).unaryExpr([] (Real x) {return 10 * std::abs(x) + 1;});
-    if (!(lambdas.array() > 0).all()) {
-        std::cerr << "Not all lambdas positive!\n";
+    const Matrix totalMobilities = Matrix::Random(n, n).unaryExpr([] (Real x) {return 10 * std::abs(x) + 1;});
+    if (!(totalMobilities.array() > 0).all()) {
+        std::cerr << "Not all totalMobilities positive!\n";
         TEST_CHECK(false);
     }
     Matrix sources(Matrix::Random(n, n));
 
-    const SparseMatrix transmissibilities = assembleTransmissibilityMatrix(lambdas);
+    const SparseMatrix transmissibilities = assembleTransmissibilityMatrix(totalMobilities);
 
     VectorToBeMappedAsMatrix vecmap = solvePressurePoissonProblem(transmissibilities, sources);
     const Matrix& pressures = vecmap.map;
@@ -34,24 +34,24 @@ void testPressurePoisson() {
             } else {
                 if (i < n - 1) {
                     shouldBeSource +=
-                          computeTransmissibility(lambdas, {i, j}, {i + 1, j}) *
+                          computeTransmissibility(totalMobilities, {i, j}, {i + 1, j}) *
                           (pressures(i, j) - pressures(i + 1, j));
                 }
 
                 if (i > 0) {
-                    shouldBeSource += computeTransmissibility(lambdas, {i, j}, {i - 1, j}) *
+                    shouldBeSource += computeTransmissibility(totalMobilities, {i, j}, {i - 1, j}) *
                                       (pressures(i, j) - pressures(i - 1, j));
                 }
 
                 if (j < n - 1) {
                     shouldBeSource +=
-                          computeTransmissibility(lambdas, {i, j}, {i, j + 1}) *
+                          computeTransmissibility(totalMobilities, {i, j}, {i, j + 1}) *
                           (pressures(i, j) - pressures(i, j + 1));
                 }
 
                 if (j > 0) {
                     shouldBeSource +=
-                          computeTransmissibility(lambdas, {i, j}, {i, j - 1}) *
+                          computeTransmissibility(totalMobilities, {i, j}, {i, j - 1}) *
                           (pressures(i, j) - pressures(i, j - 1));
                 }
             }

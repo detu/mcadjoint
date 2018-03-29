@@ -2,7 +2,7 @@
 // Created by Stefano Weidmann on 24.03.18.
 //
 
-#include "oilproblem.hpp"
+#include "oilProblem.hpp"
 #include <iostream>
 
 int main() {
@@ -10,16 +10,16 @@ int main() {
     const int n = 5;
     std::cout << "n = " << n << "\n";
 
-    Matrix lambdas(n, n);
+    Matrix totalMobilities(n, n);
 
-    lambdas.setRandom();
-    lambdas.array() += 5;
+    totalMobilities.setRandom();
+    totalMobilities.array() += 5;
 
     if (n <= 10) {
-        std::cout << "lambdas = \n" << lambdas << "\n";
+        std::cout << "totalMobilities = \n" << totalMobilities << "\n";
     }
 
-    const Matrix transmissibilities = assembleTransmissibilityMatrix(lambdas);
+    const Matrix transmissibilities = assembleTransmissibilityMatrix(totalMobilities);
 
     Eigen::JacobiSVD<Matrix> svd(transmissibilities);
     double cond = svd.singularValues()(0)

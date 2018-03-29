@@ -2,7 +2,7 @@
 // Created by Stefano Weidmann on 28.03.18.
 //
 
-#include "oilproblem.hpp"
+#include "oilProblem.hpp"
 #include <stefCommonHeaders/dev.hpp>
 
 int main() {

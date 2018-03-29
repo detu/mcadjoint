@@ -5,7 +5,7 @@
 #ifndef STEFCOMMONHEADERS_PRESSUREINTERNAL_HPP
 #define STEFCOMMONHEADERS_PRESSUREINTERNAL_HPP
 
-#include "oilproblem.hpp"
+#include "oilProblem.hpp"
 
 __attribute__((pure))
 static inline CellIndex pressureToTransmissibilityIndex(
