@@ -24,6 +24,7 @@ Build/
 *.aux
 *.log
 *.toc
+*.fls
 
 report.pdf
 
