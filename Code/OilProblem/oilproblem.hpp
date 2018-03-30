@@ -42,4 +42,13 @@ CellIndex pressureToTransmissibilityIndex(
       const CellIndex& toCell,
       const int numberOfRows);
 
+__attribute__((pure))
+Matrix computeTotalDarcyVelocitiesX(ConstMatrixRef totalTransmissibilities, Matrix pressureDerivativesX);
+
+__attribute__((pure))
+Matrix computeTotalDarcyVelocitiesY(ConstMatrixRef totalTransmissibilities, Matrix pressureDerivativesY);
+
+__attribute__((pure))
+Matrix computeFluxFunctionFactors(ConstMatrixRef saturations, const Real porosity, const Real dynamicViscosityWater, const Real dynamicViscosityOil);
+
 #endif //STEFCOMMONHEADERS_OILPROBLEM_HPP

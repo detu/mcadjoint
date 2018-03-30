@@ -54,3 +54,69 @@ Real getDerivativeAtCellBorder(CellIndex cell,
         }
     }
 }
+
+CellIndex borderIndexToCenterIndex(CellIndex borderIndex, const CellIndex::Direction whichBorder) {
+    switch (whichBorder) {
+        case CellIndex::Direction::NORTH: {
+            return borderIndex;
+        }
+        case CellIndex::Direction::SOUTH: {
+            --borderIndex.i;
+            return borderIndex;
+        }
+        case CellIndex::Direction::WEST: {
+            return borderIndex;
+        }
+        case CellIndex::Direction::EAST: {
+            --borderIndex.j;
+            return borderIndex;
+        }
+    }
+}
+
+
+Matrix computeTotalDarcyVelocitiesX(ConstMatrixRef totalTransmissibilities, Matrix pressureDerivativesX) {
+    const int numberOfColsOfDerivatives = int(pressureDerivativesX.cols());
+    const int numberOfRowsOfDerivatives = int(pressureDerivativesX.rows());
+    const int numberOfRowsOfPressures = numberOfRowsOfDerivatives;
+
+    CellIndex borderIndex;
+
+    // skip first and last column which are on the outside of the domain and are zero anyways.
+    for (borderIndex.j = 1; borderIndex.j < numberOfColsOfDerivatives - 1; ++borderIndex.j) {
+        for (borderIndex.i = 0; borderIndex.i < numberOfRowsOfDerivatives; ++borderIndex.i) {
+            const CellIndex pressureCellWestOfThisBorder = borderIndexToCenterIndex(borderIndex, CellIndex::Direction::EAST); // This border is to the east of the cell
+            const CellIndex pressureCellEastOfThisBorder = borderIndexToCenterIndex(borderIndex, CellIndex::Direction::WEST);
+            const CellIndex correspondingTransmissibilityIndex = pressureToTransmissibilityIndex(pressureCellEastOfThisBorder, pressureCellWestOfThisBorder, numberOfRowsOfPressures);
+
+            const Real transmissibility = correspondingTransmissibilityIndex(totalTransmissibilities);
+
+            borderIndex(pressureDerivativesX) *= -transmissibility;
+        }
+    }
+
+    return pressureDerivativesX;
+}
+
+Matrix computeTotalDarcyVelocitiesY(ConstMatrixRef totalTransmissibilities, Matrix pressureDerivativesY) {
+    const int numberOfColsOfDerivatives = int(pressureDerivativesY.cols());
+    const int numberOfRowsOfDerivatives = int(pressureDerivativesY.rows());
+    const int numberOfRowsOfPressures = numberOfRowsOfDerivatives - 1; // the zero derivatives at the top and the bottom are added
+
+    CellIndex borderIndex;
+
+    for (borderIndex.j = 0; borderIndex.j < numberOfColsOfDerivatives; ++borderIndex.j) {
+        // skip first and last row which are on the outside of the domain and are zero anyways.
+        for (borderIndex.i = 1; borderIndex.i < numberOfRowsOfDerivatives - 1; ++borderIndex.i) {
+            const CellIndex pressureCellNorthOfThisBorder = borderIndexToCenterIndex(borderIndex, CellIndex::Direction::SOUTH); // This border is to the south of the cell
+            const CellIndex pressureCellSouthOfThisBorder = borderIndexToCenterIndex(borderIndex, CellIndex::Direction::NORTH);
+            const CellIndex correspondingTransmissibilityIndex = pressureToTransmissibilityIndex(pressureCellNorthOfThisBorder, pressureCellSouthOfThisBorder, numberOfRowsOfPressures);
+
+            const Real transmissibility = correspondingTransmissibilityIndex(totalTransmissibilities);
+
+            borderIndex(pressureDerivativesY) *= -transmissibility;
+        }
+    }
+
+    return pressureDerivativesY;
+}
