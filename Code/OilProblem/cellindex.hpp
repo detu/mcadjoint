@@ -7,6 +7,7 @@
 
 #include "typedefs.hpp"
 #include <array>
+#include <string>
 
 #if !defined(__GNUC__) && !defined(__attribute__)
     #define __attribute__(ignored)
@@ -20,6 +21,14 @@ struct CellIndex {
     enum class Direction {
         NORTH = 0, EAST = 1, WEST = 2, SOUTH = 3
     };
+
+    static inline const char* directionToString(const CellIndex::Direction direction) {
+        constexpr static std::array<const char*, 4> directionNames = {
+              "north", "east", "west", "south"
+        };
+
+        return directionNames[static_cast<int>(direction)];
+    }
 
 
     template <typename Derived>
@@ -54,44 +63,43 @@ struct CellIndex {
     }
 
 
-    void shiftPoint(Point& point, const int numberOfRows, const int numberOfCols, const Real meshWidth) const {
-        point.x += Real(j) / Real(numberOfCols) * meshWidth;
-        point.y -= Real(i) / Real(numberOfRows) * meshWidth;
+    void shiftPoint(Point& point, const Real meshWidth) const {
+        point.x += Real(j) * meshWidth;
+        point.y -= Real(i) * meshWidth;
     }
 
-    inline Point toCenterPoint(const int numberOfRows, const int numberOfCols, const Real meshWidth) const {
+    inline Point toCenterPoint(const Real meshWidth) const {
         Point point = {meshWidth/2.0, 1.0 - meshWidth/2.0};
-        shiftPoint(point, numberOfRows, numberOfCols, meshWidth);
+        shiftPoint(point, meshWidth);
         return point;
     }
 
-    inline Point toEastWestBorderPoint(const int numberOfRows, const int numberOfCols, const Real meshWidth) const {
-        Point point = {0.0, 1.0 - meshWidth/2.0};
 
-        shiftPoint(point, numberOfRows, numberOfCols, meshWidth);
-        return point;
-    }
-
-    inline Point toNorthSouthBorderPoint(const int numberOfRows, const int numberOfCols, const Real meshWidth) const {
-        Point point = {meshWidth/2.0, 1.0};
-
-        shiftPoint(point, numberOfRows, numberOfCols, meshWidth);
-        return point;
-    }
-
-    inline Point toBorderPoint(const int numberOfRows, const int numberOfCols, const Real meshWidth, const CellIndex::Direction whichBorder) const {
+    inline Point toBorderPoint(const Real meshWidth, const CellIndex::Direction whichBorder) const {
+        Point point;
         switch (whichBorder) {
-            case CellIndex::Direction::NORTH:
+            case CellIndex::Direction::NORTH: {
+                point = {meshWidth/2.0, 1.0};
+                break;
+            }
             case CellIndex::Direction::SOUTH: {
-                return toNorthSouthBorderPoint(numberOfRows, numberOfCols, meshWidth);
+                point = {meshWidth/2.0, 1.0 - meshWidth};
+                break;
             }
 
-            case CellIndex::Direction::EAST:
             case CellIndex::Direction::WEST: {
-                return toEastWestBorderPoint(numberOfRows, numberOfCols, meshWidth);
+                point = {0.0, 1.0 - meshWidth/2.0};
+                break;
             }
 
+            case CellIndex::Direction::EAST: {
+                point = {meshWidth, 1.0 - meshWidth/2.0};
+                break;
+            }
         }
+
+        shiftPoint(point, meshWidth);
+        return point;
     }
 
     inline CellIndex neighbor(const Direction direction) const {

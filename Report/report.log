@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2018.1.26)  29 MAR 2018 11:17
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2018.1.26)  29 MAR 2018 23:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -536,26 +536,26 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 216.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 219.
 [2
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 216.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 219.
 (./report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 216.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 216.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 219.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 219.
 Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: 30EE9643AA6E56246B26AA5DD8E7059F;54.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 216.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 219.
  ) 
 Here is how much of TeX's memory you used:
- 8313 strings out of 494725
- 125911 string characters out of 6175067
- 224040 words of memory out of 5000000
+ 8314 strings out of 494725
+ 125916 string characters out of 6175067
+ 222040 words of memory out of 5000000
  11552 multiletter control sequences out of 15000+600000
  38541 words of font info for 80 fonts, out of 8000000 for 9000
  81 hyphenation exceptions out of 8191
- 31i,14n,28p,240b,410s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 31i,14n,28p,240b,413s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/opt/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</opt/texlive/texmf-dist
 /fonts/type1/public/amsfonts/cm/cmex10.pfb></opt/texlive/texmf-dist/fonts/type1
 /public/amsfonts/cm/cmmi10.pfb></opt/texlive/texmf-dist/fonts/type1/public/amsf
@@ -565,10 +565,10 @@ exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></opt/texlive/texmf
 -dist/fonts/type1/urw/times/utmb8a.pfb></opt/texlive/texmf-dist/fonts/type1/urw
 /times/utmbi8a.pfb></opt/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></
 opt/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on report.pdf (2 pages, 105002 bytes).
+Output written on report.pdf (2 pages, 105067 bytes).
 PDF statistics:
- 101 PDF objects out of 1000 (max. 8388607)
- 84 compressed objects within 1 object stream
- 26 named destinations out of 1000 (max. 500000)
+ 102 PDF objects out of 1000 (max. 8388607)
+ 85 compressed objects within 1 object stream
+ 27 named destinations out of 1000 (max. 500000)
  9 words of extra memory for PDF output out of 10000 (max. 10000000)
 

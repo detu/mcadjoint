@@ -74,8 +74,8 @@ void testPressurePoisson() {
 
 
 void testDerivatives() {
-    const Real meshWidth = 1e-6;
-    const int n = 100;
+    const Real meshWidth = 1e-5;
+    const int n = 5;
 
     const auto f = [] (const Point& p) {
         return std::sin(p.x) * std::cos(p.y);
@@ -94,12 +94,19 @@ void testDerivatives() {
     Matrix field(n, n);
     for (int j = 0; j < n; ++j) {
         for (int i = 0; i < n; ++i) {
-            field(i, j) = f(CellIndex({i, j}).toCenterPoint(n, n, meshWidth));
+            field(i, j) = f(CellIndex({i, j}).toCenterPoint(meshWidth));
         }
     }
 
     const Matrix computedXDerivatives = computeXDerivative(field, meshWidth);
     const Matrix computedYDerivatives = computeYDerivative(field, meshWidth);
+
+
+    #ifdef VERBOSE_TESTS
+    std::cout << "f =\n" << field << "\n\ndx =\n" << computedXDerivatives << "\n\ndy =\n" << computedYDerivatives << "\n";
+    #endif
+
+
 
     constexpr static std::array<CellIndex::Direction, 4> directionsToCheck = {
           CellIndex::Direction::NORTH, CellIndex::Direction::SOUTH, CellIndex::Direction::EAST, CellIndex::Direction::WEST
@@ -107,14 +114,17 @@ void testDerivatives() {
 
     CellIndex cell = {0, 0};
     CellIndex greatestErrorLocation;
+    CellIndex::Direction greatestErrorDirection;
     Real greatestError = -1;
+    Real greatestErrorExactDerivative = NAN;
+    Real greatestErrorComputedDerivative = NAN;
     for (cell.j = 0; cell.j < n; ++cell.j) {
         for (cell.i = 0; cell.i < n; ++cell.i) {
             for (const CellIndex::Direction direction: directionsToCheck) {
 
                 const Real computedDerivative = getDerivativeAtCellBorder(cell, computedXDerivatives, computedYDerivatives, direction);
-                if (cell.j == 0 && direction == CellIndex::Direction::EAST ||
-                    cell.j == n-1 && direction == CellIndex::Direction::WEST ||
+                if (cell.j == 0 && direction == CellIndex::Direction::WEST ||
+                    cell.j == n-1 && direction == CellIndex::Direction::EAST ||
                     cell.i == 0 && direction == CellIndex::Direction::NORTH  ||
                     cell.i == n-1 && direction == CellIndex::Direction::SOUTH) {
                     TEST_CHECK_(computedDerivative == 0, "derivative at border not zero but %lf", computedDerivative);
@@ -123,7 +133,7 @@ void testDerivatives() {
 
 
                 Real exactDerivative = NAN;
-                const Point locationOfBorder = cell.toBorderPoint(n, n, meshWidth, direction);
+                const Point locationOfBorder = cell.toBorderPoint(meshWidth, direction);
                 switch (direction) {
                     case CellIndex::Direction::NORTH:
                     case CellIndex::Direction::SOUTH: {
@@ -142,12 +152,17 @@ void testDerivatives() {
                 if (error > greatestError) {
                     greatestError = error;
                     greatestErrorLocation = cell;
+                    greatestErrorDirection = direction;
+                    greatestErrorExactDerivative = exactDerivative;
+                    greatestErrorComputedDerivative = computedDerivative;
                 }
             }
         }
     }
 
-    TEST_CHECK_(greatestError < 1e-5, "Greatest error %lf is at (%d, %d)", greatestError, greatestErrorLocation.i, greatestErrorLocation.j);
+    TEST_CHECK_(greatestError < 1e-5, "Greatest error %lf is at (%d, %d) in direction %s\nThere the exact derivative is %lf, but computed was %lf",
+                greatestError, greatestErrorLocation.i, greatestErrorLocation.j, CellIndex::directionToString(greatestErrorDirection),
+                greatestErrorExactDerivative, greatestErrorComputedDerivative);
 }
 
 TEST_LIST = {

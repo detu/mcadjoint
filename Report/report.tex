@@ -207,10 +207,13 @@ Comparing the total Darcy's law \eqref{flowrateTotal} and the Darcy's law for wa
 
 We then plug in the model for the relative permeabilities in terms of the saturations \eqref{relativePermeabilityModel}, to get the final for of saturation transport equation
 
-\begin{empheq}[box=\fbox]{align}
-\pdiff{S_\text{w}}{t} + \div\left(\vec{F}(S, \vec{v}_\text{tot})\right) &= \frac{q_\text{w}}{\phi} \\
-\vec{F}(S, \vec{v}_\text{tot}) &:= \frac{1}{\phi} \frac{S_\text{w}^2}{S_\text{w}^2 + (1-S_\text{w})^2 \mu_\text{w} / \mu_\text{o}} \vec{v}_\text{tot},
+\begin{empheq}[box=\fbox]{equation}
+\pdiff{S_\text{w}}{t} + \div\left(\vec{F}(S_\text{w}, \vec{v}_\text{tot})\right) = \frac{q_\text{w}}{\phi},
 \end{empheq}
-where $\vec{F}$ is the flux function.
+where $\vec{F}$ is the flux function
+\begin{empheq}[box=\fbox]{equation}
+\vec{F}(S_\text{w}, \vec{v}_\text{tot}) := \frac{S_\text{w}^2 / \phi}{S_\text{w}^2 + (1-S_\text{w})^2 \mu_\text{w} / \mu_\text{o}} \vec{v}_\text{tot}.
+\end{empheq}
+
 
 \end{document}
