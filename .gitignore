@@ -3,3 +3,27 @@ a.out
 *.dSYM
 Build/
 
+
+# Latexmk
+*.fdb_latexmk
+
+# SyncTeX
+*.synctex.gz
+
+# LaTeX Beamer
+*.snm
+*.vrb
+*.nav
+*.out
+
+# BibTeX
+*.bbl
+*.blg
+
+# LaTeX temporary files
+*.aux
+*.log
+*.toc
+
+report.pdf
+
