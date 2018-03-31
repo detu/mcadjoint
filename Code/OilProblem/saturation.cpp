@@ -13,3 +13,31 @@ Matrix computeFluxFunctionFactors(ConstMatrixRef saturationsWater, const Real po
 
     return saturationsWater.unaryExpr(map);
 }
+
+Matrix approximateFluxFunctionFactorsAtBordersX(ConstMatrixRef fluxFunctionFactors) {
+    Matrix fluxFunctionFactorsAtBordersX(fluxFunctionFactors.rows(), fluxFunctionFactors.cols()+1);
+
+    fluxFunctionFactorsAtBordersX.col(0).setZero();
+
+    const int numberOfCols = int(fluxFunctionFactorsAtBordersX.cols());
+    for (int colIndex = 1; colIndex < numberOfCols-1; ++colIndex) {
+        fluxFunctionFactorsAtBordersX.col(colIndex) = 0.5 * (fluxFunctionFactorsAtBordersX.col(colIndex) - fluxFunctionFactorsAtBordersX.col(colIndex-1));
+    }
+
+    fluxFunctionFactorsAtBordersX.col(numberOfCols-1).setZero();
+    return fluxFunctionFactorsAtBordersX;
+}
+
+Matrix approximateFluxFunctionFactorsAtBordersY(ConstMatrixRef fluxFunctionFactors) {
+    Matrix fluxFunctionFactorsAtBordersY(fluxFunctionFactors.rows(), fluxFunctionFactors.cols()+1);
+
+    fluxFunctionFactorsAtBordersY.row(0).setZero();
+
+    const int numberOfRows = int(fluxFunctionFactorsAtBordersY.rows());
+    for (int rowIndex = 1; rowIndex < numberOfRows-1; ++rowIndex) {
+        fluxFunctionFactorsAtBordersY.row(rowIndex) = 0.5 * (fluxFunctionFactorsAtBordersY.row(rowIndex) - fluxFunctionFactorsAtBordersY.row(rowIndex-1));
+    }
+
+    fluxFunctionFactorsAtBordersY.col(numberOfRows-1).setZero();
+    return fluxFunctionFactorsAtBordersY;
+}

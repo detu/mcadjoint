@@ -10,11 +10,11 @@
 using Real = double;
 using Vector = Eigen::Matrix<Real, Eigen::Dynamic, 1>;
 using VectorRef = Eigen::Ref<Vector>;
-using ConstVectorRef = const Eigen::Ref<const Vector>;
+using ConstVectorRef = const Eigen::Ref<const Vector>&;
 
 using Matrix = Eigen::Matrix<Real, Eigen::Dynamic, Eigen::Dynamic>;
 using MatrixRef = Eigen::Ref<Matrix>;
-using ConstMatrixRef = const Eigen::Ref<const Matrix>;
+using ConstMatrixRef = const Eigen::Ref<const Matrix>&;
 
 using SparseVector = Eigen::SparseVector<Real>;
 
