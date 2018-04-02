@@ -2,23 +2,32 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true" buildAllGenerated="true">
     <generated>
-      <config projectName="stefCommonHeaders" targetName="BaseLib" />
+      <config projectName="stefCommonHeaders" targetName="Test_pch" />
+      <config projectName="stefCommonHeaders" targetName="clean_cotire" />
+      <config projectName="stefCommonHeaders" targetName="Test_unity" />
+      <config projectName="stefCommonHeaders" targetName="OilProblem_unity" />
       <config projectName="stefCommonHeaders" targetName="DryRun" />
-      <config projectName="stefCommonHeaders" targetName="OilLib" />
+      <config projectName="stefCommonHeaders" targetName="DryRun_unity" />
+      <config projectName="stefCommonHeaders" targetName="all_unity" />
+      <config projectName="stefCommonHeaders" targetName="OilProblem_pch" />
       <config projectName="stefCommonHeaders" targetName="Test" />
+      <config projectName="stefCommonHeaders" targetName="DryRun_pch" />
       <config projectName="stefCommonHeaders" targetName="OilProblem" />
+      <config projectName="stefCommonHeaders" targetName="all_pch" />
     </generated>
   </component>
   <component name="CMakeSettings">
     <configurations>
-      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
-      <configuration PROFILE_NAME="Release" CONFIG_NAME="Release" />
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" GENERATION_DIR="$PROJECT_DIR$/../../Build/Debug/OilProblem" />
+      <configuration PROFILE_NAME="Release" CONFIG_NAME="Release" GENERATION_DIR="$PROJECT_DIR$/../../Build/Release/OilProblem" />
     </configurations>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="243856ce-78f7-4963-8ee2-7f94acac5c1e" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/cmake-build-release/" />
+    <ignored path="$PROJECT_DIR$/../../Build/Debug/OilProblem/" />
+    <ignored path="$PROJECT_DIR$/../../Build/Release/OilProblem/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -26,97 +35,14 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Release" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
+      <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="431">
-              <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="main.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-              <folding>
-                <element signature="e#51#76#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pressure.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pressure.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="282">
-              <caret line="55" column="0" lean-forward="false" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
-              <folding>
-                <element signature="e#208#253#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="typedefs.hpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/typedefs.hpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="71">
-              <caret line="12" column="54" lean-forward="false" selection-start-line="12" selection-start-column="54" selection-end-line="12" selection-end-column="54" />
-              <folding>
-                <marker date="1522487740000" expanded="true" signature="1025:1141" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="cellindex.hpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cellindex.hpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-507">
-              <caret line="77" column="31" lean-forward="false" selection-start-line="77" selection-start-column="31" selection-end-line="77" selection-end-column="31" />
-              <folding>
-                <element signature="e#132#155#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="oilproblem.hpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/oilproblem.hpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="765">
-              <caret line="51" column="0" lean-forward="false" selection-start-line="51" selection-start-column="0" selection-end-line="51" selection-end-column="148" />
-              <folding>
-                <element signature="e#134#157#0" expanded="true" />
-                <element signature="e#238#268#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="darcyVelocity.cpp" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/darcyVelocity.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="486">
-              <caret line="121" column="1" lean-forward="false" selection-start-line="121" selection-start-column="1" selection-end-line="121" selection-end-column="1" />
-              <folding>
-                <element signature="e#51#76#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="saturation.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/saturation.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="124">
-              <caret line="16" column="0" lean-forward="false" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="83" />
+            <state relative-caret-position="247">
+              <caret line="45" column="58" lean-forward="false" selection-start-line="45" selection-start-column="58" selection-end-line="45" selection-end-column="58" />
               <folding />
             </state>
           </provider>
@@ -125,7 +51,7 @@
       <file leaf-file-name="Block.h" pinned="false" current-in-tab="false">
         <entry file="file:///opt/local/include/eigen3/Eigen/src/Core/Block.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
+            <state relative-caret-position="1785">
               <caret line="119" column="0" lean-forward="false" selection-start-line="119" selection-start-column="0" selection-end-line="119" selection-end-column="0" />
               <folding />
             </state>
@@ -165,15 +91,15 @@
         <option value="$PROJECT_DIR$/darcyVelocityInternal.hpp" />
         <option value="$PROJECT_DIR$/pressureInternal.hpp" />
         <option value="$PROJECT_DIR$/pressure.cpp" />
-        <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/oilProblem.hpp" />
         <option value="$PROJECT_DIR$/thirdParty/stefcommonheaders/thirdParty/acutest/include/acutest.h" />
         <option value="$PROJECT_DIR$/test.cpp" />
         <option value="$PROJECT_DIR$/cellindex.hpp" />
         <option value="$PROJECT_DIR$/darcyVelocity.cpp" />
+        <option value="$PROJECT_DIR$/typedefs.hpp" />
         <option value="$PROJECT_DIR$/oilproblem.hpp" />
         <option value="$PROJECT_DIR$/saturation.cpp" />
-        <option value="$PROJECT_DIR$/typedefs.hpp" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
       </list>
     </option>
   </component>
@@ -218,42 +144,7 @@
           <expand>
             <path>
               <item name="stefCommonHeaders" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
-              <item name="OilProblem" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="stefCommonHeaders" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
-              <item name="OilProblem" type="462c0819:PsiDirectoryNode" />
-              <item name="thirdParty" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="stefCommonHeaders" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
-              <item name="OilProblem" type="462c0819:PsiDirectoryNode" />
-              <item name="thirdParty" type="462c0819:PsiDirectoryNode" />
-              <item name="stefcommonheaders" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="stefCommonHeaders" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
-              <item name="OilProblem" type="462c0819:PsiDirectoryNode" />
-              <item name="thirdParty" type="462c0819:PsiDirectoryNode" />
-              <item name="stefcommonheaders" type="462c0819:PsiDirectoryNode" />
-              <item name="thirdParty" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="stefCommonHeaders" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
-              <item name="OilProblem" type="462c0819:PsiDirectoryNode" />
-              <item name="thirdParty" type="462c0819:PsiDirectoryNode" />
-              <item name="stefcommonheaders" type="462c0819:PsiDirectoryNode" />
-              <item name="thirdParty" type="462c0819:PsiDirectoryNode" />
-              <item name="acutest" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="stefCommonHeaders" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
-              <item name="OilProblem" type="462c0819:PsiDirectoryNode" />
-              <item name="thirdParty" type="462c0819:PsiDirectoryNode" />
-              <item name="stefcommonheaders" type="462c0819:PsiDirectoryNode" />
-              <item name="thirdParty" type="462c0819:PsiDirectoryNode" />
-              <item name="acutest" type="462c0819:PsiDirectoryNode" />
-              <item name="include" type="462c0819:PsiDirectoryNode" />
+              <item name="OilProblem" type="47feb1d3:ProjectViewModuleNode" />
             </path>
           </expand>
           <select />
@@ -282,31 +173,59 @@
     </option>
   </component>
   <component name="RunManager" selected="Application.Test">
-    <configuration name="BaseLib" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="BaseLib" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="DryRun">
-      <envs />
-    </configuration>
     <configuration name="Build All" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="DryRun" EXPLICIT_BUILD_TARGET_NAME="all">
       <envs />
     </configuration>
     <configuration name="DryRun" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="DryRun" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="DryRun">
       <envs />
     </configuration>
-    <configuration name="OilLib" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="OilLib" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="OilProblem">
+    <configuration name="DryRun_pch" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="DryRun_pch" CONFIG_NAME="Debug">
+      <envs />
+    </configuration>
+    <configuration name="DryRun_unity" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="DryRun_unity" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="DryRun_unity">
       <envs />
     </configuration>
     <configuration name="OilProblem" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="OilProblem" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="OilProblem">
       <envs />
     </configuration>
+    <configuration name="OilProblem_pch" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="OilProblem_pch" CONFIG_NAME="Debug">
+      <envs />
+    </configuration>
+    <configuration name="OilProblem_unity" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="OilProblem_unity" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="OilProblem_unity">
+      <envs />
+    </configuration>
     <configuration name="Test" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="--exec=never" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="Test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="Test">
       <envs />
     </configuration>
-    <list size="6">
+    <configuration name="Test_pch" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="Test_pch" CONFIG_NAME="Debug">
+      <envs />
+    </configuration>
+    <configuration name="Test_unity" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="Test_unity" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="Test_unity">
+      <envs />
+    </configuration>
+    <configuration name="all_pch" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="all_pch" CONFIG_NAME="Debug">
+      <envs />
+    </configuration>
+    <configuration name="all_unity" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="all_unity" CONFIG_NAME="Debug">
+      <envs />
+    </configuration>
+    <configuration name="clean_cotire" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="clean_cotire" CONFIG_NAME="Debug">
+      <envs />
+    </configuration>
+    <list size="13">
       <item index="0" class="java.lang.String" itemvalue="Application.Build All" />
-      <item index="1" class="java.lang.String" itemvalue="Application.BaseLib" />
-      <item index="2" class="java.lang.String" itemvalue="Application.DryRun" />
-      <item index="3" class="java.lang.String" itemvalue="Application.OilLib" />
-      <item index="4" class="java.lang.String" itemvalue="Application.OilProblem" />
-      <item index="5" class="java.lang.String" itemvalue="Application.Test" />
+      <item index="1" class="java.lang.String" itemvalue="Application.all_pch" />
+      <item index="2" class="java.lang.String" itemvalue="Application.all_unity" />
+      <item index="3" class="java.lang.String" itemvalue="Application.clean_cotire" />
+      <item index="4" class="java.lang.String" itemvalue="Application.DryRun" />
+      <item index="5" class="java.lang.String" itemvalue="Application.DryRun_pch" />
+      <item index="6" class="java.lang.String" itemvalue="Application.DryRun_unity" />
+      <item index="7" class="java.lang.String" itemvalue="Application.OilProblem" />
+      <item index="8" class="java.lang.String" itemvalue="Application.OilProblem_pch" />
+      <item index="9" class="java.lang.String" itemvalue="Application.OilProblem_unity" />
+      <item index="10" class="java.lang.String" itemvalue="Application.Test" />
+      <item index="11" class="java.lang.String" itemvalue="Application.Test_pch" />
+      <item index="12" class="java.lang.String" itemvalue="Application.Test_unity" />
     </list>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
@@ -322,12 +241,14 @@
       <workItem from="1521895541932" duration="15739000" />
       <workItem from="1522081211266" duration="1271000" />
       <workItem from="1522136613319" duration="2395000" />
-      <workItem from="1522139206374" duration="30136000" />
+      <workItem from="1522139206374" duration="31240000" />
+      <workItem from="1522654532035" duration="678000" />
+      <workItem from="1522655626367" duration="1260000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="49541000" />
+    <option name="totallyTimeSpent" value="52583000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="796" extended-state="6" />
@@ -335,11 +256,10 @@
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2494043" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3266762" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32952926" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3266762" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32952926" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4593438" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23469388" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2339515" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -350,6 +270,7 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4593438" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -383,47 +304,8 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/typedefs.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="47" lean-forward="false" selection-start-line="19" selection-start-column="47" selection-end-line="19" selection-end-column="47" />
-          <folding>
-            <marker date="1522487740000" expanded="true" signature="1025:1141" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cellindex.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="570">
-          <caret line="38" column="0" lean-forward="false" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
-          <folding>
-            <element signature="e#132#155#0" expanded="true" />
-            <element signature="e#711#729#0" expanded="false" />
-            <element signature="e#852#870#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/oilproblem.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-          <folding>
-            <element signature="e#134#157#0" expanded="true" />
-            <element signature="e#238#268#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/thirdParty/stefcommonheaders/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/oilproblem.hpp" />
+    <entry file="file://$PROJECT_DIR$/thirdParty/stefcommonheaders/CMakeLists.txt" />
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="315">
@@ -432,77 +314,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-          <folding>
-            <element signature="e#51#71#0" expanded="false" />
-            <element signature="e#3240#3358#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/test.cpp" />
     <entry file="file:///opt/local/include/eigen3/Eigen/src/SparseLU/SparseLU.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3285">
           <caret line="219" column="0" lean-forward="false" selection-start-line="219" selection-start-column="0" selection-end-line="219" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/oilproblem.cpp" />
-    <entry file="file://$PROJECT_DIR$/dryRun.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="30" column="0" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
-          <folding>
-            <element signature="e#51#76#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/typedefs.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="47" lean-forward="false" selection-start-line="19" selection-start-column="47" selection-end-line="19" selection-end-column="47" />
-          <folding>
-            <marker date="1522487740000" expanded="true" signature="1025:1141" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cellindex.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="570">
-          <caret line="38" column="0" lean-forward="false" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
-          <folding>
-            <element signature="e#132#155#0" expanded="true" />
-            <element signature="e#711#729#0" expanded="false" />
-            <element signature="e#852#870#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/thirdParty/stefcommonheaders/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/oilproblem.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-          <folding>
-            <element signature="e#134#157#0" expanded="true" />
-            <element signature="e#238#268#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/dryRun.cpp" />
+    <entry file="file://$PROJECT_DIR$/typedefs.hpp" />
+    <entry file="file://$PROJECT_DIR$/cellindex.hpp" />
+    <entry file="file://$PROJECT_DIR$/thirdParty/stefcommonheaders/CMakeLists.txt" />
+    <entry file="file://$PROJECT_DIR$/oilproblem.hpp" />
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -511,77 +336,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-          <folding>
-            <element signature="e#51#71#0" expanded="false" />
-            <element signature="e#3240#3358#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/test.cpp" />
     <entry file="file:///opt/local/include/eigen3/Eigen/src/SparseLU/SparseLU.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3285">
           <caret line="219" column="0" lean-forward="false" selection-start-line="219" selection-start-column="0" selection-end-line="219" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/oilproblem.cpp" />
-    <entry file="file://$PROJECT_DIR$/dryRun.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="30" column="0" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
-          <folding>
-            <element signature="e#51#76#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/typedefs.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="47" lean-forward="false" selection-start-line="19" selection-start-column="47" selection-end-line="19" selection-end-column="47" />
-          <folding>
-            <marker date="1522487740000" expanded="true" signature="1025:1141" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cellindex.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="6" lean-forward="false" selection-start-line="17" selection-start-column="6" selection-end-line="17" selection-end-column="6" />
-          <folding>
-            <element signature="e#132#155#0" expanded="true" />
-            <element signature="e#711#729#0" expanded="false" />
-            <element signature="e#852#870#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/oilproblem.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="22" column="14" lean-forward="false" selection-start-line="22" selection-start-column="14" selection-end-line="22" selection-end-column="14" />
-          <folding>
-            <element signature="e#134#157#0" expanded="true" />
-            <element signature="e#238#268#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/thirdParty/stefcommonheaders/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/dryRun.cpp" />
+    <entry file="file://$PROJECT_DIR$/typedefs.hpp" />
+    <entry file="file://$PROJECT_DIR$/cellindex.hpp" />
+    <entry file="file://$PROJECT_DIR$/oilproblem.hpp" />
+    <entry file="file://$PROJECT_DIR$/thirdParty/stefcommonheaders/CMakeLists.txt" />
     <entry file="file://$PROJECT_DIR$/../driverBurger.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-6369">
@@ -594,225 +362,70 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3285">
           <caret line="219" column="0" lean-forward="false" selection-start-line="219" selection-start-column="0" selection-end-line="219" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/oilproblem.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-          <folding>
-            <element signature="e#134#157#0" expanded="true" />
-            <element signature="e#238#268#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/oilproblem.hpp" />
     <entry file="file://$PROJECT_DIR$/oilproblem.cpp" />
     <entry file="file://$PROJECT_DIR$/oilproblem.cpp" />
-    <entry file="file://$PROJECT_DIR$/thirdParty/stefcommonheaders/thirdParty/cotire/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/thirdParty/stefcommonheaders/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/thirdParty/stefcommonheaders/thirdparty/cotire/CMakeLists.txt" />
+    <entry file="file://$PROJECT_DIR$/thirdParty/stefcommonheaders/CMakeLists.txt" />
     <entry file="file:///opt/local/include/eigen3/Eigen/src/PardisoSupport/PardisoSupport.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="178">
           <caret line="268" column="0" lean-forward="false" selection-start-line="268" selection-start-column="0" selection-end-line="268" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/FindMKL.cmake">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
-          <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/thirdParty/stefcommonheaders/include/stefCommonHeaders/dev.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="0" lean-forward="true" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
-          <folding>
-            <element signature="e#46#65#0" expanded="false" />
-            <element signature="e#112#155#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dryRun.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="30" column="18" lean-forward="true" selection-start-line="30" selection-start-column="18" selection-end-line="30" selection-end-column="18" />
-          <folding>
-            <element signature="e#51#76#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/declareFunctionAsInternal.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="19" lean-forward="false" selection-start-line="7" selection-start-column="12" selection-end-line="7" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/point.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="48" lean-forward="false" selection-start-line="11" selection-start-column="48" selection-end-line="11" selection-end-column="48" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/darcyVelocityInternal.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pressureInternal.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/thirdParty/stefcommonheaders/thirdParty/acutest/include/acutest.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="159">
-          <caret line="469" column="24" lean-forward="false" selection-start-line="469" selection-start-column="12" selection-end-line="469" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/FindMKL.cmake" />
+    <entry file="file://$PROJECT_DIR$/utils.cpp" />
+    <entry file="file://$PROJECT_DIR$/utils.hpp" />
+    <entry file="file://$PROJECT_DIR$/thirdParty/stefcommonheaders/include/stefCommonHeaders/dev.hpp" />
+    <entry file="file://$PROJECT_DIR$/dryRun.cpp" />
+    <entry file="file://$PROJECT_DIR$/declareFunctionAsInternal.hpp" />
+    <entry file="file://$PROJECT_DIR$/point.hpp" />
+    <entry file="file://$PROJECT_DIR$/darcyVelocityInternal.hpp" />
+    <entry file="file://$PROJECT_DIR$/pressureInternal.hpp" />
+    <entry file="file://$PROJECT_DIR$/thirdParty/stefcommonheaders/thirdparty/acutest/include/acutest.h" />
     <entry file="file:///opt/local/include/eigen3/Eigen/src/Core/Block.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
+        <state relative-caret-position="1785">
           <caret line="119" column="0" lean-forward="false" selection-start-line="119" selection-start-column="0" selection-end-line="119" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test.cpp">
+    <entry file="file://$PROJECT_DIR$/test.cpp" />
+    <entry file="file://$PROJECT_DIR$/cellindex.hpp" />
+    <entry file="file://$PROJECT_DIR$/pressure.cpp" />
+    <entry file="file://$PROJECT_DIR$/main.cpp" />
+    <entry file="file://$PROJECT_DIR$/typedefs.hpp" />
+    <entry file="file://$PROJECT_DIR$/oilproblem.hpp" />
+    <entry file="file://$PROJECT_DIR$/darcyVelocity.cpp" />
+    <entry file="file://$PROJECT_DIR$/saturation.cpp" />
+    <entry file="file://$PROJECT_DIR$/../../Build/Release/OilProblem/cotire/OilProblem_CXX_unity.cxx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="757">
-          <caret line="159" column="9" lean-forward="true" selection-start-line="159" selection-start-column="9" selection-end-line="159" selection-end-column="9" />
-          <folding>
-            <element signature="e#51#71#0" expanded="false" />
-            <element signature="e#3240#3358#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cellindex.hpp">
+    <entry file="file://$PROJECT_DIR$/../../Build/debug/OilProblem/cotire/OilProblem_CXX_unity.cxx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-507">
-          <caret line="77" column="31" lean-forward="false" selection-start-line="77" selection-start-column="31" selection-end-line="77" selection-end-column="31" />
+        <state relative-caret-position="165">
+          <caret line="11" column="0" lean-forward="true" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
           <folding>
-            <element signature="e#132#155#0" expanded="true" />
+            <element signature="e#169#252#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="431">
-          <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+        <state relative-caret-position="247">
+          <caret line="45" column="58" lean-forward="false" selection-start-line="45" selection-start-column="58" selection-end-line="45" selection-end-column="58" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pressure.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="282">
-          <caret line="55" column="0" lean-forward="false" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
-          <folding>
-            <element signature="e#208#253#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-          <folding>
-            <element signature="e#51#76#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/oilproblem.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="765">
-          <caret line="51" column="0" lean-forward="false" selection-start-line="51" selection-start-column="0" selection-end-line="51" selection-end-column="148" />
-          <folding>
-            <element signature="e#134#157#0" expanded="true" />
-            <element signature="e#238#268#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/saturation.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="124">
-          <caret line="16" column="0" lean-forward="false" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="83" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/typedefs.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="71">
-          <caret line="12" column="54" lean-forward="false" selection-start-line="12" selection-start-column="54" selection-end-line="12" selection-end-column="54" />
-          <folding>
-            <marker date="1522487740000" expanded="true" signature="1025:1141" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/darcyVelocity.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="486">
-          <caret line="121" column="1" lean-forward="false" selection-start-line="121" selection-start-column="1" selection-end-line="121" selection-end-column="1" />
-          <folding>
-            <element signature="e#51#76#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>

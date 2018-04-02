@@ -51,4 +51,13 @@ Matrix computeTotalDarcyVelocitiesY(ConstMatrixRef totalTransmissibilities, Matr
 __attribute__((pure))
 Matrix computeFluxFunctionFactors(ConstMatrixRef saturations, const Real porosity, const Real dynamicViscosityWater, const Real dynamicViscosityOil);
 
+__attribute__((pure))
+Matrix approximateFluxFunctionFactorsAtBordersX(ConstMatrixRef fluxFunctionFactors);
+
+__attribute__((pure))
+Matrix approximateFluxFunctionFactorsAtBordersY(ConstMatrixRef fluxFunctionFactors);
+
+__attribute__((pure))
+Matrix computeDivergence(ConstMatrixRef xDerivative, ConstMatrixRef yDerivative);
+
 #endif //STEFCOMMONHEADERS_OILPROBLEM_HPP

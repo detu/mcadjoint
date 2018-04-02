@@ -41,3 +41,7 @@ Matrix approximateFluxFunctionFactorsAtBordersY(ConstMatrixRef fluxFunctionFacto
     fluxFunctionFactorsAtBordersY.col(numberOfRows-1).setZero();
     return fluxFunctionFactorsAtBordersY;
 }
+
+Matrix computeDivergence(ConstMatrixRef xDerivative, ConstMatrixRef yDerivative) {
+
+}

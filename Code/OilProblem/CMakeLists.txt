@@ -6,6 +6,8 @@ option(USE_MKL_IF_PRESENT "Use Intel MKL if present" OFF)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(COTIRE_UNITY_SOURCE_MAXIMUM_NUMBER_OF_INCLUDES -j)
+
 
 include("thirdParty/stefcommonheaders/CMakeLists.txt")
 include(cotire)
@@ -15,22 +17,19 @@ set(baseLibHeaders control.h gnuplot_i.h utils.hpp)
 set(baseLibSources control.cpp gnuplot_i.cpp utils.cpp)
 set(oilLibHeaders oilProblem.hpp typedefs.hpp cellindex.hpp)
 set(oilLibSources pressure.cpp darcyVelocity.cpp saturation.cpp)
-set(dryRunSources dryRun.cpp)
-set(mainSources main.cpp)
-set(testSources test.cpp)
+set(dryRunSources dryRun.cpp ${oilLibSources} ${baseLibSources} ${baseLibHeaders} ${oilLibHeaders})
+set(mainSources main.cpp ${oilLibSources} ${baseLibSources} ${baseLibHeaders} ${oilLibHeaders})
+set(testSources test.cpp ${oilLibSources} ${baseLibSources} ${baseLibHeaders} ${oilLibHeaders})
 
-add_library(BaseLib STATIC ${baseLibSources} ${baseLibHeaders})
-target_link_libraries(BaseLib stefCommonHeaders)
-
-add_library(OilLib STATIC ${oilLibSources} ${oilLibHeaders})
-target_link_libraries(OilLib BaseLib)
 
 add_executable(DryRun ${dryRunSources})
 add_executable(Test ${testSources})
 add_executable(OilProblem ${mainSources})
-target_link_libraries(DryRun OilLib)
-target_link_libraries(OilProblem OilLib)
-target_link_libraries(Test OilLib)
+
+foreach(executable IN ITEMS DryRun Test OilProblem)
+    target_link_libraries(${executable} stefCommonHeaders)
+    cotire(${executable})
+endforeach()
 
 
 if (USE_MKL_IF_PRESENT)
