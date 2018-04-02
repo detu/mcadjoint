@@ -7,8 +7,8 @@
       <config projectName="stefCommonHeaders" targetName="Test_unity" />
       <config projectName="stefCommonHeaders" targetName="OilProblem_unity" />
       <config projectName="stefCommonHeaders" targetName="DryRun" />
-      <config projectName="stefCommonHeaders" targetName="DryRun_unity" />
       <config projectName="stefCommonHeaders" targetName="all_unity" />
+      <config projectName="stefCommonHeaders" targetName="DryRun_unity" />
       <config projectName="stefCommonHeaders" targetName="OilProblem_pch" />
       <config projectName="stefCommonHeaders" targetName="Test" />
       <config projectName="stefCommonHeaders" targetName="DryRun_pch" />
@@ -38,21 +38,53 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <file leaf-file-name="Block.h" pinned="false" current-in-tab="false">
+        <entry file="file:///opt/local/include/eigen3/Eigen/src/Core/Block.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="247">
-              <caret line="45" column="58" lean-forward="false" selection-start-line="45" selection-start-column="58" selection-end-line="45" selection-end-column="58" />
+            <state relative-caret-position="367">
+              <caret line="116" column="21" lean-forward="false" selection-start-line="116" selection-start-column="21" selection-end-line="116" selection-end-column="21" />
+              <folding>
+                <marker date="1497510620000" expanded="true" signature="5836:6050" ph="{...}" />
+                <marker date="1497510620000" expanded="true" signature="6219:6522" ph="{...}" />
+                <marker date="1497510620000" expanded="true" signature="6769:7107" ph="{...}" />
+                <marker date="1497510620000" expanded="true" signature="12586:12781" ph="{...}" />
+                <marker date="1497510620000" expanded="true" signature="15321:15342" ph="{...}" />
+                <marker date="1497510620000" expanded="true" signature="15686:15707" ph="{...}" />
+                <marker date="1497510620000" expanded="true" signature="16129:16150" ph="{...}" />
+                <marker date="1497510620000" expanded="true" signature="17406:17427" ph="{...}" />
+                <marker date="1497510620000" expanded="true" signature="17495:17667" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="saturation.cpp" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/saturation.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="120">
+              <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="2" selection-end-line="43" selection-end-column="3" />
+              <folding>
+                <element signature="e#50#75#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="oilproblem.hpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/oilproblem.hpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="221">
+              <caret line="53" column="0" lean-forward="false" selection-start-line="53" selection-start-column="2" selection-end-line="57" selection-end-column="86" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Block.h" pinned="false" current-in-tab="false">
-        <entry file="file:///opt/local/include/eigen3/Eigen/src/Core/Block.h">
+      <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1785">
-              <caret line="119" column="0" lean-forward="false" selection-start-line="119" selection-start-column="0" selection-end-line="119" selection-end-column="0" />
+            <state relative-caret-position="217">
+              <caret line="31" column="7" lean-forward="false" selection-start-line="31" selection-start-column="7" selection-end-line="31" selection-end-column="7" />
               <folding />
             </state>
           </provider>
@@ -97,9 +129,9 @@
         <option value="$PROJECT_DIR$/cellindex.hpp" />
         <option value="$PROJECT_DIR$/darcyVelocity.cpp" />
         <option value="$PROJECT_DIR$/typedefs.hpp" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/oilproblem.hpp" />
         <option value="$PROJECT_DIR$/saturation.cpp" />
-        <option value="$PROJECT_DIR$/CMakeLists.txt" />
       </list>
     </option>
   </component>
@@ -145,6 +177,11 @@
             <path>
               <item name="stefCommonHeaders" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
               <item name="OilProblem" type="47feb1d3:ProjectViewModuleNode" />
+            </path>
+            <path>
+              <item name="stefCommonHeaders" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
+              <item name="OilProblem" type="47feb1d3:ProjectViewModuleNode" />
+              <item name="OilProblem" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -243,12 +280,12 @@
       <workItem from="1522136613319" duration="2395000" />
       <workItem from="1522139206374" duration="31240000" />
       <workItem from="1522654532035" duration="678000" />
-      <workItem from="1522655626367" duration="1260000" />
+      <workItem from="1522655626367" duration="3465000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="52583000" />
+    <option name="totallyTimeSpent" value="54788000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="796" extended-state="6" />
@@ -256,8 +293,8 @@
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2494043" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3266762" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32952926" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3266762" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32952926" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2339515" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -387,22 +424,12 @@
     <entry file="file://$PROJECT_DIR$/darcyVelocityInternal.hpp" />
     <entry file="file://$PROJECT_DIR$/pressureInternal.hpp" />
     <entry file="file://$PROJECT_DIR$/thirdParty/stefcommonheaders/thirdparty/acutest/include/acutest.h" />
-    <entry file="file:///opt/local/include/eigen3/Eigen/src/Core/Block.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1785">
-          <caret line="119" column="0" lean-forward="false" selection-start-line="119" selection-start-column="0" selection-end-line="119" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test.cpp" />
     <entry file="file://$PROJECT_DIR$/cellindex.hpp" />
     <entry file="file://$PROJECT_DIR$/pressure.cpp" />
     <entry file="file://$PROJECT_DIR$/main.cpp" />
     <entry file="file://$PROJECT_DIR$/typedefs.hpp" />
-    <entry file="file://$PROJECT_DIR$/oilproblem.hpp" />
     <entry file="file://$PROJECT_DIR$/darcyVelocity.cpp" />
-    <entry file="file://$PROJECT_DIR$/saturation.cpp" />
     <entry file="file://$PROJECT_DIR$/../../Build/Release/OilProblem/cotire/OilProblem_CXX_unity.cxx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -416,16 +443,52 @@
         <state relative-caret-position="165">
           <caret line="11" column="0" lean-forward="true" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
           <folding>
-            <element signature="e#169#252#0" expanded="true" />
+            <element signature="e#169#252#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///opt/local/include/eigen3/Eigen/src/Core/Block.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="367">
+          <caret line="116" column="21" lean-forward="false" selection-start-line="116" selection-start-column="21" selection-end-line="116" selection-end-column="21" />
+          <folding>
+            <marker date="1497510620000" expanded="true" signature="5836:6050" ph="{...}" />
+            <marker date="1497510620000" expanded="true" signature="6219:6522" ph="{...}" />
+            <marker date="1497510620000" expanded="true" signature="6769:7107" ph="{...}" />
+            <marker date="1497510620000" expanded="true" signature="12586:12781" ph="{...}" />
+            <marker date="1497510620000" expanded="true" signature="15321:15342" ph="{...}" />
+            <marker date="1497510620000" expanded="true" signature="15686:15707" ph="{...}" />
+            <marker date="1497510620000" expanded="true" signature="16129:16150" ph="{...}" />
+            <marker date="1497510620000" expanded="true" signature="17406:17427" ph="{...}" />
+            <marker date="1497510620000" expanded="true" signature="17495:17667" ph="{...}" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="45" column="58" lean-forward="false" selection-start-line="45" selection-start-column="58" selection-end-line="45" selection-end-column="58" />
+        <state relative-caret-position="217">
+          <caret line="31" column="7" lean-forward="false" selection-start-line="31" selection-start-column="7" selection-end-line="31" selection-end-column="7" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/oilproblem.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="53" column="0" lean-forward="false" selection-start-line="53" selection-start-column="2" selection-end-line="57" selection-end-column="86" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/saturation.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="2" selection-end-line="43" selection-end-column="3" />
+          <folding>
+            <element signature="e#50#75#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

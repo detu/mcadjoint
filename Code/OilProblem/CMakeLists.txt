@@ -26,6 +26,12 @@ add_executable(DryRun ${dryRunSources})
 add_executable(Test ${testSources})
 add_executable(OilProblem ${mainSources})
 
+add_definitions(-DEIGEN_DEFAULT_DENSE_INDEX_TYPE=int -DEIGEN_NO_AUTOMATIC_RESIZING)
+if (lowercaseBuildType STREQUAL "debug")
+    add_definitions(-DEIGEN_INITIALIZE_MATRICES_BY_NAN)
+endif()
+
+string(TOLOWER CMAKE_BUILD_TYPE lowercaseBuildType)
 foreach(executable IN ITEMS DryRun Test OilProblem)
     target_link_libraries(${executable} stefCommonHeaders)
     cotire(${executable})
