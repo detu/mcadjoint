@@ -18,20 +18,16 @@ using ConstMatrixRef = const Eigen::Ref<const Matrix>&;
 
 using SparseVector = Eigen::SparseVector<Real>;
 
+using CostFunction = std::function<Real(Matrix)>;
 
-struct VectorToBeMappedAsMatrix {
-    Vector vec;
-    Eigen::Map<Matrix> map;
 
-    inline VectorToBeMappedAsMatrix(Vector&& input, const int matrixRows, const int matrixCols):
-          vec(input), map(vec.data(), matrixRows, matrixCols) {}
-};
 
 
 struct Point {
     Real x;
     Real y;
 };
+
 
 #ifdef USE_PARDISO
 #include <Eigen/PardisoSupport>

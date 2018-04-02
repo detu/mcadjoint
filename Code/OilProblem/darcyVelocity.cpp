@@ -7,7 +7,7 @@
 
 Matrix computeXDerivative(ConstMatrixRef field, const Real meshWidth) {
     Matrix xDerivative(field.rows(), field.cols() + 1);
-    const int numberOfCols = int(xDerivative.cols());
+    const int numberOfCols = 1;
     const int lastColIndex = numberOfCols-1;
     xDerivative.col(0).setZero();
 
@@ -21,7 +21,7 @@ Matrix computeXDerivative(ConstMatrixRef field, const Real meshWidth) {
 
 Matrix computeYDerivative(ConstMatrixRef field, const Real meshWidth) {
     Matrix yDerivative(field.rows()+1, field.cols());
-    const int numberOfRows = int(yDerivative.rows());
+    const int numberOfRows = yDerivative.rows();
     const int lastRowIndex = numberOfRows-1;
     yDerivative.row(0).setZero();
 
@@ -76,8 +76,8 @@ CellIndex borderIndexToCenterIndex(CellIndex borderIndex, const CellIndex::Direc
 
 
 Matrix computeTotalDarcyVelocitiesX(ConstMatrixRef totalTransmissibilities, Matrix pressureDerivativesX) {
-    const int numberOfColsOfDerivatives = int(pressureDerivativesX.cols());
-    const int numberOfRowsOfDerivatives = int(pressureDerivativesX.rows());
+    const int numberOfColsOfDerivatives = pressureDerivativesX.cols();
+    const int numberOfRowsOfDerivatives = pressureDerivativesX.rows();
     const int numberOfRowsOfPressures = numberOfRowsOfDerivatives;
 
     CellIndex borderIndex;
@@ -99,8 +99,8 @@ Matrix computeTotalDarcyVelocitiesX(ConstMatrixRef totalTransmissibilities, Matr
 }
 
 Matrix computeTotalDarcyVelocitiesY(ConstMatrixRef totalTransmissibilities, Matrix pressureDerivativesY) {
-    const int numberOfColsOfDerivatives = int(pressureDerivativesY.cols());
-    const int numberOfRowsOfDerivatives = int(pressureDerivativesY.rows());
+    const int numberOfColsOfDerivatives = pressureDerivativesY.cols();
+    const int numberOfRowsOfDerivatives = pressureDerivativesY.rows();
     const int numberOfRowsOfPressures = numberOfRowsOfDerivatives - 1; // the zero derivatives at the top and the bottom are added
 
     CellIndex borderIndex;

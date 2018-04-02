@@ -15,50 +15,49 @@ Matrix computeFluxFunctionFactors(ConstMatrixRef saturationsWater, const Real po
     return saturationsWater.unaryExpr(map);
 }
 
-//Matrix approximateFluxFunctionFactorsAtBordersX(ConstMatrixRef fluxFunctionFactors) {
-//    Matrix fluxFunctionFactorsAtBordersX(fluxFunctionFactors.rows(), fluxFunctionFactors.cols()+1);
-//
-//    fluxFunctionFactorsAtBordersX.col(0).setZero();
-//
-//    const int numberOfCols = int(fluxFunctionFactorsAtBordersX.cols());
-//    for (int colIndex = 1; colIndex < numberOfCols-1; ++colIndex) {
-//        fluxFunctionFactorsAtBordersX.col(colIndex) = 0.5 * (fluxFunctionFactorsAtBordersX.col(colIndex) - fluxFunctionFactorsAtBordersX.col(colIndex-1));
-//    }
-//
-//    fluxFunctionFactorsAtBordersX.col(numberOfCols-1).setZero();
-//    return fluxFunctionFactorsAtBordersX;
-//}
-//
-//Matrix approximateFluxFunctionFactorsAtBordersY(ConstMatrixRef fluxFunctionFactors) {
-//    Matrix fluxFunctionFactorsAtBordersY(fluxFunctionFactors.rows(), fluxFunctionFactors.cols()+1);
-//
-//    fluxFunctionFactorsAtBordersY.row(0).setZero();
-//
-//    const int numberOfRows = int(fluxFunctionFactorsAtBordersY.rows());
-//    for (int rowIndex = 1; rowIndex < numberOfRows-1; ++rowIndex) {
-//        fluxFunctionFactorsAtBordersY.row(rowIndex) = 0.5 * (fluxFunctionFactorsAtBordersY.row(rowIndex) - fluxFunctionFactorsAtBordersY.row(rowIndex-1));
-//    }
-//
-//    fluxFunctionFactorsAtBordersY.col(numberOfRows-1).setZero();
-//    return fluxFunctionFactorsAtBordersY;
-//}
-
-Matrix computeDivergence(ConstMatrixRef xDerivative, ConstMatrixRef yDerivative) {
-    Matrix divergence(xDerivative.rows(), xDerivative.cols()-1);
-    ASSERT(divergence.rows() == yDerivative.rows() - 1);
-    ASSERT(divergence.cols() == yDerivative.cols());
-
-    const int numberOfColumnsInDivergence = divergence.cols();
-    const int numberOfRowsInDivergence = divergence.rows();
-
-    for (int divCol = 0; divCol < numberOfColumnsInDivergence; ++divCol) {
-        divergence.col(divCol) =
+Matrix computeFluxesX(ConstMatrixRef fluxFunctionFactors, Matrix darcyVelocitiesX) {
+    ASSERT(fluxFunctionFactors.cols() == darcyVelocitiesX.cols() - 1);
+    const int numberOfCols = darcyVelocitiesX.cols();
+    for (int colIndex = 1; colIndex < numberOfCols - 1; ++colIndex) {
+        darcyVelocitiesX.col(colIndex) *= (darcyVelocitiesX.col(colIndex).array() >= 0).select(
+              fluxFunctionFactors.col(colIndex - 1), fluxFunctionFactors.col(colIndex));
     }
-
-    for (int divRow = 0; divRow < numberOfRowsInDivergence; ++divRow) {
-        divergence.row(divRow) += 0.5 * (yDerivative.row(divRow) + yDerivative.row(divRow + 1));
-    }
-
-    return divergence;
+    return darcyVelocitiesX;
 }
 
+Matrix computeFluxesY(ConstMatrixRef fluxFunctionFactors, Matrix darcyVelocitiesY) {
+    ASSERT(fluxFunctionFactors.rows() == darcyVelocitiesY.rows() - 1);
+    const int numberOfRows = darcyVelocitiesY.rows();
+    for (int rowIndex = 1; rowIndex < numberOfRows - 1; ++rowIndex) {
+        darcyVelocitiesY.row(rowIndex) *= (darcyVelocitiesY.row(rowIndex).array() >= 0).select(
+              fluxFunctionFactors.row(rowIndex), fluxFunctionFactors.row(rowIndex - 1));
+    }
+    return darcyVelocitiesY;
+}
+
+
+
+Matrix advanceStateInTime(Matrix state, ConstMatrixRef derivativeInTime, const Real timestep) {
+    state += timestep * derivativeInTime;
+}
+
+Matrix computeSaturationDivergence(ConstMatrixRef fluxFunctionFactors, ConstMatrixRef fluxesX, ConstMatrixRef fluxesY, const Real meshWidth) {
+    const int numberOfRows = fluxFunctionFactors.rows();
+    const int numberOfCols = fluxFunctionFactors.cols();
+    ASSERT(fluxesX.cols() == numberOfCols + 1);
+    ASSERT(fluxesX.rows() == numberOfRows);
+    ASSERT(fluxesY.cols() == numberOfCols);
+    ASSERT(fluxesY.rows() == numberOfRows+1);
+
+    Matrix divergences(numberOfRows, numberOfCols);
+
+    for (int colIndex = 0; colIndex < numberOfCols; ++colIndex) {
+        divergences.col(colIndex) = (fluxesX.col(colIndex + 1) - fluxesX.col(colIndex)) / meshWidth;
+    }
+
+    for (int rowIndex = 0; rowIndex < numberOfRows; ++rowIndex) {
+        divergences.row(rowIndex) = (fluxesY.row(rowIndex) - fluxesY.row(rowIndex+1)) / meshWidth;
+    }
+
+    return divergences;
+}

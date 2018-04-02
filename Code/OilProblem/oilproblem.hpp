@@ -7,6 +7,7 @@
 
 #include "typedefs.hpp"
 #include "cellindex.hpp"
+#include "vectorToBeMappedAsMatrix.hpp"
 
 #if !defined(__GNUC__) && !defined(__attribute__)
     #define __attribute__(ignored)
@@ -51,13 +52,19 @@ Matrix computeTotalDarcyVelocitiesY(ConstMatrixRef totalTransmissibilities, Matr
 __attribute__((pure))
 Matrix computeFluxFunctionFactors(ConstMatrixRef saturations, const Real porosity, const Real dynamicViscosityWater, const Real dynamicViscosityOil);
 
-//__attribute__((pure))
-//Matrix approximateFluxFunctionFactorsAtBordersX(ConstMatrixRef fluxFunctionFactors);
-//
-//__attribute__((pure))
-//Matrix approximateFluxFunctionFactorsAtBordersY(ConstMatrixRef fluxFunctionFactors);
+__attribute__((pure))
+Matrix computeFluxesX(ConstMatrixRef fluxFunctionFactors, Matrix darcyVelocitiesX);
 
 __attribute__((pure))
-Matrix computeDivergence(ConstMatrixRef xDerivative, ConstMatrixRef yDerivative);
+Matrix computeFluxesY(ConstMatrixRef fluxFunctionFactors, Matrix darcyVelocitiesY);
+
+__attribute__((pure))
+Matrix advanceStateInTime(Matrix state, ConstMatrixRef derivativeInTime);
+
+__attribute__((pure))
+Matrix computeSaturationDivergence(ConstMatrixRef fluxFunctionFactors, ConstMatrixRef fluxesX, ConstMatrixRef fluxesY, const Real meshWidth);
+
+__attribute__((pure))
+MinimizationState doAMinimizerStep(MinimizationState oldState, ConstMatrixRef sensitivity);
 
 #endif //STEFCOMMONHEADERS_OILPROBLEM_HPP
