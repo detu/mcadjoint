@@ -83,9 +83,10 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
                 const bool neighborIsCellInTheWell = wellCell == neighbor;
                 const bool iAmCellInTheWell = wellCell == myself;
 
+                // TODO SparseQr
                 if (likely(!iAmCellInTheWell)) {
                     meToMyself(transmissibilities) += currentTransmissibility;
-                    
+
                     if (likely(!neighborIsCellInTheWell)) {
                         neighborToMe(transmissibilities) -= currentTransmissibility;
                         neighborToThemselves(transmissibilities) += currentTransmissibility;
