@@ -8,7 +8,7 @@
 
 
 void testPressurePoisson() {
-    const int n = 100;
+    const int n = 2;
 
     const Matrix totalMobilities = Matrix::Random(n, n).unaryExpr([] (Real x) {return 10 * std::abs(x) + 1;});
     if (!(totalMobilities.array() > 0).all()) {
@@ -17,43 +17,51 @@ void testPressurePoisson() {
     }
     Matrix sources(Matrix::Random(n, n));
 
-    const SparseMatrix transmissibilities = assembleTransmissibilityMatrix(totalMobilities);
-
-    VectorToBeMappedAsMatrix vecmap = solvePressurePoissonProblem(transmissibilities, sources);
-    const Matrix& pressures = vecmap.map;
-
+    Matrix pressures(n, n);
+    pressures.setZero();
     const CellIndex wellCell = {0, n-1};
+    const Real pressureAtWellNow = wellCell(pressures);
+
+    #ifdef VERBOSE_TESTS
+    std::cout << "Pressure at well now = " << pressureAtWellNow << "\n";
+    #endif
+
+
+    const SparseMatrix transmissibilities = assemblePressureSystemWithBC(totalMobilities);
+    std::cout << Matrix(transmissibilities) << "\n";
+
+    Eigen::Map<Vector> pressuresAsVector(pressures.data(), pressures.size());
+
+    solvePressurePoissonProblemInplace(transmissibilities, sources, pressureAtWellNow, pressuresAsVector);
+    std::cout << pressures << "\n";
+
+
     Real error = -1;
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             double shouldBeSource = 0;
 
+            if (i < n - 1) {
+                shouldBeSource +=
+                      computeTransmissibility(totalMobilities, {i, j}, {i + 1, j}) *
+                      (pressures(i, j) - pressures(i + 1, j));
+            }
 
-            if (CellIndex({i, j}) == wellCell) {
-                shouldBeSource = pressures(i, j);
-            } else {
-                if (i < n - 1) {
-                    shouldBeSource +=
-                          computeTransmissibility(totalMobilities, {i, j}, {i + 1, j}) *
-                          (pressures(i, j) - pressures(i + 1, j));
-                }
+            if (i > 0) {
+                shouldBeSource += computeTransmissibility(totalMobilities, {i, j}, {i - 1, j}) *
+                                  (pressures(i, j) - pressures(i - 1, j));
+            }
 
-                if (i > 0) {
-                    shouldBeSource += computeTransmissibility(totalMobilities, {i, j}, {i - 1, j}) *
-                                      (pressures(i, j) - pressures(i - 1, j));
-                }
+            if (j < n - 1) {
+                shouldBeSource +=
+                      computeTransmissibility(totalMobilities, {i, j}, {i, j + 1}) *
+                      (pressures(i, j) - pressures(i, j + 1));
+            }
 
-                if (j < n - 1) {
-                    shouldBeSource +=
-                          computeTransmissibility(totalMobilities, {i, j}, {i, j + 1}) *
-                          (pressures(i, j) - pressures(i, j + 1));
-                }
-
-                if (j > 0) {
-                    shouldBeSource +=
-                          computeTransmissibility(totalMobilities, {i, j}, {i, j - 1}) *
-                          (pressures(i, j) - pressures(i, j - 1));
-                }
+            if (j > 0) {
+                shouldBeSource +=
+                      computeTransmissibility(totalMobilities, {i, j}, {i, j - 1}) *
+                      (pressures(i, j) - pressures(i, j - 1));
             }
 
             const double newError = std::abs(sources(i, j) - shouldBeSource);

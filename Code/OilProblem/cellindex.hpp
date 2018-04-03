@@ -8,6 +8,7 @@
 #include "typedefs.hpp"
 #include <array>
 #include <string>
+#include <stefCommonHeaders/assert.h>
 
 #if !defined(__GNUC__) && !defined(__attribute__)
     #define __attribute__(ignored)
@@ -45,36 +46,52 @@ struct CellIndex {
         return sparseMatrix.coeffRef(i, j);
     }
 
+    __attribute__((pure))
     inline Real operator()(const SparseMatrix& sparseMatrix) const {
         return sparseMatrix.coeff(i, j);
     }
 
+    __attribute__((pure))
     inline int linearIndex(const int numberOfRows) const {
         return i + numberOfRows * j;
     }
 
+    __attribute__((pure))
+    inline int linearIndexWithSkip(const int numberOfRows, const int linearIndexToSkip) const {
+        int candidate = linearIndex(numberOfRows);
+        ASSERT(candidate != linearIndexToSkip);
 
+        if (candidate > linearIndexToSkip) {
+            --candidate;
+        }
+
+        return candidate;
+    }
+
+    __attribute__((pure))
     inline bool operator==(const CellIndex& other) const {
         return i == other.i && j == other.j;
     }
 
+    __attribute__((pure))
     inline bool operator!=(const CellIndex& other) const {
         return !(*this == other);
     }
 
 
-    void shiftPoint(Point& point, const Real meshWidth) const {
+    inline void shiftPoint(Point& point, const Real meshWidth) const {
         point.x += Real(j) * meshWidth;
         point.y -= Real(i) * meshWidth;
     }
 
+    __attribute__((pure))
     inline Point toCenterPoint(const Real meshWidth) const {
         Point point = {meshWidth/2.0, 1.0 - meshWidth/2.0};
         shiftPoint(point, meshWidth);
         return point;
     }
 
-
+    __attribute__((pure))
     inline Point toBorderPoint(const Real meshWidth, const CellIndex::Direction whichBorder) const {
         Point point;
         switch (whichBorder) {
@@ -102,6 +119,7 @@ struct CellIndex {
         return point;
     }
 
+    __attribute__((pure))
     inline CellIndex neighbor(const Direction direction) const {
         switch (direction) {
             case (Direction::NORTH): {

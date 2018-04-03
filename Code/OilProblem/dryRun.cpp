@@ -7,7 +7,7 @@
 
 int main() {
     std::cout << "Test transmission matrix\n------------------------\n";
-    const int n = 5;
+    const int n = 2;
     std::cout << "n = " << n << "\n";
 
     Matrix totalMobilities(n, n);
@@ -19,14 +19,18 @@ int main() {
         std::cout << "totalMobilities = \n" << totalMobilities << "\n";
     }
 
-    const Matrix transmissibilities = assembleTransmissibilityMatrix(totalMobilities);
+    Matrix sources;
+    sources.resizeLike(totalMobilities);
+    sources.setZero();
+
+    const Matrix transmissibilities = assemblePressureSystemWithBC(totalMobilities);
 
     Eigen::JacobiSVD<Matrix> svd(transmissibilities);
     double cond = svd.singularValues()(0)
                   / svd.singularValues()(svd.singularValues().size()-1);
 
     std::cout << "cond = " << cond << "\n";
-    std::cout << "eigenvalues = " << transmissibilities.eigenvalues() << "\n";
+    std::cout << "eigenvalues = " << (transmissibilities.transpose() * transmissibilities).eigenvalues() << "\n";
 
     if (n <= 10) {
         std::cout << "transmissibilities = \n" << transmissibilities;

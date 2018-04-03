@@ -6,6 +6,7 @@
 #define STEFCOMMONHEADERS_TYPEDEFS_HPP
 #include <Eigen/Sparse>
 #include <Eigen/Dense>
+#include <functional>
 
 using Real = double;
 using Vector = Eigen::Matrix<Real, Eigen::Dynamic, 1>;
@@ -20,6 +21,8 @@ using SparseVector = Eigen::SparseVector<Real>;
 
 using CostFunction = std::function<Real(Matrix)>;
 
+using WellFunction = std::function<Real(Real)>;
+using PressureFunction = WellFunction;
 
 
 

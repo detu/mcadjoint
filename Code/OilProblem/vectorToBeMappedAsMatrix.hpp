@@ -32,4 +32,12 @@ struct MinimizationState {
           stepSize(NAN), cost(NAN), parameters(matrixRows, matrixCols) {}
 };
 
+struct SimulationState {
+    Matrix saturationsWater;
+    VectorToBeMappedAsMatrix pressures;
+
+    inline SimulationState(const int matrixRows, const int matrixCols):
+          saturationsWater(matrixRows, matrixCols), pressures(matrixRows, matrixCols) {}
+};
+
 #endif //STEFCOMMONHEADERS_VECTORTOBEMAPPEDASMATRIX_HPP

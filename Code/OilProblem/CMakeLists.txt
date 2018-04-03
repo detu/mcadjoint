@@ -15,8 +15,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}")
 
 set(baseLibHeaders control.h gnuplot_i.h utils.hpp)
 set(baseLibSources control.cpp gnuplot_i.cpp utils.cpp)
-set(oilLibHeaders oilProblem.hpp typedefs.hpp cellindex.hpp vectorToBeMappedAsMatrix.hpp)
-set(oilLibSources pressure.cpp darcyVelocity.cpp saturation.cpp minimizer.cpp)
+set(oilLibHeaders oilProblem.hpp typedefs.hpp cellindex.hpp vectorToBeMappedAsMatrix.hpp fixedParameters.hpp)
+set(oilLibSources pressure.cpp darcyVelocity.cpp saturation.cpp minimizer.cpp forward.cpp)
 set(dryRunSources dryRun.cpp ${oilLibSources} ${baseLibSources} ${baseLibHeaders} ${oilLibHeaders})
 set(mainSources main.cpp ${oilLibSources} ${baseLibSources} ${baseLibHeaders} ${oilLibHeaders})
 set(testSources test.cpp ${oilLibSources} ${baseLibSources} ${baseLibHeaders} ${oilLibHeaders})
@@ -24,6 +24,8 @@ set(testSources test.cpp ${oilLibSources} ${baseLibSources} ${baseLibHeaders} ${
 
 add_executable(DryRun ${dryRunSources})
 add_executable(Test ${testSources})
+add_executable(TestVerbose ${testSources})
+target_compile_definitions(TestVerbose PUBLIC -DVERBOSE_TESTS)
 add_executable(OilProblem ${mainSources})
 
 add_definitions(-DEIGEN_DEFAULT_DENSE_INDEX_TYPE=int -DEIGEN_NO_AUTOMATIC_RESIZING)
@@ -32,7 +34,7 @@ if (lowercaseBuildType STREQUAL "debug")
 endif()
 
 string(TOLOWER CMAKE_BUILD_TYPE lowercaseBuildType)
-foreach(executable IN ITEMS DryRun Test OilProblem)
+foreach(executable IN ITEMS DryRun Test TestVerbose OilProblem)
     target_link_libraries(${executable} stefCommonHeaders)
     cotire(${executable})
 endforeach()

@@ -18,11 +18,12 @@ Real computeTransmissibility(ConstMatrixRef totalMobilities, const CellIndex& fr
 
 
 __attribute__((pure))
-SparseMatrix assembleTransmissibilityMatrix(ConstMatrixRef totalMobilities);
+SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities);
+
+void solvePressurePoissonProblemInplace(const SparseMatrix& transmissibilities, ConstMatrixRef sources, const Real pressureAtWell, VectorRef result);
 
 
-__attribute__((pure))
-VectorToBeMappedAsMatrix solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstMatrixRef sources);
+
 
 // Gradient zero at boundaries
 __attribute__((pure))
@@ -41,7 +42,8 @@ __attribute__((pure))
 CellIndex pressureToTransmissibilityIndex(
       const CellIndex& fromCell,
       const CellIndex& toCell,
-      const int numberOfRows);
+      const int numberOfRows,
+      const int numberOfCols);
 
 __attribute__((pure))
 Matrix computeTotalDarcyVelocitiesX(ConstMatrixRef totalTransmissibilities, Matrix pressureDerivativesX);
@@ -66,5 +68,9 @@ Matrix computeSaturationDivergence(ConstMatrixRef fluxFunctionFactors, ConstMatr
 
 __attribute__((pure))
 MinimizationState doAMinimizerStep(MinimizationState oldState, ConstMatrixRef sensitivity);
+
+__attribute__((pure))
+Matrix computeTotalMobilities(const Real dynamicViscosityOil, const Real dynamicViscosityWater, ConstMatrixRef permeabilities, ConstMatrixRef saturationsWater);
+
 
 #endif //STEFCOMMONHEADERS_OILPROBLEM_HPP

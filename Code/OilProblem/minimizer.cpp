@@ -2,7 +2,7 @@
 // Created by Stefano Weidmann on 02.04.18.
 //
 
-#include "oilproblem.hpp"
+#include "oilProblem.hpp"
 
 MinimizationState doAMinimizerStep(const CostFunction& toMinimize, const MinimizationState& oldState, ConstMatrixRef sensitivity) {
     MinimizationState newState(oldState.parameters.map.rows(), oldState.parameters.map.cols());

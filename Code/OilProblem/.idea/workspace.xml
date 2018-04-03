@@ -2,17 +2,20 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true" buildAllGenerated="true">
     <generated>
+      <config projectName="stefCommonHeaders" targetName="Test_unity" />
+      <config projectName="stefCommonHeaders" targetName="DryRun" />
+      <config projectName="stefCommonHeaders" targetName="DryRun_unity" />
+      <config projectName="stefCommonHeaders" targetName="TestVerbose_unity" />
+      <config projectName="stefCommonHeaders" targetName="OilProblem_pch" />
+      <config projectName="stefCommonHeaders" targetName="OilProblem" />
       <config projectName="stefCommonHeaders" targetName="Test_pch" />
       <config projectName="stefCommonHeaders" targetName="clean_cotire" />
-      <config projectName="stefCommonHeaders" targetName="Test_unity" />
       <config projectName="stefCommonHeaders" targetName="OilProblem_unity" />
-      <config projectName="stefCommonHeaders" targetName="DryRun" />
       <config projectName="stefCommonHeaders" targetName="all_unity" />
-      <config projectName="stefCommonHeaders" targetName="DryRun_unity" />
-      <config projectName="stefCommonHeaders" targetName="OilProblem_pch" />
+      <config projectName="stefCommonHeaders" targetName="TestVerbose_pch" />
       <config projectName="stefCommonHeaders" targetName="Test" />
       <config projectName="stefCommonHeaders" targetName="DryRun_pch" />
-      <config projectName="stefCommonHeaders" targetName="OilProblem" />
+      <config projectName="stefCommonHeaders" targetName="TestVerbose" />
       <config projectName="stefCommonHeaders" targetName="all_pch" />
     </generated>
   </component>
@@ -38,45 +41,56 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="saturation.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/saturation.cpp">
+      <file leaf-file-name="oilProblem.hpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/oilProblem.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="645">
-              <caret line="43" column="7" lean-forward="false" selection-start-line="43" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
+            <state relative-caret-position="330">
+              <caret line="22" column="140" lean-forward="false" selection-start-line="22" selection-start-column="140" selection-end-line="22" selection-end-column="140" />
               <folding>
-                <element signature="e#50#75#0" expanded="true" />
+                <element signature="e#134#157#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="minimizer.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/minimizer.cpp">
+      <file leaf-file-name="PlainObjectBase.h" pinned="false" current-in-tab="false">
+        <entry file="file:///opt/local/include/eigen3/Eigen/src/Core/PlainObjectBase.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="24" column="20" lean-forward="false" selection-start-line="24" selection-start-column="20" selection-end-line="24" selection-end-column="20" />
+            <state relative-caret-position="131">
+              <caret line="280" column="0" lean-forward="false" selection-start-line="280" selection-start-column="0" selection-end-line="280" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="darcyVelocity.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/darcyVelocity.cpp">
+      <file leaf-file-name="AssignEvaluator.h" pinned="false" current-in-tab="false">
+        <entry file="file:///opt/local/include/eigen3/Eigen/src/Core/AssignEvaluator.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-231">
-              <caret line="82" column="26" lean-forward="false" selection-start-line="82" selection-start-column="26" selection-end-line="82" selection-end-column="26" />
+            <state relative-caret-position="131">
+              <caret line="878" column="0" lean-forward="false" selection-start-line="878" selection-start-column="0" selection-end-line="878" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="oilproblem.hpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/oilproblem.hpp">
+      <file leaf-file-name="Ref.h" pinned="false" current-in-tab="false">
+        <entry file="file:///opt/local/include/eigen3/Eigen/src/Core/Ref.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1005">
-              <caret line="67" column="91" lean-forward="false" selection-start-line="67" selection-start-column="91" selection-end-line="67" selection-end-column="91" />
+            <state relative-caret-position="131">
+              <caret line="247" column="0" lean-forward="false" selection-start-line="247" selection-start-column="0" selection-end-line="247" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="403">
+              <caret line="34" column="104" lean-forward="false" selection-start-line="34" selection-start-column="87" selection-end-line="34" selection-end-column="104" />
               <folding>
-                <element signature="e#134#157#0" expanded="true" />
+                <marker date="1522768342000" expanded="false" signature="2283:2465" ph="..." />
+                <marker date="1522768342000" expanded="false" signature="3384:3502" ph="..." />
               </folding>
             </state>
           </provider>
@@ -85,8 +99,8 @@
       <file leaf-file-name="typedefs.hpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/typedefs.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="190">
-              <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+            <state relative-caret-position="329">
+              <caret line="40" column="36" lean-forward="false" selection-start-line="40" selection-start-column="36" selection-end-line="40" selection-end-column="36" />
               <folding>
                 <element signature="e#129#152#0" expanded="true" />
               </folding>
@@ -94,21 +108,44 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="vectorToBeMappedAsMatrix.hpp" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/vectorToBeMappedAsMatrix.hpp">
+      <file leaf-file-name="forward.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/forward.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="237">
-              <caret line="17" column="54" lean-forward="false" selection-start-line="17" selection-start-column="54" selection-end-line="17" selection-end-column="54" />
+            <state relative-caret-position="300">
+              <caret line="20" column="10" lean-forward="false" selection-start-line="20" selection-start-column="10" selection-end-line="20" selection-end-column="10" />
+              <folding>
+                <element signature="e#51#76#0" expanded="true" />
+                <marker date="1522760047000" expanded="true" signature="268:865" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pressure.cpp" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/pressure.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="359">
+              <caret line="87" column="20" lean-forward="false" selection-start-line="87" selection-start-column="20" selection-end-line="87" selection-end-column="20" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <file leaf-file-name="dryRun.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dryRun.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="217">
-              <caret line="31" column="7" lean-forward="false" selection-start-line="31" selection-start-column="7" selection-end-line="31" selection-end-column="7" />
+            <state relative-caret-position="194">
+              <caret line="25" column="82" lean-forward="false" selection-start-line="25" selection-start-column="82" selection-end-line="25" selection-end-column="82" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="darcyVelocity.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/darcyVelocity.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="343">
+              <caret line="114" column="207" lean-forward="false" selection-start-line="114" selection-start-column="207" selection-end-line="114" selection-end-column="207" />
               <folding />
             </state>
           </provider>
@@ -143,25 +180,28 @@
         <option value="$PROJECT_DIR$/oilproblem.cpp" />
         <option value="$PROJECT_DIR$/FindMKL.cmake" />
         <option value="$PROJECT_DIR$/main.cpp" />
-        <option value="$PROJECT_DIR$/dryRun.cpp" />
         <option value="$PROJECT_DIR$/gradient.cpp" />
         <option value="$PROJECT_DIR$/maybeHideFunction.hpp" />
         <option value="$PROJECT_DIR$/point.hpp" />
         <option value="$PROJECT_DIR$/darcyVelocityInternal.hpp" />
         <option value="$PROJECT_DIR$/pressureInternal.hpp" />
-        <option value="$PROJECT_DIR$/pressure.cpp" />
-        <option value="$PROJECT_DIR$/oilProblem.hpp" />
         <option value="$PROJECT_DIR$/thirdParty/stefcommonheaders/thirdParty/acutest/include/acutest.h" />
-        <option value="$PROJECT_DIR$/test.cpp" />
-        <option value="$PROJECT_DIR$/cellindex.hpp" />
-        <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/saturation.cpp" />
-        <option value="$PROJECT_DIR$/darcyVelocity.cpp" />
         <option value="$PROJECT_DIR$/optimizer.cpp" />
         <option value="$PROJECT_DIR$/oilproblem.hpp" />
-        <option value="$PROJECT_DIR$/typedefs.hpp" />
         <option value="$PROJECT_DIR$/minimizer.cpp" />
+        <option value="$PROJECT_DIR$/flowProblem.cpp" />
         <option value="$PROJECT_DIR$/vectorToBeMappedAsMatrix.hpp" />
+        <option value="$PROJECT_DIR$/fixedParameters.hpp" />
+        <option value="$PROJECT_DIR$/forward.cpp" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/cellindex.hpp" />
+        <option value="$PROJECT_DIR$/darcyVelocity.cpp" />
+        <option value="$PROJECT_DIR$/dryRun.cpp" />
+        <option value="$PROJECT_DIR$/test.cpp" />
+        <option value="$PROJECT_DIR$/oilProblem.hpp" />
+        <option value="$PROJECT_DIR$/typedefs.hpp" />
+        <option value="$PROJECT_DIR$/pressure.cpp" />
       </list>
     </option>
   </component>
@@ -220,7 +260,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="CMakeSettings" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -239,7 +279,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.Test">
+  <component name="RunManager" selected="Application.TestVerbose">
     <configuration name="Build All" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="DryRun" EXPLICIT_BUILD_TARGET_NAME="all">
       <envs />
     </configuration>
@@ -264,6 +304,15 @@
     <configuration name="Test" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="--exec=never" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="Test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="Test">
       <envs />
     </configuration>
+    <configuration name="TestVerbose" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="TestVerbose" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="TestVerbose">
+      <envs />
+    </configuration>
+    <configuration name="TestVerbose_pch" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="TestVerbose_pch" CONFIG_NAME="Debug">
+      <envs />
+    </configuration>
+    <configuration name="TestVerbose_unity" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="TestVerbose_unity" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="TestVerbose_unity">
+      <envs />
+    </configuration>
     <configuration name="Test_pch" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="Test_pch" CONFIG_NAME="Debug">
       <envs />
     </configuration>
@@ -279,7 +328,7 @@
     <configuration name="clean_cotire" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="clean_cotire" CONFIG_NAME="Debug">
       <envs />
     </configuration>
-    <list size="13">
+    <list size="16">
       <item index="0" class="java.lang.String" itemvalue="Application.Build All" />
       <item index="1" class="java.lang.String" itemvalue="Application.all_pch" />
       <item index="2" class="java.lang.String" itemvalue="Application.all_unity" />
@@ -293,6 +342,9 @@
       <item index="10" class="java.lang.String" itemvalue="Application.Test" />
       <item index="11" class="java.lang.String" itemvalue="Application.Test_pch" />
       <item index="12" class="java.lang.String" itemvalue="Application.Test_unity" />
+      <item index="13" class="java.lang.String" itemvalue="Application.TestVerbose" />
+      <item index="14" class="java.lang.String" itemvalue="Application.TestVerbose_pch" />
+      <item index="15" class="java.lang.String" itemvalue="Application.TestVerbose_unity" />
     </list>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
@@ -310,12 +362,12 @@
       <workItem from="1522136613319" duration="2395000" />
       <workItem from="1522139206374" duration="31240000" />
       <workItem from="1522654532035" duration="678000" />
-      <workItem from="1522655626367" duration="9826000" />
+      <workItem from="1522655626367" duration="25691000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="61149000" />
+    <option name="totallyTimeSpent" value="77014000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="796" extended-state="6" />
@@ -323,14 +375,14 @@
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2494043" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3266762" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32952926" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2339515" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3266762" sideWeight="0.38919777" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32952926" sideWeight="0.49722" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2339515" sideWeight="0.60365367" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2339515" sideWeight="0.3963463" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3989796" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39800286" sideWeight="0.49086577" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -366,33 +418,15 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="4" />
+      <option name="time" value="5" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" column="26" lean-forward="false" selection-start-line="21" selection-start-column="26" selection-end-line="21" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test.cpp" />
-    <entry file="file:///opt/local/include/eigen3/Eigen/src/SparseLU/SparseLU.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3285">
-          <caret line="219" column="0" lean-forward="false" selection-start-line="219" selection-start-column="0" selection-end-line="219" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/oilproblem.cpp" />
-    <entry file="file://$PROJECT_DIR$/dryRun.cpp" />
     <entry file="file://$PROJECT_DIR$/typedefs.hpp" />
     <entry file="file://$PROJECT_DIR$/cellindex.hpp" />
     <entry file="file://$PROJECT_DIR$/thirdParty/stefcommonheaders/CMakeLists.txt" />
-    <entry file="file://$PROJECT_DIR$/oilproblem.hpp" />
+    <entry file="file://$PROJECT_DIR$/oilProblem.hpp" />
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -413,7 +447,7 @@
     <entry file="file://$PROJECT_DIR$/dryRun.cpp" />
     <entry file="file://$PROJECT_DIR$/typedefs.hpp" />
     <entry file="file://$PROJECT_DIR$/cellindex.hpp" />
-    <entry file="file://$PROJECT_DIR$/oilproblem.hpp" />
+    <entry file="file://$PROJECT_DIR$/oilProblem.hpp" />
     <entry file="file://$PROJECT_DIR$/thirdParty/stefcommonheaders/CMakeLists.txt" />
     <entry file="file://$PROJECT_DIR$/../driverBurger.cpp">
       <provider selected="true" editor-type-id="text-editor">
@@ -430,7 +464,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/oilproblem.hpp" />
+    <entry file="file://$PROJECT_DIR$/oilProblem.hpp" />
     <entry file="file://$PROJECT_DIR$/oilproblem.cpp" />
     <entry file="file://$PROJECT_DIR$/oilproblem.cpp" />
     <entry file="file://$PROJECT_DIR$/thirdParty/stefcommonheaders/thirdparty/cotire/CMakeLists.txt" />
@@ -446,15 +480,11 @@
     <entry file="file://$PROJECT_DIR$/utils.cpp" />
     <entry file="file://$PROJECT_DIR$/utils.hpp" />
     <entry file="file://$PROJECT_DIR$/thirdParty/stefcommonheaders/include/stefCommonHeaders/dev.hpp" />
-    <entry file="file://$PROJECT_DIR$/dryRun.cpp" />
     <entry file="file://$PROJECT_DIR$/declareFunctionAsInternal.hpp" />
     <entry file="file://$PROJECT_DIR$/point.hpp" />
     <entry file="file://$PROJECT_DIR$/darcyVelocityInternal.hpp" />
     <entry file="file://$PROJECT_DIR$/pressureInternal.hpp" />
     <entry file="file://$PROJECT_DIR$/thirdParty/stefcommonheaders/thirdparty/acutest/include/acutest.h" />
-    <entry file="file://$PROJECT_DIR$/test.cpp" />
-    <entry file="file://$PROJECT_DIR$/cellindex.hpp" />
-    <entry file="file://$PROJECT_DIR$/pressure.cpp" />
     <entry file="file://$PROJECT_DIR$/main.cpp" />
     <entry file="file://$PROJECT_DIR$/../../Build/Release/OilProblem/cotire/OilProblem_CXX_unity.cxx">
       <provider selected="true" editor-type-id="text-editor">
@@ -471,14 +501,6 @@
           <folding>
             <element signature="e#169#252#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="217">
-          <caret line="31" column="7" lean-forward="false" selection-start-line="31" selection-start-column="7" selection-end-line="31" selection-end-column="7" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -500,44 +522,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/typedefs.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
-          <folding>
-            <element signature="e#129#152#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/oilproblem.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1005">
-          <caret line="67" column="91" lean-forward="false" selection-start-line="67" selection-start-column="91" selection-end-line="67" selection-end-column="91" />
-          <folding>
-            <element signature="e#134#157#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/darcyVelocity.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-231">
-          <caret line="82" column="26" lean-forward="false" selection-start-line="82" selection-start-column="26" selection-end-line="82" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/saturation.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="645">
-          <caret line="43" column="7" lean-forward="false" selection-start-line="43" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
-          <folding>
-            <element signature="e#50#75#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/minimizer.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
@@ -546,10 +530,134 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/fixedParameters.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="16" column="4" lean-forward="false" selection-start-line="16" selection-start-column="4" selection-end-line="16" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/vectorToBeMappedAsMatrix.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="237">
-          <caret line="17" column="54" lean-forward="false" selection-start-line="17" selection-start-column="54" selection-end-line="17" selection-end-column="54" />
+        <state relative-caret-position="315">
+          <caret line="21" column="51" lean-forward="false" selection-start-line="21" selection-start-column="51" selection-end-line="21" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cellindex.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1665">
+          <caret line="121" column="25" lean-forward="false" selection-start-line="121" selection-start-column="25" selection-end-line="121" selection-end-column="25" />
+          <folding>
+            <element signature="e#132#155#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="317">
+          <caret line="38" column="25" lean-forward="false" selection-start-line="38" selection-start-column="25" selection-end-line="38" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/saturation.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="279">
+          <caret line="43" column="7" lean-forward="false" selection-start-line="43" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/darcyVelocity.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="343">
+          <caret line="114" column="207" lean-forward="false" selection-start-line="114" selection-start-column="207" selection-end-line="114" selection-end-column="207" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///opt/local/include/eigen3/Eigen/src/Core/PlainObjectBase.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="131">
+          <caret line="280" column="0" lean-forward="false" selection-start-line="280" selection-start-column="0" selection-end-line="280" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///opt/local/include/eigen3/Eigen/src/Core/AssignEvaluator.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="131">
+          <caret line="878" column="0" lean-forward="false" selection-start-line="878" selection-start-column="0" selection-end-line="878" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///opt/local/include/eigen3/Eigen/src/Core/Ref.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="131">
+          <caret line="247" column="0" lean-forward="false" selection-start-line="247" selection-start-column="0" selection-end-line="247" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dryRun.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="194">
+          <caret line="25" column="82" lean-forward="false" selection-start-line="25" selection-start-column="82" selection-end-line="25" selection-end-column="82" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/oilProblem.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="22" column="140" lean-forward="false" selection-start-line="22" selection-start-column="140" selection-end-line="22" selection-end-column="140" />
+          <folding>
+            <element signature="e#134#157#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/typedefs.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="329">
+          <caret line="40" column="36" lean-forward="false" selection-start-line="40" selection-start-column="36" selection-end-line="40" selection-end-column="36" />
+          <folding>
+            <element signature="e#129#152#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forward.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="20" column="10" lean-forward="false" selection-start-line="20" selection-start-column="10" selection-end-line="20" selection-end-column="10" />
+          <folding>
+            <element signature="e#51#76#0" expanded="true" />
+            <marker date="1522760047000" expanded="true" signature="268:865" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="403">
+          <caret line="34" column="104" lean-forward="false" selection-start-line="34" selection-start-column="87" selection-end-line="34" selection-end-column="104" />
+          <folding>
+            <marker date="1522768342000" expanded="false" signature="2283:2465" ph="..." />
+            <marker date="1522768342000" expanded="false" signature="3384:3502" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pressure.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="359">
+          <caret line="87" column="20" lean-forward="false" selection-start-line="87" selection-start-column="20" selection-end-line="87" selection-end-column="20" />
           <folding />
         </state>
       </provider>
