@@ -47,7 +47,7 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
 
 
     const int numberOfPairs = numberOfCols * numberOfRows;
-    SparseMatrix transmissibilities(numberOfPairs, numberOfPairs);
+    SparseMatrix transmissibilities(numberOfPairs + 1, numberOfPairs); // + 1 because we want to fix the pressure at the well to be zero
 
 
     transmissibilities.reserve(Eigen::VectorXi::Constant(transmissibilities.cols(), 6));
@@ -55,7 +55,6 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
     CellIndex myself = {0, 0};
 
     const CellIndex wellCell = {0, numberOfCols-1};
-
     for (myself.j = 0; myself.j < numberOfCols; ++myself.j) {
         for (myself.i = 0; myself.i < numberOfRows; ++myself.i) {
 
@@ -80,39 +79,58 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
 
                 const Real currentTransmissibility = computeTransmissibility(totalMobilities, myself, neighbor);
 
-                const bool neighborIsCellInTheWell = wellCell == neighbor;
-                const bool iAmCellInTheWell = wellCell == myself;
 
-                // TODO SparseQr
-                if (likely(!iAmCellInTheWell)) {
+                if (wellCell != myself) {
                     meToMyself(transmissibilities) += currentTransmissibility;
+                    neighborToMe(transmissibilities) -= currentTransmissibility;
+                }
 
-                    if (likely(!neighborIsCellInTheWell)) {
-                        neighborToMe(transmissibilities) -= currentTransmissibility;
-                        neighborToThemselves(transmissibilities) += currentTransmissibility;
-                    }
-                } else {
-                    meToMyself(transmissibilities) = 1;
+                if (wellCell != neighbor) {
+                    meToNeighbor(transmissibilities) -= currentTransmissibility;
+                    neighborToThemselves(transmissibilities) += currentTransmissibility;
                 }
             }
         }
     }
 
+    transmissibilities.coeffRef(transmissibilities.rows() - 1, wellCell.linearIndex(numberOfRows)) = 1;
     transmissibilities.makeCompressed();
     return transmissibilities;
 }
 
 
-void solvePressurePoissonProblemInplace(const SparseMatrix& transmissibilities, ConstMatrixRef sources, const Real pressureAtWell, VectorRef result) {
+Vector projectSourcesIntoRange(ConstMatrixRef sources) {
+    Vector sourcesProjectedIntoRange(sources.size() + 1);
+    sourcesProjectedIntoRange << Eigen::Map<const Vector>(sources.data(), sources.size()), 0;
 
-    SparseSolver solver;
-    solver.compute(transmissibilities);
-    result = solver.solve(Eigen::Map<const Vector>(sources.data(), sources.size()));
-    //std::cout << "Estimated error = " << solver.error() << "\n";
+    sourcesProjectedIntoRange.head(sources.size()).array() -= sourcesProjectedIntoRange.head(sources.size()).array().mean();
 
-    result.array() += pressureAtWell;
+    return sourcesProjectedIntoRange;
 }
 
+Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstVectorRef sourcesProjectedIntoRange, ConstVectorRef pressureGuess) {
+
+    Eigen::LeastSquaresConjugateGradient<SparseMatrix> solver;
+    solver.setTolerance(1e-4);
+    //solver.setMaxIterations(1);
+    solver.compute(transmissibilities);
+
+    const Vector result = solver.solve(sourcesProjectedIntoRange);
+
+    ASSERT(solver.info() == Eigen::Success);
+    //std::cout << "Estimated error = " << solver.error() << "\n";
+
+    return result;
+}
+
+Vector augmentSources(ConstMatrixRef sources) {
+
+    Vector augmentedSources(sources.size() + 1);
+    augmentedSources << Eigen::Map<const Vector>(sources.data(), sources.size()), 0;
+    return augmentedSources;
+}
+
+#ifdef TODO
 Vector assemblePressureSourceVector(const Real pressureWellNow, const int numberOfRows, const int numberOfCols) {
     const CellIndex wellCell = {0, numberOfCols - 1};
 
@@ -120,3 +138,4 @@ Vector assemblePressureSourceVector(const Real pressureWellNow, const int number
 
 
 }
+    #endif

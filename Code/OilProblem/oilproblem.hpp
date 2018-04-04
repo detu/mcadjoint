@@ -20,10 +20,14 @@ Real computeTransmissibility(ConstMatrixRef totalMobilities, const CellIndex& fr
 __attribute__((pure))
 SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities);
 
-void solvePressurePoissonProblemInplace(const SparseMatrix& transmissibilities, ConstMatrixRef sources, const Real pressureAtWell, VectorRef result);
+__attribute__((pure))
+Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstVectorRef sourcesProjectedIntoRange, ConstVectorRef pressureGuess);
 
+__attribute__((pure))
+Vector augmentSources(ConstMatrixRef sources);
 
-
+__attribute__((pure))
+Vector projectSourcesIntoRange(ConstMatrixRef sources);
 
 // Gradient zero at boundaries
 __attribute__((pure))

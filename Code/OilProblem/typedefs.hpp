@@ -6,6 +6,8 @@
 #define STEFCOMMONHEADERS_TYPEDEFS_HPP
 #include <Eigen/Sparse>
 #include <Eigen/Dense>
+#include <Eigen/OrderingMethods>
+
 #include <functional>
 
 using Real = double;
@@ -35,11 +37,9 @@ struct Point {
 #ifdef USE_PARDISO
 #include <Eigen/PardisoSupport>
 using SparseMatrix = Eigen::SparseMatrix<Real, Eigen::RowMajor>;
-using SparseSolver = Eigen::PardisoLU<SparseMatrix>;
+using SparseLeastSquaresSolver = Eigen::PardisoLU<SparseMatrix>;
 #else
 using SparseMatrix = Eigen::SparseMatrix<Real, Eigen::ColMajor>;
-using SparseSolver = Eigen::SparseLU<SparseMatrix>;
-
 #endif
 
 
