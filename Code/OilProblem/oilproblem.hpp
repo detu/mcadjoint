@@ -21,7 +21,7 @@ __attribute__((pure))
 SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities);
 
 __attribute__((pure))
-Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstVectorRef sourcesProjectedIntoRange, ConstVectorRef pressureGuess);
+Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstVectorRef negatedSourcesProjectedIntoRange, ConstVectorRef pressureGuess);
 
 __attribute__((pure))
 Vector augmentSources(ConstMatrixRef sources);

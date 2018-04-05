@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{bm}
+\usepackage{bbm}
 \usepackage{empheq}
 \usepackage{etoolbox}
 \usepackage{hyperref}
@@ -35,6 +36,7 @@
 \end{varwidth}}}
 \renewcommand*{\d}[1]{\ensuremath{\mathrm{d}#1}}
 \newcommand*{\dist}{\sim}
+\newcommand*{\indicator}{\ensuremath{\mathbb{1}}}
 \newcommand*{\reals}{\ensuremath{\mathbb{R}}}
 \newcommand*{\integers}{\ensuremath{\mathbb{Z}}}
 \newcommand*{\naturals}{\ensuremath{\mathbb{N}}}
@@ -43,7 +45,7 @@
 \newcommand*{\inclimg}[2][]{\begin{figure}[H]\centering\includegraphics[max width=0.9\textwidth,keepaspectratio]{#2}#1\end{figure}}
 \newcommand*{\diff}[2]{\ensuremath{\frac{\d}{\d{#2}}{#1}}}
 \newcommand*{\pdiff}[2]{\ensuremath{\frac{\partial}{\partial{#2}}{#1}}}
-
+\newcommand*{\ddiff}[2]{\ensuremath{\frac{\delta}{\delta{#2}}{#1}}}
 \newcommand*{\mdiff}[3]{\ensuremath{\frac{\d{^{#3}}}{\d{#2}^{#3}}{#1}}}
 \newcommand*{\pmdiff}[3]{\ensuremath{\frac{\partial{^{#3}}}{\partial{#2}^{#3}}{#1}}}
 
@@ -60,12 +62,13 @@
 \newcommand*{\tmat}[1]{\tvec{#1}}
 \newcommand*{\rgramian}[1]{{#1}\transpose{#1}}
 \newcommand*{\lgramian}[1]{\transpose{#1}{#1}}
-\newcommand*{\indicator}[1]{\ensuremath{\mathbb{1}\left\{#1\right\}}}
+\renewcommand*{\indicator}{\ensuremath{\mathbbm{1}}}
 \newcommand*{\invmat}[1]{\ensuremath{\invert{\mat{#1}}}}
 \newcommand*{\iprod}[3]{\ensuremath{\ifstrempty{#1}{\transpose{#2} {#3}}{\transpose{#1} {#2} {#3}}}}
 \newcommand*{\ciprod}[2]{\ensuremath{\left\langle{#1},{#2}\right\rangle}}
 \newcommand*{\miprod}[2]{\iprod{#1}{#2}{#1}}
 \newcommand*{\enm}[1]{\left\langle{#1}\right\rangle}
+\DeclareMathOperator*{\hmean}{hmean}
 %\newcommand*{\grad}{\mathrm{grad}}
 %\renewcommand*{\div}{\mathrm{div}}
 \newcommand*{\bigO}[1]{\ensuremath{\mathcal{O}\left({#1}\right)}}
@@ -197,7 +200,8 @@ Substituting in the $\lambda$ from \eqref{lambdas} into Darcy's law \eqref{flowr
 
 Plugging this \eqref{flowrateTotal} into the conservation of mass \eqref{conservationOfMass} leads to the pressure equation
 \begin{empheq}[box=\fbox]{equation}
-\div(\lambda_\text{tot}\grad(p)) = q_\text{tot}.
+\label{pressurePoisson}
+\div(\lambda_\text{tot}\grad(p)) = -q_\text{tot}.
 \end{empheq}
 
 Comparing the total Darcy's law \eqref{flowrateTotal} and the Darcy's law for water \eqref{flowrateWater}, we see that
@@ -224,8 +228,7 @@ For the pressure equation we use homogeneous Neumann boundary conditions (no flo
 \end{equation}
 where we choose $p_0$ such that the compatibility condition
 \begin{equation}
-\int_\Omega q_\text{tot} \d{A} \overset{!}{=} \int_{\partial\Omega} \lambda_\text{tot}
-\iprod{}{\grad(p)}{\vec{n}} \d{l}
+\int_\Omega q_\text{tot} \d{A} \overset{!}{=} \int_{\partial\Omega} \lambda_\text{tot} \iprod{}{\grad(p)}{\vec{n}} \d{l}
 \end{equation}
 is satisfied.
 
@@ -237,6 +240,39 @@ To test the Monte-Carlo adjoint method, we want to match the pressure difference
 where the variables with a tilde denote computed quantities.
 
 \section{Discretization}
+We discretize the square domain $\Omega$ with $n \times n$ square finite volumes, thus getting a mesh width of $h := 1/n$.
+
+Averaging the pressure Poisson equation \eqref{pressurePoisson} over such a finite volume $K$, and using the divergence theorem leads to
+\begin{equation}
+\label{finiteVolumes}
+\frac{1}{h^2} \int_{\partial K} \lambda_\text{tot} \iprod{}{\grad(p)}{\vec{n}} \d{l} = -\frac{1}{h^2} \int_K q_\text{tot} \d{A}.
+\end{equation}
+Using the four boundaries $N$orth, $E$ast, $S$outh and $W$est of the finite volume $K$, we approximate \eqref{finiteVolumes} as
+\begin{multline}
+\frac{1}{h}\biggr( (\lambda_\text{tot} \ddiff{p}{x})\lvert_\text{E} - (\lambda_\text{tot} \ddiff{p}{x})\lvert_\text{W} \\+ (\lambda_\text{tot}\ddiff{p}{y})\lvert_\text{N}
+- \ddiff{p}{y})\lvert_\text{S} \biggr) \\= - \frac{Q_\text{tot}}{h^2} \cdot \begin{cases} 1, &\text{if } K \text{ is the finite volume nearest to the well} \\
+0, & \text{otherwise} \end{cases}
+\end{multline}
+
+$\ddiff{\cdot}{\cdot}$ denote the standard finite difference quotients, i.e.
+\begin{align}
+\label{differenceQuotients}
+\ddiff{p}{x}\lvert_\text{E} &\approx \frac{1}{h}(p_R - p_K) \\
+\ddiff{p}{x}\lvert_\text{W} &\approx \frac{1}{h}(p_K - p_D) \\
+\ddiff{p}{y}\lvert_\text{N} &\approx \frac{1}{h}(p_U - p_K) \\
+\ddiff{p}{y}\lvert_\text{S} &\approx \frac{1}{h}(p_K - p_D).
+\end{align}
+Here, $U$ stands for the upper neighbor of $K$, $D$ for the lower (down), $R$ for the right and $L$ for the left.
+
+The total mobilities $\lambda_\text{tot}$ at the boundaries are approximated by the harmonic mean of the total mobilities inside the adjacent finite volumes as
+\begin{align}
+\label{harmonicMeans}
+\lambda_\text{tot}\lvert_\text{E} &\approx \hmean(\lambda_\text{tot}\lvert_K, \lambda_\text{tot}\lvert_R) \\
+\lambda_\text{tot}\lvert_\text{W} &\approx \hmean(\lambda_\text{tot}\lvert_K, \lambda_\text{tot}\lvert_L) \\
+\lambda_\text{tot}\lvert_\text{N} &\approx \hmean(\lambda_\text{tot}\lvert_K, \lambda_\text{tot}\lvert_U) \\
+\lambda_\text{tot}\lvert_\text{S} &\approx \hmean(\lambda_\text{tot}\lvert_K, \lambda_\text{tot}\lvert_D),
+\end{align}
+where $\hmean(a, b) = 2ab/(a+b).$
 
 %\bibliographystyle{IEEEtran}
 %\bibliography{references}

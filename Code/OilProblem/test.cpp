@@ -35,8 +35,8 @@ void testPressurePoisson() {
 
     Eigen::Map<Vector> pressuresAsVector(pressures.data(), pressures.size());
 
-    const Vector sourcesProjectedIntoRange = projectSourcesIntoRange(sources);
-    pressuresAsVector = std::move(solvePressurePoissonProblem(transmissibilities, sourcesProjectedIntoRange, Vector::Constant(pressures.size(), pressureAtWellNow)));
+    const Vector negatedSourcesProjectedIntoRange = -projectSourcesIntoRange(sources);
+    pressuresAsVector = std::move(solvePressurePoissonProblem(transmissibilities, negatedSourcesProjectedIntoRange, Vector::Constant(pressures.size(), pressureAtWellNow)));
     #ifdef VERBOSE_TESTS
     std::cout << "pressures = " << pressures << "\n";
     std::cout << "pressures as vector = " << pressuresAsVector << "\n";
@@ -48,36 +48,36 @@ void testPressurePoisson() {
     Real error = -1;
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
-            double shouldBeSource = 0;
+            double shouldBeNegativeSource = 0;
 
             if (i < n - 1) {
-                shouldBeSource +=
+                shouldBeNegativeSource +=
                       computeTransmissibility(totalMobilities, {i, j}, {i + 1, j}) *
                       (pressures(i, j) - pressures(i + 1, j));
             }
 
             if (i > 0) {
-                shouldBeSource += computeTransmissibility(totalMobilities, {i, j}, {i - 1, j}) *
+                shouldBeNegativeSource += computeTransmissibility(totalMobilities, {i, j}, {i - 1, j}) *
                                   (pressures(i, j) - pressures(i - 1, j));
             }
 
             if (j < n - 1) {
-                shouldBeSource +=
+                shouldBeNegativeSource +=
                       computeTransmissibility(totalMobilities, {i, j}, {i, j + 1}) *
                       (pressures(i, j) - pressures(i, j + 1));
             }
 
             if (j > 0) {
-                shouldBeSource +=
+                shouldBeNegativeSource +=
                       computeTransmissibility(totalMobilities, {i, j}, {i, j - 1}) *
                       (pressures(i, j) - pressures(i, j - 1));
             }
 
-            const double newError = std::abs(sources(i, j) - shouldBeSource);
+            const double newError = std::abs(sources(i, j) + shouldBeNegativeSource);
             if (newError > error) {
                 #ifdef VERBOSE_TESTS
                 std::cout << "New max error at (" << i << ", " << j << ") of " << newError << "\n"
-                          << "is " << shouldBeSource << " but should be " << sources(i, j) << "\n";
+                          << "is " << -shouldBeNegativeSource << " but should be " << sources(i, j) << "\n";
                 #endif
                 error = newError;
             }

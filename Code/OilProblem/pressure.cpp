@@ -115,7 +115,7 @@ Vector projectSourcesIntoRange(ConstMatrixRef sources) {
     return sourcesProjectedIntoRange;
 }
 
-Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstVectorRef sourcesProjectedIntoRange, ConstVectorRef pressureGuess) {
+Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstVectorRef negatedSourcesProjectedIntoRange, ConstVectorRef pressureGuess) {
     LOGGER->debug("Solving system");
 
     Eigen::LeastSquaresConjugateGradient<SparseMatrix> solver;
@@ -123,7 +123,7 @@ Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, Const
     //solver.setMaxIterations(1);
     solver.compute(transmissibilities);
 
-    const Vector result = solver.solveWithGuess(sourcesProjectedIntoRange, pressureGuess);
+    const Vector result = solver.solveWithGuess(negatedSourcesProjectedIntoRange, pressureGuess);
 
     LOGGER->debug("System solved");
 
