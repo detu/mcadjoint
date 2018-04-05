@@ -7,7 +7,7 @@
 
 Matrix computeXDerivative(ConstMatrixRef field, const Real meshWidth) {
     Matrix xDerivative(field.rows(), field.cols() + 1);
-    const int numberOfCols = 1;
+    const int numberOfCols = xDerivative.cols();
     const int lastColIndex = numberOfCols-1;
     xDerivative.col(0).setZero();
 

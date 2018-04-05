@@ -8,7 +8,7 @@
 
 
 void testPressurePoisson() {
-    const int n = 10;
+    const int n = 100;
 
     const Matrix totalMobilities = Matrix::Random(n, n).unaryExpr([] (Real x) {return 10 * std::abs(x) + 1;});
     if (!(totalMobilities.array() > 0).all()) {
@@ -19,7 +19,8 @@ void testPressurePoisson() {
     const CellIndex wellCell = {0, n-1};
 
     Matrix sources(Matrix::Zero(n, n));
-    wellCell(sources) = 1;
+    wellCell(sources) = -1;
+
 
     Matrix pressures(n, n);
     pressures.setZero();
@@ -31,7 +32,6 @@ void testPressurePoisson() {
 
 
     const SparseMatrix transmissibilities = assemblePressureSystemWithBC(totalMobilities);
-    std::cout << Matrix(transmissibilities) << "\n";
 
     Eigen::Map<Vector> pressuresAsVector(pressures.data(), pressures.size());
 
@@ -74,24 +74,24 @@ void testPressurePoisson() {
             }
 
             const double newError = std::abs(sources(i, j) - shouldBeSource);
-            /*if (newError > error) {*/
+            if (newError > error) {
                 #ifdef VERBOSE_TESTS
                 std::cout << "New max error at (" << i << ", " << j << ") of " << newError << "\n"
                           << "is " << shouldBeSource << " but should be " << sources(i, j) << "\n";
                 #endif
                 error = newError;
-            /*}*/
+            }
 
         }
     }
 
     //std::cout << "error = " << error << "\n";
-    TEST_CHECK(error < 1e-5);
+    TEST_CHECK(error < 1e-3);
 }
 
 
 void testDerivatives() {
-    const Real meshWidth = 1e-5;
+    const Real meshWidth = 1e-2;
     const int n = 5;
 
     const auto f = [] (const Point& p) {

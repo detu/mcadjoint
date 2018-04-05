@@ -3,6 +3,7 @@
 //
 
 #include "oilProblem.hpp"
+#include "logging.hpp"
 #include <stefCommonHeaders/assert.h>
 
 #ifdef __GNUC__
@@ -41,13 +42,14 @@ CellIndex pressureToTransmissibilityIndex(
 
 
 SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
+    LOGGER->debug("Starting to assemble system");
 
     const int numberOfRows = totalMobilities.rows();
     const int numberOfCols = totalMobilities.cols();
 
 
     const int numberOfPairs = numberOfCols * numberOfRows;
-    SparseMatrix transmissibilities(numberOfPairs + 1, numberOfPairs); // + 1 because we want to fix the pressure at the well to be zero
+    SparseMatrix transmissibilities(numberOfPairs  + 1, numberOfPairs); // + 1 because we want to fix the pressure at the well to be zero
 
 
     transmissibilities.reserve(Eigen::VectorXi::Constant(transmissibilities.cols(), 6));
@@ -95,27 +97,35 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
 
     transmissibilities.coeffRef(transmissibilities.rows() - 1, wellCell.linearIndex(numberOfRows)) = 1;
     transmissibilities.makeCompressed();
+
+    LOGGER->debug("Assembled system");
     return transmissibilities;
 }
 
 
 Vector projectSourcesIntoRange(ConstMatrixRef sources) {
+    LOGGER->debug("Starting to project sources into range");
     Vector sourcesProjectedIntoRange(sources.size() + 1);
     sourcesProjectedIntoRange << Eigen::Map<const Vector>(sources.data(), sources.size()), 0;
 
     sourcesProjectedIntoRange.head(sources.size()).array() -= sourcesProjectedIntoRange.head(sources.size()).array().mean();
 
+    LOGGER->debug("Projected sources into range");
+
     return sourcesProjectedIntoRange;
 }
 
 Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstVectorRef sourcesProjectedIntoRange, ConstVectorRef pressureGuess) {
+    LOGGER->debug("Solving system");
 
     Eigen::LeastSquaresConjugateGradient<SparseMatrix> solver;
-    solver.setTolerance(1e-4);
+    //solver.setTolerance(1e-3);
     //solver.setMaxIterations(1);
     solver.compute(transmissibilities);
 
-    const Vector result = solver.solve(sourcesProjectedIntoRange);
+    const Vector result = solver.solveWithGuess(sourcesProjectedIntoRange, pressureGuess);
+
+    LOGGER->debug("System solved");
 
     ASSERT(solver.info() == Eigen::Success);
     //std::cout << "Estimated error = " << solver.error() << "\n";

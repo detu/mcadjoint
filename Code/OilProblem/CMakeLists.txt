@@ -7,14 +7,16 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(COTIRE_UNITY_SOURCE_MAXIMUM_NUMBER_OF_INCLUDES -j)
+get_filename_component(thirdPartyDir "${CMAKE_CURRENT_SOURCE_DIR}/../thirdParty" REALPATH)
+set(COTIRE_ADDITIONAL_PREFIX_HEADER_IGNORE_PATH "${thirdPartyDir}")
 
 
-include("thirdParty/stefcommonheaders/CMakeLists.txt")
+include("../thirdParty/stefcommonheaders/CMakeLists.txt")
 include(cotire)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}")
 
-set(baseLibHeaders control.h gnuplot_i.h utils.hpp)
-set(baseLibSources control.cpp gnuplot_i.cpp utils.cpp)
+set(baseLibHeaders control.h gnuplot_i.h utils.hpp logging.hpp)
+set(baseLibSources control.cpp gnuplot_i.cpp utils.cpp logging.cpp)
 set(oilLibHeaders oilProblem.hpp typedefs.hpp cellindex.hpp vectorToBeMappedAsMatrix.hpp fixedParameters.hpp)
 set(oilLibSources pressure.cpp darcyVelocity.cpp saturation.cpp minimizer.cpp forward.cpp)
 set(dryRunSources dryRun.cpp ${oilLibSources} ${baseLibSources} ${baseLibHeaders} ${oilLibHeaders})
