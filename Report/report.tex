@@ -214,11 +214,12 @@ Comparing the total Darcy's law \eqref{flowrateTotal} and the Darcy's law for wa
 We then plug in the model for the relative permeabilities in terms of the saturations \eqref{relativePermeabilityModel}, to get the final for of saturation transport equation
 
 \begin{empheq}[box=\fbox]{equation}
-\pdiff{S_\text{w}}{t} + \div\left(\vec{F}(S_\text{w}, \vec{v}_\text{tot})\right) = \frac{q_\text{w}}{\phi},
+\label{saturationEquation}
+\pdiff{S_\text{w}}{t} + \div\left(f(S_\text{w}) \vec{v}_\text{tot})\right) = \frac{q_\text{w}}{\phi},
 \end{empheq}
-where $\vec{F}$ is the flux function
+where $f$ is the flux function
 \begin{empheq}[box=\fbox]{equation}
-\vec{F}(S_\text{w}, \vec{v}_\text{tot}) := \frac{S_\text{w}^2 / \phi}{S_\text{w}^2 + (1-S_\text{w})^2 \mu_\text{w} / \mu_\text{o}} \vec{v}_\text{tot}.
+f(S_\text{w}) := \frac{S_\text{w}^2 / \phi}{S_\text{w}^2 + (1-S_\text{w})^2 \mu_\text{w} / \mu_\text{o}}.
 \end{empheq}
 
 \subsection{Boundary and initial conditions}
@@ -237,13 +238,25 @@ is satisfied.
 \subsection{What to optimize?}
 To test the Monte-Carlo adjoint method, we want to match the pressure difference between drill and well, which is 
 \begin{equation}
-\Delta p(t) := \biggr(\big(p_\text{drill}(t) - p_\text{well}(t)\big) - \big(\tilde{p}_\text{drill}(t) - \tilde{p}_\text{well}(t)\big)\biggr)^2,
+\label{costFunction}
+c(T) := \int_0^T \biggr(\big(p_\text{drill}(t) - p_\text{well}(t)\big) - \big(\tilde{p}_\text{drill}(t) - \tilde{p}_\text{well}(t)\big)\biggr)^2 \d{t},
 \end{equation}
-where the variables with a tilde denote computed quantities.
+where the variables with a tilde denote computed quantities and $T$ is a final time.
 
 \section{Discretization}
 We discretize the square domain $\Omega$ with $n \times n$ square finite volumes, thus getting a mesh width of $h := 1/n$.
 
+An overview of the discretization technique is given in the following procedure:
+\begin{enumerate}
+	\item Solve the pressure equation \eqref{pressurePoisson} as detailed in subsection \ref{discPressurePoisson}
+	\item Compute the total Darcy velocity as in \eqref{flowrateTotal}, using the same approximation of the gradient as in the first step
+	\item Consider the total Darcy velocity to be independent of the saturation $S_\text{w}.$
+	\item With this assumption, solve the saturation equation \eqref{saturationEquation} as in subsection \ref{discSaturationEquation}
+	\item Update the relative permeabilities according to \eqref{relativePermeabilityModel} and repeat.
+\end{enumerate}
+
+\subsection{Discretizing the pressure Poisson equation}
+\label{discPressurePoisson}
 Averaging the pressure Poisson equation \eqref{pressurePoisson} over such a finite volume $K$, and using the divergence theorem leads to
 \begin{equation}
 \label{finiteVolumes}
@@ -265,6 +278,7 @@ $\ddiff{\cdot}{\cdot}$ denote the standard finite difference quotients, i.e.
 \ddiff{p}{y}\lvert_\text{S} &\approx \frac{1}{h}(p_K - p_D).
 \end{align}
 Here, $U$ stands for the upper neighbor of $K$, $D$ for the lower (down), $R$ for the right and $L$ for the left.
+$p_K$ is the pressure at the center of the volume, which is taken to be the same as the volume averaged $\bar{p}$, as our scheme is just first order.
 
 The total mobilities $\lambda_\text{tot}$ at the boundaries are approximated by the harmonic mean of the total mobilities inside the adjacent finite volumes as
 \begin{align}
@@ -274,8 +288,107 @@ The total mobilities $\lambda_\text{tot}$ at the boundaries are approximated by 
 \lambda_\text{tot}\lvert_\text{N} &\approx \hmean(\lambda_\text{tot}\lvert_K, \lambda_\text{tot}\lvert_U) \\
 \lambda_\text{tot}\lvert_\text{S} &\approx \hmean(\lambda_\text{tot}\lvert_K, \lambda_\text{tot}\lvert_D),
 \end{align}
-where $\hmean(a, b) = 2ab/(a+b).$
+where \begin{equation}
+\hmean(a, b) = 2ab/(a+b).
+\end{equation}
 \important{Explain why the harmonic mean}
+
+The discretized pressure Poisson equation reads
+\begin{multline}
+T_E (p_K - p_R) + T_W (p_K - p_L) \\+ T_N ( p_K - p_U) + T_S (p_K - p_D) \\= {Q_\text{tot}} \cdot \begin{cases} 1, &\text{if } K \text{ is the finite volume nearest to the well} \\
+0, & \text{otherwise} \end{cases},
+\end{multline}
+
+where \begin{equation}
+T_N = \hmean(\lambda_\text{tot}\lvert_K, \lambda_\text{tot}\lvert_U),
+\end{equation}
+and so on.
+
+\subsection{Discretizing the saturation equation}
+\label{discSaturationEquation}
+The finite volume reformulation of the saturation equation \eqref{saturationEquation} leads to the following:
+\begin{multline}
+\label{saturationEquationFV}
+\pdiff{\frac{1}{h^2} \int_K S_\text{w} \d{A}}{t} \\+ \frac{1}{h}\biggr((f(S_\text{w})v_{\text{tot }, x})\lvert_E - (f(S_\text{w})v_{\text{tot }, x})\lvert_W \\+ (f(S_\text{w})v_{\text{tot }, y})\lvert_N - (f(S_\text{w})v_{\text{tot }, y})\lvert_S\biggr) \\=
+\frac{Q_\text{w}}{h^2} \cdot \begin{cases} 1, &\text{if } K \text{ is the finite volume nearest to the well} \\0, &\text{otherwise}\end{cases}
+\end{multline}
+
+We identify the volume average
+\begin{equation}
+\frac{1}{h^2} \int_K S_\text{w} \d{A} =: S_K,
+\end{equation}
+with the saturation at the center of the volume $S_K$. This is legit, as our scheme is just first order.
+
+For the total Darcy velocity $\vec{v}_\text{tot}$ we use the same discretization of the pressure gradients as in the pressure equation, \eqref{differenceQuotients}.
+This makes it available at the boundaries ($N$, $S$, $E$, $W$), as required by \eqref{saturationEquationFV}.
+
+For the flux function $f$ at the boundaries, we use an upwind discretization. The standard formulation can be simplified by noting that \begin{equation}
+\diff{f}{S_\text{w}} > 0
+\end{equation}
+and so instead of the advection velocity
+\begin{equation}
+\pdiff{(f \cdot \vec{v}_\text{tot})}{S_\text{w}}
+\end{equation}
+we can use the Darcy velocity $\vec{v}_\text{tot}.$
+We remember that this requires fixing the total Darcy velocity $\vec{v}_\text{tot}$ to be independent of the saturation $S_\text{w}$
+
+For timestepping of the saturation equation \eqref{saturationEquationFV} , we use explicit Euler, as this simplifies the Jacobian used in the Monte-Carlo adjoint.
+
+\subsection{Discretizing the cost function}
+The cost function \eqref{costFunction} is discretized as a sum of squares over the timesteps, where the computed quantities with a tilde are taken to be the quantities in the volumes nearest to the well and the drill.
+
+\begin{equation}
+\sum_{i=1}^{n} (\Delta p(i\Delta t) - \tilde{\Delta p}^{(i)})^2,
+\end{equation}
+where
+\begin{align}
+\Delta_p(t) &:= p_\text{well}(t) - p_\text{drill}(t) \\
+\tilde{\Delta p}^{(i)} &:= p_\text{well cell}^{(i)} - p_\text{drill cell}^{(i)}
+\end{align}
+and $\Delta t$ is the timestep.
+
+\section{Computing the quantities for the Monte-Carlo adjoint solver}
+
+First, we define the pressure residuals
+\begin{multline}
+\Pi_K^{(i)} := T_E^{(i-1)} (p_K^{(i)} - p_R^{(i)}) + T_W^{(i-1)} (p_K^{(i)} - p_L^{(i)}) \\+ T_N ( p_K^{(i)} - p_U^{(i)}) + T_S^{(i-1)} (p_K^{(i)} - p_D^{(i)}) - Q_\text{tot, K}^{(i-1)}, 
+\end{multline}
+where
+\begin{equation}
+Q_\text{tot, K}^{(i)} := Q_\text{tot}(i\Delta t) \cdot \begin{cases} 1, &\text{if } K \text{ is the cell nearest to the well}\\0, &\text{ otherwise} \end{cases}
+\end{equation}
+
+The saturation residuals are given by
+\begin{multline}
+\Sigma_K^{(i)} := S_K^{(i)} - S_K^{(i-1)} \\+ \frac{\Delta t}{h} \biggr((f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_E - (f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_W \\+ (f(S_\text{w}^{(i-1)})v_{\text{tot }, y}^{(i-1)})\lvert_N - (f(S_\text{w}^{(i-1)})v_{\text{tot }, y}^{(i-1)})\lvert_S\biggr) - \Delta t Q_\text{tot, K}^{(i-1)}.
+\end{multline}
+
+The nonzero derivatives for the diagonal blocks are given by
+\begin{align}
+\pdiff{\Pi_K^{(i)}}{p_K^{(i)}} &= T_E^{(i-1)} + T_W^{(i-1)} + T_N^{(i-1)} + T_S^{(i-1)} \\
+\pdiff{\Pi_K^{(i)}}{p_R^{(i)}} &= -T_E^{(i-1)} \\
+\pdiff{\Pi_K^{(i)}}{p_L^{(i)}} &= -T_W^{(i-1)} \\
+\pdiff{\Pi_K^{(i)}}{p_N^{(i)}} &= -T_U^{(i-1)} \\
+\pdiff{\Pi_K^{(i)}}{p_S^{(i)}} &= -T_D^{(i-1)}
+\end{align}
+
+and by
+\begin{align}
+\pdiff{\Sigma_K^{(i)}}{S_K^{(i)}} &= 1 \\
+\pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_K^{(i-1)}} &= f^\prime({S_{\text{w}}}_K^{(i-1)}) \cdot \biggr(\indicator(v_\text{tot, x}\lvert_E > 0) v_\text{tot, x}\lvert_E \\& + \indicator(v_\text{tot, x}\lvert_W < 0) v_\text{tot, x}\lvert_W + \indicator(v_\text{tot, y}\lvert_N > 0) v_\text{tot, y}\lvert_N \\&+ \indicator(v_\text{tot, y}\lvert_S < 0) v_\text{tot, y}\lvert_S\biggr) \\ 
+\pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_R^{(i-1)}} &= f^\prime({S_{\text{w}}}_R^{(i-1)}) \cdot \indicator(v_\text{tot, x}\lvert_E < 0) v_\text{tot, x}\lvert_E \\
+\pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_L^{(i-1)}} &= f^\prime({S_{\text{w}}}_L^{(i-1)}) \cdot \indicator(v_\text{tot, x}\lvert_W > 0) v_\text{tot, x}\lvert_W \\
+\pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_U^{(i-1)}} &= f^\prime({S_{\text{w}}}_U^{(i-1)}) \cdot \indicator(v_\text{tot, y}\lvert_N < 0) v_\text{tot, y}\lvert_N \\
+\pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_D^{(i-1)}} &= f^\prime({S_{\text{w}}}_D^{(i-1)}) \cdot \indicator(v_\text{tot, y}\lvert_S > 0) v_\text{tot, x}\lvert_S,
+\end{align}
+where
+\begin{align}
+f^\prime(S_\text{w}) = \text{insert derivative here} \\
+\indicator(b) = \begin{cases} 1, &\text{if } b \text{ true} \\ 0, &\text{otherwise.}
+\end{cases}
+\end{align}
+
+
 
 %\bibliographystyle{IEEEtran}
 %\bibliography{references}
