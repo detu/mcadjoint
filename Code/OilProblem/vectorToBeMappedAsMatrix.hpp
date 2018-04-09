@@ -2,8 +2,7 @@
 // Created by Stefano Weidmann on 02.04.18.
 //
 
-#ifndef STEFCOMMONHEADERS_VECTORTOBEMAPPEDASMATRIX_HPP
-#define STEFCOMMONHEADERS_VECTORTOBEMAPPEDASMATRIX_HPP
+#pragma once
 #include "typedefs.hpp"
 struct VectorToBeMappedAsMatrix {
     Vector vec;
@@ -39,5 +38,3 @@ struct SimulationState {
     inline SimulationState(const int matrixRows, const int matrixCols):
           saturationsWater(matrixRows, matrixCols), pressures(matrixRows, matrixCols) {}
 };
-
-#endif //STEFCOMMONHEADERS_VECTORTOBEMAPPEDASMATRIX_HPP

@@ -2,8 +2,7 @@
 // Created by Stefano Weidmann on 24.03.18.
 //
 
-#ifndef STEFCOMMONHEADERS_CELLINDEX_HPP
-#define STEFCOMMONHEADERS_CELLINDEX_HPP
+#pragma once
 
 #include "typedefs.hpp"
 #include <array>
@@ -167,5 +166,3 @@ struct CellIndex {
 
 
 };
-
-#endif //STEFCOMMONHEADERS_CELLINDEX_HPP

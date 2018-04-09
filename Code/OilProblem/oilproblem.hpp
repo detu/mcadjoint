@@ -2,8 +2,7 @@
 // Created by Stefano Weidmann on 24.03.18.
 //
 
-#ifndef STEFCOMMONHEADERS_OILPROBLEM_HPP
-#define STEFCOMMONHEADERS_OILPROBLEM_HPP
+#pragma once
 
 #include "typedefs.hpp"
 #include "cellindex.hpp"
@@ -76,5 +75,3 @@ MinimizationState doAMinimizerStep(MinimizationState oldState, ConstMatrixRef se
 __attribute__((pure))
 Matrix computeTotalMobilities(const Real dynamicViscosityOil, const Real dynamicViscosityWater, ConstMatrixRef permeabilities, ConstMatrixRef saturationsWater);
 
-
-#endif //STEFCOMMONHEADERS_OILPROBLEM_HPP

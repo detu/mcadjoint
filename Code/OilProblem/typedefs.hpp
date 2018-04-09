@@ -2,8 +2,8 @@
 // Created by Stefano Weidmann on 24.03.18.
 //
 
-#ifndef STEFCOMMONHEADERS_TYPEDEFS_HPP
-#define STEFCOMMONHEADERS_TYPEDEFS_HPP
+#pragma once
+
 #include <Eigen/Sparse>
 #include <Eigen/Dense>
 #include <Eigen/OrderingMethods>
@@ -43,4 +43,3 @@ using SparseMatrix = Eigen::SparseMatrix<Real, Eigen::ColMajor>;
 #endif
 
 
-#endif //STEFCOMMONHEADERS_TYPEDEFS_HPP

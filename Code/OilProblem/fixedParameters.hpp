@@ -2,8 +2,7 @@
 // Created by Stefano Weidmann on 02.04.18.
 //
 
-#ifndef STEFCOMMONHEADERS_FIXEDPARAMETERS_HPP
-#define STEFCOMMONHEADERS_FIXEDPARAMETERS_HPP
+#pragma once
 
 #include "typedefs.hpp"
 
@@ -20,5 +19,3 @@ struct FixedParameters {
     Real meshWidth;
 
 };
-
-#endif //STEFCOMMONHEADERS_FIXEDPARAMETERS_HPP
