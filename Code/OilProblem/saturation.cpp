@@ -3,6 +3,7 @@
 //
 #include "oilProblem.hpp"
 #include <stefCommonHeaders/assert.h>
+#include <stefCommonHeaders/dev.hpp>
 
 Matrix computeFluxFunctionFactors(ConstMatrixRef saturationsWater, const Real porosity, const Real dynamicViscosityWater, const Real dynamicViscosityOil) {
     const auto map = [&] (const Real saturationWater) {
@@ -35,7 +36,25 @@ Matrix computeFluxesY(ConstMatrixRef fluxFunctionFactors, Matrix darcyVelocities
     return darcyVelocitiesY;
 }
 
-Matrix compute
+
+SparseMatrix computePressureResidualsDerivedByPressure(const SparseMatrix& transmissibilities) {
+    return transmissibilities;
+}
+
+Matrix computePressureResidualsDerivedBySaturationWater() {
+    #pragma message "TODO"
+    DEV_STUB();
+}
+
+Matrix computeSaturationWaterResidualsDerivedBySaturationWater() {
+    #pragma message "TODO"
+    DEV_STUB();
+}
+
+Matrix computeSaturationWaterResidualsDerivedByPressure() {
+    #pragma message "TODO"
+    DEV_STUB();
+}
 
 
 
