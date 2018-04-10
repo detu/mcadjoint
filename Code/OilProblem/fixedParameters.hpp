@@ -9,13 +9,17 @@
 struct FixedParameters {
     Real dynamicViscosityOil;
     Real dynamicViscosityWater;
+    Real porosity;
 
-    WellFunction outFlowPerUnitDepthOil;
-    WellFunction outFlowPerUnitDepthWater;
+    Real meshWidth;
+
+
+    WellFunction outflowPerUnitDepthOil;
+    WellFunction outflowPerUnitDepthWater;
+    WellFunction inflowPerUnitDepthWater;
 
     PressureFunction pressureDrill;
     PressureFunction pressureWell;
 
-    Real meshWidth;
 
 };

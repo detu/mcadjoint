@@ -75,7 +75,7 @@ CellIndex borderIndexToCenterIndex(CellIndex borderIndex, const CellIndex::Direc
 }
 
 
-Matrix computeTotalDarcyVelocitiesX(ConstMatrixRef totalTransmissibilities, Matrix pressureDerivativesX) {
+Matrix computeTotalDarcyVelocitiesX(ConstMatrixRef totalMobilities, Matrix pressureDerivativesX) {
     const int numberOfColsOfDerivatives = pressureDerivativesX.cols();
     const int numberOfRowsOfDerivatives = pressureDerivativesX.rows();
     const int numberOfRowsOfPressures = numberOfRowsOfDerivatives;
@@ -88,9 +88,8 @@ Matrix computeTotalDarcyVelocitiesX(ConstMatrixRef totalTransmissibilities, Matr
         for (borderIndex.i = 0; borderIndex.i < numberOfRowsOfDerivatives; ++borderIndex.i) {
             const CellIndex pressureCellWestOfThisBorder = borderIndexToCenterIndex(borderIndex, CellIndex::Direction::EAST); // This border is to the east of the cell
             const CellIndex pressureCellEastOfThisBorder = borderIndexToCenterIndex(borderIndex, CellIndex::Direction::WEST);
-            const CellIndex correspondingTransmissibilityIndex = pressureToTransmissibilityIndex(pressureCellEastOfThisBorder, pressureCellWestOfThisBorder, numberOfRowsOfPressures, numberOfColsOfPressures);
 
-            const Real transmissibility = correspondingTransmissibilityIndex(totalTransmissibilities);
+            const Real transmissibility = computeTransmissibility(totalMobilities, pressureCellEastOfThisBorder, pressureCellWestOfThisBorder);
 
             borderIndex(pressureDerivativesX) *= -transmissibility;
         }
@@ -99,7 +98,7 @@ Matrix computeTotalDarcyVelocitiesX(ConstMatrixRef totalTransmissibilities, Matr
     return pressureDerivativesX;
 }
 
-Matrix computeTotalDarcyVelocitiesY(ConstMatrixRef totalTransmissibilities, Matrix pressureDerivativesY) {
+Matrix computeTotalDarcyVelocitiesY(ConstMatrixRef totalMobilities, Matrix pressureDerivativesY) {
     const int numberOfColsOfDerivatives = pressureDerivativesY.cols();
     const int numberOfRowsOfDerivatives = pressureDerivativesY.rows();
     const int numberOfRowsOfPressures = numberOfRowsOfDerivatives - 1; // the zero derivatives at the top and the bottom are added
@@ -112,9 +111,8 @@ Matrix computeTotalDarcyVelocitiesY(ConstMatrixRef totalTransmissibilities, Matr
         for (borderIndex.i = 1; borderIndex.i < numberOfRowsOfDerivatives - 1; ++borderIndex.i) {
             const CellIndex pressureCellNorthOfThisBorder = borderIndexToCenterIndex(borderIndex, CellIndex::Direction::SOUTH); // This border is to the south of the cell
             const CellIndex pressureCellSouthOfThisBorder = borderIndexToCenterIndex(borderIndex, CellIndex::Direction::NORTH);
-            const CellIndex correspondingTransmissibilityIndex = pressureToTransmissibilityIndex(pressureCellNorthOfThisBorder, pressureCellSouthOfThisBorder, numberOfRowsOfPressures, numberOfColsOfPressures);
 
-            const Real transmissibility = correspondingTransmissibilityIndex(totalTransmissibilities);
+            const Real transmissibility = computeTransmissibility(totalMobilities, pressureCellNorthOfThisBorder, pressureCellSouthOfThisBorder);
 
             borderIndex(pressureDerivativesY) *= -transmissibility;
         }

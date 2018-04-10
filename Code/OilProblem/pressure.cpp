@@ -57,24 +57,27 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
     CellIndex myself = {0, 0};
 
     const CellIndex drillCell = {numberOfRows-1, 0};
+
+
     for (myself.j = 0; myself.j < numberOfCols; ++myself.j) {
         for (myself.i = 0; myself.i < numberOfRows; ++myself.i) {
 
 
             const CellIndex meToMyself = pressureToTransmissibilityIndex(myself, myself, numberOfRows, numberOfCols);
-
-            if (unlikely(myself == drillCell)) {
+            const bool iAmTheDrilCell = myself == drillCell;
+            if (unlikely(iAmTheDrilCell)) {
                 meToMyself(transmissibilities) = 1;
-                continue;
             }
 
             constexpr static std::array<CellIndex::Direction, 2> directionsToCheck = {
-                  CellIndex::Direction::SOUTH, CellIndex::Direction::WEST
+                  CellIndex::Direction::EAST, CellIndex::Direction::NORTH
             };
 
 
 
             for (const CellIndex::Direction direction: directionsToCheck) {
+
+
                 if (unlikely(!myself.hasNeighbor(direction, numberOfRows, numberOfCols))) {
                     continue;
                 }
@@ -89,14 +92,17 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
 
                 const Real currentTransmissibility = computeTransmissibility(totalMobilities, myself, neighbor);
 
-
-                meToMyself(transmissibilities) += currentTransmissibility;
-                neighborToMe(transmissibilities) -= currentTransmissibility;
-
-                //if (drillCell != neighbor) {
+                if (likely(!iAmTheDrilCell)) {
+                    meToMyself(transmissibilities) += currentTransmissibility;
                     meToNeighbor(transmissibilities) -= currentTransmissibility;
+                }
+
+
+                if (likely(neighbor != drillCell)) {
                     neighborToThemselves(transmissibilities) += currentTransmissibility;
-                //}
+                    neighborToMe(transmissibilities) -= currentTransmissibility;
+                }
+
             }
         }
     }
@@ -137,14 +143,17 @@ Vector projectSourcesIntoRange(ConstMatrixRef sources) {
 Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstVectorRef rhs, ConstVectorRef pressureGuess) {
     LOGGER->debug("Solving system");
 
-    Eigen::ConjugateGradient<SparseMatrix> solver;
+    Eigen::SparseLU<SparseMatrix> solver;
     //solver.setTolerance(1e-3);
     //solver.setMaxIterations(1);
     solver.compute(transmissibilities);
 
-    const Vector result = solver.solveWithGuess(rhs, pressureGuess);
+    LOGGER->debug("transmissibilities {}", transmissibilities);
+
+    const Vector result = solver.solve(rhs);
 
     LOGGER->debug("System solved");
+    LOGGER->debug("result = {}", result);
 
     ASSERT(solver.info() == Eigen::Success);
     //std::cout << "Estimated error = " << solver.error() << "\n";

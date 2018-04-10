@@ -23,19 +23,19 @@ int main() {
     sources.resizeLike(totalMobilities);
     sources.setZero();
 
-    const Matrix transmissibilities = assemblePressureSystemWithBC(totalMobilities);
+    const Matrix pressureSystemMatrix = assemblePressureSystemWithBC(totalMobilities);
 
-    Eigen::JacobiSVD<Matrix> svd(transmissibilities);
+    Eigen::JacobiSVD<Matrix> svd(pressureSystemMatrix);
     double cond = svd.singularValues()(0)
                   / svd.singularValues()(svd.singularValues().size()-1);
 
     std::cout << "cond = " << cond << "\n";
-    std::cout << "eigenvalues = " << (transmissibilities.transpose() * transmissibilities).eigenvalues() << "\n";
+    std::cout << "eigenvalues = " << (pressureSystemMatrix.transpose() * pressureSystemMatrix).eigenvalues() << "\n";
 
     if (n <= 10) {
-        std::cout << "transmissibilities = \n" << transmissibilities;
+        std::cout << "pressureSystemMatrix = \n" << pressureSystemMatrix;
     } else {
-        std::cout << "too big, don't display transmissibilities\n";
+        std::cout << "too big, don't display pressureSystemMatrix\n";
     }
     return 0;
 }

@@ -19,6 +19,28 @@ struct VectorToBeMappedAsMatrix {
 
     inline VectorToBeMappedAsMatrix(const int matrixRows, const int matrixCols):
           vec(matrixRows * matrixCols), map(vec.data(), matrixRows, matrixCols) {}
+
+    inline operator Eigen::Ref<const Matrix>() const {
+        return map;
+    }
+
+    inline operator Eigen::Ref<Matrix>() {
+        return map;
+    }
+
+    inline operator Eigen::Ref<const Vector>() const {
+        return vec;
+    }
+
+    inline operator Eigen::Ref<Vector>() {
+        return vec;
+    }
+
+    inline VectorToBeMappedAsMatrix& operator =(Vector vector) {
+        vec = vector;
+        map = Eigen::Map<Matrix>(vec.data(), map.rows(), map.cols());
+        return *this;
+    }
 };
 
 
@@ -31,10 +53,4 @@ struct MinimizationState {
           stepSize(NAN), cost(NAN), parameters(matrixRows, matrixCols) {}
 };
 
-struct SimulationState {
-    Matrix saturationsWater;
-    VectorToBeMappedAsMatrix pressures;
 
-    inline SimulationState(const int matrixRows, const int matrixCols):
-          saturationsWater(matrixRows, matrixCols), pressures(matrixRows, matrixCols) {}
-};

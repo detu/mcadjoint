@@ -272,10 +272,10 @@ Using the four boundaries $N$orth, $E$ast, $S$outh and $W$est of the finite volu
 $\ddiff{\cdot}{\cdot}$ denote the standard finite difference quotients, i.e.
 \begin{align}
 \label{differenceQuotients}
-\ddiff{p}{x}\lvert_\text{E} &\approx \frac{1}{h}(p_R - p_K) \\
-\ddiff{p}{x}\lvert_\text{W} &\approx \frac{1}{h}(p_K - p_D) \\
-\ddiff{p}{y}\lvert_\text{N} &\approx \frac{1}{h}(p_U - p_K) \\
-\ddiff{p}{y}\lvert_\text{S} &\approx \frac{1}{h}(p_K - p_D).
+\ddiff{p}{x}\lvert_\text{E} &= \frac{1}{h}(p_R - p_K) \\
+\ddiff{p}{x}\lvert_\text{W} &= \frac{1}{h}(p_K - p_D) \\
+\ddiff{p}{y}\lvert_\text{N} &= \frac{1}{h}(p_U - p_K) \\
+\ddiff{p}{y}\lvert_\text{S} &= \frac{1}{h}(p_K - p_D).
 \end{align}
 Here, $U$ stands for the upper neighbor of $K$, $D$ for the lower (down), $R$ for the right and $L$ for the left.
 $p_K$ is the pressure at the center of the volume, which is taken to be the same as the volume averaged $\bar{p}$, as our scheme is just first order.
@@ -390,7 +390,7 @@ f^\prime(S_\text{w}) = \text{insert derivative here} \\
 
 For the off diagonal blocks, we have
 \begin{align}
-\pdiff{\Sigma_K^{(i)}}{p_K^{(i)}} &= frac{\Delta t}{h^2} \biggr(T_E^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_E \\&+ T_W^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_W \nonumber\\&+ T_N^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_N \nonumber\\&+T_S^{(i-1)}  f(S_\text{w}^{(i-1)})\lvert_S\biggr) \nonumber\\
+\pdiff{\Sigma_K^{(i)}}{p_K^{(i)}} &= \frac{\Delta t}{h^2} \biggr(T_E^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_E \\&+ T_W^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_W \nonumber\\&+ T_N^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_N \nonumber\\&+T_S^{(i-1)}  f(S_\text{w}^{(i-1)})\lvert_S\biggr) \nonumber\\
 \pdiff{\Sigma_K^{(i)}}{p_R^{(i)}} &= -\frac{\Delta t}{h^2}T_E^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_E \\
 \pdiff{\Sigma_K^{(i)}}{p_L^{(i)}} &= -\frac{\Delta t}{h^2}T_W^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_W \\\\
 \pdiff{\Sigma_K^{(i)}}{p_U^{(i)}} &= -\frac{\Delta t}{h^2}T_N^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_N \\

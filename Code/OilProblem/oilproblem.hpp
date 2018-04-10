@@ -7,6 +7,8 @@
 #include "typedefs.hpp"
 #include "cellindex.hpp"
 #include "vectorToBeMappedAsMatrix.hpp"
+#include "fixedParameters.hpp"
+#include "simulationState.hpp"
 
 #if !defined(__GNUC__) && !defined(__attribute__)
     #define __attribute__(ignored)
@@ -50,10 +52,10 @@ CellIndex pressureToTransmissibilityIndex(
       const int numberOfCols);
 
 __attribute__((pure))
-Matrix computeTotalDarcyVelocitiesX(ConstMatrixRef totalTransmissibilities, Matrix pressureDerivativesX);
+Matrix computeTotalDarcyVelocitiesX(ConstMatrixRef totalMobilities, Matrix pressureDerivativesX);
 
 __attribute__((pure))
-Matrix computeTotalDarcyVelocitiesY(ConstMatrixRef totalTransmissibilities, Matrix pressureDerivativesY);
+Matrix computeTotalDarcyVelocitiesY(ConstMatrixRef totalMobilities, Matrix pressureDerivativesY);
 
 __attribute__((pure))
 Matrix computeFluxFunctionFactors(ConstMatrixRef saturations, const Real porosity, const Real dynamicViscosityWater, const Real dynamicViscosityOil);
@@ -64,11 +66,9 @@ Matrix computeFluxesX(ConstMatrixRef fluxFunctionFactors, Matrix darcyVelocities
 __attribute__((pure))
 Matrix computeFluxesY(ConstMatrixRef fluxFunctionFactors, Matrix darcyVelocitiesY);
 
-__attribute__((pure))
-Matrix advanceStateInTime(Matrix state, ConstMatrixRef derivativeInTime);
 
 __attribute__((pure))
-Matrix computeSaturationDivergence(ConstMatrixRef fluxFunctionFactors, ConstMatrixRef fluxesX, ConstMatrixRef fluxesY, const Real meshWidth);
+Matrix computeSaturationDivergences(ConstMatrixRef fluxFunctionFactors, ConstMatrixRef fluxesX, ConstMatrixRef fluxesY, const Real meshWidth);
 
 __attribute__((pure))
 MinimizationState doAMinimizerStep(MinimizationState oldState, ConstMatrixRef sensitivity);
@@ -76,3 +76,7 @@ MinimizationState doAMinimizerStep(MinimizationState oldState, ConstMatrixRef se
 __attribute__((pure))
 Matrix computeTotalMobilities(const Real dynamicViscosityOil, const Real dynamicViscosityWater, ConstMatrixRef permeabilities, ConstMatrixRef saturationsWater);
 
+void advanceSaturationsInTime(const FixedParameters& params, MatrixRef saturationsWater,
+                              ConstMatrixRef pressures, ConstMatrixRef totalMobilities, Real& time);
+
+void stepForwardProblem(const FixedParameters& params, ConstMatrixRef permeabilities, SimulationState& currentState, VectorRef pressureRhs);
