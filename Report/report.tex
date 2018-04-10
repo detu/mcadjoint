@@ -375,7 +375,7 @@ The nonzero derivatives for the diagonal blocks are given by
 and by
 \begin{align}
 \pdiff{\Sigma_K^{(i)}}{S_K^{(i)}} &= 1 \\
-\pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_K^{(i-1)}} &= \begin{split} f^\prime({S_{\text{w}}}_K^{(i-1)}) \cdot \biggr(\indicator(v_\text{tot, x}\lvert_E > 0) v_\text{tot, x}\lvert_E \\ + \indicator(v_\text{tot, x}\lvert_W < 0) v_\text{tot, x}\lvert_W + \indicator(v_\text{tot, y}\lvert_N > 0) v_\text{tot, y}\lvert_N \\+ \indicator(v_\text{tot, y}\lvert_S < 0) v_\text{tot, y}\lvert_S\biggr) \end{split} \\ 
+\pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_K^{(i-1)}} &=  f^\prime({S_{\text{w}}}_K^{(i-1)}) \cdot \biggr(\indicator(v_\text{tot, x}\lvert_E > 0) v_\text{tot, x}\lvert_E \\&+ \indicator(v_\text{tot, x}\lvert_W < 0) v_\text{tot, x}\lvert_W + \indicator(v_\text{tot, y}\lvert_N > 0) v_\text{tot, y}\lvert_N  \nonumber\\&+ \indicator(v_\text{tot, y}\lvert_S < 0) v_\text{tot, y}\lvert_S\biggr) \nonumber\\ 
 \pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_R^{(i-1)}} &= f^\prime({S_{\text{w}}}_R^{(i-1)}) \frac{\Delta t}{h}\cdot \indicator(v_\text{tot, x}\lvert_E < 0) v_\text{tot, x}\lvert_E \\
 \pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_L^{(i-1)}} &= f^\prime({S_{\text{w}}}_L^{(i-1)}) \frac{\Delta t}{h}\cdot \indicator(v_\text{tot, x}\lvert_W > 0) v_\text{tot, x}\lvert_W \\
 \pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_U^{(i-1)}} &= f^\prime({S_{\text{w}}}_U^{(i-1)}) \frac{\Delta t}{h}\cdot \indicator(v_\text{tot, y}\lvert_N < 0) v_\text{tot, y}\lvert_N \\
@@ -390,7 +390,7 @@ f^\prime(S_\text{w}) = \text{insert derivative here} \\
 
 For the off diagonal blocks, we have
 \begin{align}
-\pdiff{\Sigma_K^{(i)}}{p_K^{(i)}} &= \begin{split}\frac{\Delta t}{h^2} \biggr(T_E^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_E + T_W^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_W \\+ T_N^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_N + T_S^{(i-1)}  f(S_\text{w}^{(i-1)})\lvert_S\biggr) \end{split}\\
+\pdiff{\Sigma_K^{(i)}}{p_K^{(i)}} &= frac{\Delta t}{h^2} \biggr(T_E^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_E \\&+ T_W^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_W \nonumber\\&+ T_N^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_N \nonumber\\&+T_S^{(i-1)}  f(S_\text{w}^{(i-1)})\lvert_S\biggr) \nonumber\\
 \pdiff{\Sigma_K^{(i)}}{p_R^{(i)}} &= -\frac{\Delta t}{h^2}T_E^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_E \\
 \pdiff{\Sigma_K^{(i)}}{p_L^{(i)}} &= -\frac{\Delta t}{h^2}T_W^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_W \\\\
 \pdiff{\Sigma_K^{(i)}}{p_U^{(i)}} &= -\frac{\Delta t}{h^2}T_N^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_N \\

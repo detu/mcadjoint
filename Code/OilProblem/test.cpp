@@ -17,26 +17,27 @@ void testPressurePoisson() {
     }
 
     const CellIndex wellCell = {0, n-1};
+    const CellIndex drillCell = {n-1, 0};
 
     Matrix sources(Matrix::Zero(n, n));
     wellCell(sources) = -1;
 
+    drillCell(sources) = -wellCell(sources);
 
     Matrix pressures(n, n);
     pressures.setZero();
-    const Real pressureAtWellNow = wellCell(pressures);
-
-    #ifdef VERBOSE_TESTS
-    std::cout << "Pressure at well now = " << pressureAtWellNow << "\n";
-    #endif
 
 
     const SparseMatrix transmissibilities = assemblePressureSystemWithBC(totalMobilities);
 
     Eigen::Map<Vector> pressuresAsVector(pressures.data(), pressures.size());
 
-    const Vector negatedSourcesProjectedIntoRange = -projectSourcesIntoRange(sources);
-    pressuresAsVector = std::move(solvePressurePoissonProblem(transmissibilities, negatedSourcesProjectedIntoRange, Vector::Constant(pressures.size(), pressureAtWellNow)));
+    Vector rhs(sources.size());
+    rhs.setZero();
+
+    adaptRhsForPressure(-1, 9, rhs, n, n);
+
+    pressuresAsVector = std::move(solvePressurePoissonProblem(transmissibilities, rhs, Vector::Constant(pressures.size(), 9)));
     #ifdef VERBOSE_TESTS
     std::cout << "pressures = " << pressures << "\n";
     std::cout << "pressures as vector = " << pressuresAsVector << "\n";

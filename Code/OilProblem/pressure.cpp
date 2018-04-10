@@ -49,22 +49,30 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
 
 
     const int numberOfPairs = numberOfCols * numberOfRows;
-    SparseMatrix transmissibilities(numberOfPairs  + 1, numberOfPairs); // + 1 because we want to fix the pressure at the well to be zero
+    SparseMatrix transmissibilities(numberOfPairs, numberOfPairs);
 
 
     transmissibilities.reserve(Eigen::VectorXi::Constant(transmissibilities.cols(), 6));
 
     CellIndex myself = {0, 0};
 
-    const CellIndex wellCell = {0, numberOfCols-1};
+    const CellIndex drillCell = {numberOfRows-1, 0};
     for (myself.j = 0; myself.j < numberOfCols; ++myself.j) {
         for (myself.i = 0; myself.i < numberOfRows; ++myself.i) {
 
 
             const CellIndex meToMyself = pressureToTransmissibilityIndex(myself, myself, numberOfRows, numberOfCols);
+
+            if (unlikely(myself == drillCell)) {
+                meToMyself(transmissibilities) = 1;
+                continue;
+            }
+
             constexpr static std::array<CellIndex::Direction, 2> directionsToCheck = {
                   CellIndex::Direction::SOUTH, CellIndex::Direction::WEST
             };
+
+
 
             for (const CellIndex::Direction direction: directionsToCheck) {
                 if (unlikely(!myself.hasNeighbor(direction, numberOfRows, numberOfCols))) {
@@ -82,20 +90,17 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
                 const Real currentTransmissibility = computeTransmissibility(totalMobilities, myself, neighbor);
 
 
-                if (wellCell != myself) {
-                    meToMyself(transmissibilities) += currentTransmissibility;
-                    neighborToMe(transmissibilities) -= currentTransmissibility;
-                }
+                meToMyself(transmissibilities) += currentTransmissibility;
+                neighborToMe(transmissibilities) -= currentTransmissibility;
 
-                if (wellCell != neighbor) {
+                //if (drillCell != neighbor) {
                     meToNeighbor(transmissibilities) -= currentTransmissibility;
                     neighborToThemselves(transmissibilities) += currentTransmissibility;
-                }
+                //}
             }
         }
     }
 
-    transmissibilities.coeffRef(transmissibilities.rows() - 1, wellCell.linearIndex(numberOfRows)) = 1;
     transmissibilities.makeCompressed();
 
     LOGGER->debug("Assembled system");
@@ -103,7 +108,20 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
 }
 
 
+void adaptRhsForPressure(const Real sourceAtWellNow, const Real pressureAtDrillNow, VectorRef rhs, const int numberOfRows,
+                         const int numberOfCols) {
+    const CellIndex drillCell = {numberOfRows-1, 0};
+    const int drillCellIndex = drillCell.linearIndex(numberOfRows);
+    const CellIndex wellCell = {0, numberOfCols-1};
+    const int wellCellIndex = wellCell.linearIndex(numberOfRows);
+
+    rhs(wellCellIndex) = -sourceAtWellNow;
+    rhs(drillCellIndex) = pressureAtDrillNow;
+}
+
+
 Vector projectSourcesIntoRange(ConstMatrixRef sources) {
+
     LOGGER->debug("Starting to project sources into range");
     Vector sourcesProjectedIntoRange(sources.size() + 1);
     sourcesProjectedIntoRange << Eigen::Map<const Vector>(sources.data(), sources.size()), 0;
@@ -115,15 +133,16 @@ Vector projectSourcesIntoRange(ConstMatrixRef sources) {
     return sourcesProjectedIntoRange;
 }
 
-Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstVectorRef negatedSourcesProjectedIntoRange, ConstVectorRef pressureGuess) {
+
+Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstVectorRef rhs, ConstVectorRef pressureGuess) {
     LOGGER->debug("Solving system");
 
-    Eigen::LeastSquaresConjugateGradient<SparseMatrix> solver;
+    Eigen::ConjugateGradient<SparseMatrix> solver;
     //solver.setTolerance(1e-3);
     //solver.setMaxIterations(1);
     solver.compute(transmissibilities);
 
-    const Vector result = solver.solveWithGuess(negatedSourcesProjectedIntoRange, pressureGuess);
+    const Vector result = solver.solveWithGuess(rhs, pressureGuess);
 
     LOGGER->debug("System solved");
 
@@ -133,12 +152,7 @@ Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, Const
     return result;
 }
 
-Vector augmentSources(ConstMatrixRef sources) {
 
-    Vector augmentedSources(sources.size() + 1);
-    augmentedSources << Eigen::Map<const Vector>(sources.data(), sources.size()), 0;
-    return augmentedSources;
-}
 
 #ifdef TODO
 Vector assemblePressureSourceVector(const Real pressureWellNow, const int numberOfRows, const int numberOfCols) {

@@ -20,12 +20,13 @@ __attribute__((pure))
 SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities);
 
 __attribute__((pure))
-Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstVectorRef negatedSourcesProjectedIntoRange, ConstVectorRef pressureGuess);
+Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstVectorRef rhs, ConstVectorRef pressureGuess);
+
+void adaptRhsForPressure(const Real sourceAtWellNow, const Real pressureAtDrillNow, VectorRef rhs, const int numberOfRows,
+                         const int numberOfCols);
 
 __attribute__((pure))
-Vector augmentSources(ConstMatrixRef sources);
-
-__attribute__((pure))
+[[deprecated("Not used anymore by current formulation")]]
 Vector projectSourcesIntoRange(ConstMatrixRef sources);
 
 // Gradient zero at boundaries
