@@ -16,8 +16,8 @@ void testPressurePoisson() {
         TEST_CHECK(false);
     }
 
-    const CellIndex wellCell = {0, n-1};
-    const CellIndex drillCell = {n-1, 0};
+    const CellIndex wellCell = findWellCell(n, n);
+    const CellIndex drillCell = findDrillCell(n, n);
 
     Matrix sources(Matrix::Zero(n, n));
     wellCell(sources) = -1;

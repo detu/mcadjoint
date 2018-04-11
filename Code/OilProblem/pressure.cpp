@@ -5,6 +5,7 @@
 #include "oilProblem.hpp"
 #include "logging.hpp"
 #include <stefCommonHeaders/assert.h>
+#include "specialCells.hpp"
 
 #ifdef __GNUC__
     #define likely(x)       __builtin_expect((x),1)
@@ -31,10 +32,6 @@ CellIndex pressureToTransmissibilityIndex(
       const int numberOfRows,
       const int numberOfCols) {
 
-
-    const CellIndex wellCell = {0, numberOfCols-1};
-    const int wellCellLinearIndex = wellCell.linearIndex(numberOfRows);
-
     return {fromCell.linearIndex(numberOfRows),
             toCell.linearIndex(numberOfRows)};
 }
@@ -56,7 +53,7 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
 
     CellIndex myself = {0, 0};
 
-    const CellIndex referenceCell = {0, 0};
+    const CellIndex referenceCell = findReferenceCell(numberOfRows, numberOfCols);
 
 
     for (myself.j = 0; myself.j < numberOfCols; ++myself.j) {
@@ -116,13 +113,14 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
 
 void adaptRhsForPressure(const Real sourceAtWellNow, const Real sourceAtDrillNow, VectorRef rhs, const int numberOfRows,
                          const int numberOfCols) {
-    const CellIndex drillCell = {numberOfRows-1, 0};
+    const CellIndex drillCell = findDrillCell(numberOfRows, numberOfCols);
+
     const int drillCellIndex = drillCell.linearIndex(numberOfRows);
 
-    const CellIndex wellCell = {0, numberOfCols-1};
+    const CellIndex wellCell = findWellCell(numberOfRows, numberOfCols);
     const int wellCellIndex = wellCell.linearIndex(numberOfRows);
 
-    const CellIndex referenceCell = {0, 0};
+    const CellIndex referenceCell = findReferenceCell(numberOfRows, numberOfCols);
     const int referenceCellIndex = referenceCell.linearIndex(numberOfRows);
 
     rhs(wellCellIndex) = -std::abs(sourceAtWellNow);
@@ -168,14 +166,3 @@ Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, Const
     return result;
 }
 
-
-
-#ifdef TODO
-Vector assemblePressureSourceVector(const Real pressureWellNow, const int numberOfRows, const int numberOfCols) {
-    const CellIndex wellCell = {0, numberOfCols - 1};
-
-    Vector pressureSourceVector(numberOfRows * numberOfCols);
-
-
-}
-    #endif

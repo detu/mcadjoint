@@ -6,6 +6,7 @@
 #include <stefCommonHeaders/dev.hpp>
 #include "logging.hpp"
 #include <stefCommonHeaders/dbg.hpp>
+#include "specialCells.hpp"
 
 Matrix computeFluxFunctionFactors(ConstMatrixRef saturationsWater, const Real porosity, const Real dynamicViscosityWater, const Real dynamicViscosityOil) {
     const auto map = [&] (const Real saturationWater) {
@@ -147,8 +148,8 @@ void advanceSaturationsInTime(const FixedParameters& params, MatrixRef saturatio
 
     const Matrix saturationDivergences = computeSaturationDivergences(fluxFunctionFactors, fluxesX, fluxesY, params.meshWidth);
 
-    const CellIndex drillCell = {saturationsWater.rows()-1, 0};
-    const CellIndex wellCell = {0, saturationsWater.cols()-1};
+    const CellIndex drillCell = findDrillCell(saturationsWater.rows(), saturationsWater.cols());
+    const CellIndex wellCell = findWellCell(saturationsWater.rows(), saturationsWater.cols());
 
     saturationsWater -= timestep * saturationDivergences;
     wellCell(saturationsWater) -= timestep * params.outflowPerUnitDepthWater(time);

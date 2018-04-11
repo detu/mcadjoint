@@ -9,6 +9,7 @@
 #include "vectorToBeMappedAsMatrix.hpp"
 #include "fixedParameters.hpp"
 #include "simulationState.hpp"
+#include "specialCells.hpp"
 
 
 

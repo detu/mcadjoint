@@ -5,14 +5,18 @@
 #include "oilproblem.hpp"
 #include "logging.hpp"
 #include <EigenSimplematio.hpp>
+#include "specialCells.hpp"
 
 int main() {
 
     //feenableexcept(FE_ALL_EXCEPT & ~FE_INEXACT);
 
 
-    const int n = 10;
+    const int n = 20;
     const Real meshWidth = 1.0 / n;
+
+    const CellIndex wellCell = findWellCell(n, n);
+    const CellIndex drillCell = findDrillCell(n, n);
 
     const Matrix permeabilities = Matrix::Ones(n, n);
 
@@ -41,15 +45,17 @@ int main() {
     simulationState.saturationsWater.setZero();
 
     params.meshWidth = meshWidth;
-    CellIndex wellCell = {0, n-1};
-    params.outflowPerUnitDepthWater = [&] (const Real time) {
 
-        return 3*simulationState.saturationsWater();
-    };
 
     params.inflowPerUnitDepthWater = [&] (const Real time) {
         return 3;
     };
+
+    params.outflowPerUnitDepthWater = [&] (const Real time) {
+        return 3*wellCell(simulationState.saturationsWater);
+    };
+
+
 
     params.outflowPerUnitDepthOil = [&] (const Real time) {
         return params.inflowPerUnitDepthWater(time) - params.outflowPerUnitDepthWater(time);
