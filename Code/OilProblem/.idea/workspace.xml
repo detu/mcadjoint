@@ -4,10 +4,11 @@
     <generated>
       <config projectName="stefCommonHeaders" targetName="DryRun" />
       <config projectName="stefCommonHeaders" targetName="Test" />
+      <config projectName="stefCommonHeaders" targetName="QuarterFiveSpotUnity" />
       <config projectName="stefCommonHeaders" targetName="commonLib" />
       <config projectName="stefCommonHeaders" targetName="QuarterFiveSpot" />
-      <config projectName="stefCommonHeaders" targetName="TestVerbose" />
       <config projectName="stefCommonHeaders" targetName="OilProblem" />
+      <config projectName="stefCommonHeaders" targetName="TestVerbose" />
     </generated>
   </component>
   <component name="CMakeSettings">
@@ -39,8 +40,8 @@
       <file leaf-file-name="quarterFiveSpot.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/quarterFiveSpot.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="30" column="6" lean-forward="false" selection-start-line="30" selection-start-column="6" selection-end-line="30" selection-end-column="6" />
+            <state relative-caret-position="-376">
+              <caret line="26" column="28" lean-forward="false" selection-start-line="26" selection-start-column="28" selection-end-line="26" selection-end-column="28" />
               <folding>
                 <element signature="e#51#76#0" expanded="true" />
               </folding>
@@ -52,17 +53,7 @@
         <entry file="file://$PROJECT_DIR$/test.cpp">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="392">
-              <caret line="34" column="31" lean-forward="true" selection-start-line="34" selection-start-column="31" selection-end-line="34" selection-end-column="31" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="simulationState.hpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/simulationState.hpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="16" column="61" lean-forward="false" selection-start-line="16" selection-start-column="52" selection-end-line="16" selection-end-column="61" />
+              <caret line="34" column="31" lean-forward="false" selection-start-line="34" selection-start-column="31" selection-end-line="34" selection-end-column="31" />
               <folding />
             </state>
           </provider>
@@ -71,7 +62,7 @@
       <file leaf-file-name="oilproblem.hpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/oilproblem.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="148">
+            <state relative-caret-position="-406">
               <caret line="11" column="27" lean-forward="false" selection-start-line="11" selection-start-column="27" selection-end-line="11" selection-end-column="27" />
               <folding>
                 <element signature="e#65#88#0" expanded="true" />
@@ -80,11 +71,21 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="382">
+              <caret line="80" column="31" lean-forward="false" selection-start-line="80" selection-start-column="31" selection-end-line="80" selection-end-column="31" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="pressure.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pressure.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="435">
-              <caret line="30" column="30" lean-forward="true" selection-start-line="30" selection-start-column="30" selection-end-line="30" selection-end-column="30" />
+            <state relative-caret-position="-31">
+              <caret line="85" column="0" lean-forward="false" selection-start-line="85" selection-start-column="0" selection-end-line="85" selection-end-column="0" />
               <folding>
                 <element signature="e#51#76#0" expanded="true" />
               </folding>
@@ -112,37 +113,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="dryRun.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dryRun.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="327">
-              <caret line="25" column="37" lean-forward="false" selection-start-line="25" selection-start-column="37" selection-end-line="25" selection-end-column="37" />
-              <folding>
-                <element signature="e#51#76#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="saturation.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/saturation.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="162" column="9" lean-forward="false" selection-start-line="162" selection-start-column="9" selection-end-line="162" selection-end-column="9" />
+            <state relative-caret-position="-513">
+              <caret line="99" column="14" lean-forward="false" selection-start-line="99" selection-start-column="14" selection-end-line="99" selection-end-column="14" />
               <folding>
                 <element signature="e#50#75#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="forward.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/forward.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="23" column="62" lean-forward="false" selection-start-line="23" selection-start-column="62" selection-end-line="23" selection-end-column="62" />
-              <folding>
-                <element signature="e#51#76#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -207,15 +184,15 @@
         <option value="$PROJECT_DIR$/../thirdParty/stefcommonheaders/include/stefCommonHeaders/eigenToCsv.hpp" />
         <option value="$PROJECT_DIR$/logging.hpp" />
         <option value="$PROJECT_DIR$/fixedParameters.hpp" />
-        <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/vectorToBeMappedAsMatrix.hpp" />
         <option value="$PROJECT_DIR$/darcyVelocity.cpp" />
         <option value="$PROJECT_DIR$/forward.cpp" />
         <option value="$PROJECT_DIR$/specialCells.hpp" />
-        <option value="$PROJECT_DIR$/saturation.cpp" />
         <option value="$PROJECT_DIR$/oilproblem.hpp" />
-        <option value="$PROJECT_DIR$/quarterFiveSpot.cpp" />
         <option value="$PROJECT_DIR$/test.cpp" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/saturation.cpp" />
+        <option value="$PROJECT_DIR$/quarterFiveSpot.cpp" />
         <option value="$PROJECT_DIR$/pressure.cpp" />
       </list>
     </option>
@@ -317,7 +294,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.QuarterFiveSpot Just Info log">
+  <component name="RunManager" selected="Application.QuarterFiveSpotUnity">
     <configuration name="Build All" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="QuarterFiveSpot" EXPLICIT_BUILD_TARGET_NAME="all">
       <envs />
     </configuration>
@@ -337,6 +314,11 @@
         <env name="LOG_LEVEL" value="debug" />
       </envs>
     </configuration>
+    <configuration name="QuarterFiveSpotUnity" type="CMakeRunConfiguration" factoryName="Application" WORKING_DIR="file://$PROJECT_DIR$/../../Run" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="QuarterFiveSpotUnity" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="QuarterFiveSpotUnity">
+      <envs>
+        <env name="LOG_LEVEL" value="info" />
+      </envs>
+    </configuration>
     <configuration name="Test" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="--exec=never" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="Test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="Test">
       <envs>
         <env name="LOG_LEVEL" value="debug" />
@@ -350,15 +332,16 @@
     <configuration name="commonLib" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="commonLib" CONFIG_NAME="Debug">
       <envs />
     </configuration>
-    <list size="8">
+    <list size="9">
       <item index="0" class="java.lang.String" itemvalue="Application.Build All" />
       <item index="1" class="java.lang.String" itemvalue="Application.QuarterFiveSpot Just Info log" />
       <item index="2" class="java.lang.String" itemvalue="Application.QuarterFiveSpot" />
-      <item index="3" class="java.lang.String" itemvalue="Application.commonLib" />
-      <item index="4" class="java.lang.String" itemvalue="Application.DryRun" />
-      <item index="5" class="java.lang.String" itemvalue="Application.OilProblem" />
-      <item index="6" class="java.lang.String" itemvalue="Application.Test" />
-      <item index="7" class="java.lang.String" itemvalue="Application.TestVerbose" />
+      <item index="3" class="java.lang.String" itemvalue="Application.QuarterFiveSpotUnity" />
+      <item index="4" class="java.lang.String" itemvalue="Application.commonLib" />
+      <item index="5" class="java.lang.String" itemvalue="Application.DryRun" />
+      <item index="6" class="java.lang.String" itemvalue="Application.OilProblem" />
+      <item index="7" class="java.lang.String" itemvalue="Application.Test" />
+      <item index="8" class="java.lang.String" itemvalue="Application.TestVerbose" />
     </list>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
@@ -382,16 +365,15 @@
       <workItem from="1523276861701" duration="2429000" />
       <workItem from="1523359382257" duration="17607000" />
       <workItem from="1523429844704" duration="391000" />
-      <workItem from="1523430385122" duration="16945000" />
+      <workItem from="1523430385122" duration="21327000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="137408000" />
+    <option name="totallyTimeSpent" value="141790000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="796" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2494043" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -400,7 +382,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2339515" sideWeight="0.7347101" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4593438" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2339515" sideWeight="0.2652899" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2339515" sideWeight="0.2652899" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -443,8 +425,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/pressureInternal.hpp" />
-    <entry file="file://$PROJECT_DIR$/thirdParty/stefcommonheaders/thirdparty/acutest/include/acutest.h" />
     <entry file="file://$PROJECT_DIR$/main.cpp" />
     <entry file="file://$PROJECT_DIR$/../../Build/Release/OilProblem/cotire/OilProblem_CXX_unity.cxx">
       <provider selected="true" editor-type-id="text-editor">
@@ -670,14 +650,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="52" column="4" lean-forward="false" selection-start-line="52" selection-start-column="4" selection-end-line="52" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/vectorToBeMappedAsMatrix.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="388">
@@ -707,7 +679,7 @@
         <state relative-caret-position="327">
           <caret line="25" column="37" lean-forward="false" selection-start-line="25" selection-start-column="37" selection-end-line="25" selection-end-column="37" />
           <folding>
-            <element signature="e#51#76#0" expanded="true" />
+            <element signature="e#51#76#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -725,7 +697,7 @@
         <state relative-caret-position="345">
           <caret line="23" column="62" lean-forward="false" selection-start-line="23" selection-start-column="62" selection-end-line="23" selection-end-column="62" />
           <folding>
-            <element signature="e#51#76#0" expanded="true" />
+            <element signature="e#51#76#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -746,19 +718,53 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/../../Build/RelWithDebugInfo/ub_quarterFiveSpot.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/saturation.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="162" column="9" lean-forward="false" selection-start-line="162" selection-start-column="9" selection-end-line="162" selection-end-column="9" />
+        <state relative-caret-position="-513">
+          <caret line="99" column="14" lean-forward="false" selection-start-line="99" selection-start-column="14" selection-end-line="99" selection-end-column="14" />
           <folding>
             <element signature="e#50#75#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/test.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="392">
+          <caret line="34" column="31" lean-forward="false" selection-start-line="34" selection-start-column="31" selection-end-line="34" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../Build/Debug/OilProblem/ub_quarterFiveSpot.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#34#128#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="382">
+          <caret line="80" column="31" lean-forward="false" selection-start-line="80" selection-start-column="31" selection-end-line="80" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/oilproblem.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="148">
+        <state relative-caret-position="-406">
           <caret line="11" column="27" lean-forward="false" selection-start-line="11" selection-start-column="27" selection-end-line="11" selection-end-column="27" />
           <folding>
             <element signature="e#65#88#0" expanded="true" />
@@ -768,26 +774,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/quarterFiveSpot.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="30" column="6" lean-forward="false" selection-start-line="30" selection-start-column="6" selection-end-line="30" selection-end-column="6" />
+        <state relative-caret-position="-376">
+          <caret line="26" column="28" lean-forward="false" selection-start-line="26" selection-start-column="28" selection-end-line="26" selection-end-column="28" />
           <folding>
             <element signature="e#51#76#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="392">
-          <caret line="34" column="31" lean-forward="true" selection-start-line="34" selection-start-column="31" selection-end-line="34" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pressure.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="30" column="30" lean-forward="true" selection-start-line="30" selection-start-column="30" selection-end-line="30" selection-end-column="30" />
+        <state relative-caret-position="-31">
+          <caret line="85" column="0" lean-forward="false" selection-start-line="85" selection-start-column="0" selection-end-line="85" selection-end-column="0" />
           <folding>
             <element signature="e#51#76#0" expanded="true" />
           </folding>

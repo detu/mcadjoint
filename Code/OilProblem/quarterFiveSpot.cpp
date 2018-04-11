@@ -12,7 +12,7 @@ int main() {
     //feenableexcept(FE_ALL_EXCEPT & ~FE_INEXACT);
 
 
-    const int n = 20;
+    const int n = 100;
     const Real meshWidth = 1.0 / n;
 
     const CellIndex wellCell = findWellCell(n, n);
@@ -24,7 +24,7 @@ int main() {
 
     params.dynamicViscosityOil = 0.630; // SAE motor oil 20°C
     params.dynamicViscosityWater = 0.0010518; // Water 20°C
-    params.finalTime = 0.01;
+    params.finalTime = 0.015;
     const Real atmosphericPressure = 1e5;
     params.pressureWell = [=] (const Real time) {
         return atmosphericPressure;
@@ -72,7 +72,7 @@ int main() {
 
     LOGGER->debug("dim sat water = ({}, {})", simulationState.saturationsWater.rows(), simulationState.saturationsWater.cols());
 
-    SMIO::EigenMatFile matFile("satWater.mat");
+    SMIO::EigenMatFile matFile("fieldsQuarterFiveSpot.mat");
     matFile.writeVariable("satWater", clamp(simulationState.saturationsWater, 0, 1));
     matFile.writeVariable("pressure", Matrix(simulationState.pressures.map));
 

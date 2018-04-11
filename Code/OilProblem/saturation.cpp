@@ -97,7 +97,7 @@ Matrix computeSaturationDivergences(ConstMatrixRef fluxFunctionFactors, ConstMat
 }
 
 static inline Real computeCflTimestep(const Real maximumAdvectionVelocity, const Real meshWidth) {
-    return 0.7 * meshWidth / maximumAdvectionVelocity;
+    return 0.9 * meshWidth / maximumAdvectionVelocity;
 }
 
 void advanceSaturationsInTime(const FixedParameters& params, MatrixRef saturationsWater,
@@ -153,7 +153,7 @@ void advanceSaturationsInTime(const FixedParameters& params, MatrixRef saturatio
 
     saturationsWater -= timestep * saturationDivergences;
     wellCell(saturationsWater) -= timestep * params.outflowPerUnitDepthWater(time);
-    drillCell(saturationsWater) += timestep * params.inflowPerUnitDepthWater(time);
+    drillCell(saturationsWater) = 1;
 
 
 

@@ -53,21 +53,14 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
 
     CellIndex myself = {0, 0};
 
-    const CellIndex referenceCell = findReferenceCell(numberOfRows, numberOfCols);
-
-
     for (myself.j = 0; myself.j < numberOfCols; ++myself.j) {
         for (myself.i = 0; myself.i < numberOfRows; ++myself.i) {
 
 
             const CellIndex meToMyself = pressureToTransmissibilityIndex(myself, myself, numberOfRows, numberOfCols);
-            const bool iAmTheReferenceCell = myself == referenceCell;
-            if (unlikely(iAmTheReferenceCell)) {
-                meToMyself(transmissibilities) = 1;
-            }
 
             constexpr static std::array<CellIndex::Direction, 2> directionsToCheck = {
-                  CellIndex::Direction::EAST, CellIndex::Direction::NORTH
+                  CellIndex::Direction::WEST, CellIndex::Direction::NORTH
             };
 
 
@@ -89,16 +82,12 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
 
                 const Real currentTransmissibility = computeTransmissibility(totalMobilities, myself, neighbor);
 
-                if (likely(!iAmTheReferenceCell)) {
-                    meToMyself(transmissibilities) += currentTransmissibility;
-                    meToNeighbor(transmissibilities) -= currentTransmissibility;
-                }
+                meToMyself(transmissibilities) += currentTransmissibility;
 
+                neighborToThemselves(transmissibilities) += currentTransmissibility;
 
-                if (likely(neighbor != referenceCell)) {
-                    neighborToThemselves(transmissibilities) += currentTransmissibility;
-                    neighborToMe(transmissibilities) -= currentTransmissibility;
-                }
+                meToNeighbor(transmissibilities) -= currentTransmissibility;
+                neighborToMe(transmissibilities) -= currentTransmissibility;
 
             }
         }
@@ -147,7 +136,7 @@ Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, Const
     LOGGER->debug("Solving system");
 
     Eigen::ConjugateGradient<SparseMatrix> solver;
-    //solver.setTolerance(1e-3);
+    solver.setTolerance(1e-2);
     //solver.setMaxIterations(1);
     solver.compute(transmissibilities);
 
