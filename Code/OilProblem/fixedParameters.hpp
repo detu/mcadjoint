@@ -16,8 +16,6 @@ struct FixedParameters {
     Real meshWidth;
 
 
-    WellFunction outflowPerUnitDepthOil;
-    WellFunction outflowPerUnitDepthWater;
     WellFunction inflowPerUnitDepthWater;
 
     PressureFunction pressureDrill;

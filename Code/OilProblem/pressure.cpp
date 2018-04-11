@@ -135,9 +135,8 @@ Vector projectSourcesIntoRange(ConstMatrixRef sources) {
 Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstVectorRef rhs, ConstVectorRef pressureGuess) {
     LOGGER->debug("Solving system");
 
-    Eigen::ConjugateGradient<SparseMatrix> solver;
-    solver.setTolerance(1e-2);
-    //solver.setMaxIterations(1);
+    Eigen::ConjugateGradient<SparseMatrix, Eigen::Upper | Eigen::Lower> solver;
+    solver.setTolerance(1e-6);
     solver.compute(transmissibilities);
 
     LOGGER->debug("transmissibilities {}", transmissibilities);
@@ -147,9 +146,9 @@ Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, Const
     LOGGER->debug("System solved");
     //LOGGER->debug("result = {}", result);
 
-    if (solver.info() != Eigen::Success) {
+    /*if (solver.info() != Eigen::Success) {
         throw std::runtime_error("Solver didn't converge!");
-    }
+    }*/
     //std::cout << "Estimated error = " << solver.error() << "\n";
 
     return result;

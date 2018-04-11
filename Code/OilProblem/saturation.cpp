@@ -60,7 +60,7 @@ Matrix computeSaturationWaterResidualsDerivedByPressure() {
 }
 
 
-static Real clamp(const Real x, const Real minVal, const Real maxVal) {
+Real clamp(const Real x, const Real minVal, const Real maxVal) {
     if (x > maxVal) {
         return maxVal;
     }
@@ -140,7 +140,7 @@ void advanceSaturationsInTime(const FixedParameters& params, MatrixRef saturatio
     LOGGER->debug("max advection speed y = {}", maximumAdvectionSpeedY);
 
     const Real firstTimestep = 1e-5;
-    const Real maxTimestep = params.finalTime * 1e-2;
+    const Real maxTimestep = params.finalTime * 1e-1;
     const Real cflTimestep = std::min(timestepX, timestepY);
     const Real timestep = (time > 0? std::min(maxTimestep, cflTimestep): firstTimestep);
 
@@ -152,7 +152,10 @@ void advanceSaturationsInTime(const FixedParameters& params, MatrixRef saturatio
     const CellIndex wellCell = findWellCell(saturationsWater.rows(), saturationsWater.cols());
 
     saturationsWater -= timestep * saturationDivergences;
-    wellCell(saturationsWater) -= timestep * params.outflowPerUnitDepthWater(time);
+    LOGGER->info("Well cell div sat = {}", wellCell(saturationDivergences));
+    wellCell(saturationsWater) -= timestep * std::abs(params.inflowPerUnitDepthWater(time)) * wellCell(saturationsWater);
+    wellCell(saturationsWater) = clamp(wellCell(saturationsWater), 0, 1);
+    LOGGER->info("Well cell sat = {}", wellCell(saturationsWater));
     drillCell(saturationsWater) = 1;
 
 

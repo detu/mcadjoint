@@ -6,13 +6,28 @@
 #include "logging.hpp"
 #include <EigenSimplematio.hpp>
 #include "specialCells.hpp"
+#include <signal.h>
+#include <cstdlib>
+
+const int n = 100;
+SimulationState simulationState(n, n);
+
+
+void writeToFile(int ignored) {
+    SMIO::EigenMatFile matFile("fieldsQuarterFiveSpot.mat");
+    matFile.writeVariable("satWater", clamp(simulationState.saturationsWater, 0, 1));
+    matFile.writeVariable("pressure", Matrix(simulationState.pressures.map));
+    matFile.close();
+    std::exit(1);
+}
 
 int main() {
+
+
 
     //feenableexcept(FE_ALL_EXCEPT & ~FE_INEXACT);
 
 
-    const int n = 100;
     const Real meshWidth = 1.0 / n;
 
     const CellIndex wellCell = findWellCell(n, n);
@@ -24,7 +39,7 @@ int main() {
 
     params.dynamicViscosityOil = 0.630; // SAE motor oil 20°C
     params.dynamicViscosityWater = 0.0010518; // Water 20°C
-    params.finalTime = 0.015;
+    params.finalTime = 0.16;
     const Real atmosphericPressure = 1e5;
     params.pressureWell = [=] (const Real time) {
         return atmosphericPressure;
@@ -40,10 +55,8 @@ int main() {
 
 
 
-    SimulationState simulationState(n, n);
 
     simulationState.saturationsWater.setZero();
-
     params.meshWidth = meshWidth;
 
 
@@ -51,18 +64,13 @@ int main() {
         return 3;
     };
 
-    params.outflowPerUnitDepthWater = [&] (const Real time) {
-        return 3*wellCell(simulationState.saturationsWater);
-    };
-
-
-
-    params.outflowPerUnitDepthOil = [&] (const Real time) {
-        return params.inflowPerUnitDepthWater(time) - params.outflowPerUnitDepthWater(time);
-    };
 
     Vector pressureRhs(n*n);
     pressureRhs.setZero();
+
+    signal(SIGINT, writeToFile);
+    signal(SIGTERM, writeToFile);
+
 
     while (simulationState.time < params.finalTime) {
         stepForwardProblem(params, permeabilities, simulationState, pressureRhs);
@@ -72,9 +80,6 @@ int main() {
 
     LOGGER->debug("dim sat water = ({}, {})", simulationState.saturationsWater.rows(), simulationState.saturationsWater.cols());
 
-    SMIO::EigenMatFile matFile("fieldsQuarterFiveSpot.mat");
-    matFile.writeVariable("satWater", clamp(simulationState.saturationsWater, 0, 1));
-    matFile.writeVariable("pressure", Matrix(simulationState.pressures.map));
-
+    writeToFile(0);
     return 0;
 }

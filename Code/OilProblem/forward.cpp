@@ -16,11 +16,10 @@ void stepForwardProblem(const FixedParameters& params, ConstMatrixRef permeabili
 
     LOGGER->debug("pressure system {}", pressureSystem);
 
-    const Real waterSourceAtWellNow = -std::abs(params.outflowPerUnitDepthWater(currentState.time));
-    const Real oilSourceAtWellNow = -std::abs(params.outflowPerUnitDepthOil(currentState.time));
-    const Real totalSourceAtWellNow = waterSourceAtWellNow + oilSourceAtWellNow;
 
     const Real sourceAtDrillNow = std::abs(params.inflowPerUnitDepthWater(currentState.time));
+    const Real totalSourceAtWellNow = -sourceAtDrillNow;
+
     adaptRhsForPressure(totalSourceAtWellNow, sourceAtDrillNow, pressureRhs, currentState.saturationsWater.rows(), currentState.saturationsWater.cols());
 
     LOGGER->debug("pressure rhs {}", pressureRhs);
