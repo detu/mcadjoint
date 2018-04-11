@@ -56,7 +56,7 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
 
     CellIndex myself = {0, 0};
 
-    const CellIndex drillCell = {numberOfRows-1, 0};
+    const CellIndex referenceCell = {0, 0};
 
 
     for (myself.j = 0; myself.j < numberOfCols; ++myself.j) {
@@ -64,8 +64,8 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
 
 
             const CellIndex meToMyself = pressureToTransmissibilityIndex(myself, myself, numberOfRows, numberOfCols);
-            const bool iAmTheDrilCell = myself == drillCell;
-            if (unlikely(iAmTheDrilCell)) {
+            const bool iAmTheReferenceCell = myself == referenceCell;
+            if (unlikely(iAmTheReferenceCell)) {
                 meToMyself(transmissibilities) = 1;
             }
 
@@ -92,13 +92,13 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
 
                 const Real currentTransmissibility = computeTransmissibility(totalMobilities, myself, neighbor);
 
-                if (likely(!iAmTheDrilCell)) {
+                if (likely(!iAmTheReferenceCell)) {
                     meToMyself(transmissibilities) += currentTransmissibility;
                     meToNeighbor(transmissibilities) -= currentTransmissibility;
                 }
 
 
-                if (likely(neighbor != drillCell)) {
+                if (likely(neighbor != referenceCell)) {
                     neighborToThemselves(transmissibilities) += currentTransmissibility;
                     neighborToMe(transmissibilities) -= currentTransmissibility;
                 }
@@ -114,15 +114,20 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
 }
 
 
-void adaptRhsForPressure(const Real sourceAtWellNow, const Real pressureAtDrillNow, VectorRef rhs, const int numberOfRows,
+void adaptRhsForPressure(const Real sourceAtWellNow, const Real sourceAtDrillNow, VectorRef rhs, const int numberOfRows,
                          const int numberOfCols) {
     const CellIndex drillCell = {numberOfRows-1, 0};
     const int drillCellIndex = drillCell.linearIndex(numberOfRows);
+
     const CellIndex wellCell = {0, numberOfCols-1};
     const int wellCellIndex = wellCell.linearIndex(numberOfRows);
 
-    rhs(wellCellIndex) = -sourceAtWellNow;
-    rhs(drillCellIndex) = pressureAtDrillNow;
+    const CellIndex referenceCell = {0, 0};
+    const int referenceCellIndex = referenceCell.linearIndex(numberOfRows);
+
+    rhs(wellCellIndex) = -std::abs(sourceAtWellNow);
+    rhs(drillCellIndex) = +std::abs(sourceAtDrillNow);
+    rhs(referenceCellIndex) = 0;
 }
 
 
@@ -143,19 +148,21 @@ Vector projectSourcesIntoRange(ConstMatrixRef sources) {
 Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstVectorRef rhs, ConstVectorRef pressureGuess) {
     LOGGER->debug("Solving system");
 
-    Eigen::SparseLU<SparseMatrix> solver;
+    Eigen::ConjugateGradient<SparseMatrix> solver;
     //solver.setTolerance(1e-3);
     //solver.setMaxIterations(1);
     solver.compute(transmissibilities);
 
     LOGGER->debug("transmissibilities {}", transmissibilities);
 
-    const Vector result = solver.solve(rhs);
+    const Vector result = solver.solveWithGuess(rhs, pressureGuess);
 
     LOGGER->debug("System solved");
-    LOGGER->debug("result = {}", result);
+    //LOGGER->debug("result = {}", result);
 
-    ASSERT(solver.info() == Eigen::Success);
+    if (solver.info() != Eigen::Success) {
+        throw std::runtime_error("Solver didn't converge!");
+    }
     //std::cout << "Estimated error = " << solver.error() << "\n";
 
     return result;

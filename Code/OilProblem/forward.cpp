@@ -16,18 +16,18 @@ void stepForwardProblem(const FixedParameters& params, ConstMatrixRef permeabili
 
     LOGGER->debug("pressure system {}", pressureSystem);
 
-    const Real waterSourceAtWellNow = -params.outflowPerUnitDepthWater(currentState.time);
-    const Real oilSourceAtWellNow = -params.outflowPerUnitDepthWater(currentState.time);
+    const Real waterSourceAtWellNow = -std::abs(params.outflowPerUnitDepthWater(currentState.time));
+    const Real oilSourceAtWellNow = -std::abs(params.outflowPerUnitDepthOil(currentState.time));
     const Real totalSourceAtWellNow = waterSourceAtWellNow + oilSourceAtWellNow;
 
-    const Real pressureAtDrillNow = params.pressureDrill(currentState.time);
-    adaptRhsForPressure(totalSourceAtWellNow, pressureAtDrillNow, pressureRhs, currentState.saturationsWater.rows(), currentState.saturationsWater.cols());
+    const Real sourceAtDrillNow = std::abs(params.inflowPerUnitDepthWater(currentState.time));
+    adaptRhsForPressure(totalSourceAtWellNow, sourceAtDrillNow, pressureRhs, currentState.saturationsWater.rows(), currentState.saturationsWater.cols());
 
     LOGGER->debug("pressure rhs {}", pressureRhs);
     currentState.pressures = solvePressurePoissonProblem(pressureSystem, pressureRhs, currentState.pressures.vec);
 
     LOGGER->debug("pressures {}", currentState.pressures.vec);
-    advanceSaturationsInTime(params, currentState.saturationsWater, currentState.pressures, totalMobilities, currentState.time);
+    advanceSaturationsInTime(params, currentState.saturationsWater, currentState.pressures.map, totalMobilities, currentState.time);
 }
 
 Matrix computeTotalMobilities(const Real dynamicViscosityOil, const Real dynamicViscosityWater, ConstMatrixRef permeabilities, ConstMatrixRef saturationsWater) {

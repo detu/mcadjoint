@@ -11,6 +11,8 @@ struct FixedParameters {
     Real dynamicViscosityWater;
     Real porosity;
 
+    Real finalTime;
+
     Real meshWidth;
 
 

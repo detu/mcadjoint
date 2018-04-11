@@ -84,8 +84,8 @@ Matrix computeTotalDarcyVelocitiesX(ConstMatrixRef totalMobilities, Matrix press
     CellIndex borderIndex;
 
     // skip first and last column which are on the outside of the domain and are zero anyways.
-    for (borderIndex.j = 1; borderIndex.j < numberOfColsOfDerivatives - 1; ++borderIndex.j) {
-        for (borderIndex.i = 0; borderIndex.i < numberOfRowsOfDerivatives; ++borderIndex.i) {
+    for (borderIndex.j = 1; borderIndex.j < numberOfColsOfPressures; ++borderIndex.j) {
+        for (borderIndex.i = 0; borderIndex.i < numberOfRowsOfPressures; ++borderIndex.i) {
             const CellIndex pressureCellWestOfThisBorder = borderIndexToCenterIndex(borderIndex, CellIndex::Direction::EAST); // This border is to the east of the cell
             const CellIndex pressureCellEastOfThisBorder = borderIndexToCenterIndex(borderIndex, CellIndex::Direction::WEST);
 
@@ -106,9 +106,9 @@ Matrix computeTotalDarcyVelocitiesY(ConstMatrixRef totalMobilities, Matrix press
 
     CellIndex borderIndex;
 
-    for (borderIndex.j = 0; borderIndex.j < numberOfColsOfDerivatives; ++borderIndex.j) {
+    for (borderIndex.j = 0; borderIndex.j < numberOfColsOfPressures; ++borderIndex.j) {
         // skip first and last row which are on the outside of the domain and are zero anyways.
-        for (borderIndex.i = 1; borderIndex.i < numberOfRowsOfDerivatives - 1; ++borderIndex.i) {
+        for (borderIndex.i = 1; borderIndex.i < numberOfRowsOfPressures; ++borderIndex.i) {
             const CellIndex pressureCellNorthOfThisBorder = borderIndexToCenterIndex(borderIndex, CellIndex::Direction::SOUTH); // This border is to the south of the cell
             const CellIndex pressureCellSouthOfThisBorder = borderIndexToCenterIndex(borderIndex, CellIndex::Direction::NORTH);
 
