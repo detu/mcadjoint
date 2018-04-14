@@ -13,12 +13,12 @@ const int n = 100;
 SimulationState simulationState(n, n);
 
 
-void writeToFile(int ignored) {
+void writeToFile(int signalNumber) {
     SMIO::EigenMatFile matFile("fieldsQuarterFiveSpot.mat");
     matFile.writeVariable("satWater", clamp(simulationState.saturationsWater, 0, 1));
     matFile.writeVariable("pressure", Matrix(simulationState.pressures.map));
     matFile.close();
-    std::exit(1);
+    std::exit(signalNumber);
 }
 
 int main() {
@@ -39,21 +39,16 @@ int main() {
 
     params.dynamicViscosityOil = 0.630; // SAE motor oil 20°C
     params.dynamicViscosityWater = 0.0010518; // Water 20°C
-    params.finalTime = 2;
+    params.finalTime = 1000;
     const Real atmosphericPressure = 1e5;
-    params.pressureWell = [=] (const Real time) {
-        return atmosphericPressure;
-    };
 
-    params.pressureDrill = [=] (const Real time) {
+    params.overPressureDrill = [=] (const Real time) {
         return 2*atmosphericPressure;
     };
 
 
 
     params.porosity = 1;
-
-
 
 
     simulationState.saturationsWater.setZero();

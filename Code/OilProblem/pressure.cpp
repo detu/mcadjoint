@@ -37,7 +37,7 @@ CellIndex pressureToTransmissibilityIndex(
 }
 
 
-void adaptPressureGradientsAtWell(const Real wellPressureNow, ConstMatrixRef pressures, MatrixRef pressureDerivativesX, MatrixRef pressureDerivativesY, const Real meshWidth) {
+void adaptPressureGradientsAtWell(const Real inflowNow, ConstMatrixRef mobilities, ConstMatrixRef pressures, MatrixRef pressureDerivativesX, MatrixRef pressureDerivativesY, const Real meshWidth) {
     const CellIndex wellCell = findWellCell(pressures.rows(), pressures.cols());
     const CellIndex eastDerivativeOfWellCell = centerIndexToBorderIndex(wellCell, CellIndex::Direction::EAST);
     const CellIndex northDerivativeOfWellCell = centerIndexToBorderIndex(wellCell, CellIndex::Direction::NORTH);
@@ -45,15 +45,15 @@ void adaptPressureGradientsAtWell(const Real wellPressureNow, ConstMatrixRef pre
     const CellIndex westDerivativeOfWellCell = centerIndexToBorderIndex(wellCell, CellIndex::Direction::WEST);
 
 
-    eastDerivativeOfWellCell(pressureDerivativesX) = (wellPressureNow - wellCell(pressures)) / meshWidth;
-    northDerivativeOfWellCell(pressureDerivativesY) = (wellPressureNow - wellCell(pressures)) / meshWidth;
+    eastDerivativeOfWellCell(pressureDerivativesX) = -inflowNow / (4 * wellCell(mobilities) * meshWidth);
+    northDerivativeOfWellCell(pressureDerivativesY) = eastDerivativeOfWellCell(pressureDerivativesX);
 
 }
 
 
 
 SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
-    LOGGER->debug("Starting to assemble system");
+    //LOGGER->debug("Starting to assemble system");
 
     const int numberOfRows = totalMobilities.rows();
     const int numberOfCols = totalMobilities.cols();
@@ -62,25 +62,35 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
     const int numberOfPairs = numberOfCols * numberOfRows;
     SparseMatrix transmissibilities(numberOfPairs, numberOfPairs);
 
+    //const CellIndex referenceCell = findReferenceCell(numberOfRows, numberOfCols);
 
     transmissibilities.reserve(Eigen::VectorXi::Constant(transmissibilities.cols(), 6));
 
     CellIndex myself = {0, 0};
+    const CellIndex wellCell = findWellCell(numberOfRows, numberOfCols);
+    const CellIndex cellWithTheKnownPressure = wellCell;
 
     for (myself.j = 0; myself.j < numberOfCols; ++myself.j) {
         for (myself.i = 0; myself.i < numberOfRows; ++myself.i) {
 
+            const bool iAmTheCellWithTheKnownPressure = myself == cellWithTheKnownPressure;
+
+
+
 
             const CellIndex meToMyself = pressureToTransmissibilityIndex(myself, myself, numberOfRows, numberOfCols);
 
+            if (iAmTheCellWithTheKnownPressure) {
+                meToMyself(transmissibilities) = 1;
+            }
+
             constexpr static std::array<CellIndex::Direction, 2> directionsToCheck = {
-                  CellIndex::Direction::WEST, CellIndex::Direction::NORTH
+                  CellIndex::Direction::EAST, CellIndex::Direction::SOUTH
             };
 
 
 
             for (const CellIndex::Direction direction: directionsToCheck) {
-
 
                 if (unlikely(!myself.hasNeighbor(direction, numberOfRows, numberOfCols))) {
                     continue;
@@ -96,12 +106,15 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
 
                 const Real currentTransmissibility = computeTransmissibility(totalMobilities, myself, neighbor);
 
-                meToMyself(transmissibilities) += currentTransmissibility;
+                if (!iAmTheCellWithTheKnownPressure) {
+                    meToMyself(transmissibilities) += currentTransmissibility;
+                    meToNeighbor(transmissibilities) -= currentTransmissibility;
+                }
 
-                neighborToThemselves(transmissibilities) += currentTransmissibility;
-
-                meToNeighbor(transmissibilities) -= currentTransmissibility;
-                neighborToMe(transmissibilities) -= currentTransmissibility;
+                if (neighbor != cellWithTheKnownPressure) {
+                    neighborToThemselves(transmissibilities) += currentTransmissibility;
+                    neighborToMe(transmissibilities) -= currentTransmissibility;
+                }
 
             }
         }
@@ -109,12 +122,12 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
 
     transmissibilities.makeCompressed();
 
-    LOGGER->debug("Assembled system");
+    //LOGGER->debug("Assembled system");
     return transmissibilities;
 }
 
 
-void adaptRhsForPressure(const Real sourceAtWellNow, const Real sourceAtDrillNow, VectorRef rhs, const int numberOfRows,
+void adaptRhsForPressure(const Real sourceAtDrillNow, VectorRef rhs, const int numberOfRows,
                          const int numberOfCols) {
     const CellIndex drillCell = findDrillCell(numberOfRows, numberOfCols);
 
@@ -123,12 +136,8 @@ void adaptRhsForPressure(const Real sourceAtWellNow, const Real sourceAtDrillNow
     const CellIndex wellCell = findWellCell(numberOfRows, numberOfCols);
     const int wellCellIndex = wellCell.linearIndex(numberOfRows);
 
-    const CellIndex referenceCell = findReferenceCell(numberOfRows, numberOfCols);
-    const int referenceCellIndex = referenceCell.linearIndex(numberOfRows);
-
-    rhs(wellCellIndex) = -std::abs(sourceAtWellNow);
+    rhs(wellCellIndex) = 0;
     rhs(drillCellIndex) = +std::abs(sourceAtDrillNow);
-    rhs(referenceCellIndex) = 0;
 }
 
 
@@ -146,16 +155,16 @@ Vector projectSourcesIntoRange(ConstMatrixRef sources) {
 }
 
 
-Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstVectorRef rhs, ConstVectorRef pressureGuess) {
+Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstVectorRef rhs) {
     LOGGER->debug("Solving system");
 
-    Eigen::ConjugateGradient<SparseMatrix, Eigen::Upper | Eigen::Lower> solver;
-    solver.setTolerance(1e-6);
+    Eigen::SparseLU<SparseMatrix> solver;
     solver.compute(transmissibilities);
 
-    LOGGER->debug("transmissibilities {}", transmissibilities);
+    LOGGER->debug("transmissibilities =\n{}", transmissibilities);
+    LOGGER->debug("rhs =\n{}", rhs);
 
-    const Vector result = solver.solveWithGuess(rhs, pressureGuess);
+    const Vector result = solver.solve(rhs);
 
     LOGGER->debug("System solved");
     //LOGGER->debug("result = {}", result);

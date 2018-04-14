@@ -18,8 +18,7 @@ struct FixedParameters {
 
     WellFunction inflowPerUnitDepthWater;
 
-    PressureFunction pressureDrill;
-    PressureFunction pressureWell;
+    PressureFunction overPressureDrill;
 
 
 };

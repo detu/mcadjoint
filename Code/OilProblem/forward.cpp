@@ -9,23 +9,21 @@
 void stepForwardProblem(const FixedParameters& params, ConstMatrixRef permeabilities, SimulationState& currentState, VectorRef pressureRhs) {
     const Matrix totalMobilities = computeTotalMobilities(params.dynamicViscosityOil, params.dynamicViscosityWater, permeabilities, currentState.saturationsWater);
 
-    LOGGER->debug("total mobilities {}", totalMobilities);
-    const Real pressureDrillNow = params.pressureDrill(currentState.time);
-    const Real pressureWellNow = params.pressureWell(currentState.time);
+    //LOGGER->debug("total mobilities {}", totalMobilities);
+    const Real pressureDrillNow = params.overPressureDrill(currentState.time);
     const SparseMatrix pressureSystem = assemblePressureSystemWithBC(totalMobilities);
 
-    LOGGER->debug("pressure system {}", pressureSystem);
+    //LOGGER->debug("pressure system {}", pressureSystem);
 
 
     const Real sourceAtDrillNow = std::abs(params.inflowPerUnitDepthWater(currentState.time));
-    const Real totalSourceAtWellNow = -sourceAtDrillNow;
 
-    adaptRhsForPressure(totalSourceAtWellNow, sourceAtDrillNow, pressureRhs, currentState.saturationsWater.rows(), currentState.saturationsWater.cols());
+    adaptRhsForPressure(sourceAtDrillNow, pressureRhs, currentState.saturationsWater.rows(), currentState.saturationsWater.cols());
 
-    LOGGER->debug("pressure rhs {}", pressureRhs);
-    currentState.pressures = solvePressurePoissonProblem(pressureSystem, pressureRhs, currentState.pressures.vec);
+    //LOGGER->debug("pressure rhs {}", pressureRhs);
+    currentState.pressures = solvePressurePoissonProblem(pressureSystem, pressureRhs);
 
-    LOGGER->debug("pressures {}", currentState.pressures.vec);
+    //LOGGER->debug("pressures {}", currentState.pressures.vec);
     advanceSaturationsInTime(params, currentState.saturationsWater, currentState.pressures.map, totalMobilities, currentState.time);
 }
 

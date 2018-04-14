@@ -90,10 +90,6 @@ Matrix computeSaturationDivergences(ConstMatrixRef fluxFunctionFactors, ConstMat
         divergences.row(rowIndex) += (fluxesY.row(rowIndex) - fluxesY.row(rowIndex+1)) / meshWidth;
     }
 
-
-    LOGGER->debug("div sat water =\n{}", divergences);
-
-
     return divergences;
 }
 
@@ -103,16 +99,13 @@ static inline Real computeCflTimestep(const Real maximumAdvectionVelocity, const
 
 void advanceSaturationsInTime(const FixedParameters& params, MatrixRef saturationsWater,
                               ConstMatrixRef pressures,
-                              const Eigen::Ref<const Eigen::Matrix<double, -1, -1>>& totalMobilities, Real& time) {
-
-    LOGGER->debug("sat water =\n{}", saturationsWater);
+                              ConstMatrixRef totalMobilities, Real& time) {
 
     const Matrix fluxFunctionFactors = computeFluxFunctionFactors(saturationsWater, params.porosity, params.dynamicViscosityWater, params.dynamicViscosityOil);
-    LOGGER->debug("flux function factors =\n{}", fluxFunctionFactors);
-    LOGGER->debug("pressures {}", pressures);
+
     Matrix pressureDerivativesX = computeXDerivative(pressures, params.meshWidth);
     Matrix pressureDerivativesY = computeYDerivative(pressures, params.meshWidth);
-    //adaptPressureGradientsAtWell(params.pressureWell(time), pressures, pressureDerivativesX, pressureDerivativesY, params.meshWidth);
+    //adaptPressureGradientsAtWell(params.inflowPerUnitDepthWater(time), totalMobilities, pressures, pressureDerivativesX, pressureDerivativesY, params.meshWidth);
 
     const Matrix darcyVelocitiesX = computeTotalDarcyVelocitiesX(totalMobilities, pressureDerivativesX);
     const Matrix darcyVelocitiesY = computeTotalDarcyVelocitiesY(totalMobilities, pressureDerivativesY);
@@ -139,22 +132,36 @@ void advanceSaturationsInTime(const FixedParameters& params, MatrixRef saturatio
     const CellIndex drillCell = findDrillCell(saturationsWater.rows(), saturationsWater.cols());
     const CellIndex wellCell = findWellCell(saturationsWater.rows(), saturationsWater.cols());
 
-
+    const Real oldSaturationWellCell = wellCell(saturationsWater);
     const Matrix saturationDivergences = computeSaturationDivergences(fluxFunctionFactors, fluxesX, fluxesY, params.meshWidth);
     saturationsWater -= timestep * saturationDivergences;
-    wellCell(saturationsWater) -= wellCell(saturationsWater) * timestep * std::abs(params.inflowPerUnitDepthWater(time)) / (params.porosity * std::pow(params.meshWidth, 2));
+    const Real divergenceSaturationWellCell = timestep * wellCell(saturationDivergences);
+    const Real outflowWellCell = clamp(wellCell(saturationsWater), 0, 1) * timestep * std::abs(params.inflowPerUnitDepthWater(time)) / (params.porosity * std::pow(params.meshWidth, 2));
+    wellCell(saturationsWater) -= outflowWellCell;
+
     wellCell(saturationsWater) = clamp(wellCell(saturationsWater), 0, 1);
+    //wellCell(saturationsWater) += timestep * wellCell(saturationDivergences) * oldSaturationWell;
 
 
     drillCell(saturationsWater) = 1;
     time += timestep;
+    LOGGER->debug("old sat well = {}", oldSaturationWellCell);
+    LOGGER->debug("sat water =\n{}", saturationsWater);
+
+    LOGGER->debug("flux function factors =\n{}", fluxFunctionFactors);
+    LOGGER->debug("pressures =\n{}", pressures);
 
     LOGGER->debug("pressure dx = \n{}", pressureDerivativesX);
     LOGGER->debug("darcy vx =\n{}", darcyVelocitiesX);
 
     LOGGER->debug("pressure dy = \n{}", pressureDerivativesY);
+    LOGGER->debug("darcy vy = \n{}", darcyVelocitiesY);
+
+    LOGGER->debug("inflow = {}", std::abs(params.inflowPerUnitDepthWater(time)));
+    LOGGER->debug("meshwidth = {}", params.meshWidth);
 
     LOGGER->debug("fluxes x =\n{}", fluxesX);
+    LOGGER->debug("fluxes y =\n{}", fluxesY);
 
     //LOGGER->debug("advection velocities x {}", advectionVelocitiesX);
 
@@ -163,12 +170,20 @@ void advanceSaturationsInTime(const FixedParameters& params, MatrixRef saturatio
 
     LOGGER->debug("CFL timestep = {}", timestep);
 
-    LOGGER->info("Well cell div sat = {}", wellCell(saturationDivergences));
+    LOGGER->debug("div sat water =\n{}", saturationDivergences);
+
+    LOGGER->debug("timestep = {}", timestep);
+    LOGGER->info("Well cell div sat = {}", divergenceSaturationWellCell);
+    LOGGER->info("Well cell outflow water = {}", outflowWellCell);
     LOGGER->info("Well cell sat = {}", wellCell(saturationsWater));
     LOGGER->info("South neighbor of well cell sat = {}", wellCell.neighbor(CellIndex::Direction::SOUTH)(saturationsWater));
     LOGGER->info("West neighbor of well cell sat = {}", wellCell.neighbor(CellIndex::Direction::WEST)(saturationsWater));
 
-
+    if (wellCell(saturationsWater) < 0) {
+        throw std::logic_error("well sat < 0!");
+    } else if (wellCell(saturationsWater) > 1) {
+        throw std::logic_error("well sat > 1!");
+    }
 
 }
 

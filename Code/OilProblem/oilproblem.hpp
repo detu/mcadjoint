@@ -18,9 +18,9 @@ Real computeTransmissibility(ConstMatrixRef totalMobilities, const CellIndex& fr
 
 SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities);
 
-Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstVectorRef rhs, ConstVectorRef pressureGuess);
+Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstVectorRef rhs);
 
-void adaptRhsForPressure(const Real sourceAtWellNow, const Real sourceAtDrillNow, VectorRef rhs, const int numberOfRows,
+void adaptRhsForPressure(const Real sourceAtDrillNow, VectorRef rhs, const int numberOfRows,
                          const int numberOfCols);
 
 [[deprecated("Not used anymore by current formulation")]]
@@ -32,7 +32,7 @@ Matrix computeXDerivative(ConstMatrixRef field, const Real meshWidth);
 Matrix computeYDerivative(ConstMatrixRef field, const Real meshWidth);
 
 
-void adaptPressureGradientsAtWell(const Real wellPressureNow, ConstMatrixRef pressures, MatrixRef pressureDerivativesX, MatrixRef pressureDerivativesY, const Real meshWidth);
+void adaptPressureGradientsAtWell(const Real inflowNow, ConstMatrixRef mobilities, ConstMatrixRef pressures, MatrixRef pressureDerivativesX, MatrixRef pressureDerivativesY, const Real meshWidth);
 
 Real getDerivativeAtCellBorder(CellIndex cell,
                                ConstMatrixRef xDerivative, ConstMatrixRef yDerivative,
