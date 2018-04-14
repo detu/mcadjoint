@@ -32,9 +32,13 @@ Matrix computeXDerivative(ConstMatrixRef field, const Real meshWidth);
 Matrix computeYDerivative(ConstMatrixRef field, const Real meshWidth);
 
 
+void adaptPressureGradientsAtWell(const Real wellPressureNow, ConstMatrixRef pressures, MatrixRef pressureDerivativesX, MatrixRef pressureDerivativesY, const Real meshWidth);
+
 Real getDerivativeAtCellBorder(CellIndex cell,
                                ConstMatrixRef xDerivative, ConstMatrixRef yDerivative,
                                const CellIndex::Direction whichBorder);
+CellIndex centerIndexToBorderIndex(CellIndex centerIndex, const CellIndex::Direction whichBorder);
+CellIndex borderIndexToCenterIndex(CellIndex borderIndex, const CellIndex::Direction whichBorder);
 
 CellIndex pressureToTransmissibilityIndex(
       const CellIndex& fromCell,

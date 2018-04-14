@@ -310,7 +310,7 @@ The finite volume reformulation of the saturation equation \eqref{saturationEqua
 \begin{multline}
 \label{saturationEquationFV}
 \pdiff{\frac{1}{h^2} \int_K S_\text{w} \d{A}}{t} \\+ \frac{1}{h}\biggr((f(S_\text{w})v_{\text{tot }, x})\lvert_E - (f(S_\text{w})v_{\text{tot }, x})\lvert_W \\+ (f(S_\text{w})v_{\text{tot }, y})\lvert_N - (f(S_\text{w})v_{\text{tot }, y})\lvert_S\biggr) \\=
-\frac{Q_\text{w}}{h^2} \cdot \begin{cases} 1, &\text{if } K \text{ is the finite volume nearest to the well} \\0, &\text{otherwise}\end{cases}
+\frac{Q_\text{w}}{h^2 \phi} \cdot \begin{cases} 1, &\text{if } K \text{ is the finite volume nearest to the well} \\0, &\text{otherwise}\end{cases}
 \end{multline}
 
 We identify the volume average

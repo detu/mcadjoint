@@ -74,6 +74,25 @@ CellIndex borderIndexToCenterIndex(CellIndex borderIndex, const CellIndex::Direc
     }
 }
 
+CellIndex centerIndexToBorderIndex(CellIndex centerIndex, const CellIndex::Direction whichBorder) {
+    switch (whichBorder) {
+        case CellIndex::Direction::NORTH: {
+            return centerIndex;
+        }
+        case CellIndex::Direction::SOUTH: {
+            ++centerIndex.i;
+            return centerIndex;
+        }
+        case CellIndex::Direction::WEST: {
+            return centerIndex;
+        }
+        case CellIndex::Direction::EAST: {
+            ++centerIndex.j;
+            return centerIndex;
+        }
+    }
+}
+
 
 Matrix computeTotalDarcyVelocitiesX(ConstMatrixRef totalMobilities, Matrix pressureDerivativesX) {
     const int numberOfColsOfDerivatives = pressureDerivativesX.cols();

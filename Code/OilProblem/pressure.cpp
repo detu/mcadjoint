@@ -37,6 +37,20 @@ CellIndex pressureToTransmissibilityIndex(
 }
 
 
+void adaptPressureGradientsAtWell(const Real wellPressureNow, ConstMatrixRef pressures, MatrixRef pressureDerivativesX, MatrixRef pressureDerivativesY, const Real meshWidth) {
+    const CellIndex wellCell = findWellCell(pressures.rows(), pressures.cols());
+    const CellIndex eastDerivativeOfWellCell = centerIndexToBorderIndex(wellCell, CellIndex::Direction::EAST);
+    const CellIndex northDerivativeOfWellCell = centerIndexToBorderIndex(wellCell, CellIndex::Direction::NORTH);
+    const CellIndex southDerivativeOfWellCell = centerIndexToBorderIndex(wellCell, CellIndex::Direction::SOUTH);
+    const CellIndex westDerivativeOfWellCell = centerIndexToBorderIndex(wellCell, CellIndex::Direction::WEST);
+
+
+    eastDerivativeOfWellCell(pressureDerivativesX) = (wellPressureNow - wellCell(pressures)) / meshWidth;
+    northDerivativeOfWellCell(pressureDerivativesY) = (wellPressureNow - wellCell(pressures)) / meshWidth;
+
+}
+
+
 
 SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
     LOGGER->debug("Starting to assemble system");
@@ -153,4 +167,5 @@ Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, Const
 
     return result;
 }
+
 

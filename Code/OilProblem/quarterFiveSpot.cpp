@@ -39,7 +39,7 @@ int main() {
 
     params.dynamicViscosityOil = 0.630; // SAE motor oil 20°C
     params.dynamicViscosityWater = 0.0010518; // Water 20°C
-    params.finalTime = 0.16;
+    params.finalTime = 2;
     const Real atmosphericPressure = 1e5;
     params.pressureWell = [=] (const Real time) {
         return atmosphericPressure;
