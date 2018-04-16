@@ -383,8 +383,8 @@ and by
 \end{align}
 where
 \begin{align}
-f^\prime(S_\text{w}) = \text{insert derivative here} \\
-\indicator(b) = \begin{cases} 1, &\text{if } b \text{ true} \\ 0, &\text{otherwise.}
+f^\prime(S_\text{w}) &=  \frac{2\mu_\text{o}\mu_\text{w} (1 - S_\text{w})S_\text{w}}{\phi \cdot \left(\mu_\text{w}(1 - S_\text{w})^2 + \mu_\text{o}S_\text{w}^2\right)^2}\\
+\indicator(b) &= \begin{cases} 1, &\text{if } b \text{ true} \\ 0, &\text{otherwise.}
 \end{cases}
 \end{align}
 
@@ -398,14 +398,20 @@ For the off diagonal blocks, we have
 \end{align}
 and
 \begin{align}
-\pdiff{\Pi_K^{(i)}}{{S_\text{w}}_K^{(i)}} &=, 
+\pdiff{\Pi_K^{(i)}}{{S_\text{w}}_K^{(i)}} &= 2 \pdiff{\lambda_\text{tot}^{(i-1)}}{S_\text{w}}\lvert_K\\&\sum_{n\in\{U, D, L, R\}} \frac{(p_K^{(i-1)} - p_n^{(i-1)}) \cdot (\lambda_{\text{tot, }n}^{(i-1)})^2}{(\lambda_{\text{tot, }K}^{(i-1)} + \lambda_{\text{tot, }n}^{(i-1)})^2} \nonumber\\
+\pdiff{\Pi_K^{(i)}}{{S_\text{w}}_R^{(i)}} &= 2 \pdiff{\lambda_\text{tot}^{(i-1)}}{S_\text{w}}\lvert_R \cdot
+\frac{(p_K^{(i-1)} - p_R^{(i-1)}) \cdot (\lambda_{\text{tot, }K}^{(i-1)})^2}{(\lambda_{\text{tot, }K}^{(i-1)} + \lambda_{\text{tot, }R}^{(i-1)})^2} \\
+\pdiff{\Pi_K^{(i)}}{{S_\text{w}}_L^{(i)}} &= 2 \pdiff{\lambda_\text{tot}^{(i-1)}}{S_\text{w}}\lvert_L \cdot
+\frac{(p_K^{(i-1)} - p_L^{(i-1)}) \cdot (\lambda_{\text{tot, }K}^{(i-1)})^2}{(\lambda_{\text{tot, }K}^{(i-1)} + \lambda_{\text{tot, }L}^{(i-1)})^2} \\
+\pdiff{\Pi_K^{(i)}}{{S_\text{w}}_U^{(i)}} &= 2 \pdiff{\lambda_\text{tot}^{(i-1)}}{S_\text{w}}\lvert_U \cdot
+\frac{(p_K^{(i-1)} - p_U^{(i-1)}) \cdot (\lambda_{\text{tot, }K}^{(i-1)})^2}{(\lambda_{\text{tot, }K}^{(i-1)} + \lambda_{\text{tot, }U}^{(i-1)})^2} \\
+\pdiff{\Pi_K^{(i)}}{{S_\text{w}}_D^{(i)}} &= 2 \pdiff{\lambda_\text{tot}^{(i-1)}}{S_\text{w}}\lvert_D \cdot
+\frac{(p_K^{(i-1)} - p_D^{(i-1)}) \cdot (\lambda_{\text{tot, }K}^{(i-1)})^2}{(\lambda_{\text{tot, }K}^{(i-1)} + \lambda_{\text{tot, }D}^{(i-1)})^2} \\
 \end{align}
 where
-\begin{equation}
-\hmean^\prime(a, b) := 
-\end{equation}
-
-
+\begin{align}
+\pdiff{\lambda_\text{tot}}{S_\text{w}} &= 2k\left(\frac{S_\text{w} - 1}{\mu_\text{o}} + \frac{S_\text{w}}{\mu_\text{w}}\right)
+\end{align}
 %\bibliographystyle{IEEEtran}
 %\bibliography{references}
 \end{document}

@@ -40,7 +40,7 @@
         <entry file="file://$PROJECT_DIR$/quarterFiveSpot.cpp">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="396">
-              <caret line="46" column="44" lean-forward="false" selection-start-line="46" selection-start-column="44" selection-end-line="46" selection-end-column="44" />
+              <caret line="46" column="50" lean-forward="true" selection-start-line="46" selection-start-column="50" selection-end-line="46" selection-end-column="50" />
               <folding>
                 <element signature="e#51#76#0" expanded="true" />
               </folding>
@@ -389,12 +389,12 @@
       <workItem from="1523276861701" duration="2429000" />
       <workItem from="1523359382257" duration="17607000" />
       <workItem from="1523429844704" duration="391000" />
-      <workItem from="1523430385122" duration="63474000" />
+      <workItem from="1523430385122" duration="64326000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="183937000" />
+    <option name="totallyTimeSpent" value="184789000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="796" extended-state="6" />
@@ -832,7 +832,7 @@
     <entry file="file://$PROJECT_DIR$/quarterFiveSpot.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="396">
-          <caret line="46" column="44" lean-forward="false" selection-start-line="46" selection-start-column="44" selection-end-line="46" selection-end-column="44" />
+          <caret line="46" column="50" lean-forward="true" selection-start-line="46" selection-start-column="50" selection-end-line="46" selection-end-column="50" />
           <folding>
             <element signature="e#51#76#0" expanded="true" />
           </folding>
