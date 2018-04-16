@@ -15,4 +15,10 @@ struct SimulationState {
 
     inline SimulationState(const int matrixRows, const int matrixCols):
           saturationsWater(matrixRows, matrixCols), pressures(matrixRows, matrixCols), time(0) {}
+
+    inline SimulationState():
+          SimulationState(0, 0) {}
+
+
+
 };

@@ -67,7 +67,7 @@ Matrix clamp(ConstMatrixRef x, const Real minVal, const Real maxVal);
 
 Matrix computeTotalMobilities(const Real dynamicViscosityOil, const Real dynamicViscosityWater, ConstMatrixRef permeabilities, ConstMatrixRef saturationsWater);
 
-void advanceSaturationsInTime(const FixedParameters& params, MatrixRef saturationsWater,
+bool advanceSaturationsInTime(const FixedParameters& params, MatrixRef saturationsWater,
                               ConstMatrixRef pressures, ConstMatrixRef totalMobilities, Real& time);
 
-void stepForwardProblem(const FixedParameters& params, ConstMatrixRef permeabilities, SimulationState& currentState, VectorRef pressureRhs);
+bool stepForwardProblem(const FixedParameters& params, ConstMatrixRef permeabilities, SimulationState& currentState, VectorRef pressureRhs);

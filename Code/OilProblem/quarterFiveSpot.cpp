@@ -8,21 +8,40 @@
 #include "specialCells.hpp"
 #include <signal.h>
 #include <cstdlib>
+#include <argh.h>
+#include <stefCommonHeaders/logging.hpp>
+#include <memory>
 
-const int n = 100;
-SimulationState simulationState(n, n);
+
+int n = -1;
+std::unique_ptr<SimulationState> simulationState = nullptr;
 
 
-void writeToFile(int signalNumber) {
+void writeToFileAndExit(int signalNumber) {
     SMIO::EigenMatFile matFile("fieldsQuarterFiveSpot.mat");
-    matFile.writeVariable("satWater", clamp(simulationState.saturationsWater, 0, 1));
-    matFile.writeVariable("pressure", Matrix(simulationState.pressures.map));
+    matFile.writeVariable("satWater", clamp(simulationState->saturationsWater, 0, 1));
+    matFile.writeVariable("pressure", Matrix(simulationState->pressures.map));
     matFile.close();
     std::exit(signalNumber);
 }
 
-int main() {
 
+void parseCommandLine(const int argc, const char** argv) {
+    argh::parser cmdl;
+    cmdl.parse(argc, argv, argh::parser::PREFER_PARAM_FOR_UNREG_OPTION);
+
+    std::string levelName;
+    cmdl("-n") >> n;
+    cmdl({"-l", "--level"}) >> levelName;
+
+    LOGGER = stefCommonHeaders::setUpLog(spdlog::level::from_str(levelName));
+    simulationState = std::make_unique<SimulationState>(n, n);
+
+}
+
+int main(const int argc, const char** argv) {
+
+    parseCommandLine(argc, argv);
 
 
     //feenableexcept(FE_ALL_EXCEPT & ~FE_INEXACT);
@@ -39,7 +58,7 @@ int main() {
 
     params.dynamicViscosityOil = 0.630; // SAE motor oil 20°C
     params.dynamicViscosityWater = 0.0010518; // Water 20°C
-    params.finalTime = 1000;
+    params.finalTime = 0.1;
     const Real atmosphericPressure = 1e5;
 
     params.overPressureDrill = [=] (const Real time) {
@@ -51,7 +70,7 @@ int main() {
     params.porosity = 1;
 
 
-    simulationState.saturationsWater.setZero();
+    simulationState->saturationsWater.setZero();
     params.meshWidth = meshWidth;
 
 
@@ -63,18 +82,22 @@ int main() {
     Vector pressureRhs(n*n);
     pressureRhs.setZero();
 
-    signal(SIGINT, writeToFile);
-    signal(SIGTERM, writeToFile);
+    signal(SIGINT, writeToFileAndExit);
+    signal(SIGTERM, writeToFileAndExit);
 
 
-    while (simulationState.time < params.finalTime) {
-        stepForwardProblem(params, permeabilities, simulationState, pressureRhs);
-        LOGGER->debug("saturations water =\n{}", simulationState.saturationsWater);
-        LOGGER->info("time = {}", simulationState.time);
+    while (simulationState->time < params.finalTime) {
+        const bool breakThroughHappened = stepForwardProblem(params, permeabilities, *simulationState, pressureRhs);
+        LOGGER->debug("saturations water =\n{}", simulationState->saturationsWater);
+        LOGGER->info("time = {}", simulationState->time);
+        if (breakThroughHappened) {
+            LOGGER->info("Water broke though to well.");
+            break;
+        }
     }
 
-    LOGGER->debug("dim sat water = ({}, {})", simulationState.saturationsWater.rows(), simulationState.saturationsWater.cols());
+    LOGGER->debug("dim sat water = ({}, {})", simulationState->saturationsWater.rows(), simulationState->saturationsWater.cols());
 
-    writeToFile(0);
+    writeToFileAndExit(0);
     return 0;
 }

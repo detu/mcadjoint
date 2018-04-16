@@ -97,7 +97,7 @@ static inline Real computeCflTimestep(const Real maximumAdvectionVelocity, const
     return 0.9 * meshWidth / maximumAdvectionVelocity;
 }
 
-void advanceSaturationsInTime(const FixedParameters& params, MatrixRef saturationsWater,
+bool advanceSaturationsInTime(const FixedParameters& params, MatrixRef saturationsWater,
                               ConstMatrixRef pressures,
                               ConstMatrixRef totalMobilities, Real& time) {
 
@@ -135,16 +135,23 @@ void advanceSaturationsInTime(const FixedParameters& params, MatrixRef saturatio
     const Real oldSaturationWellCell = wellCell(saturationsWater);
     const Matrix saturationDivergences = computeSaturationDivergences(fluxFunctionFactors, fluxesX, fluxesY, params.meshWidth);
     saturationsWater -= timestep * saturationDivergences;
+
     const Real divergenceSaturationWellCell = timestep * wellCell(saturationDivergences);
-    const Real outflowWellCell = clamp(wellCell(saturationsWater), 0, 1) * timestep * std::abs(params.inflowPerUnitDepthWater(time)) / (params.porosity * std::pow(params.meshWidth, 2));
-    wellCell(saturationsWater) -= outflowWellCell;
+    const bool breakThroughHappened = std::abs(divergenceSaturationWellCell) > 1e-16;
+    Real outflowWellCell = 0;
+    if (breakThroughHappened) {
+        outflowWellCell =
+              clamp(wellCell(saturationsWater), 0, 1) * timestep * std::abs(params.inflowPerUnitDepthWater(time)) /
+              (params.porosity * std::pow(params.meshWidth, 2));
+        wellCell(saturationsWater) -= outflowWellCell;
 
-    wellCell(saturationsWater) = clamp(wellCell(saturationsWater), 0, 1);
-    //wellCell(saturationsWater) += timestep * wellCell(saturationDivergences) * oldSaturationWell;
+        wellCell(saturationsWater) = clamp(wellCell(saturationsWater), 0, 1);
+    }
 
-
-    drillCell(saturationsWater) = 1;
     time += timestep;
+    drillCell(saturationsWater) = 1;
+
+
     LOGGER->debug("old sat well = {}", oldSaturationWellCell);
     LOGGER->debug("sat water =\n{}", saturationsWater);
 
@@ -184,6 +191,8 @@ void advanceSaturationsInTime(const FixedParameters& params, MatrixRef saturatio
     } else if (wellCell(saturationsWater) > 1) {
         throw std::logic_error("well sat > 1!");
     }
+
+    return breakThroughHappened;
 
 }
 

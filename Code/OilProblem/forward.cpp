@@ -6,7 +6,7 @@
 #include "fixedParameters.hpp"
 #include "logging.hpp"
 
-void stepForwardProblem(const FixedParameters& params, ConstMatrixRef permeabilities, SimulationState& currentState, VectorRef pressureRhs) {
+bool stepForwardProblem(const FixedParameters& params, ConstMatrixRef permeabilities, SimulationState& currentState, VectorRef pressureRhs) {
     const Matrix totalMobilities = computeTotalMobilities(params.dynamicViscosityOil, params.dynamicViscosityWater, permeabilities, currentState.saturationsWater);
 
     //LOGGER->debug("total mobilities {}", totalMobilities);
@@ -24,7 +24,7 @@ void stepForwardProblem(const FixedParameters& params, ConstMatrixRef permeabili
     currentState.pressures = solvePressurePoissonProblem(pressureSystem, pressureRhs);
 
     //LOGGER->debug("pressures {}", currentState.pressures.vec);
-    advanceSaturationsInTime(params, currentState.saturationsWater, currentState.pressures.map, totalMobilities, currentState.time);
+    return advanceSaturationsInTime(params, currentState.saturationsWater, currentState.pressures.map, totalMobilities, currentState.time);
 }
 
 Matrix computeTotalMobilities(const Real dynamicViscosityOil, const Real dynamicViscosityWater, ConstMatrixRef permeabilities, ConstMatrixRef saturationsWater) {

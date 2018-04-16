@@ -6,6 +6,6 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
 
-extern const std::shared_ptr<spdlog::logger> LOGGER;
+extern std::shared_ptr<spdlog::logger> LOGGER;
 
 

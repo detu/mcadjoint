@@ -22,10 +22,12 @@ struct VectorToBeMappedAsMatrix {
 
 
     inline VectorToBeMappedAsMatrix& operator =(ConstVectorRef vector) {
+        vec.resizeLike(vector);
         vec = vector;
         map = Eigen::Map<Matrix>(vec.data(), map.rows(), map.cols());
         return *this;
     }
+
 };
 
 
