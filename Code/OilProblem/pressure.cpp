@@ -26,11 +26,7 @@ Real computeTransmissibility(ConstMatrixRef totalMobilities, const CellIndex& fr
     return 2.0 * lambdaFrom * lambdaTo / (lambdaFrom + lambdaTo);
 }
 
-CellIndex pressureToTransmissibilityIndex(
-      const CellIndex& fromCell,
-      const CellIndex& toCell,
-      const int numberOfRows,
-      const int numberOfCols) {
+CellIndex pressureToTransmissibilityIndex(const CellIndex& fromCell, const CellIndex& toCell, const int numberOfRows) {
 
     return {fromCell.linearIndex(numberOfRows),
             toCell.linearIndex(numberOfRows)};
@@ -64,7 +60,7 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
 
     //const CellIndex referenceCell = findReferenceCell(numberOfRows, numberOfCols);
 
-    transmissibilities.reserve(Eigen::VectorXi::Constant(transmissibilities.cols(), 6));
+    transmissibilities.reserve(Eigen::VectorXi::Constant(transmissibilities.cols(), 5));
 
     CellIndex myself = {0, 0};
     const CellIndex wellCell = findWellCell(numberOfRows, numberOfCols);
@@ -78,7 +74,7 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
 
 
 
-            const CellIndex meToMyself = pressureToTransmissibilityIndex(myself, myself, numberOfRows, numberOfCols);
+            const CellIndex meToMyself = pressureToTransmissibilityIndex(myself, myself, numberOfRows);
 
             if (iAmTheCellWithTheKnownPressure) {
                 meToMyself(transmissibilities) = 1;
@@ -98,10 +94,8 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
 
                 const CellIndex neighbor = myself.neighbor(direction);
 
-                const CellIndex neighborToThemselves = pressureToTransmissibilityIndex(neighbor, neighbor, numberOfRows,
-                                                                                       numberOfCols);
-                const CellIndex meToNeighbor = pressureToTransmissibilityIndex(myself, neighbor, numberOfRows,
-                                                                               numberOfCols);
+                const CellIndex neighborToThemselves = pressureToTransmissibilityIndex(neighbor, neighbor, numberOfRows);
+                const CellIndex meToNeighbor = pressureToTransmissibilityIndex(myself, neighbor, numberOfRows);
                 const CellIndex neighborToMe = meToNeighbor.transpose();
 
                 const Real currentTransmissibility = computeTransmissibility(totalMobilities, myself, neighbor);

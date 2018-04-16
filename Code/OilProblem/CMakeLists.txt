@@ -30,7 +30,7 @@ include(cotire)
 set(baseLibHeaders control.h gnuplot_i.h utils.hpp logging.hpp)
 set(baseLibSources control.cpp gnuplot_i.cpp utils.cpp logging.cpp)
 set(oilLibHeaders oilProblem.hpp typedefs.hpp cellindex.hpp vectorToBeMappedAsMatrix.hpp fixedParameters.hpp simulationState.hpp specialCells.hpp)
-set(oilLibSources pressure.cpp darcyVelocity.cpp saturation.cpp minimizer.cpp forward.cpp)
+set(oilLibSources pressure.cpp darcyVelocity.cpp saturation.cpp minimizer.cpp forward.cpp derivativesForAdjoint.cpp)
 add_library(commonLib STATIC ${oilLibSources} ${oilLibHeaders} ${baseLibSources} ${baseLibHeaders})
 target_link_libraries(commonLib stefCommonHeaders)
 

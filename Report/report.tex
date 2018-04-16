@@ -351,11 +351,11 @@ and $\Delta t$ is the timestep.
 
 First, we define the pressure residuals
 \begin{multline}
-\Pi_K^{(i)} := T_E^{(i-1)} (p_K^{(i)} - p_R^{(i)}) + T_W^{(i-1)} (p_K^{(i)} - p_L^{(i)}) \\+ T_N ( p_K^{(i)} - p_U^{(i)}) + T_S^{(i-1)} (p_K^{(i)} - p_D^{(i)}) - Q_\text{tot, K}^{(i-1)}, 
+\Pi_K^{(i)} := \begin{cases} p_K^{(i-1)} - p_\text{well}(i\Delta t), & \text{if } K \text{ is the cell}\\&\text{nearest to the well}\\T_E^{(i-1)} (p_K^{(i)} - p_R^{(i)}) \\+ T_W^{(i-1)} (p_K^{(i)} - p_L^{(i)}) \\+ T_N ( p_K^{(i)} - p_U^{(i)}) \\+ T_S^{(i-1)} (p_K^{(i)} - p_D^{(i)}) - Q_\text{tot, K}^{(i-1)}, & \text{else}\end{cases}, 
 \end{multline}
 where
 \begin{equation}
-Q_\text{tot, K}^{(i)} := Q_\text{tot}(i\Delta t) \cdot \begin{cases} 1, &\text{if } K \text{ is the cell nearest to the well}\\0, &\text{ otherwise} \end{cases}
+Q_\text{tot, K}^{(i)} := Q_\text{tot}(i\Delta t) \cdot \begin{cases} 1, &\text{if } K \text{ is the cell nearest to the drill}\\0, &\text{ otherwise} \end{cases}
 \end{equation}
 
 The saturation residuals are given by
@@ -371,11 +371,12 @@ The nonzero derivatives for the diagonal blocks are given by
 \pdiff{\Pi_K^{(i)}}{p_N^{(i)}} &= -T_U^{(i-1)} \\
 \pdiff{\Pi_K^{(i)}}{p_S^{(i)}} &= -T_D^{(i-1)}
 \end{align}
+for cells which are not nearest to the well
 
 and by
 \begin{align}
 \pdiff{\Sigma_K^{(i)}}{S_K^{(i)}} &= 1 \\
-\pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_K^{(i-1)}} &=  f^\prime({S_{\text{w}}}_K^{(i-1)}) \cdot \biggr(\indicator(v_\text{tot, x}\lvert_E > 0) v_\text{tot, x}\lvert_E \\&+ \indicator(v_\text{tot, x}\lvert_W < 0) v_\text{tot, x}\lvert_W + \indicator(v_\text{tot, y}\lvert_N > 0) v_\text{tot, y}\lvert_N  \nonumber\\&+ \indicator(v_\text{tot, y}\lvert_S < 0) v_\text{tot, y}\lvert_S\biggr) \nonumber\\ 
+\pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_K^{(i-1)}} &=  f^\prime({S_{\text{w}}}_K^{(i-1)}) \frac{\Delta t}{h}\cdot \biggr(\indicator(v_\text{tot, x}\lvert_E > 0) v_\text{tot, x}\lvert_E \\&+ \indicator(v_\text{tot, x}\lvert_W < 0) v_\text{tot, x}\lvert_W + \indicator(v_\text{tot, y}\lvert_N > 0) v_\text{tot, y}\lvert_N  \nonumber\\&+ \indicator(v_\text{tot, y}\lvert_S < 0) v_\text{tot, y}\lvert_S\biggr) - 1 \nonumber\\ 
 \pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_R^{(i-1)}} &= f^\prime({S_{\text{w}}}_R^{(i-1)}) \frac{\Delta t}{h}\cdot \indicator(v_\text{tot, x}\lvert_E < 0) v_\text{tot, x}\lvert_E \\
 \pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_L^{(i-1)}} &= f^\prime({S_{\text{w}}}_L^{(i-1)}) \frac{\Delta t}{h}\cdot \indicator(v_\text{tot, x}\lvert_W > 0) v_\text{tot, x}\lvert_W \\
 \pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_U^{(i-1)}} &= f^\prime({S_{\text{w}}}_U^{(i-1)}) \frac{\Delta t}{h}\cdot \indicator(v_\text{tot, y}\lvert_N < 0) v_\text{tot, y}\lvert_N \\
@@ -396,7 +397,7 @@ For the off diagonal blocks, we have
 \pdiff{\Sigma_K^{(i)}}{p_U^{(i)}} &= -\frac{\Delta t}{h^2}T_N^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_N \\
 \pdiff{\Sigma_K^{(i)}}{p_D^{(i)}} &= -\frac{\Delta t}{h^2}T_S^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_S,
 \end{align}
-and
+for cells not nearest to the well and
 \begin{align}
 \pdiff{\Pi_K^{(i)}}{{S_\text{w}}_K^{(i)}} &= 2 \pdiff{\lambda_\text{tot}^{(i-1)}}{S_\text{w}}\lvert_K\\&\sum_{n\in\{U, D, L, R\}} \frac{(p_K^{(i-1)} - p_n^{(i-1)}) \cdot (\lambda_{\text{tot, }n}^{(i-1)})^2}{(\lambda_{\text{tot, }K}^{(i-1)} + \lambda_{\text{tot, }n}^{(i-1)})^2} \nonumber\\
 \pdiff{\Pi_K^{(i)}}{{S_\text{w}}_R^{(i)}} &= 2 \pdiff{\lambda_\text{tot}^{(i-1)}}{S_\text{w}}\lvert_R \cdot

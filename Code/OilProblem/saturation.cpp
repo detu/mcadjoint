@@ -40,24 +40,6 @@ Matrix computeFluxesY(ConstMatrixRef fluxFunctionFactors, Matrix darcyVelocities
 }
 
 
-SparseMatrix computePressureResidualsDerivedByPressure(const SparseMatrix& transmissibilities) {
-    return transmissibilities;
-}
-
-Matrix computePressureResidualsDerivedBySaturationWater() {
-    #pragma message "TODO"
-    DEV_STUB();
-}
-
-Matrix computeSaturationWaterResidualsDerivedBySaturationWater() {
-    #pragma message "TODO"
-    DEV_STUB();
-}
-
-Matrix computeSaturationWaterResidualsDerivedByPressure() {
-    #pragma message "TODO"
-    DEV_STUB();
-}
 
 
 Real clamp(const Real x, const Real minVal, const Real maxVal) {

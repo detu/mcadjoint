@@ -12,6 +12,19 @@
 #include "specialCells.hpp"
 
 
+Matrix computeFluxFunctionFactorDerivatives(ConstMatrixRef saturationsWater, const Real porosity, const Real dynamicViscosityWater, const Real dynamicViscosityOil);
+
+SparseMatrix computePressureResidualsDerivedByPressure(const SparseMatrix& pressureSystem);
+SparseMatrix computePressureResidualsDerivedBySaturationWater(ConstMatrixRef pressures, ConstMatrixRef totalMobilities, ConstMatrixRef totalMobilitiesDerivedBySaturationsWater);
+SparseMatrix computeSaturationWaterResidualsDerivedBySaturationWater(ConstMatrixRef fluxFunctionDerivatives,
+                                                                     ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY,
+                                                                     const Real timestep, const Real meshWidth
+);
+SparseMatrix computeSaturationWaterResidualsDerivedByPressure(ConstMatrixRef pressureSystem, ConstMatrixRef fluxFunctionFactors,
+                                                              ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY,
+                                                              ConstMatrixRef mobilities,
+                                                              const Real timestep, const Real meshWidth);
+
 
 Real computeTransmissibility(ConstMatrixRef totalMobilities, const CellIndex& fromCell, const CellIndex& toCell);
 
@@ -40,11 +53,7 @@ Real getDerivativeAtCellBorder(CellIndex cell,
 CellIndex centerIndexToBorderIndex(CellIndex centerIndex, const CellIndex::Direction whichBorder);
 CellIndex borderIndexToCenterIndex(CellIndex borderIndex, const CellIndex::Direction whichBorder);
 
-CellIndex pressureToTransmissibilityIndex(
-      const CellIndex& fromCell,
-      const CellIndex& toCell,
-      const int numberOfRows,
-      const int numberOfCols);
+CellIndex pressureToTransmissibilityIndex(const CellIndex& fromCell, const CellIndex& toCell, const int numberOfRows);
 
 Matrix computeTotalDarcyVelocitiesX(ConstMatrixRef totalMobilities, Matrix pressureDerivativesX);
 
