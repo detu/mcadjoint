@@ -243,6 +243,9 @@ c(T) := \int_0^T \biggr(\big(p_\text{drill}(t) - p_\text{well}(t)\big) - \big(\t
 \end{equation}
 where the variables with a tilde denote computed quantities and $T$ is a final time.
 
+\subsection{What do we control?}
+We control the log-permeabilities $\ln(k)$, as these are hard to measure.
+
 \section{Discretization}
 We discretize the square domain $\Omega$ with $n \times n$ square finite volumes, thus getting a mesh width of $h := 1/n$.
 
@@ -376,7 +379,7 @@ for cells which are not nearest to the well
 and by
 \begin{align}
 \pdiff{\Sigma_K^{(i)}}{S_K^{(i)}} &= 1 \\
-\pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_K^{(i-1)}} &=  f^\prime({S_{\text{w}}}_K^{(i-1)}) \frac{\Delta t}{h}\cdot \biggr(\indicator(v_\text{tot, x}\lvert_E > 0) v_\text{tot, x}\lvert_E \\&+ \indicator(v_\text{tot, x}\lvert_W < 0) v_\text{tot, x}\lvert_W + \indicator(v_\text{tot, y}\lvert_N > 0) v_\text{tot, y}\lvert_N  \nonumber\\&+ \indicator(v_\text{tot, y}\lvert_S < 0) v_\text{tot, y}\lvert_S\biggr) - 1 \nonumber\\ 
+\pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_K^{(i-1)}} &=  f^\prime({S_{\text{w}}}_K^{(i-1)}) \frac{\Delta t}{h}\cdot \biggr(\indicator(v_\text{tot, x}\lvert_E > 0) v_\text{tot, x}\lvert_E \\&+ \indicator(v_\text{tot, x}\lvert_W < 0) v_\text{tot, x}\lvert_W + \indicator(v_\text{tot, y}\lvert_N > 0) v_\text{tot, y}\lvert_N  \nonumber\\&+ \indicator(v_\text{tot, y}\lvert_S < 0) v_\text{tot, y}\lvert_S\biggr) \nonumber\\ 
 \pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_R^{(i-1)}} &= f^\prime({S_{\text{w}}}_R^{(i-1)}) \frac{\Delta t}{h}\cdot \indicator(v_\text{tot, x}\lvert_E < 0) v_\text{tot, x}\lvert_E \\
 \pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_L^{(i-1)}} &= f^\prime({S_{\text{w}}}_L^{(i-1)}) \frac{\Delta t}{h}\cdot \indicator(v_\text{tot, x}\lvert_W > 0) v_\text{tot, x}\lvert_W \\
 \pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_U^{(i-1)}} &= f^\prime({S_{\text{w}}}_U^{(i-1)}) \frac{\Delta t}{h}\cdot \indicator(v_\text{tot, y}\lvert_N < 0) v_\text{tot, y}\lvert_N \\
@@ -399,20 +402,36 @@ For the off diagonal blocks, we have
 \end{align}
 for cells not nearest to the well and
 \begin{align}
-\pdiff{\Pi_K^{(i)}}{{S_\text{w}}_K^{(i)}} &= 2 \pdiff{\lambda_\text{tot}^{(i-1)}}{S_\text{w}}\lvert_K\\&\sum_{n\in\{U, D, L, R\}} \frac{(p_K^{(i-1)} - p_n^{(i-1)}) \cdot (\lambda_{\text{tot, }n}^{(i-1)})^2}{(\lambda_{\text{tot, }K}^{(i-1)} + \lambda_{\text{tot, }n}^{(i-1)})^2} \nonumber\\
-\pdiff{\Pi_K^{(i)}}{{S_\text{w}}_R^{(i)}} &= 2 \pdiff{\lambda_\text{tot}^{(i-1)}}{S_\text{w}}\lvert_R \cdot
+\pdiff{\Pi_K^{(i)}}{{S_\text{w}}_K^{(i-1)}} &= 2 \pdiff{\lambda_\text{tot}^{(i-1)}}{S_\text{w}}\lvert_K\\&\sum_{n\in\{U, D, L, R\}} \frac{(p_K^{(i-1)} - p_n^{(i-1)}) \cdot (\lambda_{\text{tot, }n}^{(i-1)})^2}{(\lambda_{\text{tot, }K}^{(i-1)} + \lambda_{\text{tot, }n}^{(i-1)})^2} \nonumber\\
+\pdiff{\Pi_K^{(i)}}{{S_\text{w}}_R^{(i-1)}} &= 2 \pdiff{\lambda_\text{tot}^{(i-1)}}{S_\text{w}}\lvert_R \cdot
 \frac{(p_K^{(i-1)} - p_R^{(i-1)}) \cdot (\lambda_{\text{tot, }K}^{(i-1)})^2}{(\lambda_{\text{tot, }K}^{(i-1)} + \lambda_{\text{tot, }R}^{(i-1)})^2} \\
-\pdiff{\Pi_K^{(i)}}{{S_\text{w}}_L^{(i)}} &= 2 \pdiff{\lambda_\text{tot}^{(i-1)}}{S_\text{w}}\lvert_L \cdot
+\pdiff{\Pi_K^{(i)}}{{S_\text{w}}_L^{(i-1)}} &= 2 \pdiff{\lambda_\text{tot}^{(i-1)}}{S_\text{w}}\lvert_L \cdot
 \frac{(p_K^{(i-1)} - p_L^{(i-1)}) \cdot (\lambda_{\text{tot, }K}^{(i-1)})^2}{(\lambda_{\text{tot, }K}^{(i-1)} + \lambda_{\text{tot, }L}^{(i-1)})^2} \\
-\pdiff{\Pi_K^{(i)}}{{S_\text{w}}_U^{(i)}} &= 2 \pdiff{\lambda_\text{tot}^{(i-1)}}{S_\text{w}}\lvert_U \cdot
+\pdiff{\Pi_K^{(i)}}{{S_\text{w}}_U^{(i-1)}} &= 2 \pdiff{\lambda_\text{tot}^{(i-1)}}{S_\text{w}}\lvert_U \cdot
 \frac{(p_K^{(i-1)} - p_U^{(i-1)}) \cdot (\lambda_{\text{tot, }K}^{(i-1)})^2}{(\lambda_{\text{tot, }K}^{(i-1)} + \lambda_{\text{tot, }U}^{(i-1)})^2} \\
-\pdiff{\Pi_K^{(i)}}{{S_\text{w}}_D^{(i)}} &= 2 \pdiff{\lambda_\text{tot}^{(i-1)}}{S_\text{w}}\lvert_D \cdot
-\frac{(p_K^{(i-1)} - p_D^{(i-1)}) \cdot (\lambda_{\text{tot, }K}^{(i-1)})^2}{(\lambda_{\text{tot, }K}^{(i-1)} + \lambda_{\text{tot, }D}^{(i-1)})^2} \\
+\pdiff{\Pi_K^{(i)}}{{S_\text{w}}_D^{(i-1)}} &= 2 \pdiff{\lambda_\text{tot}^{(i-1)}}{S_\text{w}}\lvert_D \cdot
+\frac{(p_K^{(i-1)} - p_D^{(i-1)}) \cdot (\lambda_{\text{tot, }K}^{(i-1)})^2}{(\lambda_{\text{tot, }K}^{(i-1)} + \lambda_{\text{tot, }D}^{(i-1)})^2}
 \end{align}
 where
 \begin{align}
-\pdiff{\lambda_\text{tot}}{S_\text{w}} &= 2k\left(\frac{S_\text{w} - 1}{\mu_\text{o}} + \frac{S_\text{w}}{\mu_\text{w}}\right)
+\pdiff{\lambda_\text{tot}}{S_\text{w}} &= 2k\left(\frac{S_\text{w} - 1}{\mu_\text{o}} + \frac{S_\text{w}}{\mu_\text{w}}\right).
 \end{align}
+
+For solving the adjoint equations, we also need the derivatives of the residuals with respect to the parameters, in our case $\ln(k).$
+
+For the pressure residuals and if $K$ is not the cell at the well, those read\\
+\begin{align}
+\pdiff{\Pi_K^{(i)}}{\ln(k)_K} &= \lambda^{(i-1)}\lvert_K\sum_{n\in\{L, R, U, D\}} (p_K^{(i)} - p_n^{(i)})\pdiff{\hmean}{b}(\lambda^{(i-1)}\lvert_n,\\& \lambda^{(i-1)}\lvert_K)\nonumber\\
+\pdiff{\Pi_K^{(i)}}{\ln(k)_L} &= (p_K^{(i)} - p_L^{(i)})\lambda^{(i-1)}\lvert_L \pdiff{\hmean}{b}(\lambda^{(i-1)}\lvert_K, \lambda^{(i-1)}\lvert_L) \\
+\pdiff{\Pi_K^{(i)}}{\ln(k)_R} &= (p_K^{(i)} - p_R^{(i)})\lambda^{(i-1)}\lvert_R \pdiff{\hmean}{b}(\lambda^{(i-1)}\lvert_K, \lambda^{(i-1)}\lvert_R) \\
+\pdiff{\Pi_K^{(i)}}{\ln(k)_U} &= (p_K^{(i)} - p_U^{(i)})\lambda^{(i-1)}\lvert_U \pdiff{\hmean}{b}(\lambda^{(i-1)}\lvert_K, \lambda^{(i-1)}\lvert_U) \\
+\pdiff{\Pi_K^{(i)}}{\ln(k)_D} &= (p_K^{(i)} - p_D^{(i)})\lambda^{(i-1)}\lvert_D \pdiff{\hmean}{b}(\lambda^{(i-1)}\lvert_K, \lambda^{(i-1)}\lvert_D)
+\end{align}
+
+where 
+\begin{equation}
+\pdiff{\hmean}{b}(a, b) := \frac{2a^2}{(a+b)^2}
+\end{equation}
 %\bibliographystyle{IEEEtran}
 %\bibliography{references}
 \end{document}

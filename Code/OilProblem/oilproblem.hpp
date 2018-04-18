@@ -70,6 +70,7 @@ Matrix computeSaturationDivergences(ConstMatrixRef fluxFunctionFactors, ConstMat
 
 MinimizationState doAMinimizerStep(MinimizationState oldState, ConstMatrixRef sensitivity);
 
+SparseMatrix makeMatrixColStochastic(SparseMatrix matrix);
 
 Real clamp(const Real x, const Real minVal, const Real maxVal);
 Matrix clamp(ConstMatrixRef x, const Real minVal, const Real maxVal);

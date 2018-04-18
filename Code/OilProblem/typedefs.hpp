@@ -34,12 +34,6 @@ struct Point {
 };
 
 
-#ifdef USE_PARDISO
-#include <Eigen/PardisoSupport>
-using SparseMatrix = Eigen::SparseMatrix<Real, Eigen::RowMajor>;
-using SparseLeastSquaresSolver = Eigen::PardisoLU<SparseMatrix>;
-#else
 using SparseMatrix = Eigen::SparseMatrix<Real, Eigen::ColMajor>;
-#endif
 
 
