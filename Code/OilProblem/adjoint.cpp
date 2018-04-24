@@ -4,6 +4,7 @@
 
 #include "oilproblem.hpp"
 
+[[deprecated]]
 SparseMatrix makeMatrixColStochastic(SparseMatrix matrix) {
     for (int col = 0; col < matrix.cols(); ++col) {
         matrix.col(col) /= matrix.col(col).sum();
@@ -13,9 +14,28 @@ SparseMatrix makeMatrixColStochastic(SparseMatrix matrix) {
 }
 
 
-
+[[deprecated]]
 Real getTransitionProbability(const int fromState, const int toState, const SparseMatrix& transitionProbabilitiesColStochastic) {
     return transitionProbabilitiesColStochastic.coeff(toState, fromState);
+}
+
+
+// TODO transition
+void transitionState(RandomWalkState& currentState,
+                                const SparseMatrix& pressureResidualsByPressures,
+                                const SparseMatrix& pressureResidualsBySaturationsWater,
+                                const SparseMatrix& saturationsWaterResidualsByPressure,
+                                const SparseMatrix& saturationsWaterResidualsBySaturationsWater) {
+
+    const SparseMatrix& 
+
+
+    if (currentState.isAPressure) {
+
+    } else {
+
+        ++currentState.currentTimelevel;
+    }
 }
 
 AdjointState initialAdjointState(const int numberOfRows, const int numberOfCols, const int numberOfParameters, const BVectorSurrogate& b, const CMatrixSurrogate& c) {

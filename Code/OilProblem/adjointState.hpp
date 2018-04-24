@@ -4,9 +4,12 @@
 
 #pragma once
 #include "typedefs.hpp"
+#include "randomWalkState.hpp"
 #include <vector>
 
 struct AdjointState {
     Matrix weights;
     Matrix estimators;
+
+    std::vector<RandomWalkState> randomWalkStates;
 };
