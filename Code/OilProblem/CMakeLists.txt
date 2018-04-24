@@ -21,16 +21,20 @@ get_filename_component(thirdPartyDir "${CMAKE_CURRENT_SOURCE_DIR}/../thirdParty"
 include("../thirdParty/stefcommonheaders/CMakeLists.txt")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}")
 
-set(COTIRE_UNITY_SOURCE_MAXIMUM_NUMBER_OF_INCLUDES -j)
-set(COTIRE_ADDITIONAL_PREFIX_HEADER_IGNORE_PATH "${thirdPartyDir}")
-set_property(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" PROPERTY COTIRE_ENABLE_PRECOMPILED_HEADER FALSE)
-include(cotire)
+set(useCotire OFF)
+
+if (useCotire)
+    set(COTIRE_UNITY_SOURCE_MAXIMUM_NUMBER_OF_INCLUDES -j)
+    set(COTIRE_ADDITIONAL_PREFIX_HEADER_IGNORE_PATH "${thirdPartyDir}")
+    set_property(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" PROPERTY COTIRE_ENABLE_PRECOMPILED_HEADER FALSE)
+    include(cotire)
+endif()
 
 
 set(baseLibHeaders control.h gnuplot_i.h utils.hpp logging.hpp)
 set(baseLibSources control.cpp gnuplot_i.cpp utils.cpp logging.cpp)
 set(oilLibHeaders oilProblem.hpp typedefs.hpp cellindex.hpp vectorToBeMappedAsMatrix.hpp fixedParameters.hpp simulationState.hpp specialCells.hpp)
-set(oilLibSources pressure.cpp darcyVelocity.cpp saturation.cpp minimizer.cpp forward.cpp derivativesForAdjoint.cpp adjoint.cpp)
+set(oilLibSources pressure.cpp darcyVelocity.cpp saturation.cpp minimizer.cpp forward.cpp derivativesForAdjoint.cpp adjoint.cpp adjointState.hpp bVectorSurrogate.hpp cMatrixSurrogate.hpp)
 add_library(commonLib STATIC ${oilLibSources} ${oilLibHeaders} ${baseLibSources} ${baseLibHeaders})
 target_link_libraries(commonLib stefCommonHeaders)
 
@@ -64,7 +68,9 @@ endif()
 string(TOLOWER CMAKE_BUILD_TYPE lowercaseBuildType)
 foreach(executable IN ITEMS DryRun Test TestVerbose OilProblem QuarterFiveSpot)
     target_link_libraries(${executable} commonLib)
-    #cotire(${executable})
+    if (useCotire)
+        cotire(${executable})
+    endif()
 endforeach()
 
 

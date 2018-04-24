@@ -10,7 +10,9 @@
 #include "fixedParameters.hpp"
 #include "simulationState.hpp"
 #include "specialCells.hpp"
-
+#include "adjointState.hpp"
+#include "bVectorSurrogate.hpp"
+#include "cMatrixSurrogate.hpp"
 
 Matrix computeFluxFunctionFactorDerivatives(ConstMatrixRef saturationsWater, const Real porosity, const Real dynamicViscosityWater, const Real dynamicViscosityOil);
 

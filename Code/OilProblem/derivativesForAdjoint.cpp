@@ -297,3 +297,61 @@ SparseMatrix computePressureResidualsByLogPermeability(ConstMatrixRef pressures,
     return derivatives;
 
 }
+
+SparseMatrix computeSaturationsWaterResidualsByLogPermeability(ConstMatrixRef fluxesX, ConstMatrixRef fluxesY, ConstMatrixRef mobilities, const Real timestep, const Real meshWidth) {
+    const int numberOfRows = mobilities.rows();
+    const int numberOfCols = mobilities.cols();
+    const int numberOfPairs = numberOfCols * numberOfRows;
+
+    SparseMatrix derivatives(numberOfPairs, numberOfPairs);
+
+    const CellIndex wellCell = findWellCell(numberOfRows, numberOfCols);
+
+    CellIndex myself = {0, 0};
+
+    for (myself.j = 0; myself.j < numberOfCols; ++myself.j) {
+        for (myself.i = 0; myself.i < numberOfRows; ++myself.i) {
+            const bool iAmTheCellInTheWell = myself == wellCell;
+
+            if (iAmTheCellInTheWell) {
+                continue;
+            }
+
+            const CellIndex meToMyself = pressureToTransmissibilityIndex(myself, myself, numberOfRows);
+            const Real myMobility = myself(mobilities);
+
+
+            constexpr static std::array<CellIndex::Direction, 4> directionsToCheck = {
+                  CellIndex::Direction::EAST, CellIndex::Direction::WEST, CellIndex::Direction::NORTH, CellIndex::Direction::SOUTH
+            };
+
+            constexpr static std::array<int, 4> signsForDirections = {
+                  +1, -1, +1, -1
+            };
+
+            for (int directionIndex = 0; directionIndex < 4; ++directionIndex) {
+                const auto direction = directionsToCheck[directionIndex];
+                const int directionSign = signsForDirections[directionIndex];
+                if (!myself.hasNeighbor(direction, numberOfRows, numberOfCols)) {
+                    continue;
+                }
+
+                const Real signedFlux = directionSign * getDerivativeAtCellBorder(myself, fluxesX, fluxesY, direction);
+
+                const CellIndex neighbor = myself.neighbor(direction);
+                const Real mobilityNeighbor = neighbor(mobilities);
+                const CellIndex meToNeighbor = pressureToTransmissibilityIndex(myself, neighbor, numberOfRows);
+
+
+                meToMyself(derivatives) += signedFlux * hmeanDerivedBySecond(mobilityNeighbor, myMobility);
+                meToNeighbor(derivatives) = signedFlux * hmeanDerivedBySecond(myMobility, mobilityNeighbor) * timestep / meshWidth;
+
+            }
+
+            meToMyself(derivatives) *= timestep / meshWidth;
+        }
+    }
+
+    return derivatives;
+
+}
