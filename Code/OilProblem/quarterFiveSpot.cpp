@@ -2,7 +2,7 @@
 // Created by Stefano Weidmann on 10.04.18.
 //
 
-#include "oilproblem.hpp"
+#include "oilProblem.hpp"
 #include "logging.hpp"
 #include <EigenSimplematio.hpp>
 #include "specialCells.hpp"

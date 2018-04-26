@@ -2,7 +2,7 @@
 // Created by Stefano Weidmann on 17.04.18.
 //
 
-#include "oilproblem.hpp"
+#include "oilProblem.hpp"
 
 [[deprecated]]
 SparseMatrix makeMatrixColStochastic(SparseMatrix matrix) {
@@ -27,10 +27,14 @@ void transitionState(RandomWalkState& currentState,
                                 const SparseMatrix& saturationsWaterResidualsByPressure,
                                 const SparseMatrix& saturationsWaterResidualsBySaturationsWater) {
 
-    const SparseMatrix& 
+
+    std::vector<Real> candidates(10);
 
 
     if (currentState.isAPressure) {
+        // stay a pressure
+
+
 
     } else {
 

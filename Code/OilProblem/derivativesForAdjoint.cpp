@@ -2,7 +2,7 @@
 // Created by Stefano Weidmann on 16.04.18.
 //
 
-#include "oilproblem.hpp"
+#include "oilProblem.hpp"
 #include <stefCommonHeaders/dev.hpp>
 
 SparseMatrix computePressureResidualsDerivedByPressure(const SparseMatrix& pressureSystem) {

@@ -161,6 +161,23 @@ struct CellIndex {
         }
     }
 
+
+    inline std::vector<CellIndex> neighbors(const int numberOfRows, const int numberOfCols) {
+        std::vector<CellIndex> foundNeighbors(4);
+
+        constexpr static std::array<Direction, 4> directionsToCheck = {
+              Direction::EAST, Direction::WEST, Direction::NORTH, Direction::SOUTH
+        };
+
+        for (const Direction direction: directionsToCheck) {
+            if (hasNeighbor(direction, numberOfRows, numberOfCols)) {
+                foundNeighbors.push_back(neighbor(direction));
+            }
+        }
+
+        return foundNeighbors;
+    }
+
     inline CellIndex transpose() const {
         return {j, i};
     }

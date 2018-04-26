@@ -13,7 +13,7 @@ pkg_check_modules(SIMPLEMATIO REQUIRED simplematio)
 link_directories(${SIMPLEMATIO_LIBRARY_DIRS})
 
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 get_filename_component(thirdPartyDir "${CMAKE_CURRENT_SOURCE_DIR}/../thirdParty" REALPATH)
@@ -30,13 +30,14 @@ if (useCotire)
     include(cotire)
 endif()
 
+find_package(Eigen3 REQUIRED)
 
 set(baseLibHeaders control.h gnuplot_i.h utils.hpp logging.hpp)
 set(baseLibSources control.cpp gnuplot_i.cpp utils.cpp logging.cpp)
 set(oilLibHeaders oilProblem.hpp typedefs.hpp cellindex.hpp vectorToBeMappedAsMatrix.hpp fixedParameters.hpp simulationState.hpp specialCells.hpp)
 set(oilLibSources pressure.cpp darcyVelocity.cpp saturation.cpp minimizer.cpp forward.cpp derivativesForAdjoint.cpp adjoint.cpp adjointState.hpp bVectorSurrogate.hpp cMatrixSurrogate.hpp randomWalkState.hpp)
 add_library(commonLib STATIC ${oilLibSources} ${oilLibHeaders} ${baseLibSources} ${baseLibHeaders})
-target_link_libraries(commonLib stefCommonHeaders)
+target_link_libraries(commonLib stefCommonHeaders Eigen3::Eigen)
 
 
 set(quarterFiveSpotSources quarterFiveSpot.cpp)
