@@ -354,7 +354,7 @@ and $\Delta t$ is the timestep.
 
 First, we define the pressure residuals
 \begin{multline}
-\Pi_K^{(i)} := \begin{cases} p_K^{(i-1)} - p_\text{well}(i\Delta t), & \text{if } K \text{ is the cell}\\&\text{nearest to the well}\\T_E^{(i-1)} (p_K^{(i)} - p_R^{(i)}) \\+ T_W^{(i-1)} (p_K^{(i)} - p_L^{(i)}) \\+ T_N ( p_K^{(i)} - p_U^{(i)}) \\+ T_S^{(i-1)} (p_K^{(i)} - p_D^{(i)}) - Q_\text{tot, K}^{(i-1)}, & \text{else}\end{cases}, 
+\Pi_K^{(i)} := \begin{cases} p_K^{(i)} - p_\text{well}(i\Delta t), & \text{if } K \text{ is the cell}\\&\text{nearest to the well}\\T_E^{(i-1)} (p_K^{(i)} - p_R^{(i)}) \\+ T_W^{(i-1)} (p_K^{(i)} - p_L^{(i)}) \\+ T_N ( p_K^{(i)} - p_U^{(i)}) \\+ T_S^{(i-1)} (p_K^{(i)} - p_D^{(i)}) - Q_\text{tot, K}^{(i-1)}, & \text{else}\end{cases}, 
 \end{multline}
 where
 \begin{equation}
