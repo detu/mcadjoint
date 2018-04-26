@@ -7,7 +7,7 @@
 #include <Eigen/Sparse>
 #include <Eigen/Dense>
 #include <Eigen/OrderingMethods>
-
+#include <stefCommonHeaders/xoroshiro.h>
 #include <functional>
 
 using Real = double;
@@ -26,7 +26,7 @@ using CostFunction = std::function<Real(Matrix)>;
 using WellFunction = std::function<Real(Real)>;
 using PressureFunction = WellFunction;
 
-
+using Rng = XoroshiroRandomNumberEngine;
 
 struct Point {
     Real x;

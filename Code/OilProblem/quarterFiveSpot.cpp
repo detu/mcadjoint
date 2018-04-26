@@ -35,7 +35,7 @@ void parseCommandLine(const int argc, const char** argv) {
     cmdl({"-l", "--level"}) >> levelName;
 
     LOGGER = stefCommonHeaders::setUpLog(spdlog::level::from_str(levelName));
-    simulationState = std::make_unique<SimulationState>(n, n);
+    simulationState = std::unique_ptr<SimulationState>(new SimulationState(n, n));
 
 }
 
