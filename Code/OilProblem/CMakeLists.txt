@@ -13,7 +13,7 @@ pkg_check_modules(SIMPLEMATIO REQUIRED simplematio)
 link_directories(${SIMPLEMATIO_LIBRARY_DIRS})
 
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 get_filename_component(thirdPartyDir "${CMAKE_CURRENT_SOURCE_DIR}/../thirdParty" REALPATH)

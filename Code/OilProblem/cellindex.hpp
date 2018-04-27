@@ -19,6 +19,9 @@ struct CellIndex {
     int i;
     int j;
 
+    constexpr static inline CellIndex invalidCell() {
+        return {-1, -1};
+    }
 
     enum class Direction {
         NORTH = 0, EAST = 1, WEST = 2, SOUTH = 3
