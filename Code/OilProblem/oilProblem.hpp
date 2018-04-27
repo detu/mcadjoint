@@ -13,6 +13,7 @@
 #include "randomWalkState.hpp"
 #include "bVectorSurrogate.hpp"
 #include "cMatrixSurrogate.hpp"
+#include "minimizationState.hpp"
 
 Matrix computeFluxFunctionFactorDerivatives(ConstMatrixRef saturationsWater, const Real porosity, const Real dynamicViscosityWater, const Real dynamicViscosityOil);
 
@@ -46,6 +47,14 @@ Matrix computeXDerivative(ConstMatrixRef field, const Real meshWidth);
 
 Matrix computeYDerivative(ConstMatrixRef field, const Real meshWidth);
 
+bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
+                     const SparseMatrix& pressureResidualsByPressures,
+                     const SparseMatrix& pressureResidualsBySaturationsWater,
+                     const SparseMatrix& saturationsWaterResidualsByPressure,
+                     const SparseMatrix& saturationsWaterResidualsBySaturationsWater,
+                     const int numberOfRows, const int numberOfCols, Rng& rng);
+
+std::vector<RandomWalkState> initializeRandomWalks(const int numberOfRows, const int numberOfCols, const int numberOfParameters, const BVectorSurrogate& b, const CMatrixSurrogate& c);
 
 void adaptPressureGradientsAtWell(const Real inflowNow, ConstMatrixRef mobilities, ConstMatrixRef pressures, MatrixRef pressureDerivativesX, MatrixRef pressureDerivativesY, const Real meshWidth);
 

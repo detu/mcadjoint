@@ -31,13 +31,6 @@ struct VectorToBeMappedAsMatrix {
 };
 
 
-struct MinimizationState {
-    Real stepSize;
-    Real cost;
-    VectorToBeMappedAsMatrix parameters;
 
-    inline MinimizationState(const int matrixRows, const int matrixCols):
-          stepSize(NAN), cost(NAN), parameters(matrixRows, matrixCols) {}
-};
 
 
