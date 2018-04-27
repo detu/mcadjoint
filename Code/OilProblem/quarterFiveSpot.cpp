@@ -59,6 +59,7 @@ int main(const int argc, const char** argv) {
     params.dynamicViscosityOil = 0.630; // SAE motor oil 20°C
     params.dynamicViscosityWater = 0.0010518; // Water 20°C
     params.finalTime = 0.1;
+
     const Real atmosphericPressure = 1e5;
 
     params.overPressureDrill = [=] (const Real time) {

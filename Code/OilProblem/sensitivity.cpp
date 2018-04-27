@@ -6,18 +6,33 @@
 #include <stefCommonHeaders/dev.hpp>
 
 Matrix computeSensitivity(const FixedParameters& params, ConstMatrixRef permeabilities) {
-    Matrix sensitivity;
+    const int numberOfCols = permeabilities.cols();
+    const int numberOfRows = permeabilities.rows();
+    const int numberOfParameters = permeabilities.size();
+    const int numberOfCells = numberOfParameters;
 
+    // TODO
+    Vector press
+
+    SimulationState simulationState(numberOfRows, numberOfCols);
+    stepForwardProblem(params, permeabilities, simulationState)
+    const BVectorSurrogate b()
+
+    initializeRandomWalks(numberOfRows, numberOfCols, numberOfParameters,
 
 
     return sensitivity;
 }
 
 Real computeCost(const FixedParameters& params, ConstMatrixRef permeabilities) {
-    DEV_STUB();
+    const int numberOfPermeabilities = permea
+    initializeRandomWalks(params.numberOfRows, params.numberOfCols)
     // TODO
 
+    DEV_STUB();
     return NAN;
+
+
 }
 
 

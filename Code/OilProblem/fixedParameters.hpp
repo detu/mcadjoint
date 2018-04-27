@@ -20,5 +20,7 @@ struct FixedParameters {
 
     PressureFunction overPressureDrill;
 
+    Matrix initialSaturationsWater;
+
 
 };
