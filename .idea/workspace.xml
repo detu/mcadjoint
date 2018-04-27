@@ -2,9 +2,9 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true" buildAllGenerated="true">
     <generated>
+      <config projectName="stefCommonHeaders" targetName="commonLib" />
       <config projectName="stefCommonHeaders" targetName="DryRun" />
       <config projectName="stefCommonHeaders" targetName="Test" />
-      <config projectName="stefCommonHeaders" targetName="commonLib" />
       <config projectName="stefCommonHeaders" targetName="QuarterFiveSpot" />
       <config projectName="stefCommonHeaders" targetName="OilProblem" />
       <config projectName="stefCommonHeaders" targetName="TestVerbose" />
@@ -20,8 +20,9 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/OilProblem/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Code/OilProblem/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/OilProblem/adjoint.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Code/OilProblem/adjoint.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/OilProblem/quarterFiveSpot.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Code/OilProblem/quarterFiveSpot.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/OilProblem/typedefs.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/Code/OilProblem/typedefs.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/OilProblem/adjointState.hpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/OilProblem/oilProblem.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/Code/OilProblem/oilProblem.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/OilProblem/randomWalkState.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/Code/OilProblem/randomWalkState.hpp" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -36,17 +37,17 @@
       <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Code/OilProblem/CMakeLists.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="54">
+            <state relative-caret-position="270">
               <caret line="15" column="25" selection-start-line="15" selection-start-column="25" selection-end-line="15" selection-end-column="25" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="adjoint.cpp" pinned="false" current-in-tab="false">
+      <file leaf-file-name="adjoint.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Code/OilProblem/adjoint.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="211">
-              <caret line="62" column="19" selection-start-line="62" selection-start-column="19" selection-end-line="62" selection-end-column="19" />
+            <state relative-caret-position="238">
+              <caret line="26" column="35" selection-start-line="26" selection-start-column="35" selection-end-line="26" selection-end-column="35" />
               <folding>
                 <element signature="e#51#76#0" expanded="true" />
               </folding>
@@ -54,10 +55,24 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="bVectorSurrogate.hpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Code/OilProblem/bVectorSurrogate.hpp">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file leaf-file-name="randomWalkState.hpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Code/OilProblem/randomWalkState.hpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="198">
+              <caret line="11" column="11" selection-start-line="11" selection-start-column="11" selection-end-line="11" selection-end-column="11" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="EigenSimplematio.hpp" pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/include/simplematio/EigenSimplematio.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
+            <state relative-caret-position="792">
               <caret line="44" selection-start-line="44" selection-end-line="44" />
               <folding>
                 <element signature="e#1036#1060#0" expanded="true" />
@@ -68,10 +83,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="quarterFiveSpot.cpp" pinned="false" current-in-tab="true">
+      <file leaf-file-name="quarterFiveSpot.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Code/OilProblem/quarterFiveSpot.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="184">
+            <state relative-caret-position="-140">
               <caret line="37" column="81" selection-start-line="37" selection-start-column="81" selection-end-line="37" selection-end-column="81" />
             </state>
           </provider>
@@ -80,7 +95,7 @@
       <file leaf-file-name="typedefs.hpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Code/OilProblem/typedefs.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="490">
+            <state relative-caret-position="504">
               <caret line="28" column="40" selection-start-line="28" selection-start-column="40" selection-end-line="28" selection-end-column="40" />
               <folding>
                 <element signature="e#65#88#0" expanded="true" />
@@ -92,7 +107,7 @@
       <file leaf-file-name="xoroshiro.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Code/thirdParty/stefcommonheaders/include/stefCommonHeaders/xoroshiro.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-540">
+            <state relative-caret-position="3546">
               <caret line="197" column="33" selection-start-line="197" selection-start-column="6" selection-end-line="197" selection-end-column="33" />
             </state>
           </provider>
@@ -101,7 +116,7 @@
       <file leaf-file-name="cellindex.hpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Code/OilProblem/cellindex.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="328">
+            <state relative-caret-position="3186">
               <caret line="177" column="30" selection-start-line="177" selection-start-column="30" selection-end-line="177" selection-end-column="30" />
             </state>
           </provider>
@@ -111,7 +126,7 @@
         <entry file="file://$PROJECT_DIR$/Code/OilProblem/oilProblem.hpp">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="157">
-              <caret line="41" column="34" selection-start-line="41" selection-end-line="42" />
+              <caret line="12" selection-start-line="12" selection-end-line="12" />
             </state>
           </provider>
         </entry>
@@ -126,10 +141,12 @@
       <list>
         <option value="$PROJECT_DIR$/Code/OilProblem/cellindex.hpp" />
         <option value="$PROJECT_DIR$/Code/OilProblem/typedefs.hpp" />
-        <option value="$PROJECT_DIR$/Code/OilProblem/adjoint.cpp" />
         <option value="$PROJECT_DIR$/Code/OilProblem/CMakeLists.txt" />
         <option value="$USER_HOME$/include/simplematio/EigenSimplematio.hpp" />
         <option value="$PROJECT_DIR$/Code/OilProblem/quarterFiveSpot.cpp" />
+        <option value="$PROJECT_DIR$/Code/OilProblem/randomWalkState.hpp" />
+        <option value="$PROJECT_DIR$/Code/OilProblem/oilProblem.hpp" />
+        <option value="$PROJECT_DIR$/Code/OilProblem/adjoint.cpp" />
       </list>
     </option>
   </component>
@@ -152,6 +169,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -180,7 +198,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -229,7 +246,8 @@
       <option name="presentableId" value="Default" />
       <updated>1520743890020</updated>
       <workItem from="1524660687060" duration="280000" />
-      <workItem from="1524730750131" duration="5932000" />
+      <workItem from="1524730750131" duration="6630000" />
+      <workItem from="1524832097279" duration="4219000" />
     </task>
     <task id="LOCAL-00001" summary="Began to implement probability transition">
       <created>1524733605326</created>
@@ -242,17 +260,16 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="6212000" />
+    <option name="totallyTimeSpent" value="11129000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="28" width="1920" height="1018" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2521097" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2521097" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info active="true" anchor="bottom" id="Messages" visible="true" weight="0.3298969" />
-      <window_info anchor="bottom" id="CMake" order="7" weight="0.3298969" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3298969" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -260,17 +277,18 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" id="R Packages" order="3" />
       <window_info anchor="bottom" id="Python Console" order="7" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="right" id="Database" order="3" />
+      <window_info active="true" anchor="bottom" id="Messages" order="7" visible="true" weight="0.3298969" />
+      <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="right" id="R Graphics" order="3" />
       <window_info anchor="right" id="SciView" order="3" />
-      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="CMake" order="7" weight="0.3298969" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -293,40 +311,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Code/OilProblem/oilProblem.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="157">
-          <caret line="41" column="34" selection-start-line="41" selection-end-line="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Code/OilProblem/cellindex.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="328">
-          <caret line="177" column="30" selection-start-line="177" selection-start-column="30" selection-end-line="177" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Code/thirdParty/stefcommonheaders/include/stefCommonHeaders/xoroshiro.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-540">
-          <caret line="197" column="33" selection-start-line="197" selection-start-column="6" selection-end-line="197" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Code/OilProblem/typedefs.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="490">
-          <caret line="28" column="40" selection-start-line="28" selection-start-column="40" selection-end-line="28" selection-end-column="40" />
-          <folding>
-            <element signature="e#65#88#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Code/OilProblem/adjoint.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="211">
+        <state relative-caret-position="1116">
           <caret line="62" column="19" selection-start-line="62" selection-start-column="19" selection-end-line="62" selection-end-column="19" />
           <folding>
             <element signature="e#51#76#0" expanded="true" />
@@ -334,16 +321,97 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/include/simplematio/EigenSimplematio.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="792">
+          <caret line="44" selection-start-line="44" selection-end-line="44" />
+          <folding>
+            <element signature="e#1036#1060#0" expanded="true" />
+            <element signature="e#1245#1273#0" expanded="true" />
+            <element signature="e#3352#3761#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/OilProblem/typedefs.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="504">
+          <caret line="28" column="40" selection-start-line="28" selection-start-column="40" selection-end-line="28" selection-end-column="40" />
+          <folding>
+            <element signature="e#65#88#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/thirdParty/stefcommonheaders/include/stefCommonHeaders/xoroshiro.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3546">
+          <caret line="197" column="33" selection-start-line="197" selection-start-column="6" selection-end-line="197" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/OilProblem/cellindex.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3186">
+          <caret line="177" column="30" selection-start-line="177" selection-start-column="30" selection-end-line="177" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/OilProblem/oilProblem.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="738">
+          <caret line="41" column="34" selection-start-line="41" selection-end-line="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/OilProblem/quarterFiveSpot.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="666">
+          <caret line="37" column="81" selection-start-line="37" selection-start-column="81" selection-end-line="37" selection-end-column="81" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Code/OilProblem/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
+        <state relative-caret-position="270">
+          <caret line="15" column="25" selection-start-line="15" selection-start-column="25" selection-end-line="15" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/OilProblem/cellindex.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3186">
+          <caret line="177" column="30" selection-start-line="177" selection-start-column="30" selection-end-line="177" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/thirdParty/stefcommonheaders/include/stefCommonHeaders/xoroshiro.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3546">
+          <caret line="197" column="33" selection-start-line="197" selection-start-column="6" selection-end-line="197" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/OilProblem/typedefs.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="504">
+          <caret line="28" column="40" selection-start-line="28" selection-start-column="40" selection-end-line="28" selection-end-column="40" />
+          <folding>
+            <element signature="e#65#88#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/OilProblem/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
           <caret line="15" column="25" selection-start-line="15" selection-start-column="25" selection-end-line="15" selection-end-column="25" />
         </state>
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/include/simplematio/EigenSimplematio.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
+        <state relative-caret-position="792">
           <caret line="44" selection-start-line="44" selection-end-line="44" />
           <folding>
             <element signature="e#1036#1060#0" expanded="true" />
@@ -355,8 +423,38 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Code/OilProblem/quarterFiveSpot.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
+        <state relative-caret-position="-140">
           <caret line="37" column="81" selection-start-line="37" selection-start-column="81" selection-end-line="37" selection-end-column="81" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/OilProblem/randomWalkState.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="11" column="11" selection-start-line="11" selection-start-column="11" selection-end-line="11" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/OilProblem/adjointState.hpp">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/OilProblem/oilProblem.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="157">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/OilProblem/bVectorSurrogate.hpp">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/OilProblem/adjoint.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="26" column="35" selection-start-line="26" selection-start-column="35" selection-end-line="26" selection-end-column="35" />
+          <folding>
+            <element signature="e#51#76#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

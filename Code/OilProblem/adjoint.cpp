@@ -24,7 +24,8 @@ Real getTransitionProbability(const int fromState, const int toState, const Spar
 
 
 // TODO transition
-void transitionState(RandomWalkState& currentState,
+// Senke bei pressures drill cell!!
+void transitionState(RandomWalkState& currentState, AdjointState& adjointState,
                                 const SparseMatrix& pressureResidualsByPressures,
                                 const SparseMatrix& pressureResidualsBySaturationsWater,
                                 const SparseMatrix& saturationsWaterResidualsByPressure,
@@ -35,6 +36,8 @@ void transitionState(RandomWalkState& currentState,
     struct Candidate {
         const CellIndex cellIndex;
         const bool isAPressure;
+        const Real correspondingEntryOfAMatrix;
+        const Real correspondingEntryOfBVector;
     };
 
     std::vector<Real> candidateUnnormalizedProbabilities(10);
@@ -43,30 +46,36 @@ void transitionState(RandomWalkState& currentState,
     constexpr bool iAmAPressure = true;
     constexpr bool iAmASaturation = !iAmAPressure;
 
+    const CellIndex drillCell = findDrillCell(numberOfRows, numberOfCols);
+    const Real importanceOfDrillCellForPressure = 1000;
+
     const SparseMatrix& pressureResidualsDerived = (currentState.isAPressure? pressureResidualsByPressures: pressureResidualsBySaturationsWater);
     const SparseMatrix& saturationWaterResidualsDerived = currentState.isAPressure? saturationsWaterResidualsByPressure: saturationsWaterResidualsBySaturationsWater;
 
+    int numberOfPlacesToGo = 0;
     if (currentState.isAPressure) {
         // for pressures there's the probability to stay at the same place
         const CellIndex meToMyself = pressureToTransmissibilityIndex(currentState.cell, currentState.cell, numberOfRows);
-        const Real unnormalizedProbabilityOfStayingHere = 1 - std::abs(meToMyself(pressureResidualsByPressures));
+        const Real unnormalizedProbabilityOfStayingHere = 1;/*1 - std::abs(meToMyself(pressureResidualsByPressures))*/;
         ASSERT(unnormalizedProbabilityOfStayingHere > 0);
-        candidates.push_back({currentState.cell, iAmAPressure});
+        candidates.push_back({currentState.cell, iAmAPressure, 1 - std::abs(meToMyself(pressureResidualsByPressures))});
         candidateUnnormalizedProbabilities.push_back(unnormalizedProbabilityOfStayingHere);
+        ++numberOfPlacesToGo;
     }
 
     // add neighbors
     for (const auto neighbor: currentState.cell.neighbors(numberOfRows, numberOfCols)) {
         const CellIndex neighborToMe = pressureToTransmissibilityIndex(neighbor, currentState.cell, numberOfRows);
-        const Real candidateUnnormalizedProbabilityPressure = std::abs(neighborToMe(pressureResidualsDerived));
+        const Real candidateUnnormalizedProbabilityPressure = neighbor == drillCell? importanceOfDrillCellForPressure: 1; /*std::abs(neighborToMe(pressureResidualsDerived))*/;
         ASSERT(candidateUnnormalizedProbabilityPressure > 0);
-        const Real candidateUnnormalizedProbabilitySaturationWater = std::abs(neighborToMe(saturationWaterResidualsDerived));
+        const Real candidateUnnormalizedProbabilitySaturationWater = 1 /*std::abs(neighborToMe(saturationWaterResidualsDerived))*/;
         ASSERT(candidateUnnormalizedProbabilitySaturationWater > 0);
 
-        candidates.push_back({neighbor, iAmAPressure});
-        candidates.push_back({neighbor, iAmASaturation});
+        candidates.push_back({neighbor, iAmAPressure, -neighborToMe(pressureResidualsDerived)});
+        candidates.push_back({neighbor, iAmASaturation, -neighborToMe(saturationWaterResidualsDerived)});
         candidateUnnormalizedProbabilities.push_back(candidateUnnormalizedProbabilityPressure);
         candidateUnnormalizedProbabilities.push_back(candidateUnnormalizedProbabilitySaturationWater);
+        numberOfPlacesToGo += 2;
 
     }
 
@@ -76,26 +85,29 @@ void transitionState(RandomWalkState& currentState,
     if (!(currentState.isAPressure && chosenCandidate.isAPressure)) {
         ++currentState.currentTimelevel;
     }
+    // update W (pg. 6199, top)
+    if (chosenCandidate.isAPressure && chosenCandidate.)
+    currentState.W *= numberOfPlacesToGo * chosenCandidate.transitionEntry;
+    // update D (pg. 6199, top)
+    currentState.D += currentState.W * chosenCandidate.correspondingEntryOfBVector;
+
 
     currentState.isAPressure = chosenCandidate.isAPressure;
     currentState.cell = chosenCandidate.cellIndex;
 }
 
-AdjointState initialAdjointState(const int numberOfRows, const int numberOfCols, const int numberOfParameters, const BVectorSurrogate& b, const CMatrixSurrogate& c) {
-    AdjointState initialState;
+std::vector<RandomWalkState> initializeRandomWalks(const int numberOfRows, const int numberOfCols, const int numberOfParameters, const BVectorSurrogate& b, const CMatrixSurrogate& c) {
 
     const int numberOfRandomWalksPerPressureCell = 5;
 
     const int numberOfRandomWalksPerParameter = numberOfRandomWalksPerPressureCell;
+    const int numberOfRandomWalks = numberOfRandomWalksPerParameter * numberOfParameters;
 
     // We start randomWalksPerPressureCell random walks for every pressure state, which means
     // randomWalksPerPressureCell per cell
     // We hope that the saturation states are reached through the coupling of the equations
-
-    initialState.estimators.resize(numberOfRandomWalksPerPressureCell, numberOfParameters);
-    initialState.weights.resize(numberOfRandomWalksPerPressureCell, numberOfParameters);
-
-
+    
+    std::vector<RandomWalkState> randomWalks(numberOfRandomWalks);
     for (int parameterIndex = 0; parameterIndex <  numberOfParameters; ++parameterIndex) {
         const CellIndex cell = CellIndex::fromLinearIndex(parameterIndex, numberOfRows);
 
@@ -111,18 +123,23 @@ AdjointState initialAdjointState(const int numberOfRows, const int numberOfCols,
             }
         }
 
-        for (int randomWalkIndex = 0; randomWalkIndex < numberOfRandomWalksPerPressureCell; ++randomWalkIndex) {
-            const int whichCellIndex = randomWalkIndex % int(neighbors.size());
+        for (int localRandomWalkIndex = 0; localRandomWalkIndex < numberOfRandomWalksPerPressureCell; ++localRandomWalkIndex) {
+            const int whichCellIndex = localRandomWalkIndex % int(neighbors.size());
             const CellIndex neighborOrMyself = neighbors[whichCellIndex];
 
-            const bool wantAPressure = true;
+            constexpr bool wantAPressure = true;
+            RandomWalkState initialState;
+            initialState.cell = neighborOrMyself;
+            initialState.isAPressure = wantAPressure;
+            initialState.currentTimelevel = 0;
+            initialState.W = numberOfRandomWalksPerPressureCell * c(neighborOrMyself, cell, wantAPressure);
+            initialState.D = initialState.weights(localRandomWalkIndex, parameterIndex) * b(neighborOrMyself, wantAPressure);
 
-            initialState.weights(randomWalkIndex, parameterIndex) = numberOfRandomWalksPerPressureCell * c(neighborOrMyself, cell, wantAPressure);
-            initialState.estimators(randomWalkIndex, parameterIndex) = initialState.weights(randomWalkIndex, parameterIndex) * b(neighborOrMyself, wantAPressure);
+            randomWalks.push_back(std::move(initialState));
         }
     }
 
-    return initialState;
+    return randomWalks;
 
 
 

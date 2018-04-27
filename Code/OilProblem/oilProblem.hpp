@@ -10,7 +10,6 @@
 #include "fixedParameters.hpp"
 #include "simulationState.hpp"
 #include "specialCells.hpp"
-#include "adjointState.hpp"
 #include "randomWalkState.hpp"
 #include "bVectorSurrogate.hpp"
 #include "cMatrixSurrogate.hpp"
