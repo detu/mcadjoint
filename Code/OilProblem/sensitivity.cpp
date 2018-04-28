@@ -5,6 +5,7 @@
 #include "oilProblem.hpp"
 #include <stefCommonHeaders/dev.hpp>
 
+#ifdef TODO
 Matrix computeSensitivity(const FixedParameters& params, ConstMatrixRef permeabilities) {
     const int numberOfCols = permeabilities.cols();
     const int numberOfRows = permeabilities.rows();
@@ -41,3 +42,4 @@ CostFunction getCostFunctionForMinimizer(const FixedParameters& params) {
         return computeCost(params, logPermeabilities.array().exp().matrix());
     };
 }
+#endif

@@ -44,7 +44,8 @@ bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
     };
 
     std::vector<Real> candidateUnnormalizedProbabilities(10);
-    std::vector<Candidate> candidates(10);
+    std::vector<Candidate> candidates;
+    candidates.reserve(10);
 
     constexpr bool iAmAPressure = true;
     constexpr bool iAmASaturation = !iAmAPressure;

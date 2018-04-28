@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.9)
 project(OilProblem LANGUAGES CXX)
 
 find_package(OpenMP REQUIRED)
@@ -8,17 +8,12 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}
 
 option(USE_MKL_IF_PRESENT "Use Intel MKL if present" OFF)
 
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(SIMPLEMATIO REQUIRED simplematio)
-link_directories(${SIMPLEMATIO_LIBRARY_DIRS})
-
-
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 get_filename_component(thirdPartyDir "${CMAKE_CURRENT_SOURCE_DIR}/../thirdParty" REALPATH)
 
-include("../thirdParty/stefcommonheaders/CMakeLists.txt")
+include("${thirdPartyDir}/stefcommonheaders/CMakeLists.txt")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}")
 
 set(useCotire OFF)
@@ -30,14 +25,19 @@ if (useCotire)
     include(cotire)
 endif()
 
-find_package(Eigen3 REQUIRED)
+set(eigenIncludeDir "${thirdPartyDir}/eigen")
+include_directories("${eigenIncludeDir}")
+
+set(simplematioDir "${thirdPartyDir}/simplematio")
+set(simplematioBinaryDir "${CMAKE_BINARY_DIR}/simplematio")
+add_subdirectory("${simplematioDir}" "${simplematioBinaryDir}")
 
 set(baseLibHeaders control.h gnuplot_i.h utils.hpp logging.hpp)
 set(baseLibSources control.cpp gnuplot_i.cpp utils.cpp logging.cpp)
-set(oilLibHeaders oilProblem.hpp typedefs.hpp cellindex.hpp vectorToBeMappedAsMatrix.hpp fixedParameters.hpp simulationState.hpp specialCells.hpp)
-set(oilLibSources pressure.cpp darcyVelocity.cpp saturation.cpp minimizer.cpp forward.cpp derivativesForAdjoint.cpp adjoint.cpp bVectorSurrogate.hpp cMatrixSurrogate.hpp randomWalkState.hpp sensitivity.cpp minimizationState.hpp)
+set(oilLibHeaders oilProblem.hpp typedefs.hpp cellindex.hpp vectorToBeMappedAsMatrix.hpp fixedParameters.hpp simulationState.hpp specialCells.hpp bVectorSurrogate.hpp cMatrixSurrogate.hpp randomWalkState.hpp minimizationState.hpp)
+set(oilLibSources pressure.cpp darcyVelocity.cpp saturation.cpp minimizer.cpp forward.cpp derivativesForAdjoint.cpp adjoint.cpp sensitivity.cpp)
 add_library(commonLib STATIC ${oilLibSources} ${oilLibHeaders} ${baseLibSources} ${baseLibHeaders})
-target_link_libraries(commonLib stefCommonHeaders Eigen3::Eigen)
+target_link_libraries(commonLib stefCommonHeaders)
 
 
 set(quarterFiveSpotSources quarterFiveSpot.cpp)
@@ -56,7 +56,7 @@ add_executable(OilProblem ${mainSources})
 
 
 foreach(target IN ITEMS QuarterFiveSpot)
-    target_link_libraries(${target} ${SIMPLEMATIO_LIBRARIES})
+    target_link_libraries(${target} simplematio)
     target_include_directories(${target} PUBLIC ${SIMPLEMATIO_INCLUDE_DIRS})
     target_compile_options(${target} PUBLIC ${SIMPLEMATIO_CFLAGS_OTHER})
 endforeach()

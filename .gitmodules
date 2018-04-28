@@ -4,3 +4,9 @@
 [submodule "Code/thirdParty/CMake-easylib"]
 	path = Code/thirdParty/CMake-easylib
 	url = https://github.com/alehaa/CMake-easylib.git
+[submodule "Code/thirdParty/eigen"]
+	path = Code/thirdParty/eigen
+	url = https://github.com/eigenteam/eigen-git-mirror.git
+[submodule "Code/thirdParty/simplematio"]
+	path = Code/thirdParty/simplematio
+	url = https://HansiMeier@bitbucket.org/HansiMeier/simplematio.git
