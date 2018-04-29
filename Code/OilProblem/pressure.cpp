@@ -121,17 +121,16 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
 }
 
 
-void adaptRhsForPressure(const Real sourceAtDrillNow, VectorRef rhs, const int numberOfRows,
-                         const int numberOfCols) {
+SparseVector computeRhsForPressureSystem(const Real sourceAtDrillNow, const int numberOfRows, const int numberOfCols) {
     const CellIndex drillCell = findDrillCell(numberOfRows, numberOfCols);
 
     const int drillCellIndex = drillCell.linearIndex(numberOfRows);
 
-    const CellIndex wellCell = findWellCell(numberOfRows, numberOfCols);
-    const int wellCellIndex = wellCell.linearIndex(numberOfRows);
 
-    rhs(wellCellIndex) = 0;
-    rhs(drillCellIndex) = +std::abs(sourceAtDrillNow);
+    SparseVector rhs(numberOfRows*numberOfCols);
+    rhs.coeffRef(drillCellIndex) = +std::abs(sourceAtDrillNow);
+
+    return rhs;
 }
 
 
@@ -149,7 +148,7 @@ Vector projectSourcesIntoRange(ConstMatrixRef sources) {
 }
 
 
-Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstVectorRef rhs) {
+Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, const SparseVector& rhs) {
     LOGGER->debug("Solving system");
 
     Eigen::SparseLU<SparseMatrix> solver;

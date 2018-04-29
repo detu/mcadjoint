@@ -35,7 +35,7 @@ void testPressurePoisson() {
     Vector rhs(sources.size());
     rhs.setZero();
 
-    adaptRhsForPressure(-1, 9, rhs, n, n);
+    computeRhsForPressureSystem(-1, rhs, n);
 
     pressuresAsVector = std::move(solvePressurePoissonProblem(transmissibilities, rhs, Vector::Constant(pressures.size(), 9)));
     #ifdef VERBOSE_TESTS

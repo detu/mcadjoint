@@ -83,6 +83,33 @@ Real getFirstTimestep() {
     return 1e-5;
 }
 
+
+void initializeSaturationsWater(MatrixRef saturationsWater, const int numberOfRows, const int numberOfCols) {
+    saturationsWater.resize(numberOfRows, numberOfCols);
+    saturationsWater.setZero();
+}
+
+Real computeTimestep(ConstMatrixRef fluxFunctionFactors, ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY, const Real meshWidth, const Real finalTime, const Real time) {
+    const Matrix advectionVelocitiesX = computeXDerivative(fluxFunctionFactors, meshWidth).cwiseProduct(darcyVelocitiesX);
+    const Matrix advectionVelocitiesY = computeYDerivative(fluxFunctionFactors, meshWidth).cwiseProduct(darcyVelocitiesY);
+
+    const Real maximumAdvectionSpeedX = advectionVelocitiesX.cwiseAbs().maxCoeff();
+    const Real maximumAdvectionSpeedY = advectionVelocitiesY.cwiseAbs().maxCoeff();
+
+
+    const Real timestepX = computeCflTimestep(maximumAdvectionSpeedX, meshWidth);
+    const Real timestepY = computeCflTimestep(maximumAdvectionSpeedY, meshWidth);
+
+    const Real maxTimestep = finalTime * 1e-2;
+    const Real cflTimestep = std::min(timestepX, timestepY);
+    const Real timestep = (time > 0? std::min(maxTimestep, cflTimestep): getFirstTimestep());
+
+    LOGGER->debug("max advection speed x = {}", maximumAdvectionSpeedX);
+    LOGGER->debug("max advection speed y = {}", maximumAdvectionSpeedY);
+
+    return timestep;
+}
+
 bool advanceSaturationsInTime(const FixedParameters& params, MatrixRef saturationsWater,
                               ConstMatrixRef pressures,
                               ConstMatrixRef totalMobilities, Real& time) {
@@ -99,23 +126,12 @@ bool advanceSaturationsInTime(const FixedParameters& params, MatrixRef saturatio
     const Matrix fluxesX = computeFluxesX(fluxFunctionFactors, darcyVelocitiesX);
     const Matrix fluxesY = computeFluxesY(fluxFunctionFactors, darcyVelocitiesY);
 
-    const Matrix advectionVelocitiesX = computeXDerivative(fluxFunctionFactors, params.meshWidth).cwiseProduct(darcyVelocitiesX);
-    const Matrix advectionVelocitiesY = computeYDerivative(fluxFunctionFactors, params.meshWidth).cwiseProduct(darcyVelocitiesY);
 
-    const Real maximumAdvectionSpeedX = advectionVelocitiesX.cwiseAbs().maxCoeff();
-    const Real maximumAdvectionSpeedY = advectionVelocitiesY.cwiseAbs().maxCoeff();
-
-
-    const Real timestepX = computeCflTimestep(maximumAdvectionSpeedX, params.meshWidth);
-    const Real timestepY = computeCflTimestep(maximumAdvectionSpeedY, params.meshWidth);
-
-    const Real maxTimestep = params.finalTime * 1e-2;
-    const Real cflTimestep = std::min(timestepX, timestepY);
-    const Real timestep = (time > 0? std::min(maxTimestep, cflTimestep): getFirstTimestep());
 
 
     const CellIndex drillCell = findDrillCell(saturationsWater.rows(), saturationsWater.cols());
     const CellIndex wellCell = findWellCell(saturationsWater.rows(), saturationsWater.cols());
+    const Real timestep = computeTimestep(fluxFunctionFactors, darcyVelocitiesX, darcyVelocitiesY, params.meshWidth, params.finalTime, time);
 
     const Real oldSaturationWellCell = wellCell(saturationsWater);
     const Matrix saturationDivergences = computeSaturationDivergences(fluxFunctionFactors, fluxesX, fluxesY, params.meshWidth);
@@ -157,8 +173,6 @@ bool advanceSaturationsInTime(const FixedParameters& params, MatrixRef saturatio
 
     //LOGGER->debug("advection velocities x {}", advectionVelocitiesX);
 
-    LOGGER->debug("max advection speed x = {}", maximumAdvectionSpeedX);
-    LOGGER->debug("max advection speed y = {}", maximumAdvectionSpeedY);
 
     LOGGER->debug("CFL timestep = {}", timestep);
 

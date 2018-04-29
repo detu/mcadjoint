@@ -31,19 +31,20 @@ SparseMatrix computeSaturationWaterResidualsDerivedByPressure(const SparseMatrix
                                                               const Real timestep, const Real meshWidth);
 
 Matrix computeTotalMobilitiesDerivedBySaturationsWater(ConstMatrixRef permeabilities, ConstMatrixRef saturationsWater, const Real dynamicViscosityOil, const Real dynamicViscosityWater);
+void initializeSaturationsWater(MatrixRef saturationsWater, const int numberOfRows, const int numberOfCols);
+void stepForwardAndAdjointProblem(const FixedParameters& params, ConstMatrixRef& permeabilities, SimulationState& simulationState, std::vector<RandomWalkState>& randomWalks, Rng& rng);
 
 Real computeTransmissibility(ConstMatrixRef totalMobilities, const CellIndex& fromCell, const CellIndex& toCell);
 
-
+Real computeTimestep(ConstMatrixRef fluxFunctionFactors, ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY, const Real meshWidth, const Real finalTime, const Real time);
 SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities);
 
 SparseMatrix computePressureResidualsByLogPermeability(ConstMatrixRef pressures, ConstMatrixRef totalMobilities);
 SparseMatrix computeSaturationsWaterResidualsByLogPermeability(ConstMatrixRef fluxesX, ConstMatrixRef fluxesY, ConstMatrixRef mobilities, const Real timestep, const Real meshWidth);
 
-Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstVectorRef rhs);
+Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, const SparseVector& rhs);
 
-void adaptRhsForPressure(const Real sourceAtDrillNow, VectorRef rhs, const int numberOfRows,
-                         const int numberOfCols);
+SparseVector computeRhsForPressureSystem(const Real sourceAtDrillNow, const int numberOfRows, const int numberOfCols);
 
 [[deprecated("Not used anymore by current formulation")]]
 Vector projectSourcesIntoRange(ConstMatrixRef sources);
