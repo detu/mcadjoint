@@ -27,14 +27,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="243856ce-78f7-4963-8ee2-7f94acac5c1e" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Default.xml" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Default.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/adjoint.cpp" afterPath="$PROJECT_DIR$/adjoint.cpp" />
       <change beforePath="$PROJECT_DIR$/derivativesForAdjoint.cpp" afterPath="$PROJECT_DIR$/derivativesForAdjoint.cpp" />
       <change beforePath="$PROJECT_DIR$/oilProblem.hpp" afterPath="$PROJECT_DIR$/oilProblem.hpp" />
-      <change beforePath="$PROJECT_DIR$/saturation.cpp" afterPath="$PROJECT_DIR$/saturation.cpp" />
       <change beforePath="$PROJECT_DIR$/sensitivity.cpp" afterPath="$PROJECT_DIR$/sensitivity.cpp" />
-      <change beforePath="$PROJECT_DIR$/vectorToBeMappedAsMatrix.hpp" afterPath="$PROJECT_DIR$/vectorToBeMappedAsMatrix.hpp" />
       <change beforePath="$PROJECT_DIR$/../thirdParty/simplematio" afterPath="$PROJECT_DIR$/../thirdParty/simplematio" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -67,8 +65,8 @@
       <file leaf-file-name="sensitivity.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sensitivity.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="401">
-              <caret line="23" column="35" lean-forward="true" selection-start-line="23" selection-start-column="35" selection-end-line="23" selection-end-column="35" />
+            <state relative-caret-position="468">
+              <caret line="80" column="224" lean-forward="false" selection-start-line="80" selection-start-column="224" selection-end-line="80" selection-end-column="224" />
               <folding>
                 <element signature="e#42#67#0" expanded="true" />
               </folding>
@@ -99,8 +97,8 @@
       <file leaf-file-name="derivativesForAdjoint.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/derivativesForAdjoint.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-126">
-              <caret line="312" column="47" lean-forward="true" selection-start-line="312" selection-start-column="47" selection-end-line="312" selection-end-column="47" />
+            <state relative-caret-position="235">
+              <caret line="193" column="81" lean-forward="false" selection-start-line="193" selection-start-column="81" selection-end-line="193" selection-end-column="81" />
               <folding />
             </state>
           </provider>
@@ -119,8 +117,8 @@
       <file leaf-file-name="adjoint.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/adjoint.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="275">
-              <caret line="137" column="129" lean-forward="false" selection-start-line="137" selection-start-column="129" selection-end-line="137" selection-end-column="129" />
+            <state relative-caret-position="144">
+              <caret line="135" column="0" lean-forward="false" selection-start-line="135" selection-start-column="0" selection-end-line="135" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -129,8 +127,8 @@
       <file leaf-file-name="oilProblem.hpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/oilProblem.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="257">
-              <caret line="63" column="129" lean-forward="false" selection-start-line="63" selection-start-column="129" selection-end-line="63" selection-end-column="129" />
+            <state relative-caret-position="203">
+              <caret line="27" column="81" lean-forward="false" selection-start-line="27" selection-start-column="81" selection-end-line="27" selection-end-column="81" />
               <folding />
             </state>
           </provider>
@@ -190,6 +188,7 @@
       <find>c_loc</find>
       <find>pressureTo</find>
       <find>build</find>
+      <find>initialSimulationState</find>
     </findStrings>
     <replaceStrings>
       <replace>int</replace>
@@ -198,6 +197,7 @@
       <replace>totalMobilities</replace>
       <replace>\1</replace>
       <replace>$1</replace>
+      <replace>simulationState</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -247,10 +247,10 @@
         <option value="$PROJECT_DIR$/randomWalkState.hpp" />
         <option value="$PROJECT_DIR$/../thirdParty/simplematio/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/derivativesForAdjoint.cpp" />
         <option value="$PROJECT_DIR$/vectorToBeMappedAsMatrix.hpp" />
         <option value="$PROJECT_DIR$/saturation.cpp" />
         <option value="$PROJECT_DIR$/adjoint.cpp" />
+        <option value="$PROJECT_DIR$/derivativesForAdjoint.cpp" />
         <option value="$PROJECT_DIR$/oilProblem.hpp" />
         <option value="$PROJECT_DIR$/sensitivity.cpp" />
       </list>
@@ -491,12 +491,20 @@
       <workItem from="1524571822134" duration="9929000" />
       <workItem from="1524585047067" duration="2172000" />
       <workItem from="1524941690791" duration="3543000" />
-      <workItem from="1524985162177" duration="5191000" />
+      <workItem from="1524985162177" duration="7076000" />
     </task>
+    <task id="LOCAL-00001" summary="TODO mainloop">
+      <created>1524994887598</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1524994887599</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="226320000" />
+    <option name="totallyTimeSpent" value="228205000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="28" width="1680" height="1022" extended-state="6" />
@@ -546,6 +554,12 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <MESSAGE value="TODO mainloop" />
+    <MESSAGE value="Implementing all in one huge function" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implementing all in one huge function" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -824,30 +838,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/derivativesForAdjoint.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-126">
-          <caret line="312" column="47" lean-forward="true" selection-start-line="312" selection-start-column="47" selection-end-line="312" selection-end-column="47" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/adjoint.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="275">
-          <caret line="137" column="129" lean-forward="false" selection-start-line="137" selection-start-column="129" selection-end-line="137" selection-end-column="129" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/oilProblem.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="257">
-          <caret line="63" column="129" lean-forward="false" selection-start-line="63" selection-start-column="129" selection-end-line="63" selection-end-column="129" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/saturation.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1269">
@@ -856,10 +846,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/adjoint.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="135" column="0" lean-forward="false" selection-start-line="135" selection-start-column="0" selection-end-line="135" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/derivativesForAdjoint.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="235">
+          <caret line="193" column="81" lean-forward="false" selection-start-line="193" selection-start-column="81" selection-end-line="193" selection-end-column="81" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/oilProblem.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="203">
+          <caret line="27" column="81" lean-forward="false" selection-start-line="27" selection-start-column="81" selection-end-line="27" selection-end-column="81" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/sensitivity.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="401">
-          <caret line="23" column="35" lean-forward="true" selection-start-line="23" selection-start-column="35" selection-end-line="23" selection-end-column="35" />
+        <state relative-caret-position="468">
+          <caret line="80" column="224" lean-forward="false" selection-start-line="80" selection-start-column="224" selection-end-line="80" selection-end-column="224" />
           <folding>
             <element signature="e#42#67#0" expanded="true" />
           </folding>

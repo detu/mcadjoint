@@ -191,7 +191,7 @@ SparseVector computePressurePartOfDiagonalBlockTimesCostDerivedByState(const Spa
     return pressureResidualsByPressure * costFunctionDerivedByPressure;
 }
 
-SparseMatrix computeSaturationWaterResidualsDerivedByPressure(ConstMatrixRef pressureSystem, ConstMatrixRef fluxFunctionFactors,
+SparseMatrix computeSaturationWaterResidualsDerivedByPressure(const SparseMatrix& pressureSystem, ConstMatrixRef fluxFunctionFactors,
                                                         ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY,
                                                         ConstMatrixRef mobilities,
                                                         const Real timestep, const Real meshWidth) {

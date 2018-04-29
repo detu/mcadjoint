@@ -25,7 +25,7 @@ SparseMatrix computeSaturationWaterResidualsDerivedBySaturationWater(ConstMatrix
                                                                      ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY,
                                                                      const Real timestep, const Real meshWidth
 );
-SparseMatrix computeSaturationWaterResidualsDerivedByPressure(ConstMatrixRef pressureSystem, ConstMatrixRef fluxFunctionFactors,
+SparseMatrix computeSaturationWaterResidualsDerivedByPressure(const SparseMatrix& pressureSystem, ConstMatrixRef fluxFunctionFactors,
                                                               ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY,
                                                               ConstMatrixRef mobilities,
                                                               const Real timestep, const Real meshWidth);
@@ -61,7 +61,6 @@ bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
                      const int numberOfRows, const int numberOfCols, Rng& rng);
 
 std::vector<RandomWalkState> initializeRandomWalks(const int numberOfRows, const int numberOfCols, const int numberOfParameters, const BVectorSurrogate& b, const CMatrixSurrogate& c);
-std::vector<RandomWalkState> initializeRandomWalks(const FixedParameters& params, ConstMatrixRef permeabilities, SimulationState& initialSimulationState);
 
 
 void adaptPressureGradientsAtWell(const Real inflowNow, ConstMatrixRef mobilities, ConstMatrixRef pressures, MatrixRef pressureDerivativesX, MatrixRef pressureDerivativesY, const Real meshWidth);
