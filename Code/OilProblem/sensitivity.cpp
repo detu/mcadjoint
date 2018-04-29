@@ -5,7 +5,9 @@
 #include "oilProblem.hpp"
 #include <stefCommonHeaders/dev.hpp>
 
-#ifdef TODO
+
+
+
 Matrix computeSensitivity(const FixedParameters& params, ConstMatrixRef permeabilities) {
     const int numberOfCols = permeabilities.cols();
     const int numberOfRows = permeabilities.rows();
@@ -13,28 +15,32 @@ Matrix computeSensitivity(const FixedParameters& params, ConstMatrixRef permeabi
     const int numberOfCells = numberOfParameters;
 
     // TODO
-    Vector press
-
+    Vector pressureRhs(Vector::Zero(numberOfCells));
     SimulationState simulationState(numberOfRows, numberOfCols);
-    stepForwardProblem(params, permeabilities, simulationState)
-    const BVectorSurrogate b()
 
-    initializeRandomWalks(numberOfRows, numberOfCols, numberOfParameters,
+    const CellIndex drillCell = findDrillCell(numberOfRows, numberOfCols);
+
+    // initialization
+    std::vector<RandomWalkState> randomWalks = initializeRandomWalks(params, permeabilities, simulationState);
+    std::vector<RandomWalkState> stuckRandomWalks;
+
+    do {
+
+        do {
+
+        } while (!stuckRandomWalks.empty());
+    } while (!breakthroughHappened);
+
+
+    const Matrix totalMobilitiesBySaturationsWater = computeTotalMobilitiesDerivedBySaturationsWater(permeabilities, simulationState.saturationsWater, params.dynamicViscosityOil, params.dynamicViscosityWater);
+    const SparseMatrix pressureResidualsBySaturationsWater = computePressureResidualsDerivedBySaturationWater(simulationState.pressures, totalMobilities, totalMobilitiesBySaturationsWater);
+
+
 
 
     return sensitivity;
 }
 
-Real computeCost(const FixedParameters& params, ConstMatrixRef permeabilities) {
-    const int numberOfPermeabilities = permea
-    initializeRandomWalks(params.numberOfRows, params.numberOfCols)
-    // TODO
-
-    DEV_STUB();
-    return NAN;
-
-
-}
 
 
 CostFunction getCostFunctionForMinimizer(const FixedParameters& params) {
@@ -42,4 +48,3 @@ CostFunction getCostFunctionForMinimizer(const FixedParameters& params) {
         return computeCost(params, logPermeabilities.array().exp().matrix());
     };
 }
-#endif

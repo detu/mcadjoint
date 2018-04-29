@@ -134,6 +134,50 @@ bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
     return stillInTheSameTimestep;
 }
 
+
+std::vector<RandomWalkState> initializeRandomWalks(const FixedParameters& params, ConstMatrixRef permeabilities, SimulationState& initialSimulationState) {
+    const Matrix totalMobilities = computeTotalMobilities(params.dynamicViscosityOil, params.dynamicViscosityWater, permeabilities, initialSimulationState.saturationsWater);
+    const int numberOfCols = permeabilities.cols();
+    const int numberOfRows = permeabilities.rows();
+    const int numberOfParameters = permeabilities.size();
+    const int numberOfCells = numberOfParameters;
+    // solve pressure system
+    Vector pressureRhs(numberOfCells);
+    pressureRhs.setZero();
+
+    const Real pressureDrillNow = params.overPressureDrill(initialSimulationState.time);
+    const SparseMatrix pressureSystem = assemblePressureSystemWithBC(totalMobilities);
+    const Real sourceAtDrillNow = std::abs(params.inflowPerUnitDepthWater(initialSimulationState.time));
+    adaptRhsForPressure(sourceAtDrillNow, pressureRhs, initialSimulationState.saturationsWater.rows(), initialSimulationState.saturationsWater.cols());
+    initialSimulationState.pressures = solvePressurePoissonProblem(pressureSystem, pressureRhs);
+
+    const CellIndex drillCell = findDrillCell(numberOfRows, numberOfCols);
+    const Real computedPressureAtDrillCell = drillCell(initialSimulationState.pressures);
+    const Real measuredPressureAtDrillCell = params.overPressureDrill(0);
+
+    const SparseMatrix pressureResidualsByPressures = computePressureResidualsDerivedByPressure(pressureSystem);
+
+
+    const BVectorSurrogate b(computedPressureAtDrillCell, measuredPressureAtDrillCell, numberOfRows, numberOfCols);
+    const Real firstTimestep = getFirstTimestep();
+    const SparseMatrix pressureResidualsByLogPermeabilities = computePressureResidualsByLogPermeability(initialSimulationState.pressures, totalMobilities);
+
+    const Matrix fluxFunctionFactors = computeFluxFunctionFactors(initialSimulationState.saturationsWater, params.porosity, params.dynamicViscosityWater, params.dynamicViscosityOil);
+
+    const Matrix pressureDerivativesX = computeXDerivative(initialSimulationState.pressures, params.meshWidth);
+    const Matrix darcyVelocitiesX = computeTotalDarcyVelocitiesX(totalMobilities, pressureDerivativesX);
+    const Matrix fluxesX = computeFluxesX(fluxFunctionFactors, darcyVelocitiesX);
+
+    const Matrix pressureDerivativesY = computeYDerivative(initialSimulationState.pressures, params.meshWidth);
+    const Matrix darcyVelocitiesY = computeTotalDarcyVelocitiesY(totalMobilities, pressureDerivativesY);
+    const Matrix fluxesY = computeFluxesY(fluxFunctionFactors, darcyVelocitiesY);
+
+    const SparseMatrix saturationResidualsByLogPermeabilities = computeSaturationsWaterResidualsByLogPermeability(fluxesX, fluxesY, totalMobilities, firstTimestep, params.meshWidth);
+    const CMatrixSurrogate c(pressureResidualsByLogPermeabilities, saturationResidualsByLogPermeabilities, numberOfRows, numberOfCols);
+
+    return initializeRandomWalks(numberOfRows, numberOfCols, numberOfParameters, b, c);
+}
+
 std::vector<RandomWalkState> initializeRandomWalks(const int numberOfRows, const int numberOfCols, const int numberOfParameters, const BVectorSurrogate& b, const CMatrixSurrogate& c) {
 
     const int numberOfRandomWalksPerPressureCell = 5;

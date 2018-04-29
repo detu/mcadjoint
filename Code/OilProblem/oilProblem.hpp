@@ -15,6 +15,8 @@
 #include "cMatrixSurrogate.hpp"
 #include "minimizationState.hpp"
 
+Real getFirstTimestep();
+
 Matrix computeFluxFunctionFactorDerivatives(ConstMatrixRef saturationsWater, const Real porosity, const Real dynamicViscosityWater, const Real dynamicViscosityOil);
 
 SparseMatrix computePressureResidualsDerivedByPressure(const SparseMatrix& pressureSystem);
@@ -28,11 +30,15 @@ SparseMatrix computeSaturationWaterResidualsDerivedByPressure(ConstMatrixRef pre
                                                               ConstMatrixRef mobilities,
                                                               const Real timestep, const Real meshWidth);
 
+Matrix computeTotalMobilitiesDerivedBySaturationsWater(ConstMatrixRef permeabilities, ConstMatrixRef saturationsWater, const Real dynamicViscosityOil, const Real dynamicViscosityWater);
 
 Real computeTransmissibility(ConstMatrixRef totalMobilities, const CellIndex& fromCell, const CellIndex& toCell);
 
 
 SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities);
+
+SparseMatrix computePressureResidualsByLogPermeability(ConstMatrixRef pressures, ConstMatrixRef totalMobilities);
+SparseMatrix computeSaturationsWaterResidualsByLogPermeability(ConstMatrixRef fluxesX, ConstMatrixRef fluxesY, ConstMatrixRef mobilities, const Real timestep, const Real meshWidth);
 
 Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, ConstVectorRef rhs);
 
@@ -55,6 +61,8 @@ bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
                      const int numberOfRows, const int numberOfCols, Rng& rng);
 
 std::vector<RandomWalkState> initializeRandomWalks(const int numberOfRows, const int numberOfCols, const int numberOfParameters, const BVectorSurrogate& b, const CMatrixSurrogate& c);
+std::vector<RandomWalkState> initializeRandomWalks(const FixedParameters& params, ConstMatrixRef permeabilities, SimulationState& initialSimulationState);
+
 
 void adaptPressureGradientsAtWell(const Real inflowNow, ConstMatrixRef mobilities, ConstMatrixRef pressures, MatrixRef pressureDerivativesX, MatrixRef pressureDerivativesY, const Real meshWidth);
 

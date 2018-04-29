@@ -79,6 +79,10 @@ static inline Real computeCflTimestep(const Real maximumAdvectionVelocity, const
     return 0.9 * meshWidth / maximumAdvectionVelocity;
 }
 
+Real getFirstTimestep() {
+    return 1e-5;
+}
+
 bool advanceSaturationsInTime(const FixedParameters& params, MatrixRef saturationsWater,
                               ConstMatrixRef pressures,
                               ConstMatrixRef totalMobilities, Real& time) {
@@ -105,10 +109,9 @@ bool advanceSaturationsInTime(const FixedParameters& params, MatrixRef saturatio
     const Real timestepX = computeCflTimestep(maximumAdvectionSpeedX, params.meshWidth);
     const Real timestepY = computeCflTimestep(maximumAdvectionSpeedY, params.meshWidth);
 
-    const Real firstTimestep = 1e-5;
     const Real maxTimestep = params.finalTime * 1e-2;
     const Real cflTimestep = std::min(timestepX, timestepY);
-    const Real timestep = (time > 0? std::min(maxTimestep, cflTimestep): firstTimestep);
+    const Real timestep = (time > 0? std::min(maxTimestep, cflTimestep): getFirstTimestep());
 
 
     const CellIndex drillCell = findDrillCell(saturationsWater.rows(), saturationsWater.cols());
@@ -162,11 +165,11 @@ bool advanceSaturationsInTime(const FixedParameters& params, MatrixRef saturatio
     LOGGER->debug("div sat water =\n{}", saturationDivergences);
 
     LOGGER->debug("timestep = {}", timestep);
-    LOGGER->info("Well cell div sat = {}", divergenceSaturationWellCell);
-    LOGGER->info("Well cell outflow water = {}", outflowWellCell);
-    LOGGER->info("Well cell sat = {}", wellCell(saturationsWater));
-    LOGGER->info("South neighbor of well cell sat = {}", wellCell.neighbor(CellIndex::Direction::SOUTH)(saturationsWater));
-    LOGGER->info("West neighbor of well cell sat = {}", wellCell.neighbor(CellIndex::Direction::WEST)(saturationsWater));
+    LOGGER->debug("Well cell div sat = {}", divergenceSaturationWellCell);
+    LOGGER->debug("Well cell outflow water = {}", outflowWellCell);
+    LOGGER->debug("Well cell sat = {}", wellCell(saturationsWater));
+    LOGGER->debug("South neighbor of well cell sat = {}", wellCell.neighbor(CellIndex::Direction::SOUTH)(saturationsWater));
+    LOGGER->debug("West neighbor of well cell sat = {}", wellCell.neighbor(CellIndex::Direction::WEST)(saturationsWater));
 
     if (wellCell(saturationsWater) < 0) {
         throw std::logic_error("well sat < 0!");

@@ -9,6 +9,17 @@ SparseMatrix computePressureResidualsDerivedByPressure(const SparseMatrix& press
     return pressureSystem;
 }
 
+Matrix computeTotalMobilitiesDerivedBySaturationsWater(ConstMatrixRef permeabilities, ConstMatrixRef saturationsWater, const Real dynamicViscosityOil, const Real dynamicViscosityWater) {
+    const int numberOfRows = permeabilities.rows();
+    const int numberOfCols = permeabilities.cols();
+
+
+    const auto saturationsArray = saturationsWater.array();
+    const auto permeabilitiesArray = permeabilities.array();
+
+    return (2*permeabilitiesArray * ((saturationsArray - 1) / dynamicViscosityOil + saturationsArray / dynamicViscosityWater)).matrix();
+}
+
 SparseMatrix computePressureResidualsDerivedBySaturationWater(ConstMatrixRef pressures, ConstMatrixRef totalMobilities, ConstMatrixRef totalMobilitiesDerivedBySaturationsWater) {
     const int numberOfRows = pressures.rows();
     const int numberOfCols = pressures.cols();
@@ -355,3 +366,4 @@ SparseMatrix computeSaturationsWaterResidualsByLogPermeability(ConstMatrixRef fl
     return derivatives;
 
 }
+

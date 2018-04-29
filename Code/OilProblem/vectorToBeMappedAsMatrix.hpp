@@ -28,6 +28,22 @@ struct VectorToBeMappedAsMatrix {
         return *this;
     }
 
+    inline operator Eigen::Ref<const Matrix>() const {
+        return map;
+    }
+
+    inline operator Eigen::Ref<Matrix>() {
+        return map;
+    }
+
+    inline operator Eigen::Ref<const Vector>() const {
+        return vec;
+    }
+
+    inline operator Eigen::Ref<Vector>() {
+        return vec;
+    }
+
 };
 
 
