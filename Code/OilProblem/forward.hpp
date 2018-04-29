@@ -7,4 +7,4 @@
 
 bool stepForwardProblem(const FixedParameters& params, const Eigen::Ref<const Matrix>& permeabilities,
                         SimulationState& currentState);
-void stepForwardAndAdjointProblem(const FixedParameters& params, ConstMatrixRef permeabilities, SimulationState& simulationState, std::vector<RandomWalkState>& randomWalks, Rng& rng);
+bool stepForwardAndAdjointProblem(const FixedParameters& params, ConstMatrixRef permeabilities, SimulationState& simulationState, std::vector<RandomWalkState>& randomWalks, Rng& rng);

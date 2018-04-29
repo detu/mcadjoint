@@ -10,4 +10,5 @@ struct RandomWalkState {
     int currentTimelevel;
     Real W;
     Real D;
+    int parameterIndex;
 };

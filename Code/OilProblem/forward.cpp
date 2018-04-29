@@ -37,7 +37,7 @@ bool stepForwardProblem(const FixedParameters& params, const Eigen::Ref<const Ma
 
 
 
-void stepForwardAndAdjointProblem(const FixedParameters& params, ConstMatrixRef permeabilities, SimulationState& simulationState, std::vector<RandomWalkState>& randomWalks, Rng& rng) {
+bool stepForwardAndAdjointProblem(const FixedParameters& params, ConstMatrixRef permeabilities, SimulationState& simulationState, std::vector<RandomWalkState>& randomWalks, Rng& rng) {
     const int numberOfRows = permeabilities.rows();
     const int numberOfCols = permeabilities.cols();
     const int numberOfParameters = permeabilities.size();
@@ -117,4 +117,11 @@ void stepForwardAndAdjointProblem(const FixedParameters& params, ConstMatrixRef 
 
     const Matrix saturationsWaterDivergences = computeSaturationDivergences(fluxFunctionFactors, fluxesX, fluxesY, params.meshWidth);
     simulationState.saturationsWater -= timestep * saturationsWaterDivergences;
+    simulationState.time += timestep;
+    drillCell(simulationState.saturationsWater) = 1;
+
+    const CellIndex wellCell = findWellCell(numberOfRows, numberOfCols);
+    const bool breakthroughHappened = std::abs(wellCell(simulationState.saturationsWater)) > 1e-16;
+
+    return breakthroughHappened;
 }

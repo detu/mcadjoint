@@ -160,6 +160,7 @@ std::vector<RandomWalkState> initializeRandomWalks(const int numberOfRows, const
             initialState.currentTimelevel = 0;
             initialState.W = numberOfRandomWalksPerPressureCell * c(neighborOrMyself, cell, wantAPressure);
             initialState.D = initialState.W * b(neighborOrMyself, wantAPressure);
+            initialState.parameterIndex = parameterIndex;
 
             randomWalks.push_back(std::move(initialState));
         }
