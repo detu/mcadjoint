@@ -3,9 +3,12 @@
 //
 
 #include <acutest.h>
-#include "oilProblem.hpp"
 #include <iostream>
-
+#include "typedefs.hpp"
+#include "cellindex.hpp"
+#include "specialCells.hpp"
+#include "pressure.hpp"
+#include "darcyVelocity.hpp"
 
 void testPressurePoisson() {
     const int n = 100;
@@ -32,12 +35,11 @@ void testPressurePoisson() {
 
     Eigen::Map<Vector> pressuresAsVector(pressures.data(), pressures.size());
 
-    Vector rhs(sources.size());
-    rhs.setZero();
 
-    computeRhsForPressureSystem(-1, rhs, n);
 
-    pressuresAsVector = std::move(solvePressurePoissonProblem(transmissibilities, rhs, Vector::Constant(pressures.size(), 9)));
+    const SparseVector rhs = computeRhsForPressureSystem(-1, n, n);
+
+    pressuresAsVector = std::move(solvePressurePoissonProblem(transmissibilities, rhs));
     #ifdef VERBOSE_TESTS
     std::cout << "pressures = " << pressures << "\n";
     std::cout << "pressures as vector = " << pressuresAsVector << "\n";

@@ -2,18 +2,9 @@
 // Created by Stefano Weidmann on 27.03.18.
 //
 
-#include "oilProblem.hpp"
 #include "logging.hpp"
 #include <stefCommonHeaders/assert.h>
 #include "specialCells.hpp"
-
-#ifdef __GNUC__
-    #define likely(x)       __builtin_expect((x),1)
-    #define unlikely(x)     __builtin_expect((x),0)
-#else
-    #define likely(x) x
-    #define unlikely(x) x
-#endif
 
 
 
@@ -33,18 +24,6 @@ CellIndex pressureToTransmissibilityIndex(const CellIndex& fromCell, const CellI
 }
 
 
-void adaptPressureGradientsAtWell(const Real inflowNow, ConstMatrixRef mobilities, ConstMatrixRef pressures, MatrixRef pressureDerivativesX, MatrixRef pressureDerivativesY, const Real meshWidth) {
-    const CellIndex wellCell = findWellCell(pressures.rows(), pressures.cols());
-    const CellIndex eastDerivativeOfWellCell = centerIndexToBorderIndex(wellCell, CellIndex::Direction::EAST);
-    const CellIndex northDerivativeOfWellCell = centerIndexToBorderIndex(wellCell, CellIndex::Direction::NORTH);
-    const CellIndex southDerivativeOfWellCell = centerIndexToBorderIndex(wellCell, CellIndex::Direction::SOUTH);
-    const CellIndex westDerivativeOfWellCell = centerIndexToBorderIndex(wellCell, CellIndex::Direction::WEST);
-
-
-    eastDerivativeOfWellCell(pressureDerivativesX) = -inflowNow / (4 * wellCell(mobilities) * meshWidth);
-    northDerivativeOfWellCell(pressureDerivativesY) = eastDerivativeOfWellCell(pressureDerivativesX);
-
-}
 
 
 
@@ -88,7 +67,7 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
 
             for (const CellIndex::Direction direction: directionsToCheck) {
 
-                if (unlikely(!myself.hasNeighbor(direction, numberOfRows, numberOfCols))) {
+                if (!myself.hasNeighbor(direction, numberOfRows, numberOfCols)) {
                     continue;
                 }
 
@@ -134,18 +113,7 @@ SparseVector computeRhsForPressureSystem(const Real sourceAtDrillNow, const int 
 }
 
 
-Vector projectSourcesIntoRange(ConstMatrixRef sources) {
 
-    LOGGER->debug("Starting to project sources into range");
-    Vector sourcesProjectedIntoRange(sources.size() + 1);
-    sourcesProjectedIntoRange << Eigen::Map<const Vector>(sources.data(), sources.size()), 0;
-
-    sourcesProjectedIntoRange.head(sources.size()).array() -= sourcesProjectedIntoRange.head(sources.size()).array().mean();
-
-    LOGGER->debug("Projected sources into range");
-
-    return sourcesProjectedIntoRange;
-}
 
 
 Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, const SparseVector& rhs) {
@@ -168,6 +136,10 @@ Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, const
     //std::cout << "Estimated error = " << solver.error() << "\n";
 
     return result;
+}
+
+Matrix computeTotalMobilities(const Real dynamicViscosityOil, const Real dynamicViscosityWater, ConstMatrixRef permeabilities, ConstMatrixRef saturationsWater) {
+    return permeabilities.array() * (saturationsWater.array().square() / dynamicViscosityWater + (1.0 - saturationsWater.array()).square() / dynamicViscosityOil);
 }
 
 

@@ -6,6 +6,7 @@
 
 #include "typedefs.hpp"
 #include "cellindex.hpp"
+#include "specialCells.hpp"
 
 
 

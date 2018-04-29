@@ -3,10 +3,9 @@
 //
 
 #include "logging.hpp"
-
-
+#include <stefCommonHeaders/logging.hpp>
 
 using namespace std;
 using namespace spdlog;
 
-shared_ptr<logger> LOGGER = nullptr;
+shared_ptr<logger> LOGGER = stefCommonHeaders::setUpNullLog();

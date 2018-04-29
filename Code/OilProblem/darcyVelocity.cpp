@@ -2,7 +2,8 @@
 // Created by Stefano Weidmann on 29.03.18.
 //
 
-#include "oilProblem.hpp"
+#include "darcyVelocity.hpp"
+#include "pressure.hpp"
 #include <stefCommonHeaders/assert.h>
 
 Matrix computeXDerivative(ConstMatrixRef field, const Real meshWidth) {

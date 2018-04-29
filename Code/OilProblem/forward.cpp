@@ -2,11 +2,17 @@
 // Created by Stefano Weidmann on 02.04.18.
 //
 
-#include "oilProblem.hpp"
 #include "fixedParameters.hpp"
 #include "logging.hpp"
+#include "pressure.hpp"
+#include "forward.hpp"
+#include "saturation.hpp"
+#include "darcyVelocity.hpp"
+#include "derivativesForAdjoint.hpp"
+#include "adjoint.hpp"
 
-bool stepForwardProblem(const FixedParameters& params, ConstMatrixRef permeabilities, SimulationState& currentState, VectorRef pressureRhs) {
+bool stepForwardProblem(const FixedParameters& params, const Eigen::Ref<const Matrix>& permeabilities,
+                        SimulationState& currentState) {
     const Matrix totalMobilities = computeTotalMobilities(params.dynamicViscosityOil, params.dynamicViscosityWater, permeabilities, currentState.saturationsWater);
 
     //LOGGER->debug("total mobilities {}", totalMobilities);
@@ -22,17 +28,16 @@ bool stepForwardProblem(const FixedParameters& params, ConstMatrixRef permeabili
                                 currentState.saturationsWater.cols());
 
     //LOGGER->debug("pressure rhs {}", pressureRhs);
+    const SparseVector pressureRhs = computeRhsForPressureSystem(sourceAtDrillNow, currentState.saturationsWater.rows(), currentState.saturationsWater.cols());
     currentState.pressures = solvePressurePoissonProblem(pressureSystem, pressureRhs);
 
     //LOGGER->debug("pressures {}", currentState.pressures.vec);
     return advanceSaturationsInTime(params, currentState.saturationsWater, currentState.pressures.map, totalMobilities, currentState.time);
 }
 
-Matrix computeTotalMobilities(const Real dynamicViscosityOil, const Real dynamicViscosityWater, ConstMatrixRef permeabilities, ConstMatrixRef saturationsWater) {
-    return permeabilities.array() * (saturationsWater.array().square() / dynamicViscosityWater + (1.0 - saturationsWater.array()).square() / dynamicViscosityOil);
-}
 
-void stepForwardAndAdjointProblem(const FixedParameters& params, ConstMatrixRef& permeabilities, SimulationState& simulationState, std::vector<RandomWalkState>& randomWalks, Rng& rng) {
+
+void stepForwardAndAdjointProblem(const FixedParameters& params, ConstMatrixRef permeabilities, SimulationState& simulationState, std::vector<RandomWalkState>& randomWalks, Rng& rng) {
     const int numberOfRows = permeabilities.rows();
     const int numberOfCols = permeabilities.cols();
     const int numberOfParameters = permeabilities.size();
@@ -57,7 +62,7 @@ void stepForwardAndAdjointProblem(const FixedParameters& params, ConstMatrixRef&
     simulationState.pressures.vec = solvePressurePoissonProblem(pressureSystem, pressureRhs);
 
     const CellIndex drillCell = findDrillCell(numberOfRows, numberOfCols);
-    const Real computedPressureAtDrillCell = drillCell(simulationState.pressures);
+    const Real computedPressureAtDrillCell = drillCell(simulationState.pressures.map);
     const Real measuredPressureAtDrillCell = params.overPressureDrill(0);
 
 
@@ -94,7 +99,7 @@ void stepForwardAndAdjointProblem(const FixedParameters& params, ConstMatrixRef&
     const Matrix totalMobilitiesDerivedBySaturationsWater = computeTotalMobilitiesDerivedBySaturationsWater(permeabilities, simulationState.saturationsWater, params.dynamicViscosityOil, params.dynamicViscosityWater);
     const SparseMatrix pressureResidualsBySaturationsWater = computePressureResidualsDerivedBySaturationWater(simulationState.pressures, totalMobilities, totalMobilitiesDerivedBySaturationsWater);
 
-    const SparseMatrix saturationsWaterResidualsByPressure = computeSaturationWaterResidualsDerivedByPressure(pressureSystem);
+    const SparseMatrix saturationsWaterResidualsByPressure = computeSaturationWaterResidualsDerivedByPressure(pressureSystem, fluxFunctionFactors, darcyVelocitiesX, darcyVelocitiesY, totalMobilities, timestep, params.meshWidth);
     const Matrix fluxFunctionFactorDerivatives = computeFluxFunctionFactorDerivatives(simulationState.saturationsWater, params.porosity, params.dynamicViscosityWater, params.dynamicViscosityOil);
     const SparseMatrix saturationsWaterResidualsBySaturationsWater = computeSaturationWaterResidualsDerivedBySaturationWater(fluxFunctionFactorDerivatives, darcyVelocitiesX, darcyVelocitiesY, timestep, params.meshWidth);
 

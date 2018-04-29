@@ -2,7 +2,10 @@
 // Created by Stefano Weidmann on 16.04.18.
 //
 
-#include "oilProblem.hpp"
+#include "derivativesForAdjoint.hpp"
+#include "darcyVelocity.hpp"
+#include "specialCells.hpp"
+#include "pressure.hpp"
 #include <stefCommonHeaders/dev.hpp>
 
 SparseMatrix computePressureResidualsDerivedByPressure(const SparseMatrix& pressureSystem) {

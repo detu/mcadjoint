@@ -2,9 +2,13 @@
 // Created by stefanow on 4/27/18.
 //
 
-#include "oilProblem.hpp"
+#include "sensitivity.hpp"
 #include <stefCommonHeaders/dev.hpp>
-
+#include "specialCells.hpp"
+#include "simulationState.hpp"
+#include "forward.hpp"
+#include "pressure.hpp"
+#include "derivativesForAdjoint.hpp"
 
 Matrix computeSensitivity(const FixedParameters& params, ConstMatrixRef permeabilities) {
     const int numberOfCols = permeabilities.cols();
@@ -21,14 +25,13 @@ Matrix computeSensitivity(const FixedParameters& params, ConstMatrixRef permeabi
 
 
 
-    const Matrix totalMobilities = computeTotalMobilities(params.dynamicViscosityOil, params.dynamicViscosityWater, permeabilities, initialSimulationState.saturationsWater);
+    const Matrix totalMobilities = computeTotalMobilities(params.dynamicViscosityOil, params.dynamicViscosityWater, permeabilities, simulationState.saturationsWater);
 
-    Vector pressureRhs(numberOfCells);
-    pressureRhs.setZero();
+
     std::vector<RandomWalkState> randomWalks;
     Rng rng;
 
-
+    bool breakthroughHappened = false;
     do {
 
 
@@ -41,14 +44,8 @@ Matrix computeSensitivity(const FixedParameters& params, ConstMatrixRef permeabi
 
 
 
-
+    Matrix sensitivity;
     return sensitivity;
 }
 
 
-
-CostFunction getCostFunctionForMinimizer(const FixedParameters& params) {
-    return [&] (ConstMatrixRef logPermeabilities) {
-        return computeCost(params, logPermeabilities.array().exp().matrix());
-    };
-}

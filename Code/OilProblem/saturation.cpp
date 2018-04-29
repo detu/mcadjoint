@@ -1,12 +1,14 @@
 //
 // Created by Stefano Weidmann on 30.03.18.
 //
-#include "oilProblem.hpp"
+
 #include <stefCommonHeaders/assert.h>
 #include <stefCommonHeaders/dev.hpp>
 #include "logging.hpp"
 #include <stefCommonHeaders/dbg.hpp>
 #include "specialCells.hpp"
+#include "darcyVelocity.hpp"
+#include "fixedParameters.hpp"
 
 Matrix computeFluxFunctionFactors(ConstMatrixRef saturationsWater, const Real porosity, const Real dynamicViscosityWater, const Real dynamicViscosityOil) {
     const auto map = [&] (const Real saturationWater) {

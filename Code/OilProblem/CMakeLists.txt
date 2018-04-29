@@ -16,12 +16,12 @@ get_filename_component(thirdPartyDir "${CMAKE_CURRENT_SOURCE_DIR}/../thirdParty"
 include("${thirdPartyDir}/stefcommonheaders/CMakeLists.txt")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}")
 
-set(useCotire OFF)
+set(useCotire ON)
 
 if (useCotire)
     set(COTIRE_UNITY_SOURCE_MAXIMUM_NUMBER_OF_INCLUDES -j)
     set(COTIRE_ADDITIONAL_PREFIX_HEADER_IGNORE_PATH "${thirdPartyDir}")
-    set_property(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" PROPERTY COTIRE_ENABLE_PRECOMPILED_HEADER FALSE)
+    #set_property(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" PROPERTY COTIRE_ENABLE_PRECOMPILED_HEADER FALSE)
     include(cotire)
 endif()
 
@@ -34,20 +34,23 @@ add_subdirectory("${simplematioDir}" "${simplematioBinaryDir}")
 
 set(baseLibHeaders control.h gnuplot_i.h utils.hpp logging.hpp)
 set(baseLibSources control.cpp gnuplot_i.cpp utils.cpp logging.cpp)
-set(oilLibHeaders oilProblem.hpp typedefs.hpp cellindex.hpp vectorToBeMappedAsMatrix.hpp fixedParameters.hpp simulationState.hpp specialCells.hpp bVectorSurrogate.hpp cMatrixSurrogate.hpp randomWalkState.hpp minimizationState.hpp)
-set(oilLibSources pressure.cpp darcyVelocity.cpp saturation.cpp minimizer.cpp forward.cpp derivativesForAdjoint.cpp adjoint.cpp sensitivity.cpp)
+set(oilLibHeaders typedefs.hpp cellindex.hpp vectorToBeMappedAsMatrix.hpp fixedParameters.hpp simulationState.hpp specialCells.hpp bVectorSurrogate.hpp cMatrixSurrogate.hpp randomWalkState.hpp
+        pressure.hpp darcyVelocity.hpp saturation.hpp forward.hpp derivativesForAdjoint.hpp adjoint.hpp sensitivity.hpp)
+set(oilLibSources pressure.cpp darcyVelocity.cpp saturation.cpp forward.cpp derivativesForAdjoint.cpp adjoint.cpp sensitivity.cpp)
 add_library(commonLib STATIC ${oilLibSources} ${oilLibHeaders} ${baseLibSources} ${baseLibHeaders})
 target_link_libraries(commonLib stefCommonHeaders)
+
+if(useCotire)
+  cotire(commonLib)
+endif()
 
 
 set(quarterFiveSpotSources quarterFiveSpot.cpp)
 set(quarterFiveSpotUnitySources ${quarterFiveSpotSources} ${oilLibSources} ${oilLibHeaders} ${baseLibSources} ${baseLibHeaders})
-set(dryRunSources dryRun.cpp)
 set(mainSources main.cpp)
 set(testSources test.cpp)
 
 
-add_executable(DryRun ${dryRunSources})
 add_executable(Test ${testSources})
 add_executable(TestVerbose ${testSources})
 add_executable(QuarterFiveSpot ${quarterFiveSpotSources})
@@ -57,8 +60,6 @@ add_executable(OilProblem ${mainSources})
 
 foreach(target IN ITEMS QuarterFiveSpot)
     target_link_libraries(${target} simplematio)
-    target_include_directories(${target} PUBLIC ${SIMPLEMATIO_INCLUDE_DIRS})
-    target_compile_options(${target} PUBLIC ${SIMPLEMATIO_CFLAGS_OTHER})
 endforeach()
 
 add_definitions(-DEIGEN_DEFAULT_DENSE_INDEX_TYPE=int -DEIGEN_NO_AUTOMATIC_RESIZING)
@@ -67,7 +68,7 @@ if (lowercaseBuildType STREQUAL "debug")
 endif()
 
 string(TOLOWER CMAKE_BUILD_TYPE lowercaseBuildType)
-foreach(executable IN ITEMS DryRun Test TestVerbose OilProblem QuarterFiveSpot)
+foreach(executable IN ITEMS Test TestVerbose OilProblem QuarterFiveSpot)
     target_link_libraries(${executable} commonLib)
     if (useCotire)
         cotire(${executable})
@@ -83,7 +84,6 @@ if (USE_MKL_IF_PRESENT)
         message("MKL found, using that")
         include_directories(${MKL_INCLUDE_DIRS})
         link_directories(${MKL_LIB_DIRS})
-        target_link_libraries(DryRun ${MKL_LIBRARIES})
         target_link_libraries(OilProblem ${MKL_LIBRARIES})
         target_link_libraries(Test ${MKL_LIBRARIES})
         add_definitions(-DEIGEN_USE_MKL_ALL -DUSE_PARDISO)

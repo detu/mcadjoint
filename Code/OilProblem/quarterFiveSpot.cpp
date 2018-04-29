@@ -2,8 +2,10 @@
 // Created by Stefano Weidmann on 10.04.18.
 //
 
-#include "oilProblem.hpp"
+#include "saturation.hpp"
+#include "simulationState.hpp"
 #include "logging.hpp"
+#include "forward.hpp"
 #include <EigenSimplematio.hpp>
 #include "specialCells.hpp"
 #include <signal.h>
@@ -88,7 +90,7 @@ int main(const int argc, const char** argv) {
 
 
     while (simulationState->time < params.finalTime) {
-        const bool breakThroughHappened = stepForwardProblem(params, permeabilities, *simulationState, pressureRhs);
+        const bool breakThroughHappened = stepForwardProblem(params, permeabilities, *simulationState);
         LOGGER->debug("saturations water =\n{}", simulationState->saturationsWater);
         LOGGER->info("time = {}", simulationState->time);
         if (breakThroughHappened) {

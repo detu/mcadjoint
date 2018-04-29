@@ -4,6 +4,7 @@
 
 #pragma once
 #include "typedefs.hpp"
+
 struct VectorToBeMappedAsMatrix {
     Vector vec;
     Eigen::Map<Matrix> map;
