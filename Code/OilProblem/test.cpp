@@ -40,7 +40,7 @@ void testPressurePoisson() {
 
 
 
-    const SparseVector rhs = computeRhsForPressureSystem(-1, n, n);
+    const Vector rhs = computeRhsForPressureSystem(-1, n, n);
 
     pressuresAsVector = std::move(solvePressurePoissonProblem(transmissibilities, rhs));
     #ifdef VERBOSE_TESTS

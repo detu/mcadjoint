@@ -112,6 +112,7 @@ bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
 
     const Candidate absorptionCandidate = {CellIndex::invalidCell(), false, NAN, NAN };
     const Real unnormalizedAbsorptionProbability = std::abs(b(currentState.cell, currentState.isAPressure));
+    ASSERT(unnormalizedAbsorptionProbability > 0 == (currentState.cell == findDrillCell(numberOfRows, numberOfCols) && currentState.isAPressure));
 
     if (unnormalizedAbsorptionProbability > 0) {
         candidates.push_back(absorptionCandidate);
@@ -128,28 +129,27 @@ bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
     std::discrete_distribution<int> choose(candidateUnnormalizedProbabilities.cbegin(), candidateUnnormalizedProbabilities.cend());
     const int nextIndex = choose(rng);
 
-    if (candidates.size() == 0) {
-        stillInTheSameTimestep = false;
-        return stillInTheSameTimestep;
-    }
+    ASSERT(candidates.size() > 0);
     const Candidate chosenCandidate = candidates.at(nextIndex);
     ASSERT(candidates.size() == candidateUnnormalizedProbabilities.size());
 
-    const bool willBeAbsorbed = chosenCandidate.cellIndex == absorptionCandidate.cellIndex;
+
+    if (!currentState.isAPressure) {
+        ++currentState.currentTimelevel;
+        stillInTheSameTimestep = false;
+    }
 
     currentState.isAPressure = chosenCandidate.isAPressure;
     currentState.cell = chosenCandidate.cellIndex;
 
+    const bool willBeAbsorbed = chosenCandidate.cellIndex == absorptionCandidate.cellIndex;
     if (willBeAbsorbed) {
         stillInTheSameTimestep = false;
         return stillInTheSameTimestep;
     }
 
     stillInTheSameTimestep = true;
-    if (!(currentState.isAPressure && chosenCandidate.isAPressure)) {
-        ++currentState.currentTimelevel;
-        stillInTheSameTimestep = false;
-    }
+
     // update W (pg. 6199, top)
     currentState.W *= sumOfUnnormalizedProbabilities * chosenCandidate.correspondingEntryOfAMatrix;
     // update D (pg. 6199, top)
@@ -164,6 +164,32 @@ bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
     ASSERT(currentState.cell.j >= 0);
 
     return stillInTheSameTimestep;
+}
+
+void logStatisticsAboutRandomWalks(const std::vector<RandomWalkState>& randomWalks) {
+    LOGGER->info("We have {} random walks", randomWalks.size());
+
+    int absorbedWalks = 0;
+    int walksInPressure = 0;
+    int walksInSaturation = 0;
+
+    const CellIndex invalidCell = CellIndex::invalidCell();
+    for (const RandomWalkState& randomWalk: randomWalks) {
+        if (randomWalk.cell == invalidCell) {
+            ++absorbedWalks;
+        } else if (randomWalk.isAPressure) {
+            ++walksInPressure;
+        } else {
+            ++walksInSaturation;
+        }
+    }
+
+    LOGGER->info("{} walks are currently in pressure cells", walksInPressure);
+    LOGGER->info("{} walks are currently in saturation cells", walksInSaturation);
+    LOGGER->info("{} walks are absorbed", absorbedWalks);
+
+    ASSERT(absorbedWalks + walksInPressure + walksInSaturation == randomWalks.size());
+
 }
 
 

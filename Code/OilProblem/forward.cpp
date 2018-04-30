@@ -131,6 +131,8 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, ConstMatrixRef 
         } while (stillInTheSameTimestep);
     }
 
+    logStatisticsAboutRandomWalks(randomWalks);
+
 
     const Matrix saturationsWaterDivergences = computeSaturationDivergences(fluxFunctionFactors, fluxesX, fluxesY, params.meshWidth);
     simulationState.saturationsWater -= timestep * saturationsWaterDivergences;

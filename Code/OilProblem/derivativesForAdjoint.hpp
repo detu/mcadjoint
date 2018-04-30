@@ -1,5 +1,6 @@
 #pragma once
 #include "typedefs.hpp"
+#include "cellindex.hpp"
 
 SparseMatrix computePressureResidualsDerivedByPressure(const SparseMatrix& pressureSystem);
 Matrix computeTotalMobilitiesDerivedBySaturationsWater(ConstMatrixRef permeabilities, ConstMatrixRef saturationsWater, const Real dynamicViscosityOil, const Real dynamicViscosityWater);
@@ -9,10 +10,12 @@ SparseMatrix computeSaturationWaterResidualsDerivedBySaturationWater(ConstMatrix
                                                                      ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY,
                                                                      const Real timestep, const Real meshWidth
 );
-SparseVector computeCostFunctionDerivedByPressure(const Real computedPressureAtDrill, const Real measuredPressureAtDrill, const int numberOfRows, const int numberOfCols);
-SparseVector computeCostFunctionDerivedBySaturationsWater(const int numberOfRows, const int numberOfCols);
+Real computeCostFunctionDerivedByPressureEntry(const Real computedPressureAtDrill, const Real measuredPressureAtDrill,
+                                               const int numberOfRows, const int numberOfCols,
+                                               const CellIndex& derivedByCell);
+Real computeCostFunctionDerivedBySaturationsWaterEntry(const int numberOfRows, const int numberOfCols,
+                                                       const CellIndex& derivedByCell);
 
-SparseVector computePressurePartOfDiagonalBlockTimesCostDerivedByState(const SparseMatrix& pressureResidualsByPressure, ConstMatrixRef pressures, const Real measuredPressureAtDrill);
 SparseMatrix computeSaturationWaterResidualsDerivedByPressure(const SparseMatrix& pressureSystem, ConstMatrixRef fluxFunctionFactors,
                                                               ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY,
                                                               ConstMatrixRef mobilities,

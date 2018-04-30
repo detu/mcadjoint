@@ -8,6 +8,7 @@
 #include "cellindex.hpp"
 #include "specialCells.hpp"
 #include "derivativesForAdjoint.hpp"
+#include "logging.hpp"
 
 
 struct BVectorSurrogate {
@@ -15,32 +16,29 @@ struct BVectorSurrogate {
                      const int numberOfRows, const int numberOfCols):
           computedPressureAtDrill(computedPressureAtDrill), measuredPressureAtDrill(measuredPressureAtDrill),
           numberOfRows(numberOfRows), endOfPressurePart(numberOfCols * numberOfRows), drillCell(findDrillCell(numberOfRows, numberOfCols)),
-         costFunctionByPressure(computeCostFunctionDerivedByPressure(computedPressureAtDrill, measuredPressureAtDrill, numberOfRows, numberOfCols)),
-         costFunctionBySaturationsWater(computeCostFunctionDerivedBySaturationsWater(numberOfRows, numberOfCols))
-    {}
+          numberOfCols(numberOfCols)
+    {
+    }
 
     inline Real operator()(int linearStateIndex) const {
         const bool isAPressure = linearStateIndex < endOfPressurePart;
-        const CellIndex stateCell = CellIndex::fromLinearIndex(linearStateIndex, numberOfRows);
-
-        const SparseVector& correspondingPartOfBVector = isAPressure? costFunctionByPressure: costFunctionBySaturationsWater;
-
-        if (!isAPressure) {
+        if (isAPressure) {
             linearStateIndex -= endOfPressurePart;
         }
+        const CellIndex stateCell = CellIndex::fromLinearIndex(linearStateIndex, numberOfRows);
 
-        return correspondingPartOfBVector.coeff(linearStateIndex);
+        return operator()(stateCell, isAPressure);
 
     }
 
 
     inline Real operator()(const CellIndex stateCell, const bool isAPressure) const {
+        if (isAPressure) {
+            return computeCostFunctionDerivedByPressureEntry(computedPressureAtDrill, measuredPressureAtDrill, numberOfRows, numberOfCols, stateCell);
+        } else {
+            return computeCostFunctionDerivedBySaturationsWaterEntry(numberOfRows, numberOfCols, stateCell);
+        }
 
-        const int linearIndex = stateCell.linearIndex(numberOfRows);
-
-        const SparseVector& correspondingPartOfBVector = isAPressure? costFunctionByPressure: costFunctionBySaturationsWater;
-
-        return correspondingPartOfBVector.coeff(linearIndex);
     }
 
     const Real computedPressureAtDrill;
@@ -48,8 +46,7 @@ struct BVectorSurrogate {
 
     const int endOfPressurePart;
     const int numberOfRows;
-    const SparseVector costFunctionByPressure;
-    const SparseVector costFunctionBySaturationsWater;
+    const int numberOfCols;
 
 
     const CellIndex drillCell;

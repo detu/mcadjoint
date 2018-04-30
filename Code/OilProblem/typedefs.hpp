@@ -21,8 +21,6 @@ using Matrix = Eigen::Matrix<Real, Eigen::Dynamic, Eigen::Dynamic>;
 using MatrixRef = Eigen::Ref<Matrix>;
 using ConstMatrixRef = const Eigen::Ref<const Matrix>&;
 
-using SparseVector = Eigen::SparseVector<Real>;
-
 using CostFunction = std::function<Real(ConstMatrixRef)>;
 
 using WellFunction = std::function<Real(Real)>;

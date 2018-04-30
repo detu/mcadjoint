@@ -177,25 +177,25 @@ SparseMatrix computeSaturationWaterResidualsDerivedBySaturationWater(ConstMatrix
     return derivatives;
 }
 
-SparseVector computeCostFunctionDerivedByPressure(const Real computedPressureAtDrill, const Real measuredPressureAtDrill, const int numberOfRows, const int numberOfCols) {
-    SparseVector derivative(numberOfCols * numberOfRows);
+Real computeCostFunctionDerivedByPressureEntry(const Real computedPressureAtDrill, const Real measuredPressureAtDrill,
+                                               const int numberOfRows, const int numberOfCols,
+                                               const CellIndex& derivedByCell) {
 
     const CellIndex drillCell = findDrillCell(numberOfRows, numberOfCols);
-    derivative.coeffRef(drillCell.linearIndex(numberOfRows)) = 2 * (computedPressureAtDrill - measuredPressureAtDrill);
-    return derivative;
+    if (drillCell == derivedByCell) {
+        return 2 * (computedPressureAtDrill - measuredPressureAtDrill);
+    } else {
+        return 0;
+    }
+
 }
 
-SparseVector computeCostFunctionDerivedBySaturationsWater(const int numberOfRows, const int numberOfCols) {
-    return SparseVector(numberOfRows*numberOfCols);
+Real computeCostFunctionDerivedBySaturationsWaterEntry(const int numberOfRows, const int numberOfCols,
+                                                       const CellIndex& derivedByCell) {
+    return 0;
 }
 
-SparseVector computePressurePartOfDiagonalBlockTimesCostDerivedByState(const SparseMatrix& pressureResidualsByPressure, ConstMatrixRef pressures, const Real measuredPressureAtDrill) {
-    const CellIndex drillCell = findDrillCell(pressures.rows(), pressures.cols());
-    const Real computedPressureAtDrill = drillCell(pressures);
 
-    const SparseVector costFunctionDerivedByPressure = computeCostFunctionDerivedByPressure(computedPressureAtDrill, measuredPressureAtDrill, pressures.rows(), pressures.cols());
-    return pressureResidualsByPressure * costFunctionDerivedByPressure;
-}
 
 SparseMatrix computeSaturationWaterResidualsDerivedByPressure(const SparseMatrix& pressureSystem, ConstMatrixRef fluxFunctionFactors,
                                                         ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY,

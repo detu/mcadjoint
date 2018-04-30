@@ -7,6 +7,8 @@
 #include "logging.hpp"
 #include <stefCommonHeaders/logging.hpp>
 #include <stefCommonHeaders/stefFenv.h>
+#include "cellindex.hpp"
+#include "specialCells.hpp"
 
 int n = -1;
 
@@ -53,6 +55,10 @@ int main(const int argc, const char** argv) {
     params.porosity = 1;
     params.initialSaturationsWater.resize(n, n);
     params.initialSaturationsWater.setZero();
+
+    const CellIndex drillCell = findDrillCell(n, n);
+    drillCell(params.initialSaturationsWater) = 1;
+
 
 
     (void) matchWithPermeabilities(params, n, n, 1e-3, 100);

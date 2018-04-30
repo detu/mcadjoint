@@ -379,7 +379,7 @@ for cells which are not nearest to the well
 and by
 \begin{align}
 \pdiff{\Sigma_K^{(i)}}{S_K^{(i)}} &= 1 \\
-\pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_K^{(i-1)}} &=  f^\prime({S_{\text{w}}}_K^{(i-1)}) \frac{\Delta t}{h}\cdot \biggr(\indicator(v_\text{tot, x}\lvert_E > 0) v_\text{tot, x}\lvert_E \\&+ \indicator(v_\text{tot, x}\lvert_W < 0) v_\text{tot, x}\lvert_W + \indicator(v_\text{tot, y}\lvert_N > 0) v_\text{tot, y}\lvert_N  \nonumber\\&+ \indicator(v_\text{tot, y}\lvert_S < 0) v_\text{tot, y}\lvert_S\biggr) \nonumber\\ 
+\pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_K^{(i-1)}} &=  -1 + f^\prime({S_{\text{w}}}_K^{(i-1)}) \frac{\Delta t}{h}\cdot \biggr(\indicator(v_\text{tot, x}\lvert_E > 0) v_\text{tot, x}\lvert_E \\&+ \indicator(v_\text{tot, x}\lvert_W < 0) v_\text{tot, x}\lvert_W + \indicator(v_\text{tot, y}\lvert_N > 0) v_\text{tot, y}\lvert_N  \nonumber\\&+ \indicator(v_\text{tot, y}\lvert_S < 0) v_\text{tot, y}\lvert_S\biggr) \nonumber\\ 
 \pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_R^{(i-1)}} &= f^\prime({S_{\text{w}}}_R^{(i-1)}) \frac{\Delta t}{h}\cdot \indicator(v_\text{tot, x}\lvert_E < 0) v_\text{tot, x}\lvert_E \\
 \pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_L^{(i-1)}} &= f^\prime({S_{\text{w}}}_L^{(i-1)}) \frac{\Delta t}{h}\cdot \indicator(v_\text{tot, x}\lvert_W > 0) v_\text{tot, x}\lvert_W \\
 \pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_U^{(i-1)}} &= f^\prime({S_{\text{w}}}_U^{(i-1)}) \frac{\Delta t}{h}\cdot \indicator(v_\text{tot, y}\lvert_N < 0) v_\text{tot, y}\lvert_N \\
