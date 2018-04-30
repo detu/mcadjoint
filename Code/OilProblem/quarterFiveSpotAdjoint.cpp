@@ -41,15 +41,13 @@ int main(const int argc, const char** argv) {
         return 2 * atmosphericPressure;
     };
 
-    params.meshWidth = 200.0 / Real(n);
-    params.finalTime = 1;
+    params.meshWidth = 1.0 / Real(n);
+    params.finalTime = 0.1;
     params.inflowPerUnitDepthWater = [&] (const Real time) {
         return 3;
     };
 
-    const Real densityOil = 920; // density of Heavy crude oil (https://wiki.anton-paar.com/en/crude-oil/)
-    const Real kinematicViscosityOil = 2.86e-6; // Brent
-    params.dynamicViscosityOil = densityOil * kinematicViscosityOil;
+    params.dynamicViscosityOil = 0.630; // SAE motor oil 20°C
     params.dynamicViscosityWater = 0.0010518; // Water 20°C
 
     params.porosity = 1;
