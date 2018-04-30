@@ -2,7 +2,7 @@ cmake-build*/
 a.out
 *.dSYM
 Build/
-
+Run/
 
 # Latexmk
 *.fdb_latexmk
