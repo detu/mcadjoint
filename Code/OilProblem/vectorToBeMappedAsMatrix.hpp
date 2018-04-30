@@ -22,6 +22,8 @@ struct VectorToBeMappedAsMatrix {
           vec(matrixRows * matrixCols), map(vec.data(), matrixRows, matrixCols) {}
 
 
+
+
     inline VectorToBeMappedAsMatrix& operator =(ConstVectorRef vector) {
         vec.resizeLike(vector);
         vec = vector;
@@ -29,7 +31,7 @@ struct VectorToBeMappedAsMatrix {
         return *this;
     }
 
-    inline operator Eigen::Ref<const Matrix>() const {
+    /*inline operator Eigen::Ref<const Matrix>() const {
         return map;
     }
 
@@ -43,7 +45,7 @@ struct VectorToBeMappedAsMatrix {
 
     inline operator Eigen::Ref<Vector>() {
         return vec;
-    }
+    }*/
 
 };
 

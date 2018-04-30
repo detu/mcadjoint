@@ -9,35 +9,49 @@
 #include "forward.hpp"
 #include "pressure.hpp"
 #include "derivativesForAdjoint.hpp"
+#include "logging.hpp"
+#include <cmath>
 
-Vector computeSensitivity(const FixedParameters& params, ConstMatrixRef permeabilities) {
+Real computeContributionToCost(const FixedParameters& parameters, const SimulationState& currentSimulationState) {
+
+    const int numberOfRows = currentSimulationState.saturationsWater.rows();
+    const int numberOfCols = currentSimulationState.saturationsWater.cols();
+    const CellIndex drillCell = findDrillCell(numberOfRows, numberOfCols);
+
+    const Real computedPressureAtDrill = drillCell(currentSimulationState.pressures.map);
+    const Real measuredPressureAtDrill = parameters.overPressureDrill(currentSimulationState.time);
+    return std::pow(measuredPressureAtDrill - computedPressureAtDrill, 2);
+}
+
+SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, ConstMatrixRef permeabilities) {
     const int numberOfCols = permeabilities.cols();
     const int numberOfRows = permeabilities.rows();
     const int numberOfParameters = permeabilities.size();
     const int numberOfCells = numberOfParameters;
 
     SimulationState simulationState(numberOfRows, numberOfCols);
-
+    SensitivityAndCost sensitivityAndCost = {Vector::Zero(numberOfParameters), 0};
     std::vector<RandomWalkState> randomWalks;
     Rng rng;
     bool breakthroughHappened = false;
     do {
+        LOGGER->info("time = {}", simulationState.time);
         breakthroughHappened = stepForwardAndAdjointProblem(params, permeabilities, simulationState, randomWalks, rng);
+        sensitivityAndCost.cost += computeContributionToCost(params, simulationState);
     } while (!breakthroughHappened && simulationState.time < params.finalTime);
 
-
-
-    Vector sensitivity(Vector::Zero(numberOfParameters));
     Vector numberOfRandomWalksPerParameter(Vector::Zero(numberOfParameters));
 
 
     for (const RandomWalkState& randomWalk: randomWalks) {
-        sensitivity(randomWalk.parameterIndex) += randomWalk.D;
+        sensitivityAndCost.sensitivity(randomWalk.parameterIndex) += randomWalk.D;
         ++numberOfRandomWalksPerParameter(randomWalk.parameterIndex);
     }
 
-    sensitivity.array() /= numberOfRandomWalksPerParameter.array();
-    return sensitivity;
+    sensitivityAndCost.sensitivity.array() /= numberOfRandomWalksPerParameter.array();
+
+
+    return sensitivityAndCost;
 }
 
 

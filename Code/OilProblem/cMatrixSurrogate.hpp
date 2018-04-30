@@ -5,9 +5,7 @@
 #pragma once
 #include "typedefs.hpp"
 #include "cellindex.hpp"
-
-CellIndex pressureToTransmissibilityIndex(const CellIndex& fromCell, const CellIndex& toCell, const int numberOfRows);
-
+#include "pressure.hpp"
 
 struct CMatrixSurrogate {
 

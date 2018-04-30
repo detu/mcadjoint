@@ -14,7 +14,6 @@
 #include <stefCommonHeaders/logging.hpp>
 #include <memory>
 
-
 int n = -1;
 std::unique_ptr<SimulationState> simulationState = nullptr;
 

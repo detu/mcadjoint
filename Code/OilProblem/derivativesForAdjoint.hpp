@@ -10,6 +10,8 @@ SparseMatrix computeSaturationWaterResidualsDerivedBySaturationWater(ConstMatrix
                                                                      const Real timestep, const Real meshWidth
 );
 SparseVector computeCostFunctionDerivedByPressure(const Real computedPressureAtDrill, const Real measuredPressureAtDrill, const int numberOfRows, const int numberOfCols);
+SparseVector computeCostFunctionDerivedBySaturationsWater(const int numberOfRows, const int numberOfCols);
+
 SparseVector computePressurePartOfDiagonalBlockTimesCostDerivedByState(const SparseMatrix& pressureResidualsByPressure, ConstMatrixRef pressures, const Real measuredPressureAtDrill);
 SparseMatrix computeSaturationWaterResidualsDerivedByPressure(const SparseMatrix& pressureSystem, ConstMatrixRef fluxFunctionFactors,
                                                               ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY,

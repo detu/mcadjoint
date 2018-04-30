@@ -9,6 +9,9 @@
 #include "specialCells.hpp"
 #include "pressure.hpp"
 #include "darcyVelocity.hpp"
+#include "dumpToMatFile.hpp"
+
+const char* MAT_FILE_NAME = "test.mat";
 
 void testPressurePoisson() {
     const int n = 100;

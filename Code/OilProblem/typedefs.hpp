@@ -15,6 +15,8 @@ using Vector = Eigen::Matrix<Real, Eigen::Dynamic, 1>;
 using VectorRef = Eigen::Ref<Vector>;
 using ConstVectorRef = const Eigen::Ref<const Vector>&;
 
+using SignalHandler = void (*)(int);
+
 using Matrix = Eigen::Matrix<Real, Eigen::Dynamic, Eigen::Dynamic>;
 using MatrixRef = Eigen::Ref<Matrix>;
 using ConstMatrixRef = const Eigen::Ref<const Matrix>&;

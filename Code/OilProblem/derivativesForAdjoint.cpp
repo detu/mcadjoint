@@ -182,8 +182,11 @@ SparseVector computeCostFunctionDerivedByPressure(const Real computedPressureAtD
 
     const CellIndex drillCell = findDrillCell(numberOfRows, numberOfCols);
     derivative.coeffRef(drillCell.linearIndex(numberOfRows)) = 2 * (computedPressureAtDrill - measuredPressureAtDrill);
-
     return derivative;
+}
+
+SparseVector computeCostFunctionDerivedBySaturationsWater(const int numberOfRows, const int numberOfCols) {
+    return SparseVector(numberOfRows*numberOfCols);
 }
 
 SparseVector computePressurePartOfDiagonalBlockTimesCostDerivedByState(const SparseMatrix& pressureResidualsByPressure, ConstMatrixRef pressures, const Real measuredPressureAtDrill) {

@@ -4,7 +4,6 @@
 
 bool advanceSaturationsInTime(const FixedParameters& params, MatrixRef saturationsWater, ConstMatrixRef pressures, ConstMatrixRef totalMobilities, Real& time);
 Real computeTimestep(ConstMatrixRef fluxFunctionFactors, ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY, const Real meshWidth, const Real finalTime, const Real time);
-void initializeSaturationsWater(MatrixRef saturationsWater, const int numberOfRows, const int numberOfCols);
 Real getFirstTimestep();
 Matrix computeSaturationDivergences(ConstMatrixRef fluxFunctionFactors, ConstMatrixRef fluxesX, ConstMatrixRef fluxesY, const Real meshWidth);
 Real clamp(const Real x, const Real minVal, const Real maxVal);

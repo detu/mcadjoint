@@ -100,14 +100,14 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
 }
 
 
-SparseVector computeRhsForPressureSystem(const Real sourceAtDrillNow, const int numberOfRows, const int numberOfCols) {
+Vector computeRhsForPressureSystem(const Real sourceAtDrillNow, const int numberOfRows, const int numberOfCols) {
     const CellIndex drillCell = findDrillCell(numberOfRows, numberOfCols);
 
     const int drillCellIndex = drillCell.linearIndex(numberOfRows);
 
 
-    SparseVector rhs(numberOfRows*numberOfCols);
-    rhs.coeffRef(drillCellIndex) = +std::abs(sourceAtDrillNow);
+    Vector rhs(Vector::Zero(numberOfRows*numberOfCols));
+    rhs(drillCellIndex) = +std::abs(sourceAtDrillNow);
 
     return rhs;
 }
@@ -116,19 +116,21 @@ SparseVector computeRhsForPressureSystem(const Real sourceAtDrillNow, const int 
 
 
 
-Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities, const SparseVector& rhs) {
+Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities,
+                                   ConstVectorRef rhs) {
     LOGGER->debug("Solving system");
 
     Eigen::SparseLU<SparseMatrix> solver;
     solver.compute(transmissibilities);
 
     LOGGER->debug("transmissibilities =\n{}", transmissibilities);
-    LOGGER->debug("rhs =\n{}", rhs);
+    LOGGER->debug("rhs =\n{}", Vector(rhs));
 
     const Vector result = solver.solve(rhs);
 
+
     LOGGER->debug("System solved");
-    //LOGGER->debug("result = {}", result);
+    LOGGER->debug("result = {}", result);
 
     /*if (solver.info() != Eigen::Success) {
         throw std::runtime_error("Solver didn't converge!");

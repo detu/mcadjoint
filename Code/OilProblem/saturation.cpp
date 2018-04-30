@@ -86,11 +86,6 @@ Real getFirstTimestep() {
 }
 
 
-void initializeSaturationsWater(MatrixRef saturationsWater, const int numberOfRows, const int numberOfCols) {
-    saturationsWater.resize(numberOfRows, numberOfCols);
-    saturationsWater.setZero();
-}
-
 Real computeTimestep(ConstMatrixRef fluxFunctionFactors, ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY, const Real meshWidth, const Real finalTime, const Real time) {
     const Matrix advectionVelocitiesX = computeXDerivative(fluxFunctionFactors, meshWidth).cwiseProduct(darcyVelocitiesX);
     const Matrix advectionVelocitiesY = computeYDerivative(fluxFunctionFactors, meshWidth).cwiseProduct(darcyVelocitiesY);
@@ -99,8 +94,8 @@ Real computeTimestep(ConstMatrixRef fluxFunctionFactors, ConstMatrixRef darcyVel
     const Real maximumAdvectionSpeedY = advectionVelocitiesY.cwiseAbs().maxCoeff();
 
 
-    const Real timestepX = computeCflTimestep(maximumAdvectionSpeedX, meshWidth);
-    const Real timestepY = computeCflTimestep(maximumAdvectionSpeedY, meshWidth);
+    const Real timestepX = (maximumAdvectionSpeedX > 0? computeCflTimestep(maximumAdvectionSpeedX, meshWidth): getFirstTimestep());
+    const Real timestepY = (maximumAdvectionSpeedY > 0? computeCflTimestep(maximumAdvectionSpeedY, meshWidth): getFirstTimestep());
 
     const Real maxTimestep = finalTime * 1e-2;
     const Real cflTimestep = std::min(timestepX, timestepY);
