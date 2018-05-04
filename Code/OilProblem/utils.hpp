@@ -4,4 +4,8 @@
 
 #pragma once
 #include <string>
+#include "typedefs.hpp"
+
+
 std::string lowerCase(std::string str);
+Real frobeniusNormSquared(const SparseMatrix& matrix);

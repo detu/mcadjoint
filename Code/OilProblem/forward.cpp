@@ -11,6 +11,7 @@
 #include "derivativesForAdjoint.hpp"
 #include "adjoint.hpp"
 #include "dumpToMatFile.hpp"
+#include "utils.hpp"
 
 bool stepForwardProblem(const FixedParameters& params, const Eigen::Ref<const Matrix>& permeabilities,
                         SimulationState& currentState) {
@@ -75,7 +76,6 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, ConstMatrixRef 
     const Real measuredPressureAtDrillCell = params.overPressureDrill(0);
 
 
-    const BVectorSurrogate b(computedPressureAtDrillCell, measuredPressureAtDrillCell, numberOfRows, numberOfCols);
     const Real firstTimestep = getFirstTimestep();
     const SparseMatrix pressureResidualsByLogPermeabilities = computePressureResidualsByLogPermeability(simulationState.pressures.map, totalMobilities);
 
@@ -94,16 +94,11 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, ConstMatrixRef 
 
     const SparseMatrix saturationResidualsByLogPermeabilities = computeSaturationsWaterResidualsByLogPermeability(fluxesX, fluxesY, totalMobilities, firstTimestep, params.meshWidth);
 
-    if (isFirstTimestep) {
-        const CMatrixSurrogate c(pressureResidualsByLogPermeabilities, saturationResidualsByLogPermeabilities,
-                                 numberOfRows, numberOfCols);
-        // initialization
-        randomWalks = initializeRandomWalks(numberOfRows, numberOfCols, numberOfParameters, b, c);
-    }
 
 
 
     const SparseMatrix pressureResidualsByPressures = computePressureResidualsDerivedByPressure(pressureSystem);
+
 
     const Matrix totalMobilitiesDerivedBySaturationsWater = computeTotalMobilitiesDerivedBySaturationsWater(permeabilities, simulationState.saturationsWater, params.dynamicViscosityOil, params.dynamicViscosityWater);
     const SparseMatrix pressureResidualsBySaturationsWater = computePressureResidualsDerivedBySaturationWater(simulationState.pressures.map, totalMobilities, totalMobilitiesDerivedBySaturationsWater);
@@ -112,6 +107,14 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, ConstMatrixRef 
     const Matrix fluxFunctionFactorDerivatives = computeFluxFunctionFactorDerivatives(simulationState.saturationsWater, params.porosity, params.dynamicViscosityWater, params.dynamicViscosityOil);
     const SparseMatrix saturationsWaterResidualsBySaturationsWater = computeSaturationWaterResidualsDerivedBySaturationWater(fluxFunctionFactorDerivatives, darcyVelocitiesX, darcyVelocitiesY, timestep, params.meshWidth);
 
+
+    const BVectorSurrogate b(computedPressureAtDrillCell, measuredPressureAtDrillCell, numberOfRows, numberOfCols);
+    if (isFirstTimestep) {
+        const CMatrixSurrogate c(pressureResidualsByLogPermeabilities, saturationResidualsByLogPermeabilities,
+                                 numberOfRows, numberOfCols);
+        // initialization
+        randomWalks = initializeRandomWalks(numberOfRows, numberOfCols, numberOfParameters, b, c);
+    }
 
     LOGGER->debug("pressure residuals by pressure =\n{}", pressureResidualsByPressures);
     LOGGER->debug("pressure residuals by satwater =\n{}", pressureResidualsBySaturationsWater);

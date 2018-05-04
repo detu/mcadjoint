@@ -44,12 +44,16 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
 
 
     for (const RandomWalkState& randomWalk: randomWalks) {
+        ASSERT(!std::isnan(randomWalk.D));
         sensitivityAndCost.sensitivity(randomWalk.parameterIndex) += randomWalk.D;
         ++numberOfRandomWalksPerParameter(randomWalk.parameterIndex);
     }
 
-    sensitivityAndCost.sensitivity.array() /= numberOfRandomWalksPerParameter.array();
+    LOGGER->debug("Sensitivities before division =\n{}", sensitivityAndCost.sensitivity);
 
+    sensitivityAndCost.sensitivity.array() /= numberOfRandomWalksPerParameter.array().cwiseMax(1);
+
+    sensitivityAndCost.sensitivity.array() *= -1; // see equation (3)
 
     return sensitivityAndCost;
 }

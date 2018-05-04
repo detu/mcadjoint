@@ -20,6 +20,8 @@ bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
                                 const int numberOfRows, const int numberOfCols, Rng& rng) {
 
 
+    ASSERT(std::isfinite(currentState.W));
+    ASSERT(std::isfinite(currentState.D));
 
     bool stillInTheSameTimestep;
     if (currentState.cell == CellIndex::invalidCell()) {
@@ -84,11 +86,16 @@ bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
         const CellIndex neighborToMe = pressureToTransmissibilityIndex(neighbor, currentState.cell, numberOfRows);
 
         const Real correspondingEntryOfAMatrixPressure = -neighborToMe(pressureResidualsDerived);
+        ASSERT(std::isfinite(correspondingEntryOfAMatrixPressure));
         const Real correspondingEntryOfBVectorPressure = b(neighbor, neighborIsAPressure);
+        ASSERT(std::isfinite(correspondingEntryOfBVectorPressure));
+
         const Real candidateUnnormalizedProbabilityPressure = std::abs(correspondingEntryOfAMatrixPressure);
 
         const Real correspondingEntryOfAMatrixSaturationWater = -neighborToMe(saturationWaterResidualsDerived);
+        ASSERT(std::isfinite(correspondingEntryOfAMatrixSaturationWater));
         const Real correspondingEntryOfBVectorSaturationWater = b(neighbor, neighborIsASaturation);
+        ASSERT(std::isfinite(correspondingEntryOfBVectorSaturationWater));
         const Real candidateUnnormalizedProbabilitySaturationWater = std::abs(correspondingEntryOfAMatrixSaturationWater);
 
         if (candidateUnnormalizedProbabilityPressure > 0) {
@@ -98,6 +105,8 @@ bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
             candidateUnnormalizedProbabilities.push_back(candidateUnnormalizedProbabilityPressure);
         }
 
+        ASSERT(std::isfinite(candidateUnnormalizedProbabilityPressure));
+
 
         if (candidateUnnormalizedProbabilitySaturationWater > 0) {
             Candidate candidateSaturationWater = {neighbor, iAmASaturation, correspondingEntryOfAMatrixSaturationWater,
@@ -106,14 +115,16 @@ bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
             candidateUnnormalizedProbabilities.push_back(candidateUnnormalizedProbabilitySaturationWater);
         }
 
+        ASSERT(std::isfinite(candidateUnnormalizedProbabilitySaturationWater));
+
         sumOfUnnormalizedProbabilities += candidateUnnormalizedProbabilityPressure + candidateUnnormalizedProbabilitySaturationWater;
 
     }
 
-    const Candidate absorptionCandidate = {CellIndex::invalidCell(), false, NAN, NAN };
+    const Candidate absorptionCandidate = {CellIndex::invalidCell(), false, 0, 0 };
     const Real unnormalizedAbsorptionProbability = std::abs(b(currentState.cell, currentState.isAPressure));
     ASSERT(unnormalizedAbsorptionProbability > 0 == (currentState.cell == findDrillCell(numberOfRows, numberOfCols) && currentState.isAPressure));
-
+    ASSERT(std::isfinite(unnormalizedAbsorptionProbability));
     if (unnormalizedAbsorptionProbability > 0) {
         candidates.push_back(absorptionCandidate);
         candidateUnnormalizedProbabilities.push_back(unnormalizedAbsorptionProbability);
@@ -151,9 +162,24 @@ bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
     stillInTheSameTimestep = true;
 
     // update W (pg. 6199, top)
+    ASSERT(std::isfinite(currentState.W));
+    ASSERT(std::isfinite(sumOfUnnormalizedProbabilities));
+    ASSERT(std::isfinite(chosenCandidate.correspondingEntryOfAMatrix));
     currentState.W *= sumOfUnnormalizedProbabilities * chosenCandidate.correspondingEntryOfAMatrix;
+    if (/*currentState.W > 1*/ true) {
+        LOGGER->debug("Will be pressure = {}", chosenCandidate.isAPressure);
+        LOGGER->debug("Will be cell index = {} ",  chosenCandidate.cellIndex);
+        LOGGER->debug("W = {}", currentState.W);
+        LOGGER->debug("Sum of unnormalized Probs = {}", sumOfUnnormalizedProbabilities);
+        LOGGER->debug("A entry = {}", chosenCandidate.correspondingEntryOfAMatrix);
+    }
+    ASSERT(std::isfinite(currentState.W));
     // update D (pg. 6199, top)
+    ASSERT(std::isfinite(currentState.D));
+    ASSERT(std::isfinite(chosenCandidate.correspondingEntryOfBVector));
     currentState.D += currentState.W * chosenCandidate.correspondingEntryOfBVector;
+    ASSERT(std::isfinite(currentState.D));
+
 
 
 
@@ -195,6 +221,16 @@ void logStatisticsAboutRandomWalks(const std::vector<RandomWalkState>& randomWal
 
 std::vector<RandomWalkState> initializeRandomWalks(const int numberOfRows, const int numberOfCols, const int numberOfParameters, const BVectorSurrogate& b, const CMatrixSurrogate& c) {
 
+    if (true) {
+        RandomWalkState justBeginning;
+        justBeginning.isAPressure = true;
+        justBeginning.cell = {0, 0};
+        justBeginning.currentTimelevel = 0;
+        justBeginning.W = c(justBeginning.cell, justBeginning.cell, justBeginning.isAPressure);
+        justBeginning.D = justBeginning.W * b(justBeginning.cell, justBeginning.isAPressure);
+        justBeginning.parameterIndex = 0;
+        return {justBeginning};
+    }
     const int numberOfRandomWalksPerPressureCell = 5;
 
     const int numberOfRandomWalksPerParameter = numberOfRandomWalksPerPressureCell;
@@ -203,7 +239,7 @@ std::vector<RandomWalkState> initializeRandomWalks(const int numberOfRows, const
     // We start randomWalksPerPressureCell random walks for every pressure state, which means
     // randomWalksPerPressureCell per cell
     // We hope that the saturation states are reached through the coupling of the equations
-    
+
     std::vector<RandomWalkState> randomWalks(numberOfRandomWalks);
     for (int parameterIndex = 0; parameterIndex <  numberOfParameters; ++parameterIndex) {
         const CellIndex cell = CellIndex::fromLinearIndex(parameterIndex, numberOfRows);
@@ -230,6 +266,7 @@ std::vector<RandomWalkState> initializeRandomWalks(const int numberOfRows, const
             initialState.isAPressure = wantAPressure;
             initialState.currentTimelevel = 0;
             initialState.W = numberOfRandomWalksPerPressureCell * c(neighborOrMyself, cell, wantAPressure);
+            ASSERT(initialState.W > 0);
             initialState.D = initialState.W * b(neighborOrMyself, wantAPressure);
             initialState.parameterIndex = parameterIndex;
 

@@ -87,6 +87,7 @@ SparseMatrix computePressureResidualsDerivedBySaturationWater(ConstMatrixRef pre
         }
     }
 
+
     derivatives.makeCompressed();
     return derivatives;
 }
@@ -361,11 +362,11 @@ SparseMatrix computeSaturationsWaterResidualsByLogPermeability(ConstMatrixRef fl
 
 
                 meToMyself(derivatives) += signedFlux * hmeanDerivedBySecond(mobilityNeighbor, myMobility);
-                meToNeighbor(derivatives) = signedFlux * hmeanDerivedBySecond(myMobility, mobilityNeighbor) * timestep / meshWidth;
+                meToNeighbor(derivatives) = signedFlux * hmeanDerivedBySecond(myMobility, mobilityNeighbor) * timestep / meshWidth * mobilityNeighbor;
 
             }
 
-            meToMyself(derivatives) *= timestep / meshWidth;
+            meToMyself(derivatives) *= timestep / meshWidth * myMobility;
         }
     }
 

@@ -11,6 +11,7 @@
 #include <functional>
 
 using Real = double;
+
 using Vector = Eigen::Matrix<Real, Eigen::Dynamic, 1>;
 using VectorRef = Eigen::Ref<Vector>;
 using ConstVectorRef = const Eigen::Ref<const Vector>&;

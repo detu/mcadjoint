@@ -192,4 +192,10 @@ struct CellIndex {
         const std::div_t quotientAndRemainder = std::div(linearIndex, numberOfRows);
         return {quotientAndRemainder.rem, quotientAndRemainder.quot};
     }
+
 };
+
+inline std::ostream& operator<<(std::ostream& ostream, const CellIndex& cellindex) {
+    ostream << "(" << cellindex.i << ", " << cellindex.j << ")";
+    return ostream;
+}
