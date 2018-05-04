@@ -220,8 +220,8 @@ void logStatisticsAboutRandomWalks(const std::vector<RandomWalkState>& randomWal
 
 
 std::vector<RandomWalkState> initializeRandomWalks(const int numberOfRows, const int numberOfCols, const int numberOfParameters, const BVectorSurrogate& b, const CMatrixSurrogate& c) {
-
-    if (true) {
+    constexpr bool justOneRandomWalk = false;
+    if (justOneRandomWalk) {
         RandomWalkState justBeginning;
         justBeginning.isAPressure = true;
         justBeginning.cell = {0, 0};
@@ -266,11 +266,16 @@ std::vector<RandomWalkState> initializeRandomWalks(const int numberOfRows, const
             initialState.isAPressure = wantAPressure;
             initialState.currentTimelevel = 0;
             initialState.W = numberOfRandomWalksPerPressureCell * c(neighborOrMyself, cell, wantAPressure);
-            ASSERT(initialState.W > 0);
+            LOGGER->debug("Initialization: want pressure = {}", wantAPressure);
+            LOGGER->debug("Initialization: neighborOrMyself = {}", neighborOrMyself);
+            LOGGER->debug("Initialization: cell = {}", cell);
+            LOGGER->debug("Initialization c-value = {}", c(neighborOrMyself, cell, wantAPressure));
             initialState.D = initialState.W * b(neighborOrMyself, wantAPressure);
             initialState.parameterIndex = parameterIndex;
 
-            randomWalks.push_back(std::move(initialState));
+            if (initialState.W != 0) {
+                randomWalks.push_back(std::move(initialState));
+            }
         }
     }
 

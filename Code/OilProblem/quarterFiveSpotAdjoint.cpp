@@ -38,7 +38,7 @@ int main(const int argc, const char** argv) {
 
 
     FixedParameters params;
-    const Real atmosphericPressure = 1;
+    const Real atmosphericPressure = 1e5;
     params.overPressureDrill = [=] (const Real time) {
         return 2 * atmosphericPressure;
     };

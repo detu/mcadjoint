@@ -108,7 +108,10 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, ConstMatrixRef 
     const SparseMatrix saturationsWaterResidualsBySaturationsWater = computeSaturationWaterResidualsDerivedBySaturationWater(fluxFunctionFactorDerivatives, darcyVelocitiesX, darcyVelocitiesY, timestep, params.meshWidth);
 
 
-    const BVectorSurrogate b(computedPressureAtDrillCell, measuredPressureAtDrillCell, numberOfRows, numberOfCols);
+    const Real neumannCorrection = 0.5 / std::sqrt(frobeniusNormSquared(pressureResidualsBySaturationsWater) + frobeniusNormSquared(pressureResidualsByPressures));
+
+
+    const BVectorSurrogate b(computedPressureAtDrillCell * neumannCorrection, neumannCorrection * measuredPressureAtDrillCell, numberOfRows, numberOfCols);
     if (isFirstTimestep) {
         const CMatrixSurrogate c(pressureResidualsByLogPermeabilities, saturationResidualsByLogPermeabilities,
                                  numberOfRows, numberOfCols);
@@ -126,8 +129,8 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, ConstMatrixRef 
         bool stillInTheSameTimestep = false;
         do {
             stillInTheSameTimestep = transitionState(randomWalk, b,
-                                                     pressureResidualsByPressures,
-                                                     pressureResidualsBySaturationsWater,
+                                                     pressureResidualsByPressures * neumannCorrection,
+                                                     pressureResidualsBySaturationsWater * neumannCorrection,
                                                      saturationsWaterResidualsByPressure,
                                                      saturationsWaterResidualsBySaturationsWater,
                                                      numberOfRows, numberOfCols, rng);
