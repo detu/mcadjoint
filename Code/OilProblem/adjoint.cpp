@@ -166,7 +166,8 @@ bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
     ASSERT(std::isfinite(sumOfUnnormalizedProbabilities));
     ASSERT(std::isfinite(chosenCandidate.correspondingEntryOfAMatrix));
     currentState.W *= sumOfUnnormalizedProbabilities * chosenCandidate.correspondingEntryOfAMatrix;
-    if (/*currentState.W > 1*/ true) {
+    constexpr bool outputW = false;
+    if (outputW) {
         LOGGER->debug("Will be pressure = {}", chosenCandidate.isAPressure);
         LOGGER->debug("Will be cell index = {} ",  chosenCandidate.cellIndex);
         LOGGER->debug("W = {}", currentState.W);
@@ -231,7 +232,7 @@ std::vector<RandomWalkState> initializeRandomWalks(const int numberOfRows, const
         justBeginning.parameterIndex = 0;
         return {justBeginning};
     }
-    const int numberOfRandomWalksPerPressureCell = 5;
+    const int numberOfRandomWalksPerPressureCell = 10;
 
     const int numberOfRandomWalksPerParameter = numberOfRandomWalksPerPressureCell;
     const int numberOfRandomWalks = numberOfRandomWalksPerParameter * numberOfParameters;

@@ -29,7 +29,7 @@ matchWithPermeabilities(const FixedParameters& params, const int numberOfRows, c
 
 
     Real oldCost = INFINITY;
-    Real lineSearchParameter = 1e-6;
+    Real lineSearchParameter = 1e-2;
 
     dumpThisOnExit("maxIterations", maxIterations);
     dumpThisOnExit("tolerance", tolerance);

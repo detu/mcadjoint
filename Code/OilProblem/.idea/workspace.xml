@@ -38,8 +38,9 @@
   <component name="ChangeListManager">
     <list default="true" id="243856ce-78f7-4963-8ee2-7f94acac5c1e" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/adjoint.cpp" afterPath="$PROJECT_DIR$/adjoint.cpp" />
-      <change beforePath="$PROJECT_DIR$/forward.cpp" afterPath="$PROJECT_DIR$/forward.cpp" />
+      <change beforePath="$PROJECT_DIR$/minimizer.cpp" afterPath="$PROJECT_DIR$/minimizer.cpp" />
       <change beforePath="$PROJECT_DIR$/quarterFiveSpotAdjoint.cpp" afterPath="$PROJECT_DIR$/quarterFiveSpotAdjoint.cpp" />
+      <change beforePath="$PROJECT_DIR$/sensitivity.cpp" afterPath="$PROJECT_DIR$/sensitivity.cpp" />
       <change beforePath="$PROJECT_DIR$/../thirdParty/stefcommonheaders" afterPath="$PROJECT_DIR$/../thirdParty/stefcommonheaders" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -62,8 +63,18 @@
       <file leaf-file-name="adjoint.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/adjoint.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="418">
-              <caret line="275" column="33" lean-forward="false" selection-start-line="275" selection-start-column="33" selection-end-line="275" selection-end-column="33" />
+            <state relative-caret-position="204">
+              <caret line="168" column="35" lean-forward="false" selection-start-line="168" selection-start-column="35" selection-end-line="168" selection-end-column="35" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="logging.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/logging.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="135">
+              <caret line="10" column="44" lean-forward="false" selection-start-line="10" selection-start-column="44" selection-end-line="10" selection-end-column="44" />
               <folding />
             </state>
           </provider>
@@ -89,11 +100,21 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="minimizer.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/minimizer.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="181">
+              <caret line="31" column="35" lean-forward="false" selection-start-line="31" selection-start-column="35" selection-end-line="31" selection-end-column="35" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="quarterFiveSpotAdjoint.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/quarterFiveSpotAdjoint.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="310">
-              <caret line="40" column="40" lean-forward="false" selection-start-line="40" selection-start-column="40" selection-end-line="40" selection-end-column="40" />
+            <state relative-caret-position="294">
+              <caret line="40" column="38" lean-forward="false" selection-start-line="40" selection-start-column="38" selection-end-line="40" selection-end-column="38" />
               <folding>
                 <element signature="e#50#74#0" expanded="true" />
               </folding>
@@ -104,8 +125,8 @@
       <file leaf-file-name="sensitivity.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sensitivity.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="46" column="0" lean-forward="false" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
+            <state relative-caret-position="225">
+              <caret line="23" column="77" lean-forward="false" selection-start-line="23" selection-start-column="77" selection-end-line="23" selection-end-column="77" />
               <folding />
             </state>
           </provider>
@@ -129,28 +150,6 @@
             <state relative-caret-position="322">
               <caret line="111" column="50" lean-forward="false" selection-start-line="111" selection-start-column="50" selection-end-line="111" selection-end-column="50" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="derivativesForAdjoint.hpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/derivativesForAdjoint.hpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="262">
-              <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="utils.hpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/utils.hpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="53" />
-              <folding>
-                <element signature="e#64#81#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -188,7 +187,6 @@
       <find>borderI</find>
       <find>adapt</find>
       <find>total</find>
-      <find>trans</find>
       <find>centerIn</find>
       <find>LOGGER</find>
       <find>__attribute__((pure))</find>
@@ -200,6 +198,7 @@
       <find>reg</find>
       <find>regi</find>
       <find>!std::isnan</find>
+      <find>trans</find>
     </findStrings>
     <replaceStrings>
       <replace>int</replace>
@@ -253,12 +252,10 @@
         <option value="$PROJECT_DIR$/quarterFiveSpot.cpp" />
         <option value="$PROJECT_DIR$/pressure.hpp" />
         <option value="$PROJECT_DIR$/pressure.cpp" />
-        <option value="$PROJECT_DIR$/minimizer.cpp" />
         <option value="$PROJECT_DIR$/adjoint.hpp" />
         <option value="$PROJECT_DIR$/derivativesForAdjoint.hpp" />
         <option value="$PROJECT_DIR$/test.cpp" />
         <option value="$PROJECT_DIR$/bVectorSurrogate.hpp" />
-        <option value="$PROJECT_DIR$/sensitivity.cpp" />
         <option value="$PROJECT_DIR$/../thirdParty/stefcommonheaders/include/stefCommonHeaders/checkedNumber.hpp" />
         <option value="$PROJECT_DIR$/typedefs.hpp" />
         <option value="$PROJECT_DIR$/utils.hpp" />
@@ -266,8 +263,10 @@
         <option value="$PROJECT_DIR$/cellindex.hpp" />
         <option value="$PROJECT_DIR$/../thirdParty/stefcommonheaders/include/stefCommonHeaders/logging.hpp" />
         <option value="$PROJECT_DIR$/derivativesForAdjoint.cpp" />
-        <option value="$PROJECT_DIR$/quarterFiveSpotAdjoint.cpp" />
         <option value="$PROJECT_DIR$/forward.cpp" />
+        <option value="$PROJECT_DIR$/sensitivity.cpp" />
+        <option value="$PROJECT_DIR$/quarterFiveSpotAdjoint.cpp" />
+        <option value="$PROJECT_DIR$/minimizer.cpp" />
         <option value="$PROJECT_DIR$/adjoint.cpp" />
       </list>
     </option>
@@ -443,6 +442,9 @@
     <configuration name="QuarterFiveSpotAdjoint" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-n 5 --level debug" WORKING_DIR="file://$PROJECT_DIR$/../../Run" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="QuarterFiveSpotAdjoint" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="QuarterFiveSpotAdjoint">
       <envs />
     </configuration>
+    <configuration name="QuarterFiveSpotAdjoint_info log" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-n 5 --level info" WORKING_DIR="file://$PROJECT_DIR$/../../Run" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="QuarterFiveSpotAdjoint" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="QuarterFiveSpotAdjoint">
+      <envs />
+    </configuration>
     <configuration name="QuarterFiveSpotAdjoint_unity" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="QuarterFiveSpotAdjoint_unity" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="QuarterFiveSpotAdjoint_unity">
       <envs />
     </configuration>
@@ -506,7 +508,7 @@
     <configuration name="zlib" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="zlib" CONFIG_NAME="Debug">
       <envs />
     </configuration>
-    <list size="27">
+    <list size="28">
       <item index="0" class="java.lang.String" itemvalue="Application.Build All" />
       <item index="1" class="java.lang.String" itemvalue="Application.QuarterFiveSpot Just Info log" />
       <item index="2" class="java.lang.String" itemvalue="Application.all_pch" />
@@ -520,20 +522,21 @@
       <item index="10" class="java.lang.String" itemvalue="Application.QuarterFiveSpot" />
       <item index="11" class="java.lang.String" itemvalue="Application.QuarterFiveSpot_unity" />
       <item index="12" class="java.lang.String" itemvalue="Application.QuarterFiveSpotAdjoint" />
-      <item index="13" class="java.lang.String" itemvalue="Application.QuarterFiveSpotAdjoint_unity" />
-      <item index="14" class="java.lang.String" itemvalue="Application.QuarterFiveSpotUnity" />
-      <item index="15" class="java.lang.String" itemvalue="Application.Test" />
-      <item index="16" class="java.lang.String" itemvalue="Application.Test_unity" />
-      <item index="17" class="java.lang.String" itemvalue="Application.TestVerbose" />
-      <item index="18" class="java.lang.String" itemvalue="Application.TestVerbose_unity" />
-      <item index="19" class="java.lang.String" itemvalue="Application.check" />
-      <item index="20" class="java.lang.String" itemvalue="Application.copyZlibToMatioDir" />
-      <item index="21" class="java.lang.String" itemvalue="Application.EigenSimplematioTest" />
-      <item index="22" class="java.lang.String" itemvalue="Application.EigenSimplematioTestFloat" />
-      <item index="23" class="java.lang.String" itemvalue="Application.matio" />
-      <item index="24" class="java.lang.String" itemvalue="Application.simplematio" />
-      <item index="25" class="java.lang.String" itemvalue="Application.simplematiof" />
-      <item index="26" class="java.lang.String" itemvalue="Application.zlib" />
+      <item index="13" class="java.lang.String" itemvalue="Application.QuarterFiveSpotAdjoint_info log" />
+      <item index="14" class="java.lang.String" itemvalue="Application.QuarterFiveSpotAdjoint_unity" />
+      <item index="15" class="java.lang.String" itemvalue="Application.QuarterFiveSpotUnity" />
+      <item index="16" class="java.lang.String" itemvalue="Application.Test" />
+      <item index="17" class="java.lang.String" itemvalue="Application.Test_unity" />
+      <item index="18" class="java.lang.String" itemvalue="Application.TestVerbose" />
+      <item index="19" class="java.lang.String" itemvalue="Application.TestVerbose_unity" />
+      <item index="20" class="java.lang.String" itemvalue="Application.check" />
+      <item index="21" class="java.lang.String" itemvalue="Application.copyZlibToMatioDir" />
+      <item index="22" class="java.lang.String" itemvalue="Application.EigenSimplematioTest" />
+      <item index="23" class="java.lang.String" itemvalue="Application.EigenSimplematioTestFloat" />
+      <item index="24" class="java.lang.String" itemvalue="Application.matio" />
+      <item index="25" class="java.lang.String" itemvalue="Application.simplematio" />
+      <item index="26" class="java.lang.String" itemvalue="Application.simplematiof" />
+      <item index="27" class="java.lang.String" itemvalue="Application.zlib" />
     </list>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
@@ -566,7 +569,7 @@
       <workItem from="1524585047067" duration="2172000" />
       <workItem from="1524941690791" duration="3543000" />
       <workItem from="1524985162177" duration="19633000" />
-      <workItem from="1525423569241" duration="8803000" />
+      <workItem from="1525423569241" duration="10122000" />
     </task>
     <task id="LOCAL-00001" summary="TODO mainloop">
       <created>1524994887598</created>
@@ -586,19 +589,20 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="271319000" />
+    <option name="totallyTimeSpent" value="272638000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="32" y="18" width="1280" height="796" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32962668" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31383738" sideWeight="0.6099034" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31383738" sideWeight="0.6099034" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24687144" sideWeight="0.83272946" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32536975" sideWeight="0.3900966" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.45791727" sideWeight="0.4853058" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23252496" sideWeight="0.2652899" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23252496" sideWeight="0.2652899" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -694,13 +698,6 @@
           <folding>
             <element signature="e#64#90#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/logging.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="10" column="44" lean-forward="false" selection-start-line="10" selection-start-column="44" selection-end-line="10" selection-end-column="44" />
         </state>
       </provider>
     </entry>
@@ -922,20 +919,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/minimizer.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="31" column="35" lean-forward="false" selection-start-line="31" selection-start-column="35" selection-end-line="31" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/utils.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
           <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="53" />
           <folding>
-            <element signature="e#64#81#0" expanded="true" />
+            <element signature="e#64#81#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -944,14 +933,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="262">
           <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sensitivity.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="46" column="0" lean-forward="false" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -998,16 +979,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/quarterFiveSpotAdjoint.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="310">
-          <caret line="40" column="40" lean-forward="false" selection-start-line="40" selection-start-column="40" selection-end-line="40" selection-end-column="40" />
-          <folding>
-            <element signature="e#50#74#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/forward.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1044">
@@ -1026,10 +997,44 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/logging.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="10" column="44" lean-forward="false" selection-start-line="10" selection-start-column="44" selection-end-line="10" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sensitivity.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="23" column="77" lean-forward="false" selection-start-line="23" selection-start-column="77" selection-end-line="23" selection-end-column="77" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/quarterFiveSpotAdjoint.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="294">
+          <caret line="40" column="38" lean-forward="false" selection-start-line="40" selection-start-column="38" selection-end-line="40" selection-end-column="38" />
+          <folding>
+            <element signature="e#50#74#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/minimizer.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="181">
+          <caret line="31" column="35" lean-forward="false" selection-start-line="31" selection-start-column="35" selection-end-line="31" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/adjoint.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="275" column="33" lean-forward="false" selection-start-line="275" selection-start-column="33" selection-end-line="275" selection-end-column="33" />
+        <state relative-caret-position="204">
+          <caret line="168" column="35" lean-forward="false" selection-start-line="168" selection-start-column="35" selection-end-line="168" selection-end-column="35" />
           <folding />
         </state>
       </provider>

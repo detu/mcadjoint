@@ -19,7 +19,9 @@ Real computeContributionToCost(const FixedParameters& parameters, const Simulati
     const CellIndex drillCell = findDrillCell(numberOfRows, numberOfCols);
 
     const Real computedPressureAtDrill = drillCell(currentSimulationState.pressures.map);
+    LOGGER->info("computedPressureAtDrill = {}", computedPressureAtDrill);
     const Real measuredPressureAtDrill = parameters.overPressureDrill(currentSimulationState.time);
+    LOGGER->info("measured pressure at drill = {}", measuredPressureAtDrill);
     return std::pow(measuredPressureAtDrill - computedPressureAtDrill, 2);
 }
 
@@ -35,9 +37,12 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
     Rng rng;
     bool breakthroughHappened = false;
     do {
+        LOGGER->info("-----------------------------------");
         LOGGER->info("time = {}", simulationState.time);
         breakthroughHappened = stepForwardAndAdjointProblem(params, permeabilities, simulationState, randomWalks, rng);
-        sensitivityAndCost.cost += computeContributionToCost(params, simulationState);
+        const Real contributionToCost = computeContributionToCost(params, simulationState);
+        LOGGER->info("contribution to cost = {}", contributionToCost);
+        sensitivityAndCost.cost += contributionToCost;
     } while (!breakthroughHappened && simulationState.time < params.finalTime);
 
     Vector numberOfRandomWalksPerParameter(Vector::Zero(numberOfParameters));
