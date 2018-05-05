@@ -248,8 +248,8 @@ SparseMatrix computeSaturationWaterResidualsDerivedByPressure(const SparseMatrix
 
                 const Real borderContribution = borderTransmissibility * upwindFluxFunctionFactor * discretizationFactor;
 
-                meToMyself(derivatives) += borderContribution;
-                meToNeighbor(derivatives) = -borderContribution;
+                meToMyself(derivatives) -= borderContribution;
+                meToNeighbor(derivatives) = borderContribution;
 
             }
 

@@ -49,11 +49,11 @@ matchWithPermeabilities(const FixedParameters& params, const int numberOfRows, c
         dumpThisOnExit("converged", 0);
         dumpThisOnExit("sensitivities", sensitivityAndCost.sensitivity);
 
-        if (normOfSensitivity < tolerance) {
+        /*if (normOfSensitivity < tolerance) {
             dumpThisOnExit("converged", 1);
             dumpThisOnExit("normOfSensitivity", normOfSensitivity);
             break;
-        }
+        }*/
 
         const bool isFirstIteration = iteration == 0;
         if (sensitivityAndCost.cost >= oldCost) {

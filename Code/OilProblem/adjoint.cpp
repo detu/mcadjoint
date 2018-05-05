@@ -168,7 +168,7 @@ bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
     ASSERT(std::isfinite(currentState.W));
     ASSERT(std::isfinite(sumOfUnnormalizedProbabilities));
     ASSERT(std::isfinite(chosenCandidate.correspondingEntryOfAMatrix));
-    currentState.W *= sumOfUnnormalizedProbabilities * chosenCandidate.correspondingEntryOfAMatrix;
+    currentState.W *= sumOfUnnormalizedProbabilities * sign(chosenCandidate.correspondingEntryOfAMatrix);
 
     constexpr bool outputW = false;
     if (outputW) {
@@ -241,6 +241,12 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
         return;
     }
 
+    constexpr int firstTimeLevelToConsider = 10;
+
+    if (currentTimelevel < firstTimeLevelToConsider) {
+        return;
+    }
+
     constexpr bool initializeJustAtBeginning = false;
 
     if (initializeJustAtBeginning) {
@@ -252,7 +258,7 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
     if (initializeJustAtBeginning && currentTimelevel > 0) {
         return;
     }
-    const int numberOfRandomWalksToAdd = 10;
+    const int numberOfRandomWalksToAdd = 1;
 
 
 
@@ -297,7 +303,7 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
                 initialState.cell = neighborOrMyself;
                 initialState.isAPressure = wantAPressure;
                 initialState.currentTimelevel = currentTimelevel;
-                initialState.W =  cNorm * (2 * (cValue > 0) - 1);
+                initialState.W =  cNorm * sign(cValue);
 
                 constexpr bool outputInitialization = false;
                 if (outputInitialization) {

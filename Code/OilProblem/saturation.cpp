@@ -97,7 +97,7 @@ Real computeTimestep(ConstMatrixRef fluxFunctionFactors, ConstMatrixRef darcyVel
     const Real timestepX = (maximumAdvectionSpeedX > 0? computeCflTimestep(maximumAdvectionSpeedX, meshWidth): getFirstTimestep());
     const Real timestepY = (maximumAdvectionSpeedY > 0? computeCflTimestep(maximumAdvectionSpeedY, meshWidth): getFirstTimestep());
 
-    const Real maxTimestep = finalTime * 1e-2;
+    const Real maxTimestep = finalTime * 1e-1;
     const Real cflTimestep = std::min(timestepX, timestepY);
     const Real timestep = (time > 0? std::min(maxTimestep, cflTimestep): getFirstTimestep());
 

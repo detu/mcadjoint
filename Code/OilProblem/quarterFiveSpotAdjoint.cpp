@@ -35,6 +35,7 @@ void parseCommandLine(const int argc, const char** argv) {
 
 int main(const int argc, const char** argv) {
     parseCommandLine(argc, argv);
+    //StefFenv_CrashOnFPEs(FE_ALL_EXCEPT & ~FE_INEXACT & ~FE_UNDERFLOW);
 
 
     FixedParameters params;
@@ -46,7 +47,7 @@ int main(const int argc, const char** argv) {
     constexpr Real fieldWidth = 1;
 
     params.meshWidth = fieldWidth / Real(n);
-    params.finalTime = 0.1;
+    params.finalTime = 0.01;
     params.inflowPerUnitDepthWater = [&] (const Real time) {
         return 3;
     };
