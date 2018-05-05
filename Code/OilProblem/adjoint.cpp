@@ -148,7 +148,9 @@ bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
     ASSERT(candidates.size() == candidateUnnormalizedProbabilities.size());
 
 
-    if (!currentState.isAPressure) {
+    if (currentState.isAPressure) {
+        stillInTheSameTimestep = true;
+    } else {
         ++currentState.currentTimelevel;
         stillInTheSameTimestep = false;
     }
@@ -162,7 +164,6 @@ bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
         return stillInTheSameTimestep;
     }
 
-    stillInTheSameTimestep = true;
 
     // update W (pg. 6199, top)
     ASSERT(std::isfinite(currentState.W));

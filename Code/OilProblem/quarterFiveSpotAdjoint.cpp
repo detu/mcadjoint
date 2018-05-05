@@ -47,7 +47,7 @@ int main(const int argc, const char** argv) {
     constexpr Real fieldWidth = 1;
 
     params.meshWidth = fieldWidth / Real(n);
-    params.finalTime = 1;
+    params.finalTime = 0.02;
     params.inflowPerUnitDepthWater = [&] (const Real time) {
         return 3;
     };
@@ -55,10 +55,9 @@ int main(const int argc, const char** argv) {
     params.dynamicViscosityOil = 0.630; // SAE motor oil 20°C
     params.dynamicViscosityWater = 0.0010518; // Water 20°C
 
-    constexpr Real millidarcy = 1;
     params.porosity = 0.5;
     params.initialSaturationsWater.resize(n, n);
-    params.initialSaturationsWater.setConstant(std::log(millidarcy));
+    params.initialSaturationsWater.setConstant(0);
 
     const CellIndex drillCell = findDrillCell(n, n);
     drillCell(params.initialSaturationsWater) = 1;

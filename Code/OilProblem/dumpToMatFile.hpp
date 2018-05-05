@@ -10,8 +10,9 @@
 
 
 void dumpInThisMatFile(const std::string& matFileName);
-void dumpThisOnExit(const char* varName, ConstMatrixRef matrix);
-void dumpThisOnExit(const char* varName, const Real scalar);
-void dumpThisOnExit(const char* varName, const SparseMatrix& matrix);
+void dumpThis(const char* varName, ConstMatrixRef matrix);
+void dumpThis(const char* varName, const Real scalar);
+void dumpThis(const char* varName, const SparseMatrix& matrix);
+void writeToMatFile();
 
 

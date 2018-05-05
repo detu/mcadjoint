@@ -10,3 +10,6 @@
 [submodule "Code/thirdParty/simplematio"]
 	path = Code/thirdParty/simplematio
 	url = https://HansiMeier@bitbucket.org/HansiMeier/simplematio.git
+[submodule "Code/thirdParty/LBFGSpp"]
+	path = Code/thirdParty/LBFGSpp
+	url = https://github.com/yixuan/LBFGSpp.git

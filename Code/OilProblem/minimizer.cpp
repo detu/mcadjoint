@@ -8,6 +8,7 @@
 #include <array>
 #include "dumpToMatFile.hpp"
 #include <stefCommonHeaders/xoroshiro.h>
+#include <LBFGS.h>
 #include <omp.h>
 
 PermeabilitiesAndCost
@@ -18,22 +19,7 @@ matchWithPermeabilities(const FixedParameters& params, const int numberOfRows, c
 
     const int numberOfCells = numberOfCols * numberOfRows;
 
-    std::array<VectorToBeMappedAsMatrix, 2> logPermeabilities = {
-          VectorToBeMappedAsMatrix(Vector::Zero(numberOfCells), numberOfRows, numberOfCols),
-          VectorToBeMappedAsMatrix(Vector::Zero(numberOfCells), numberOfRows, numberOfCols)
-    };
 
-    VectorToBeMappedAsMatrix& logPermeabilitiesCurrent = logPermeabilities[0];
-    VectorToBeMappedAsMatrix& logPermeabilitiesOld = logPermeabilities[1];
-    Matrix permeabilities(numberOfRows, numberOfCols);
-
-
-    constexpr Real factorIfSuccessful = 1.1;
-    constexpr Real factorIfUnsuccessful = 0.5;
-
-
-    Real oldCost = INFINITY;
-    Real lineSearchParameter = 1;
 
     std::vector<Rng> rngs;
 
@@ -43,52 +29,53 @@ matchWithPermeabilities(const FixedParameters& params, const int numberOfRows, c
 
 
 
-    dumpThisOnExit("maxIterations", maxIterations);
-    dumpThisOnExit("tolerance", tolerance);
+    const auto costFunctionForLbfgs = [&] (const Vector& logPermeabilitiesAsVector, Vector& sensitivities) -> Real {
+        const Vector permeabilitiesAsVector = logPermeabilitiesAsVector.array().exp().matrix();
+        const Eigen::Map<const Matrix> permeabilities(permeabilitiesAsVector.data(), numberOfRows, numberOfCols);
 
-    for (int iteration = 0; iteration < maxIterations; ++iteration) {
-        LOGGER->info("iteration = {}", iteration);
-        dumpThisOnExit("iteration", iteration);
-
-
-        permeabilities = logPermeabilitiesCurrent.map.array().exp().matrix();
         const SensitivityAndCost sensitivityAndCost = computeSensitivityAndCost(params, permeabilities, rngs);
 
-        LOGGER->debug("Sensitivities = {}", sensitivityAndCost.sensitivity);
+        dumpThis("sensitivities", sensitivityAndCost.sensitivity);
+        dumpThis("permeabilities", permeabilities);
+        dumpThis("cost", sensitivityAndCost.cost);
+
+        writeToMatFile();
+
+        sensitivities = sensitivityAndCost.sensitivity;
+
+        return sensitivityAndCost.cost;
+    };
 
 
-        const Real normOfSensitivity = sensitivityAndCost.sensitivity.norm();
-        dumpThisOnExit("converged", 0);
-        dumpThisOnExit("sensitivities", sensitivityAndCost.sensitivity);
+    Vector logPermeabilitiesAsVector(numberOfCells);
+    logPermeabilitiesAsVector.setZero();
 
-        /*if (normOfSensitivity < tolerance) {
-            dumpThisOnExit("converged", 1);
-            dumpThisOnExit("normOfSensitivity", normOfSensitivity);
-            break;
-        }*/
+    using namespace LBFGSpp;
+    LBFGSParam<Real> lbfgsParam;
+    lbfgsParam.epsilon = tolerance;
+    lbfgsParam.max_iterations = maxIterations;
+    lbfgsParam.min_step = 1e-9;
 
-        const bool isFirstIteration = iteration == 0;
-        if (sensitivityAndCost.cost >= oldCost) {
-            // backtrack
-            logPermeabilitiesCurrent = logPermeabilitiesOld.vec;
-            lineSearchParameter *= factorIfSuccessful;
-        } else {
-            // advance
-            oldCost = sensitivityAndCost.cost;
-            logPermeabilitiesOld = logPermeabilitiesCurrent.vec;
-            logPermeabilitiesCurrent.vec -= lineSearchParameter * sensitivityAndCost.sensitivity / normOfSensitivity;
-            lineSearchParameter *= factorIfSuccessful;
-        }
+    LBFGSSolver<Real> lbfgsSolver(lbfgsParam);
 
-        dumpThisOnExit("currentPermeabilities", permeabilities);
-        dumpThisOnExit("cost", sensitivityAndCost.cost);
+    Real minimumCost = -1;
 
 
-        LOGGER->info("cost = {}", sensitivityAndCost.cost);
-        LOGGER->info("norm of sensitivity = {}", normOfSensitivity);
-    }
+    (void) lbfgsSolver.minimize(costFunctionForLbfgs, logPermeabilitiesAsVector, minimumCost);
+    PermeabilitiesAndCost permeabilitiesAndCost;
 
-    return {permeabilities, oldCost};
+    const Vector permeabilitiesAsVector = logPermeabilitiesAsVector.array().exp().matrix();
+    permeabilitiesAndCost.permeabilities = Eigen::Map<const Matrix>(permeabilitiesAsVector.data(), numberOfRows, numberOfCols);
+    permeabilitiesAndCost.cost = minimumCost;
+
+    dumpThis("permeabilities", permeabilitiesAndCost.permeabilities);
+    dumpThis("cost", permeabilitiesAndCost.permeabilities);
+
+
+
+    return permeabilitiesAndCost;
+
+
 
 
 }
