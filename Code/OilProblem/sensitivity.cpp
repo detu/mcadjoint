@@ -25,7 +25,8 @@ Real computeContributionToCost(const FixedParameters& parameters, const Simulati
     return std::pow(measuredPressureAtDrill - computedPressureAtDrill, 2);
 }
 
-SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, ConstMatrixRef permeabilities) {
+SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, const Eigen::Ref<const Matrix>& permeabilities,
+                                             std::vector<Rng>& rngs) {
     const int numberOfCols = permeabilities.cols();
     const int numberOfRows = permeabilities.rows();
     const int numberOfParameters = permeabilities.size();
@@ -34,14 +35,14 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
     SimulationState simulationState(numberOfRows, numberOfCols);
     SensitivityAndCost sensitivityAndCost = {Vector::Zero(numberOfParameters), 0};
     std::vector<RandomWalkState> randomWalks;
-    Rng rng;
+
     bool breakthroughHappened = false;
     int currentTimeLevel = 0;
     do {
         LOGGER->info("-----------------------------------");
         LOGGER->info("time = {}", simulationState.time);
-        breakthroughHappened = stepForwardAndAdjointProblem(params, permeabilities, currentTimeLevel, simulationState, randomWalks,
-                                                            rng);
+        breakthroughHappened = stepForwardAndAdjointProblem(params, permeabilities, currentTimeLevel, simulationState,
+                                                            randomWalks, rngs);
         const Real contributionToCost = computeContributionToCost(params, simulationState);
         LOGGER->info("contribution to cost = {}", contributionToCost);
         sensitivityAndCost.cost += contributionToCost;

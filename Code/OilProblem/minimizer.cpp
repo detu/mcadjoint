@@ -7,10 +7,14 @@
 #include "logging.hpp"
 #include <array>
 #include "dumpToMatFile.hpp"
+#include <stefCommonHeaders/xoroshiro.h>
+#include <omp.h>
 
 PermeabilitiesAndCost
 matchWithPermeabilities(const FixedParameters& params, const int numberOfRows, const int numberOfCols,
                         const Real tolerance, const int maxIterations) {
+
+    constexpr int seed = 42;
 
     const int numberOfCells = numberOfCols * numberOfRows;
 
@@ -31,6 +35,14 @@ matchWithPermeabilities(const FixedParameters& params, const int numberOfRows, c
     Real oldCost = INFINITY;
     Real lineSearchParameter = 1;
 
+    std::vector<Rng> rngs;
+
+    for (int threadNumber = 0; threadNumber < omp_get_num_threads(); ++threadNumber) {
+        rngs.emplace_back(seed, threadNumber);
+    }
+
+
+
     dumpThisOnExit("maxIterations", maxIterations);
     dumpThisOnExit("tolerance", tolerance);
 
@@ -40,7 +52,7 @@ matchWithPermeabilities(const FixedParameters& params, const int numberOfRows, c
 
 
         permeabilities = logPermeabilitiesCurrent.map.array().exp().matrix();
-        const SensitivityAndCost sensitivityAndCost = computeSensitivityAndCost(params, permeabilities);
+        const SensitivityAndCost sensitivityAndCost = computeSensitivityAndCost(params, permeabilities, rngs);
 
         LOGGER->debug("Sensitivities = {}", sensitivityAndCost.sensitivity);
 

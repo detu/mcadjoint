@@ -36,13 +36,14 @@ bool stepForwardProblem(const FixedParameters& params, const Eigen::Ref<const Ma
 }
 
 
-bool stepForwardAndAdjointProblem(const FixedParameters& params, ConstMatrixRef permeabilities, const int currentTimelevel,
-                                  SimulationState& simulationState, std::vector<RandomWalkState>& randomWalks, Rng& rng) {
+bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Ref<const Matrix>& permeabilities,
+                                  const int currentTimelevel, SimulationState& simulationState,
+                                  std::vector<RandomWalkState>& randomWalks, std::vector<Rng>& rngs) {
     const int numberOfRows = permeabilities.rows();
     const int numberOfCols = permeabilities.cols();
     const int numberOfParameters = permeabilities.size();
 
-    const bool isFirstTimestep = simulationState.time <= 0 || randomWalks.empty();
+    const bool isFirstTimestep = simulationState.time <= 0;
 
     if (isFirstTimestep) {
         simulationState.saturationsWater.resizeLike(params.initialSaturationsWater);
@@ -81,6 +82,7 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, ConstMatrixRef 
     dumpThisOnExit("pressureResidualsByLogPermeabilities", pressureResidualsByLogPermeabilities);
 
     const Matrix fluxFunctionFactors = computeFluxFunctionFactors(simulationState.saturationsWater, params.porosity, params.dynamicViscosityWater, params.dynamicViscosityOil);
+    dumpThisOnExit("fluxFunctionFactors", fluxFunctionFactors);
 
     const Matrix pressureDerivativesX = computeXDerivative(simulationState.pressures.map, params.meshWidth);
     const Matrix darcyVelocitiesX = computeTotalDarcyVelocitiesX(totalMobilities, pressureDerivativesX);
@@ -136,9 +138,16 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, ConstMatrixRef 
     const BVectorSurrogate b(computedPressureAtDrillCell * correspondingFactorForRhs * frobeniusFactor, measuredPressureAtDrillCell * correspondingFactorForRhs * frobeniusFactor, numberOfRows, numberOfCols);
     const CMatrixSurrogate c(pressureResidualsByLogPermeabilities, saturationResidualsByLogPermeabilities,
                              numberOfRows, numberOfCols);
-        // initialization
-    addNewRandomWalks(numberOfRows, numberOfCols, numberOfParameters, currentTimelevel, b, c, randomWalks,
-                      rng);
+
+    const bool startAddingRandomWalks = (simulationState.saturationsWater.diagonal(2).array() > 0.1).any();
+
+    if (startAddingRandomWalks) {
+        addNewRandomWalks(numberOfRows, numberOfCols, numberOfParameters, currentTimelevel, b, c, randomWalks,
+                          rngs[0]);
+    }
+
+
+
 
 
     constexpr bool showResidualDerivatives = false;
@@ -161,14 +170,14 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, ConstMatrixRef 
     #pragma omp parallel for schedule(dynamic) reduction(+: advancedRandomWalks)
     for (int randomWalkIndex = 0; randomWalkIndex < randomWalks.size(); ++randomWalkIndex) {
         RandomWalkState& randomWalk = randomWalks[randomWalkIndex];
+        Rng& rng = rngs[omp_get_thread_num()];
         bool stillInTheSameTimestep = false;
         do {
-            stillInTheSameTimestep = transitionState(randomWalk, b,
-                                                     correctedPressureResidualsByPressures * frobeniusFactor,
-                                                     correctedPressureResidualsBySaturationsWater * frobeniusFactor,
-                                                     correctedSaturationsWaterResidualsByPressures * frobeniusFactor,
-                                                     correctedSaturationsWaterResidualsBySaturationsWater * frobeniusFactor,
-                                                     numberOfRows, numberOfCols, rng);
+            stillInTheSameTimestep = transitionState(randomWalk, b, correctedPressureResidualsByPressures,
+                                                     correctedPressureResidualsBySaturationsWater,
+                                                     correctedSaturationsWaterResidualsByPressures,
+                                                     correctedSaturationsWaterResidualsBySaturationsWater, numberOfRows,
+                                                     numberOfCols, rng);
         } while (stillInTheSameTimestep);
 
         ++advancedRandomWalks;
@@ -186,6 +195,7 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, ConstMatrixRef 
 
     const Matrix saturationsWaterDivergences = computeSaturationDivergences(fluxFunctionFactors, fluxesX, fluxesY, params.meshWidth);
     simulationState.saturationsWater -= timestep * saturationsWaterDivergences;
+    dumpThisOnExit("saturationsWaterDivergences", saturationsWaterDivergences);
     simulationState.time += timestep;
     drillCell(simulationState.saturationsWater) = 1;
 

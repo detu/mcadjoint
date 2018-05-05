@@ -78,7 +78,7 @@ Matrix computeSaturationDivergences(ConstMatrixRef fluxFunctionFactors, ConstMat
 }
 
 static inline Real computeCflTimestep(const Real maximumAdvectionVelocity, const Real meshWidth) {
-    return 0.9 * meshWidth / maximumAdvectionVelocity;
+    return 0.95 * meshWidth / maximumAdvectionVelocity;
 }
 
 Real getFirstTimestep() {
@@ -97,7 +97,7 @@ Real computeTimestep(ConstMatrixRef fluxFunctionFactors, ConstMatrixRef darcyVel
     const Real timestepX = (maximumAdvectionSpeedX > 0? computeCflTimestep(maximumAdvectionSpeedX, meshWidth): getFirstTimestep());
     const Real timestepY = (maximumAdvectionSpeedY > 0? computeCflTimestep(maximumAdvectionSpeedY, meshWidth): getFirstTimestep());
 
-    const Real maxTimestep = finalTime * 1e-1;
+    const Real maxTimestep = 10;
     const Real cflTimestep = std::min(timestepX, timestepY);
     const Real timestep = (time > 0? std::min(maxTimestep, cflTimestep): getFirstTimestep());
 

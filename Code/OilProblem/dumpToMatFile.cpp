@@ -21,20 +21,24 @@ static std::mutex MAT_MUTEX;
 static bool REGISTERED_SIGNAL_HANDLER = false;
 
 static void signalHandlerError(int signal) {
+    #pragma omp single
+    {
+        if (!MAT_FILE_NAME.empty()) {
+            SMIO::EigenMatFile matFile(MAT_FILE_NAME.c_str());
+            for (const std::pair<std::string, Matrix>& entry: MATRICES_TO_DUMP) {
+                matFile.writeVariable(entry.first.c_str(), entry.second);
+            }
 
-    if (!MAT_FILE_NAME.empty()) {
-        SMIO::EigenMatFile matFile(MAT_FILE_NAME.c_str());
-        for (const std::pair<std::string, Matrix>& entry: MATRICES_TO_DUMP) {
-            matFile.writeVariable(entry.first.c_str(), entry.second);
+            for (const auto& entry: SPARSE_MATRICES_TO_DUMP) {
+                matFile.writeVariable(entry.first.c_str(), entry.second);
+            }
+
+            matFile.close();
         }
-
-        for (const auto& entry: SPARSE_MATRICES_TO_DUMP) {
-            matFile.writeVariable(entry.first.c_str(), entry.second);
-        }
-
-        matFile.close();
     }
+
     std::exit(signal);
+
 }
 
 static void signalHandlerOk() {

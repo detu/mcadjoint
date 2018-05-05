@@ -13,11 +13,11 @@
 
 
 bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
-                                const SparseMatrix& pressureResidualsByPressures,
-                                const SparseMatrix& pressureResidualsBySaturationsWater,
-                                const SparseMatrix& saturationsWaterResidualsByPressure,
-                                const SparseMatrix& saturationsWaterResidualsBySaturationsWater,
-                                const int numberOfRows, const int numberOfCols, Rng& rng) {
+                     const SparseMatrix& pressureResidualsByPressures,
+                     const SparseMatrix& pressureResidualsBySaturationsWater,
+                     const SparseMatrix& saturationsWaterResidualsByPressure,
+                     const SparseMatrix& saturationsWaterResidualsBySaturationsWater, const int numberOfRows,
+                     const int numberOfCols, Rng& rng) {
 
 
     ASSERT(std::isfinite(currentState.W));
@@ -241,11 +241,6 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
         return;
     }
 
-    constexpr int firstTimeLevelToConsider = 10;
-
-    if (currentTimelevel < firstTimeLevelToConsider) {
-        return;
-    }
 
     constexpr bool initializeJustAtBeginning = false;
 
