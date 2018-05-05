@@ -10,5 +10,7 @@ bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
                      const SparseMatrix& saturationsWaterResidualsByPressure,
                      const SparseMatrix& saturationsWaterResidualsBySaturationsWater,
                      const int numberOfRows, const int numberOfCols, Rng& rng);
-std::vector<RandomWalkState> initializeRandomWalks(const int numberOfRows, const int numberOfCols, const int numberOfParameters, const BVectorSurrogate& b, const CMatrixSurrogate& c);
+void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int numberOfParameters,
+                       const int currentTimelevel, const BVectorSurrogate& b, const CMatrixSurrogate& c,
+                       std::vector<RandomWalkState>& candidates, Rng& rng);
 void logStatisticsAboutRandomWalks(const std::vector<RandomWalkState>& randomWalks);

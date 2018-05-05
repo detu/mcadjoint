@@ -36,13 +36,16 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
     std::vector<RandomWalkState> randomWalks;
     Rng rng;
     bool breakthroughHappened = false;
+    int currentTimeLevel = 0;
     do {
         LOGGER->info("-----------------------------------");
         LOGGER->info("time = {}", simulationState.time);
-        breakthroughHappened = stepForwardAndAdjointProblem(params, permeabilities, simulationState, randomWalks, rng);
+        breakthroughHappened = stepForwardAndAdjointProblem(params, permeabilities, currentTimeLevel, simulationState, randomWalks,
+                                                            rng);
         const Real contributionToCost = computeContributionToCost(params, simulationState);
         LOGGER->info("contribution to cost = {}", contributionToCost);
         sensitivityAndCost.cost += contributionToCost;
+        ++currentTimeLevel;
     } while (!breakthroughHappened && simulationState.time < params.finalTime);
 
     Vector numberOfRandomWalksPerParameter(Vector::Zero(numberOfParameters));

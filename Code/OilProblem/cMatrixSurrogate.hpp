@@ -6,6 +6,7 @@
 #include "typedefs.hpp"
 #include "cellindex.hpp"
 #include "pressure.hpp"
+#include "utils.hpp"
 
 struct CMatrixSurrogate {
 
@@ -42,4 +43,5 @@ struct CMatrixSurrogate {
             return derivativeCell(saturationWaterResidualsByLogPermeability);
         }
     }
+
 };

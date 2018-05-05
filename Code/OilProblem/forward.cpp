@@ -37,7 +37,8 @@ bool stepForwardProblem(const FixedParameters& params, const Eigen::Ref<const Ma
 
 
 
-bool stepForwardAndAdjointProblem(const FixedParameters& params, ConstMatrixRef permeabilities, SimulationState& simulationState, std::vector<RandomWalkState>& randomWalks, Rng& rng) {
+bool stepForwardAndAdjointProblem(const FixedParameters& params, ConstMatrixRef permeabilities, const int currentTimelevel,
+                                  SimulationState& simulationState, std::vector<RandomWalkState>& randomWalks, Rng& rng) {
     const int numberOfRows = permeabilities.rows();
     const int numberOfCols = permeabilities.cols();
     const int numberOfParameters = permeabilities.size();
@@ -103,38 +104,84 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, ConstMatrixRef 
     const Matrix totalMobilitiesDerivedBySaturationsWater = computeTotalMobilitiesDerivedBySaturationsWater(permeabilities, simulationState.saturationsWater, params.dynamicViscosityOil, params.dynamicViscosityWater);
     const SparseMatrix pressureResidualsBySaturationsWater = computePressureResidualsDerivedBySaturationWater(simulationState.pressures.map, totalMobilities, totalMobilitiesDerivedBySaturationsWater);
 
-    const SparseMatrix saturationsWaterResidualsByPressure = computeSaturationWaterResidualsDerivedByPressure(pressureSystem, fluxFunctionFactors, darcyVelocitiesX, darcyVelocitiesY, totalMobilities, timestep, params.meshWidth);
+    const SparseMatrix saturationsWaterResidualsByPressures = computeSaturationWaterResidualsDerivedByPressure(pressureSystem, fluxFunctionFactors, darcyVelocitiesX, darcyVelocitiesY, totalMobilities, timestep, params.meshWidth);
     const Matrix fluxFunctionFactorDerivatives = computeFluxFunctionFactorDerivatives(simulationState.saturationsWater, params.porosity, params.dynamicViscosityWater, params.dynamicViscosityOil);
     const SparseMatrix saturationsWaterResidualsBySaturationsWater = computeSaturationWaterResidualsDerivedBySaturationWater(fluxFunctionFactorDerivatives, darcyVelocitiesX, darcyVelocitiesY, timestep, params.meshWidth);
 
 
-    const Real neumannCorrection = 0.5 / std::sqrt(frobeniusNormSquared(pressureResidualsBySaturationsWater) + frobeniusNormSquared(pressureResidualsByPressures));
+    const DiagonalMatrix inverseDiagonalPressureByPressure = extractInverseDiagonalMatrix(pressureResidualsByPressures);
+    const DiagonalMatrix inverseDiagonalSaturationBySaturation = extractInverseDiagonalMatrix(saturationsWaterResidualsBySaturationsWater);
+
+    const SparseMatrix correctedPressureResidualsByPressures = pressureResidualsByPressures * inverseDiagonalPressureByPressure;
+    const SparseMatrix correctedPressureResidualsBySaturationsWater = pressureResidualsBySaturationsWater * inverseDiagonalSaturationBySaturation;
+    const SparseMatrix correctedSaturationsWaterResidualsByPressures = saturationsWaterResidualsByPressures * inverseDiagonalPressureByPressure;
+    const SparseMatrix correctedsaturationsWaterResidualsBySaturationsWater = saturationsWaterResidualsBySaturationsWater * inverseDiagonalSaturationBySaturation;
+
+    dumpThisOnExit("correctedPressureResidualsByPressures", correctedPressureResidualsByPressures);
+    dumpThisOnExit("correctedPressureResidualsBySaturationsWater", correctedPressureResidualsBySaturationsWater);
+    dumpThisOnExit("correctedSaturationsWaterResidualsByPressures", correctedSaturationsWaterResidualsByPressures);
+    dumpThisOnExit("correctedsaturationsWaterResidualsBySaturationsWater", correctedsaturationsWaterResidualsBySaturationsWater);
 
 
-    const BVectorSurrogate b(computedPressureAtDrillCell * neumannCorrection, neumannCorrection * measuredPressureAtDrillCell, numberOfRows, numberOfCols);
-    if (isFirstTimestep) {
-        const CMatrixSurrogate c(pressureResidualsByLogPermeabilities, saturationResidualsByLogPermeabilities,
-                                 numberOfRows, numberOfCols);
+
+
+    const int drillCellLinearIndex = drillCell.linearIndex(numberOfRows);
+
+    const Real targetFrobeniusNorm = 1e-6;
+    const Real actualFrobeniusNorm = std::sqrt(
+          frobeniusNormSquared(correctedPressureResidualsByPressures) + frobeniusNormSquared(correctedPressureResidualsBySaturationsWater)
+                + frobeniusNormSquared(correctedSaturationsWaterResidualsByPressures) + frobeniusNormSquared(correctedsaturationsWaterResidualsBySaturationsWater)
+    );
+
+    const Real correspondingFactorForRhs = inverseDiagonalPressureByPressure.diagonal()(drillCellLinearIndex) * targetFrobeniusNorm / actualFrobeniusNorm;
+
+
+
+    const BVectorSurrogate b(computedPressureAtDrillCell * correspondingFactorForRhs, measuredPressureAtDrillCell * correspondingFactorForRhs, numberOfRows, numberOfCols);
+    const CMatrixSurrogate c(pressureResidualsByLogPermeabilities, saturationResidualsByLogPermeabilities,
+                             numberOfRows, numberOfCols);
         // initialization
-        randomWalks = initializeRandomWalks(numberOfRows, numberOfCols, numberOfParameters, b, c);
+    addNewRandomWalks(numberOfRows, numberOfCols, numberOfParameters, currentTimelevel, b, c, randomWalks,
+                      rng);
+
+
+    constexpr bool showResidualDerivatives = true;
+
+
+
+
+
+    if (showResidualDerivatives) {
+        LOGGER->debug("pressure residuals by pressure =\n{}", pressureResidualsByPressures);
+        LOGGER->debug("pressure residuals by satwater =\n{}", pressureResidualsBySaturationsWater);
+        LOGGER->debug("satwater residuals by satwater =\n{}", saturationsWaterResidualsBySaturationsWater);
+        LOGGER->debug("satwater residuals by pressure =\n{}", saturationsWaterResidualsByPressures);
+
+        LOGGER->debug("corrected pressure residuals by pressure =\n{}", pressureResidualsByPressures * inverseDiagonalPressureByPressure);
+        LOGGER->debug("corrected pressure residuals by satwater =\n{}", pressureResidualsBySaturationsWater * inverseDiagonalSaturationBySaturation);
+        LOGGER->debug("corrected sat water residuals by sat water =\n{}", saturationsWaterResidualsBySaturationsWater * inverseDiagonalSaturationBySaturation);
+        LOGGER->debug("corrected saturation residuals by pressure =\n{}",
+                      saturationsWaterResidualsByPressures * inverseDiagonalPressureByPressure);
     }
 
-    LOGGER->debug("pressure residuals by pressure =\n{}", pressureResidualsByPressures);
-    LOGGER->debug("pressure residuals by satwater =\n{}", pressureResidualsBySaturationsWater);
-    LOGGER->debug("satwater residuals by satwater =\n{}", saturationsWaterResidualsBySaturationsWater);
-    LOGGER->debug("satwater residuals by pressure =\n{}", saturationsWaterResidualsByPressure);
-
-
+    int advancedRandomWalks = 0;
+    constexpr bool outputProgressTransitioning = true;
     for (RandomWalkState& randomWalk: randomWalks) {
         bool stillInTheSameTimestep = false;
         do {
             stillInTheSameTimestep = transitionState(randomWalk, b,
-                                                     pressureResidualsByPressures * neumannCorrection,
-                                                     pressureResidualsBySaturationsWater * neumannCorrection,
-                                                     saturationsWaterResidualsByPressure,
-                                                     saturationsWaterResidualsBySaturationsWater,
+                                                     correctedPressureResidualsByPressures,
+                                                     correctedPressureResidualsBySaturationsWater,
+                                                     correctedSaturationsWaterResidualsByPressures,
+                                                     correctedsaturationsWaterResidualsBySaturationsWater,
                                                      numberOfRows, numberOfCols, rng);
         } while (stillInTheSameTimestep);
+
+        ++advancedRandomWalks;
+
+        if (outputProgressTransitioning) {
+            LOGGER->info("Random walk {} / {}", advancedRandomWalks, randomWalks.size());
+        }
     }
 
     logStatisticsAboutRandomWalks(randomWalks);

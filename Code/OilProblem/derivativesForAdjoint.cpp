@@ -241,7 +241,7 @@ SparseMatrix computeSaturationWaterResidualsDerivedByPressure(const SparseMatrix
                 const bool fluxGoesToNeighbor = checkWhetherFluxGoesToNeighbor(myself, direction, darcyVelocitiesX,
                                                                                darcyVelocitiesY);
                 const Real myFluxFunctionFactor = myself(fluxFunctionFactors);
-                const Real neighborFunctionFactor = myself(fluxFunctionFactors);
+                const Real neighborFunctionFactor = neighbor(fluxFunctionFactors);
 
                 const Real upwindFluxFunctionFactor = fluxGoesToNeighbor? myFluxFunctionFactor: neighborFunctionFactor;
                 const Real borderTransmissibility = iAmTheCellInTheWell? computeTransmissibility(mobilities, myself, neighbor): -meToNeighbor(pressureSystem);

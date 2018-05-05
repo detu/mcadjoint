@@ -5,7 +5,7 @@
 #include "logging.hpp"
 #include <stefCommonHeaders/assert.h>
 #include "specialCells.hpp"
-
+#include "pressure.hpp"
 
 
 Real computeTransmissibility(ConstMatrixRef totalMobilities, const CellIndex& fromCell, const CellIndex& toCell) {
@@ -17,11 +17,7 @@ Real computeTransmissibility(ConstMatrixRef totalMobilities, const CellIndex& fr
     return 2.0 * lambdaFrom * lambdaTo / (lambdaFrom + lambdaTo);
 }
 
-CellIndex pressureToTransmissibilityIndex(const CellIndex& fromCell, const CellIndex& toCell, const int numberOfRows) {
 
-    return {fromCell.linearIndex(numberOfRows),
-            toCell.linearIndex(numberOfRows)};
-}
 
 
 

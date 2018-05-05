@@ -9,3 +9,5 @@
 
 std::string lowerCase(std::string str);
 Real frobeniusNormSquared(const SparseMatrix& matrix);
+DiagonalMatrix extractInverseDiagonalMatrix(const SparseMatrix& matrix);
+Real sumOfAbsEntries(const SparseMatrix& matrix);

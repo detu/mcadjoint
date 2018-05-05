@@ -122,9 +122,12 @@ bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
     }
 
     const Candidate absorptionCandidate = {CellIndex::invalidCell(), false, 0, 0 };
-    const Real unnormalizedAbsorptionProbability = std::abs(b(currentState.cell, currentState.isAPressure));
+
+    constexpr bool alwaysAbsorbAtDrill = false;
+    const Real unnormalizedAbsorptionProbability = alwaysAbsorbAtDrill && currentState.isAPressure && currentState.cell == findDrillCell(numberOfRows, numberOfCols)? 1e8: std::abs(b(currentState.cell, currentState.isAPressure));
     ASSERT(unnormalizedAbsorptionProbability > 0 == (currentState.cell == findDrillCell(numberOfRows, numberOfCols) && currentState.isAPressure));
     ASSERT(std::isfinite(unnormalizedAbsorptionProbability));
+
     if (unnormalizedAbsorptionProbability > 0) {
         candidates.push_back(absorptionCandidate);
         candidateUnnormalizedProbabilities.push_back(unnormalizedAbsorptionProbability);
@@ -166,6 +169,7 @@ bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
     ASSERT(std::isfinite(sumOfUnnormalizedProbabilities));
     ASSERT(std::isfinite(chosenCandidate.correspondingEntryOfAMatrix));
     currentState.W *= sumOfUnnormalizedProbabilities * chosenCandidate.correspondingEntryOfAMatrix;
+
     constexpr bool outputW = false;
     if (outputW) {
         LOGGER->debug("Will be pressure = {}", chosenCandidate.isAPressure);
@@ -174,6 +178,7 @@ bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
         LOGGER->debug("Sum of unnormalized Probs = {}", sumOfUnnormalizedProbabilities);
         LOGGER->debug("A entry = {}", chosenCandidate.correspondingEntryOfAMatrix);
     }
+
     ASSERT(std::isfinite(currentState.W));
     // update D (pg. 6199, top)
     ASSERT(std::isfinite(currentState.D));
@@ -220,7 +225,9 @@ void logStatisticsAboutRandomWalks(const std::vector<RandomWalkState>& randomWal
 }
 
 
-std::vector<RandomWalkState> initializeRandomWalks(const int numberOfRows, const int numberOfCols, const int numberOfParameters, const BVectorSurrogate& b, const CMatrixSurrogate& c) {
+void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int numberOfParameters,
+                       const int currentTimelevel, const BVectorSurrogate& b, const CMatrixSurrogate& c,
+                       std::vector<RandomWalkState>& randomWalks, Rng& rng) {
     constexpr bool justOneRandomWalk = false;
     if (justOneRandomWalk) {
         RandomWalkState justBeginning;
@@ -230,22 +237,34 @@ std::vector<RandomWalkState> initializeRandomWalks(const int numberOfRows, const
         justBeginning.W = c(justBeginning.cell, justBeginning.cell, justBeginning.isAPressure);
         justBeginning.D = justBeginning.W * b(justBeginning.cell, justBeginning.isAPressure);
         justBeginning.parameterIndex = 0;
-        return {justBeginning};
+        randomWalks.push_back(justBeginning);
+        return;
     }
-    const int numberOfRandomWalksPerPressureCell = 10;
 
-    const int numberOfRandomWalksPerParameter = numberOfRandomWalksPerPressureCell;
-    const int numberOfRandomWalks = numberOfRandomWalksPerParameter * numberOfParameters;
+    constexpr bool initializeJustAtBeginning = false;
 
-    // We start randomWalksPerPressureCell random walks for every pressure state, which means
-    // randomWalksPerPressureCell per cell
-    // We hope that the saturation states are reached through the coupling of the equations
+    if (initializeJustAtBeginning) {
+        LOGGER->info("Initializing random walks");
+    } else {
+        LOGGER->info("Adding new random walks");
+    }
 
-    std::vector<RandomWalkState> randomWalks(numberOfRandomWalks);
+    if (initializeJustAtBeginning && currentTimelevel > 0) {
+        return;
+    }
+    const int numberOfRandomWalksToAdd = 10;
+
+
+
     for (int parameterIndex = 0; parameterIndex <  numberOfParameters; ++parameterIndex) {
         const CellIndex cell = CellIndex::fromLinearIndex(parameterIndex, numberOfRows);
 
-        std::vector<CellIndex> neighbors;
+        std::vector<RandomWalkState> candidates;
+        std::vector<Real> probabilities;
+
+        std::vector<CellIndex> neighborsAndMyself;
+
+        neighborsAndMyself.push_back(cell);
 
         constexpr static std::array<CellIndex::Direction, 4> directionsToCheck = {
               CellIndex::Direction::EAST, CellIndex::Direction::WEST, CellIndex::Direction::NORTH, CellIndex::Direction::SOUTH
@@ -253,34 +272,61 @@ std::vector<RandomWalkState> initializeRandomWalks(const int numberOfRows, const
 
         for (const auto direction: directionsToCheck) {
             if (cell.hasNeighbor(direction, numberOfRows, numberOfCols)) {
-                neighbors.push_back(cell.neighbor(direction));
+                neighborsAndMyself.push_back(cell.neighbor(direction));
             }
         }
 
-        for (int localRandomWalkIndex = 0; localRandomWalkIndex < numberOfRandomWalksPerPressureCell; ++localRandomWalkIndex) {
-            const int whichCellIndex = localRandomWalkIndex % int(neighbors.size());
-            const CellIndex neighborOrMyself = neighbors[whichCellIndex];
+        constexpr bool justPressure = false;
+        constexpr std::array<bool, 2 - justPressure> pressureRequired = {true};
 
-            constexpr bool wantAPressure = true;
-            RandomWalkState initialState;
-            initialState.cell = neighborOrMyself;
-            initialState.isAPressure = wantAPressure;
-            initialState.currentTimelevel = 0;
-            initialState.W = numberOfRandomWalksPerPressureCell * c(neighborOrMyself, cell, wantAPressure);
-            LOGGER->debug("Initialization: want pressure = {}", wantAPressure);
-            LOGGER->debug("Initialization: neighborOrMyself = {}", neighborOrMyself);
-            LOGGER->debug("Initialization: cell = {}", cell);
-            LOGGER->debug("Initialization c-value = {}", c(neighborOrMyself, cell, wantAPressure));
-            initialState.D = initialState.W * b(neighborOrMyself, wantAPressure);
-            initialState.parameterIndex = parameterIndex;
+        const Real cNorm = sumOfAbsEntries(c.pressureResidualsByLogPermeability.col(parameterIndex)) + sumOfAbsEntries(c.saturationWaterResidualsByLogPermeability.col(parameterIndex));
 
-            if (initialState.W != 0) {
-                randomWalks.push_back(std::move(initialState));
+        for (const bool wantAPressure: pressureRequired) {
+
+            for (const CellIndex& neighborOrMyself: neighborsAndMyself) {
+
+                const Real cValue = c(neighborOrMyself, cell, wantAPressure);
+
+
+                const Real prob = std::abs(cValue) / cNorm;
+                if (prob < 1e-12) {
+                    continue;
+                }
+
+                RandomWalkState initialState;
+                initialState.cell = neighborOrMyself;
+                initialState.isAPressure = wantAPressure;
+                initialState.currentTimelevel = currentTimelevel;
+                initialState.W =  cNorm * (2 * (cValue > 0) - 1);
+
+                constexpr bool outputInitialization = false;
+                if (outputInitialization) {
+                    LOGGER->debug("Initialization: want pressure = {}", wantAPressure);
+                    LOGGER->debug("Initialization: neighborOrMyself = {}", neighborOrMyself);
+                    LOGGER->debug("Initialization: cell = {}", cell);
+                    LOGGER->debug("Initialization c-value = {}", c(neighborOrMyself, cell, wantAPressure));
+                }
+
+                initialState.D = initialState.W * b(neighborOrMyself, wantAPressure);
+                initialState.parameterIndex = parameterIndex;
+
+                candidates.push_back(std::move(initialState));
+                probabilities.push_back(prob);
             }
+        }
+
+        std::discrete_distribution<int> choose(probabilities.cbegin(), probabilities.cend());
+
+        for (int i = 0; i < numberOfRandomWalksToAdd; ++i) {
+            randomWalks.push_back(candidates[choose(rng)]);
         }
     }
 
-    return randomWalks;
+    if (initializeJustAtBeginning) {
+        LOGGER->info("Finished initializing {} random walks", randomWalks.size());
+    } else {
+        LOGGER->info("Finished adding {} random walks", numberOfRandomWalksToAdd);
+    }
 
 
 

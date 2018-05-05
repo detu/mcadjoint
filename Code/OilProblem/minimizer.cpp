@@ -29,7 +29,7 @@ matchWithPermeabilities(const FixedParameters& params, const int numberOfRows, c
 
 
     Real oldCost = INFINITY;
-    Real lineSearchParameter = 1e-2;
+    Real lineSearchParameter = 1;
 
     dumpThisOnExit("maxIterations", maxIterations);
     dumpThisOnExit("tolerance", tolerance);
@@ -64,7 +64,7 @@ matchWithPermeabilities(const FixedParameters& params, const int numberOfRows, c
             // advance
             oldCost = sensitivityAndCost.cost;
             logPermeabilitiesOld = logPermeabilitiesCurrent.vec;
-            logPermeabilitiesCurrent.vec -= lineSearchParameter * sensitivityAndCost.sensitivity;
+            logPermeabilitiesCurrent.vec -= lineSearchParameter * sensitivityAndCost.sensitivity / normOfSensitivity;
             lineSearchParameter *= factorIfSuccessful;
         }
 

@@ -12,4 +12,6 @@
 void dumpInThisMatFile(const std::string& matFileName);
 void dumpThisOnExit(const char* varName, ConstMatrixRef matrix);
 void dumpThisOnExit(const char* varName, const Real scalar);
+void dumpThisOnExit(const char* varName, const SparseMatrix& matrix);
+
 
