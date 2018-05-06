@@ -101,8 +101,8 @@ Real computeTimestep(ConstMatrixRef fluxFunctionFactors, ConstMatrixRef darcyVel
     const Real cflTimestep = std::min(timestepX, timestepY);
     const Real timestep = (time > 0? std::min(maxTimestep, cflTimestep): getFirstTimestep());
 
-    LOGGER->debug("max advection speed x = {}", maximumAdvectionSpeedX);
-    LOGGER->debug("max advection speed y = {}", maximumAdvectionSpeedY);
+    logger().debug("max advection speed x = {}", maximumAdvectionSpeedX);
+    logger().debug("max advection speed y = {}", maximumAdvectionSpeedY);
 
     return timestep;
 }
@@ -150,37 +150,37 @@ bool advanceSaturationsInTime(const FixedParameters& params, MatrixRef saturatio
     drillCell(saturationsWater) = 1;
 
 
-    LOGGER->debug("old sat well = {}", oldSaturationWellCell);
-    LOGGER->debug("sat water =\n{}", saturationsWater);
+    logger().debug("old sat well = {}", oldSaturationWellCell);
+    logger().debug("sat water =\n{}", saturationsWater);
 
-    LOGGER->debug("flux function factors =\n{}", fluxFunctionFactors);
-    LOGGER->debug("pressures =\n{}", pressures);
+    logger().debug("flux function factors =\n{}", fluxFunctionFactors);
+    logger().debug("pressures =\n{}", pressures);
 
-    LOGGER->debug("pressure dx = \n{}", pressureDerivativesX);
-    LOGGER->debug("darcy vx =\n{}", darcyVelocitiesX);
+    logger().debug("pressure dx = \n{}", pressureDerivativesX);
+    logger().debug("darcy vx =\n{}", darcyVelocitiesX);
 
-    LOGGER->debug("pressure dy = \n{}", pressureDerivativesY);
-    LOGGER->debug("darcy vy = \n{}", darcyVelocitiesY);
+    logger().debug("pressure dy = \n{}", pressureDerivativesY);
+    logger().debug("darcy vy = \n{}", darcyVelocitiesY);
 
-    LOGGER->debug("inflow = {}", std::abs(params.inflowPerUnitDepthWater(time)));
-    LOGGER->debug("meshwidth = {}", params.meshWidth);
+    logger().debug("inflow = {}", std::abs(params.inflowPerUnitDepthWater(time)));
+    logger().debug("meshwidth = {}", params.meshWidth);
 
-    LOGGER->debug("fluxes x =\n{}", fluxesX);
-    LOGGER->debug("fluxes y =\n{}", fluxesY);
+    logger().debug("fluxes x =\n{}", fluxesX);
+    logger().debug("fluxes y =\n{}", fluxesY);
 
-    //LOGGER->debug("advection velocities x {}", advectionVelocitiesX);
+    //logger().debug("advection velocities x {}", advectionVelocitiesX);
 
 
-    LOGGER->debug("CFL timestep = {}", timestep);
+    logger().debug("CFL timestep = {}", timestep);
 
-    LOGGER->debug("div sat water =\n{}", saturationDivergences);
+    logger().debug("div sat water =\n{}", saturationDivergences);
 
-    LOGGER->debug("timestep = {}", timestep);
-    LOGGER->debug("Well cell div sat = {}", divergenceSaturationWellCell);
-    LOGGER->debug("Well cell outflow water = {}", outflowWellCell);
-    LOGGER->debug("Well cell sat = {}", wellCell(saturationsWater));
-    LOGGER->debug("South neighbor of well cell sat = {}", wellCell.neighbor(CellIndex::Direction::SOUTH)(saturationsWater));
-    LOGGER->debug("West neighbor of well cell sat = {}", wellCell.neighbor(CellIndex::Direction::WEST)(saturationsWater));
+    logger().debug("timestep = {}", timestep);
+    logger().debug("Well cell div sat = {}", divergenceSaturationWellCell);
+    logger().debug("Well cell outflow water = {}", outflowWellCell);
+    logger().debug("Well cell sat = {}", wellCell(saturationsWater));
+    logger().debug("South neighbor of well cell sat = {}", wellCell.neighbor(CellIndex::Direction::SOUTH)(saturationsWater));
+    logger().debug("West neighbor of well cell sat = {}", wellCell.neighbor(CellIndex::Direction::WEST)(saturationsWater));
 
     if (wellCell(saturationsWater) < 0) {
         throw std::logic_error("well sat < 0!");

@@ -90,15 +90,15 @@ int main(const int argc, const char** argv) {
 
     while (simulationState->time < params.finalTime) {
         const bool breakThroughHappened = stepForwardProblem(params, permeabilities, *simulationState);
-        LOGGER->debug("saturations water =\n{}", simulationState->saturationsWater);
-        LOGGER->info("time = {}", simulationState->time);
+        logger().debug("saturations water =\n{}", simulationState->saturationsWater);
+        logger().info("time = {}", simulationState->time);
         if (breakThroughHappened) {
-            LOGGER->info("Water broke though to well.");
+            logger().info("Water broke though to well.");
             break;
         }
     }
 
-    LOGGER->debug("dim sat water = ({}, {})", simulationState->saturationsWater.rows(), simulationState->saturationsWater.cols());
+    logger().debug("dim sat water = ({}, {})", simulationState->saturationsWater.rows(), simulationState->saturationsWater.cols());
 
     writeToFileAndExit(0);
     return 0;

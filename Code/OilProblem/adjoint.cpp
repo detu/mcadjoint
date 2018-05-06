@@ -183,11 +183,11 @@ bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
 
     constexpr bool outputW = false;
     if (outputW) {
-        LOGGER->debug("Will be pressure = {}", chosenCandidate.isAPressure);
-        LOGGER->debug("Will be cell index = {} ",  chosenCandidate.cellIndex);
-        LOGGER->debug("W = {}", currentState.W);
-        LOGGER->debug("Sum of unnormalized Probs = {}", sumOfUnnormalizedProbabilities);
-        LOGGER->debug("A entry = {}", chosenCandidate.correspondingEntryOfAMatrix);
+        logger().debug("Will be pressure = {}", chosenCandidate.isAPressure);
+        logger().debug("Will be cell index = {} ",  chosenCandidate.cellIndex);
+        logger().debug("W = {}", currentState.W);
+        logger().debug("Sum of unnormalized Probs = {}", sumOfUnnormalizedProbabilities);
+        logger().debug("A entry = {}", chosenCandidate.correspondingEntryOfAMatrix);
     }
 
     ASSERT(std::isfinite(currentState.W));
@@ -211,7 +211,7 @@ bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
 }
 
 void logStatisticsAboutRandomWalks(const std::vector<RandomWalkState>& randomWalks) {
-    LOGGER->info("We have {} random walks", randomWalks.size());
+    logger().info("We have {} random walks", randomWalks.size());
 
     int absorbedWalks = 0;
     int walksInPressure = 0;
@@ -228,9 +228,9 @@ void logStatisticsAboutRandomWalks(const std::vector<RandomWalkState>& randomWal
         }
     }
 
-    LOGGER->info("{} walks are currently in pressure cells", walksInPressure);
-    LOGGER->info("{} walks are currently in saturation cells", walksInSaturation);
-    LOGGER->info("{} walks are absorbed", absorbedWalks);
+    logger().info("{} walks are currently in pressure cells", walksInPressure);
+    logger().info("{} walks are currently in saturation cells", walksInSaturation);
+    logger().info("{} walks are absorbed", absorbedWalks);
 
     ASSERT(absorbedWalks + walksInPressure + walksInSaturation == randomWalks.size());
 
@@ -257,9 +257,9 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
     constexpr bool initializeJustAtBeginning = false;
 
     if (initializeJustAtBeginning) {
-        LOGGER->info("Initializing random walks");
+        logger().info("Initializing random walks");
     } else {
-        LOGGER->info("Adding new random walks");
+        logger().info("Adding new random walks");
     }
 
     if (initializeJustAtBeginning && currentTimelevel > 0) {
@@ -314,10 +314,10 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
 
                 constexpr bool outputInitialization = false;
                 if (outputInitialization) {
-                    LOGGER->debug("Initialization: want pressure = {}", wantAPressure);
-                    LOGGER->debug("Initialization: neighborOrMyself = {}", neighborOrMyself);
-                    LOGGER->debug("Initialization: cell = {}", cell);
-                    LOGGER->debug("Initialization c-value = {}", c(neighborOrMyself, cell, wantAPressure));
+                    logger().debug("Initialization: want pressure = {}", wantAPressure);
+                    logger().debug("Initialization: neighborOrMyself = {}", neighborOrMyself);
+                    logger().debug("Initialization: cell = {}", cell);
+                    logger().debug("Initialization c-value = {}", c(neighborOrMyself, cell, wantAPressure));
                 }
 
                 initialState.D = initialState.W * b(neighborOrMyself, wantAPressure);
@@ -336,9 +336,9 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
     }
 
     if (initializeJustAtBeginning) {
-        LOGGER->info("Finished initializing {} random walks", randomWalks.size());
+        logger().info("Finished initializing {} random walks", randomWalks.size());
     } else {
-        LOGGER->info("Finished adding {} random walks", numberOfRandomWalksToAdd);
+        logger().info("Finished adding {} random walks", numberOfRandomWalksToAdd);
     }
 
 

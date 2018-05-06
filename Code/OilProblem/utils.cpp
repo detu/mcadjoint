@@ -30,7 +30,7 @@ DiagonalMatrix extractInverseDiagonalMatrix(const SparseMatrix& matrix) {
     constexpr bool printInverseDiagonal = false;
 
     if (printInverseDiagonal) {
-        LOGGER->debug("inverse diagonal", Vector(diagonalMatrix.inverse()));
+        logger().debug("inverse diagonal", Vector(diagonalMatrix.inverse()));
     }
     return diagonalMatrix.inverse();
 }

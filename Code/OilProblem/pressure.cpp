@@ -24,7 +24,7 @@ Real computeTransmissibility(ConstMatrixRef totalMobilities, const CellIndex& fr
 
 
 SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
-    //LOGGER->debug("Starting to assemble system");
+    //logger().debug("Starting to assemble system");
 
     const int numberOfRows = totalMobilities.rows();
     const int numberOfCols = totalMobilities.cols();
@@ -91,7 +91,7 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
 
     transmissibilities.makeCompressed();
 
-    //LOGGER->debug("Assembled system");
+    //logger().debug("Assembled system");
     return transmissibilities;
 }
 
@@ -114,19 +114,19 @@ Vector computeRhsForPressureSystem(const Real sourceAtDrillNow, const int number
 
 Vector solvePressurePoissonProblem(const SparseMatrix& transmissibilities,
                                    ConstVectorRef rhs) {
-    LOGGER->debug("Solving system");
+    logger().debug("Solving system");
 
     Eigen::SparseLU<SparseMatrix> solver;
     solver.compute(transmissibilities);
 
-    LOGGER->debug("transmissibilities =\n{}", transmissibilities);
-    LOGGER->debug("rhs =\n{}", Vector(rhs));
+    logger().debug("transmissibilities =\n{}", transmissibilities);
+    logger().debug("rhs =\n{}", Vector(rhs));
 
     const Vector result = solver.solve(rhs);
 
 
-    LOGGER->debug("System solved");
-    LOGGER->debug("result = {}", result);
+    logger().debug("System solved");
+    logger().debug("result = {}", result);
 
     /*if (solver.info() != Eigen::Success) {
         throw std::runtime_error("Solver didn't converge!");

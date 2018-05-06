@@ -19,9 +19,9 @@ Real computeContributionToCost(const FixedParameters& parameters, const Simulati
     const CellIndex drillCell = findDrillCell(numberOfRows, numberOfCols);
 
     const Real computedPressureAtDrill = drillCell(currentSimulationState.pressures.map);
-    LOGGER->info("computedPressureAtDrill = {}", computedPressureAtDrill);
+    logger().info("computedPressureAtDrill = {}", computedPressureAtDrill);
     const Real measuredPressureAtDrill = parameters.overPressureDrill(currentSimulationState.time);
-    LOGGER->info("measured pressure at drill = {}", measuredPressureAtDrill);
+    logger().info("measured pressure at drill = {}", measuredPressureAtDrill);
     return std::pow(measuredPressureAtDrill - computedPressureAtDrill, 2);
 }
 
@@ -39,12 +39,12 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, cons
     bool breakthroughHappened = false;
     int currentTimeLevel = 0;
     do {
-        LOGGER->info("-----------------------------------");
-        LOGGER->info("time = {}", simulationState.time);
+        logger().info("-----------------------------------");
+        logger().info("time = {}", simulationState.time);
         breakthroughHappened = stepForwardAndAdjointProblem(params, permeabilities, currentTimeLevel, simulationState,
                                                             randomWalks, rngs);
         const Real contributionToCost = computeContributionToCost(params, simulationState);
-        LOGGER->info("contribution to cost = {}", contributionToCost);
+        logger().info("contribution to cost = {}", contributionToCost);
         sensitivityAndCost.cost += contributionToCost;
         ++currentTimeLevel;
     } while (!breakthroughHappened && simulationState.time < params.finalTime);
@@ -58,7 +58,7 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, cons
         ++numberOfRandomWalksPerParameter(randomWalk.parameterIndex);
     }
 
-    LOGGER->debug("Sensitivities before division =\n{}", sensitivityAndCost.sensitivity);
+    logger().debug("Sensitivities before division =\n{}", sensitivityAndCost.sensitivity);
 
     sensitivityAndCost.sensitivity.array() /= numberOfRandomWalksPerParameter.array().cwiseMax(1);
 

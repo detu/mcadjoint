@@ -39,12 +39,15 @@
     <list default="true" id="243856ce-78f7-4963-8ee2-7f94acac5c1e" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/adjoint.cpp" afterPath="$PROJECT_DIR$/adjoint.cpp" />
-      <change beforePath="$PROJECT_DIR$/fixedParameters.hpp" afterPath="$PROJECT_DIR$/fixedParameters.hpp" />
       <change beforePath="$PROJECT_DIR$/forward.cpp" afterPath="$PROJECT_DIR$/forward.cpp" />
-      <change beforePath="$PROJECT_DIR$/logging.cpp" afterPath="$PROJECT_DIR$/logging.cpp" />
       <change beforePath="$PROJECT_DIR$/logging.hpp" afterPath="$PROJECT_DIR$/logging.hpp" />
       <change beforePath="$PROJECT_DIR$/minimizer.cpp" afterPath="$PROJECT_DIR$/minimizer.cpp" />
+      <change beforePath="$PROJECT_DIR$/pressure.cpp" afterPath="$PROJECT_DIR$/pressure.cpp" />
+      <change beforePath="$PROJECT_DIR$/quarterFiveSpot.cpp" afterPath="$PROJECT_DIR$/quarterFiveSpot.cpp" />
       <change beforePath="$PROJECT_DIR$/quarterFiveSpotAdjoint.cpp" afterPath="$PROJECT_DIR$/quarterFiveSpotAdjoint.cpp" />
+      <change beforePath="$PROJECT_DIR$/saturation.cpp" afterPath="$PROJECT_DIR$/saturation.cpp" />
+      <change beforePath="$PROJECT_DIR$/sensitivity.cpp" afterPath="$PROJECT_DIR$/sensitivity.cpp" />
+      <change beforePath="$PROJECT_DIR$/utils.cpp" afterPath="$PROJECT_DIR$/utils.cpp" />
       <change beforePath="$PROJECT_DIR$/../thirdParty/stefcommonheaders" afterPath="$PROJECT_DIR$/../thirdParty/stefcommonheaders" />
       <change beforePath="$PROJECT_DIR$/../../Run/fieldsQuarterFiveSpotAdjoint.mat" afterPath="$PROJECT_DIR$/../../Run/fieldsQuarterFiveSpotAdjoint.mat" />
     </list>
@@ -80,8 +83,8 @@
       <file leaf-file-name="logger_impl.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../thirdParty/stefcommonheaders/thirdParty/spdlog/include/spdlog/details/logger_impl.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="139">
-              <caret line="306" column="0" lean-forward="false" selection-start-line="306" selection-start-column="0" selection-end-line="306" selection-end-column="0" />
+            <state relative-caret-position="994">
+              <caret line="307" column="0" lean-forward="false" selection-start-line="307" selection-start-column="0" selection-end-line="307" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -100,7 +103,7 @@
       <file leaf-file-name="quarterFiveSpotAdjoint.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/quarterFiveSpotAdjoint.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="294">
+            <state relative-caret-position="1111">
               <caret line="87" column="0" lean-forward="false" selection-start-line="87" selection-start-column="0" selection-end-line="87" selection-end-column="0" />
               <folding>
                 <element signature="e#50#74#0" expanded="true" />
@@ -109,12 +112,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="minimizer.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/minimizer.cpp">
+      <file leaf-file-name="logging.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/logging.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="148">
-              <caret line="36" column="0" lean-forward="false" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+            <state relative-caret-position="135">
+              <caret line="10" column="21" lean-forward="false" selection-start-line="10" selection-start-column="21" selection-end-line="10" selection-end-column="21" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="logging.hpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/logging.hpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="135">
+              <caret line="9" column="0" lean-forward="true" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+              <folding>
+                <element signature="e#64#90#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -129,21 +144,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LBFGS.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../thirdParty/LBFGSpp/include/LBFGS.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="148">
-              <caret line="85" column="0" lean-forward="false" selection-start-line="85" selection-start-column="0" selection-end-line="85" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="pattern_formatter_impl.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../thirdParty/stefcommonheaders/thirdParty/spdlog/include/spdlog/details/pattern_formatter_impl.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="279">
-              <caret line="702" column="0" lean-forward="false" selection-start-line="702" selection-start-column="0" selection-end-line="702" selection-end-column="0" />
+            <state relative-caret-position="-156">
+              <caret line="673" column="0" lean-forward="false" selection-start-line="673" selection-start-column="0" selection-end-line="673" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -152,18 +157,18 @@
       <file leaf-file-name="logging.hpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/../thirdParty/stefcommonheaders/include/stefCommonHeaders/logging.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="177">
-              <caret line="62" column="19" lean-forward="true" selection-start-line="62" selection-start-column="19" selection-end-line="62" selection-end-column="19" />
+            <state relative-caret-position="267">
+              <caret line="68" column="73" lean-forward="false" selection-start-line="68" selection-start-column="73" selection-end-line="68" selection-end-column="73" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="logging.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/logging.cpp">
+      <file leaf-file-name="quarterFiveSpot.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/quarterFiveSpot.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="10" column="21" lean-forward="false" selection-start-line="10" selection-start-column="21" selection-end-line="10" selection-end-column="21" />
+            <state relative-caret-position="414">
+              <caret line="63" column="40" lean-forward="false" selection-start-line="63" selection-start-column="40" selection-end-line="63" selection-end-column="40" />
               <folding />
             </state>
           </provider>
@@ -271,9 +276,9 @@
         <option value="$PROJECT_DIR$/fixedParameters.hpp" />
         <option value="$PROJECT_DIR$/forward.cpp" />
         <option value="$PROJECT_DIR$/adjoint.cpp" />
-        <option value="$PROJECT_DIR$/logging.hpp" />
         <option value="$PROJECT_DIR$/logging.cpp" />
         <option value="$PROJECT_DIR$/quarterFiveSpotAdjoint.cpp" />
+        <option value="$PROJECT_DIR$/logging.hpp" />
         <option value="$PROJECT_DIR$/../thirdParty/stefcommonheaders/include/stefCommonHeaders/logging.hpp" />
       </list>
     </option>
@@ -606,7 +611,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="314597000" />
+    <option name="totallyTimeSpent" value="315094000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="796" extended-state="6" />
@@ -614,7 +619,7 @@
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32962668" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31241083" sideWeight="0.6099034" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31241083" sideWeight="0.6099034" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24591836" sideWeight="0.83272946" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32536975" sideWeight="0.3900966" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.45714286" sideWeight="0.4853058" order="1" side_tool="false" content_ui="tabs" />
@@ -623,7 +628,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3266762" sideWeight="0.4813344" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3266762" sideWeight="0.4813344" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3132653" sideWeight="0.6099034" order="7" side_tool="false" content_ui="tabs" />
@@ -902,14 +907,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/quarterFiveSpot.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="416">
-          <caret line="63" column="40" lean-forward="false" selection-start-line="63" selection-start-column="40" selection-end-line="63" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/fixedParameters.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="345">
@@ -1014,37 +1011,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/logging.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="8" column="22" lean-forward="false" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/logging.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="10" column="21" lean-forward="false" selection-start-line="10" selection-start-column="21" selection-end-line="10" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/quarterFiveSpotAdjoint.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="87" column="0" lean-forward="false" selection-start-line="87" selection-start-column="0" selection-end-line="87" selection-end-column="0" />
-          <folding>
-            <element signature="e#50#74#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../thirdParty/LBFGSpp/include/LBFGS.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="148">
           <caret line="85" column="0" lean-forward="false" selection-start-line="85" selection-start-column="0" selection-end-line="85" selection-end-column="0" />
-          <folding />
+          <folding>
+            <marker date="1525550659000" expanded="false" signature="119:186" ph="..." />
+            <marker date="1525550659000" expanded="true" signature="207:5554" ph="{...}" />
+            <marker date="1525550659000" expanded="false" signature="277:303" ph="&lt;Scalar&gt;" />
+            <marker date="1525550659000" expanded="true" signature="322:5549" ph="{...}" />
+            <marker date="1525550659000" expanded="true" signature="1208:1521" ph="{...}" />
+            <marker date="1525550659000" expanded="true" signature="1774:1812" ph="{...}" />
+            <marker date="1525550659000" expanded="false" signature="2357:2380" ph="&lt;Foo&gt;" />
+            <marker date="1525550659000" expanded="true" signature="2440:5547" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1052,7 +1032,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="148">
           <caret line="36" column="0" lean-forward="false" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
-          <folding />
+          <folding>
+            <marker date="1525621700000" expanded="false" signature="59:287" ph="..." />
+            <marker date="1525621700000" expanded="true" signature="485:2639" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1074,16 +1057,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../thirdParty/stefcommonheaders/thirdParty/spdlog/include/spdlog/details/pattern_formatter_impl.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="279">
-          <caret line="702" column="0" lean-forward="false" selection-start-line="702" selection-start-column="0" selection-end-line="702" selection-end-column="0" />
+        <state relative-caret-position="-156">
+          <caret line="673" column="0" lean-forward="false" selection-start-line="673" selection-start-column="0" selection-end-line="673" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../thirdParty/stefcommonheaders/thirdParty/spdlog/include/spdlog/details/logger_impl.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="139">
-          <caret line="306" column="0" lean-forward="false" selection-start-line="306" selection-start-column="0" selection-end-line="306" selection-end-column="0" />
+        <state relative-caret-position="994">
+          <caret line="307" column="0" lean-forward="false" selection-start-line="307" selection-start-column="0" selection-end-line="307" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1098,10 +1081,46 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/quarterFiveSpot.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="63" column="40" lean-forward="false" selection-start-line="63" selection-start-column="40" selection-end-line="63" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/quarterFiveSpotAdjoint.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1111">
+          <caret line="87" column="0" lean-forward="false" selection-start-line="87" selection-start-column="0" selection-end-line="87" selection-end-column="0" />
+          <folding>
+            <element signature="e#50#74#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logging.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="10" column="21" lean-forward="false" selection-start-line="10" selection-start-column="21" selection-end-line="10" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logging.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="0" lean-forward="true" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+          <folding>
+            <element signature="e#64#90#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/../thirdParty/stefcommonheaders/include/stefCommonHeaders/logging.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="177">
-          <caret line="62" column="19" lean-forward="true" selection-start-line="62" selection-start-column="19" selection-end-line="62" selection-end-column="19" />
+        <state relative-caret-position="267">
+          <caret line="68" column="73" lean-forward="false" selection-start-line="68" selection-start-column="73" selection-end-line="68" selection-end-column="73" />
           <folding />
         </state>
       </provider>

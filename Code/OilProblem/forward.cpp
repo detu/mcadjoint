@@ -19,21 +19,21 @@ bool stepForwardProblem(const FixedParameters& params, const Eigen::Ref<const Ma
                         SimulationState& currentState) {
     const Matrix totalMobilities = computeTotalMobilities(params.dynamicViscosityOil, params.dynamicViscosityWater, permeabilities, currentState.saturationsWater);
 
-    //LOGGER->debug("total mobilities {}", totalMobilities);
+    //logger().debug("total mobilities {}", totalMobilities);
     const Real pressureDrillNow = params.overPressureDrill(currentState.time);
     const SparseMatrix pressureSystem = assemblePressureSystemWithBC(totalMobilities);
 
-    //LOGGER->debug("pressure system {}", pressureSystem);
+    //logger().debug("pressure system {}", pressureSystem);
 
 
     const Real sourceAtDrillNow = std::abs(params.inflowPerUnitDepthWater(currentState.time));
 
 
-    //LOGGER->debug("pressure rhs {}", pressureRhs);
+    //logger().debug("pressure rhs {}", pressureRhs);
     const Vector pressureRhs = computeRhsForPressureSystem(sourceAtDrillNow, currentState.saturationsWater.rows(), currentState.saturationsWater.cols());
     currentState.pressures = solvePressurePoissonProblem(pressureSystem, pressureRhs);
 
-    //LOGGER->debug("pressures {}", currentState.pressures.vec);
+    //logger().debug("pressures {}", currentState.pressures.vec);
     return advanceSaturationsInTime(params, currentState.saturationsWater, currentState.pressures.map, totalMobilities, currentState.time);
 }
 
@@ -53,7 +53,7 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     }
 
     dumpThis("saturationsWater", simulationState.saturationsWater);
-    LOGGER->debug("permeabilities =\n{}", permeabilities);
+    logger().debug("permeabilities =\n{}", permeabilities);
 
     const Matrix totalMobilities = computeTotalMobilities(params.dynamicViscosityOil, params.dynamicViscosityWater, permeabilities, simulationState.saturationsWater);
 
@@ -70,8 +70,8 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
 
 
     dumpThis("pressures", Matrix(simulationState.pressures.map));
-    LOGGER->debug("pressures =\n{}", simulationState.pressures.map);
-    LOGGER->debug("saturations Water =\n{}", simulationState.saturationsWater);
+    logger().debug("pressures =\n{}", simulationState.pressures.map);
+    logger().debug("saturations Water =\n{}", simulationState.saturationsWater);
 
 
     const CellIndex drillCell = findDrillCell(numberOfRows, numberOfCols);
@@ -174,21 +174,21 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     constexpr bool showResidualDerivatives = false;
 
     if (showResidualDerivatives) {
-        LOGGER->debug("pressure residuals by pressure =\n{}", pressureResidualsByPressures);
-        LOGGER->debug("pressure residuals by satwater =\n{}", pressureResidualsBySaturationsWater);
-        LOGGER->debug("satwater residuals by satwater =\n{}", saturationsWaterResidualsBySaturationsWater);
-        LOGGER->debug("satwater residuals by pressure =\n{}", saturationsWaterResidualsByPressures);
+        logger().debug("pressure residuals by pressure =\n{}", pressureResidualsByPressures);
+        logger().debug("pressure residuals by satwater =\n{}", pressureResidualsBySaturationsWater);
+        logger().debug("satwater residuals by satwater =\n{}", saturationsWaterResidualsBySaturationsWater);
+        logger().debug("satwater residuals by pressure =\n{}", saturationsWaterResidualsByPressures);
 
-        LOGGER->debug("corrected pressure residuals by pressure =\n{}", correctedPressureResidualsByPressures);
-        LOGGER->debug("corrected pressure residuals by satwater =\n{}", correctedPressureResidualsBySaturationsWater);
-        LOGGER->debug("corrected sat water residuals by sat water =\n{}", correctedSaturationsWaterResidualsBySaturationsWater);
-        LOGGER->debug("corrected saturation residuals by pressure =\n{}",
+        logger().debug("corrected pressure residuals by pressure =\n{}", correctedPressureResidualsByPressures);
+        logger().debug("corrected pressure residuals by satwater =\n{}", correctedPressureResidualsBySaturationsWater);
+        logger().debug("corrected sat water residuals by sat water =\n{}", correctedSaturationsWaterResidualsBySaturationsWater);
+        logger().debug("corrected saturation residuals by pressure =\n{}",
                       correctedSaturationsWaterResidualsByPressures);
     }
 
     int advancedRandomWalks = 0;
     constexpr bool outputProgressTransitioning = false;
-    LOGGER->debug("convergence factor = {}", convergenceFactor);
+    logger().debug("convergence factor = {}", convergenceFactor);
 
     #pragma omp parallel for schedule(dynamic) reduction(+: advancedRandomWalks)
     for (int randomWalkIndex = 0; randomWalkIndex < randomWalks.size(); ++randomWalkIndex) {
@@ -206,7 +206,7 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
         ++advancedRandomWalks;
 
         if (outputProgressTransitioning) {
-            LOGGER->info("Random walk {} / {}", advancedRandomWalks, randomWalks.size());
+            logger().info("Random walk {} / {}", advancedRandomWalks, randomWalks.size());
         }
     }
 

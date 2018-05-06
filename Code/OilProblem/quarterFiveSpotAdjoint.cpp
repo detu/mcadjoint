@@ -40,7 +40,7 @@ int main(const int argc, const char** argv) {
     LOGGER = sharedLogger.get();
 
     if (n < 0) {
-        LOGGER->error("Didn't specify a positive n. Are you sure you passed a positive value with the -n flag?");
+        logger().error("Didn't specify a positive n. Are you sure you passed a positive value with the -n flag?");
         std::exit(1);
     }
 
