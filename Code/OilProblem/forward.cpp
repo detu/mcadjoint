@@ -102,19 +102,28 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
 
 
 
-    const SparseMatrix pressureResidualsByPressures = computePressureResidualsDerivedByPressure(pressureSystem);
+    SparseMatrix pressureResidualsByPressures = computePressureResidualsDerivedByPressure(pressureSystem);
 
 
     const Matrix totalMobilitiesDerivedBySaturationsWater = computeTotalMobilitiesDerivedBySaturationsWater(permeabilities, simulationState.saturationsWater, params.dynamicViscosityOil, params.dynamicViscosityWater);
-    const SparseMatrix pressureResidualsBySaturationsWater = computePressureResidualsDerivedBySaturationWater(simulationState.pressures.map, totalMobilities, totalMobilitiesDerivedBySaturationsWater);
+    SparseMatrix pressureResidualsBySaturationsWater = computePressureResidualsDerivedBySaturationWater(simulationState.pressures.map, totalMobilities, totalMobilitiesDerivedBySaturationsWater);
 
-    const SparseMatrix saturationsWaterResidualsByPressures = computeSaturationWaterResidualsDerivedByPressure(pressureSystem, fluxFunctionFactors, darcyVelocitiesX, darcyVelocitiesY, totalMobilities, timestep, params.meshWidth);
+    SparseMatrix saturationsWaterResidualsByPressures = computeSaturationWaterResidualsDerivedByPressure(pressureSystem, fluxFunctionFactors, darcyVelocitiesX, darcyVelocitiesY, totalMobilities, timestep, params.meshWidth);
     const Matrix fluxFunctionFactorDerivatives = computeFluxFunctionFactorDerivatives(simulationState.saturationsWater, params.porosity, params.dynamicViscosityWater, params.dynamicViscosityOil);
-    const SparseMatrix saturationsWaterResidualsBySaturationsWater = computeSaturationWaterResidualsDerivedBySaturationWater(fluxFunctionFactorDerivatives, darcyVelocitiesX, darcyVelocitiesY, timestep, params.meshWidth);
-
+    SparseMatrix saturationsWaterResidualsBySaturationsWater = computeSaturationWaterResidualsDerivedBySaturationWater(fluxFunctionFactorDerivatives, darcyVelocitiesX, darcyVelocitiesY, timestep, params.meshWidth);
 
     const DiagonalMatrix inverseDiagonalPressureByPressure = extractInverseDiagonalMatrix(pressureResidualsByPressures);
-    const DiagonalMatrix inverseDiagonalSaturationBySaturation = extractInverseDiagonalMatrix(saturationsWaterResidualsBySaturationsWater);
+
+
+    const int drillCellLinearIndex = drillCell.linearIndex(numberOfRows);
+    Real correspondingFactorForRhs = inverseDiagonalPressureByPressure.diagonal()(drillCellLinearIndex);
+
+
+
+
+
+
+    //const DiagonalMatrix inverseDiagonalSaturationBySaturation = extractInverseDiagonalMatrix(saturationsWaterResidualsBySaturationsWater);
 
 
     SparseMatrix correctedPressureResidualsByPressures = pressureResidualsByPressures * inverseDiagonalPressureByPressure ;
@@ -122,23 +131,20 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     SparseMatrix correctedSaturationsWaterResidualsByPressures = saturationsWaterResidualsByPressures * inverseDiagonalPressureByPressure;
     SparseMatrix correctedSaturationsWaterResidualsBySaturationsWater = saturationsWaterResidualsBySaturationsWater;
 
-    const int drillCellLinearIndex = drillCell.linearIndex(numberOfRows);
-    Real correspondingFactorForRhs = inverseDiagonalPressureByPressure.diagonal()(drillCellLinearIndex);
-
 
     constexpr bool useFrobeniusFactor = true;
+    Real convergenceFactor = 1;
     if (useFrobeniusFactor) {
-        const Real frobeniusFactor = 1 / std::sqrt(frobeniusNormSquared(pressureResidualsByPressures) + frobeniusNormSquared(pressureResidualsBySaturationsWater)
-        + frobeniusNormSquared(saturationsWaterResidualsByPressures) + frobeniusNormSquared(saturationsWaterResidualsBySaturationsWater));
+        const Real currentFrobeniusFactor = 0.1 / std::sqrt(frobeniusNormSquared(correctedPressureResidualsByPressures) + frobeniusNormSquared(correctedPressureResidualsBySaturationsWater)
+                                                   + frobeniusNormSquared(correctedSaturationsWaterResidualsByPressures) + frobeniusNormSquared(correctedSaturationsWaterResidualsBySaturationsWater));
 
-        correctedPressureResidualsByPressures *= frobeniusFactor;
-        correctedPressureResidualsBySaturationsWater *= frobeniusFactor;
-        correctedSaturationsWaterResidualsByPressures *= frobeniusFactor;
-        correctedSaturationsWaterResidualsBySaturationsWater *= frobeniusFactor;
-        correspondingFactorForRhs *= frobeniusFactor;
+        simulationState.accumulatedConvergenceFactor *= currentFrobeniusFactor;
 
+        convergenceFactor = simulationState.accumulatedConvergenceFactor;
 
     }
+
+
 
 
     dumpThis("correctedPressureResidualsByPressures", correctedPressureResidualsByPressures);
@@ -173,15 +179,16 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
         LOGGER->debug("satwater residuals by satwater =\n{}", saturationsWaterResidualsBySaturationsWater);
         LOGGER->debug("satwater residuals by pressure =\n{}", saturationsWaterResidualsByPressures);
 
-        LOGGER->debug("corrected pressure residuals by pressure =\n{}", pressureResidualsByPressures * inverseDiagonalPressureByPressure);
-        LOGGER->debug("corrected pressure residuals by satwater =\n{}", pressureResidualsBySaturationsWater * inverseDiagonalSaturationBySaturation);
-        LOGGER->debug("corrected sat water residuals by sat water =\n{}", saturationsWaterResidualsBySaturationsWater * inverseDiagonalSaturationBySaturation);
+        LOGGER->debug("corrected pressure residuals by pressure =\n{}", correctedPressureResidualsByPressures);
+        LOGGER->debug("corrected pressure residuals by satwater =\n{}", correctedPressureResidualsBySaturationsWater);
+        LOGGER->debug("corrected sat water residuals by sat water =\n{}", correctedSaturationsWaterResidualsBySaturationsWater);
         LOGGER->debug("corrected saturation residuals by pressure =\n{}",
-                      saturationsWaterResidualsByPressures * inverseDiagonalPressureByPressure);
+                      correctedSaturationsWaterResidualsByPressures);
     }
 
     int advancedRandomWalks = 0;
     constexpr bool outputProgressTransitioning = false;
+    LOGGER->debug("convergence factor = {}", convergenceFactor);
 
     #pragma omp parallel for schedule(dynamic) reduction(+: advancedRandomWalks)
     for (int randomWalkIndex = 0; randomWalkIndex < randomWalks.size(); ++randomWalkIndex) {
@@ -192,8 +199,8 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
             stillInTheSameTimestep = transitionState(randomWalk, b, correctedPressureResidualsByPressures,
                                                      correctedPressureResidualsBySaturationsWater,
                                                      correctedSaturationsWaterResidualsByPressures,
-                                                     correctedSaturationsWaterResidualsBySaturationsWater, numberOfRows,
-                                                     numberOfCols, rng);
+                                                     correctedSaturationsWaterResidualsBySaturationsWater, convergenceFactor,
+                                                     numberOfRows, numberOfCols, rng);
         } while (stillInTheSameTimestep);
 
         ++advancedRandomWalks;

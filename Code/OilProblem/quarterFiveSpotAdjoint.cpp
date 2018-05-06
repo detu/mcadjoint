@@ -18,7 +18,7 @@ void parseCommandLine(const int argc, const char** argv) {
 
     std::string levelName = "info";
     std::string matFileName = "fieldsQuarterFiveSpotAdjoint.mat";
-    cmdl("-n") >> n;
+    cmdl({"-n", "--dimension"}) >> n;
     cmdl({"-l", "--level"}) >> levelName;
     cmdl({"-m", "--matfile"}) >> matFileName;
 

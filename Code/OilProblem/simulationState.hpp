@@ -13,6 +13,8 @@ struct SimulationState {
     VectorToBeMappedAsMatrix pressures;
     Real time;
 
+    Real accumulatedConvergenceFactor = 1;
+
     inline SimulationState(const int matrixRows, const int matrixCols):
           saturationsWater(matrixRows, matrixCols), pressures(matrixRows, matrixCols), time(0) {}
 
