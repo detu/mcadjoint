@@ -8,4 +8,4 @@
 using namespace std;
 using namespace spdlog;
 
-shared_ptr<logger> LOGGER = stefCommonHeaders::setUpNullLog();
+logger* LOGGER = nullptr;

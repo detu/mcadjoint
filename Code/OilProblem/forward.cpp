@@ -135,7 +135,7 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     constexpr bool useFrobeniusFactor = true;
     Real convergenceFactor = 1;
     if (useFrobeniusFactor) {
-        const Real currentFrobeniusFactor = 0.1 / std::sqrt(frobeniusNormSquared(correctedPressureResidualsByPressures) + frobeniusNormSquared(correctedPressureResidualsBySaturationsWater)
+        const Real currentFrobeniusFactor = 1 / std::sqrt(frobeniusNormSquared(correctedPressureResidualsByPressures) + frobeniusNormSquared(correctedPressureResidualsBySaturationsWater)
                                                    + frobeniusNormSquared(correctedSaturationsWaterResidualsByPressures) + frobeniusNormSquared(correctedSaturationsWaterResidualsBySaturationsWater));
 
         simulationState.accumulatedConvergenceFactor *= currentFrobeniusFactor;
@@ -159,8 +159,8 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     const CMatrixSurrogate c(pressureResidualsByLogPermeabilities, saturationResidualsByLogPermeabilities,
                              numberOfRows, numberOfCols);
 
-    constexpr bool startAddingRandomWalksAtBeginning = true;
-    const bool shouldAddRandomWalks = startAddingRandomWalksAtBeginning || (simulationState.saturationsWater.diagonal(2).array() > 0.1).any();
+    constexpr bool startAddingRandomWalksAtBeginning = false;
+    const bool shouldAddRandomWalks = startAddingRandomWalksAtBeginning || (simulationState.saturationsWater.diagonal(-1).array() > 0).any();
 
     if (shouldAddRandomWalks) {
         addNewRandomWalks(numberOfRows, numberOfCols, numberOfParameters, currentTimelevel, b, c, randomWalks,

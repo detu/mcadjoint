@@ -30,6 +30,7 @@ matchWithPermeabilities(const FixedParameters& params, const int numberOfRows, c
 
 
     const auto costFunctionForLbfgs = [&] (const Vector& logPermeabilitiesAsVector, Vector& sensitivities) -> Real {
+        LOGGER->debug("logPermeabilitiesAsVector =\n{}", logPermeabilitiesAsVector);
         const Vector permeabilitiesAsVector = logPermeabilitiesAsVector.array().exp().matrix();
         const Eigen::Map<const Matrix> permeabilities(permeabilitiesAsVector.data(), numberOfRows, numberOfCols);
 
@@ -46,9 +47,9 @@ matchWithPermeabilities(const FixedParameters& params, const int numberOfRows, c
         return sensitivityAndCost.cost;
     };
 
+    Matrix initialLogPermeabilities = params.initialPermeabilities.array().log().matrix();
+    Vector logPermeabilitiesAsVector(Eigen::Map<Vector>(initialLogPermeabilities.data(), initialLogPermeabilities.size(), 1));
 
-    Vector logPermeabilitiesAsVector(numberOfCells);
-    logPermeabilitiesAsVector.setZero();
 
     using namespace LBFGSpp;
     LBFGSParam<Real> lbfgsParam;

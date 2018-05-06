@@ -179,7 +179,7 @@ bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
     ASSERT(std::isfinite(currentState.W));
     ASSERT(std::isfinite(sumOfUnnormalizedProbabilities));
     ASSERT(std::isfinite(chosenCandidate.correspondingEntryOfAMatrix));
-    currentState.W *= sumOfUnnormalizedProbabilities * sign(chosenCandidate.correspondingEntryOfAMatrix);
+    currentState.W *= sumOfUnnormalizedProbabilities * convergenceFactor * sign(chosenCandidate.correspondingEntryOfAMatrix);
 
     constexpr bool outputW = false;
     if (outputW) {

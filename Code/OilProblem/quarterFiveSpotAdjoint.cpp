@@ -9,8 +9,11 @@
 #include <stefCommonHeaders/stefFenv.h>
 #include "cellindex.hpp"
 #include "specialCells.hpp"
+#include <random>
 
 int n = -1;
+
+spdlog::level::level_enum level = spdlog::level::level_enum::off;
 
 void parseCommandLine(const int argc, const char** argv) {
     argh::parser cmdl;
@@ -22,12 +25,8 @@ void parseCommandLine(const int argc, const char** argv) {
     cmdl({"-l", "--level"}) >> levelName;
     cmdl({"-m", "--matfile"}) >> matFileName;
 
-    LOGGER = stefCommonHeaders::setUpLog(spdlog::level::from_str(levelName));
+    level = spdlog::level::from_str(levelName);
 
-    if (n < 0) {
-        LOGGER->error("Didn't specify a positive n. Are you sure you passed a positive value with the -n flag?");
-        std::exit(1);
-    }
 
     dumpInThisMatFile(matFileName);
 }
@@ -36,6 +35,14 @@ void parseCommandLine(const int argc, const char** argv) {
 int main(const int argc, const char** argv) {
     parseCommandLine(argc, argv);
     //StefFenv_CrashOnFPEs(FE_ALL_EXCEPT & ~FE_INEXACT & ~FE_UNDERFLOW);
+
+    auto sharedLogger = stefCommonHeaders::setUpLog(level);
+    LOGGER = sharedLogger.get();
+
+    if (n < 0) {
+        LOGGER->error("Didn't specify a positive n. Are you sure you passed a positive value with the -n flag?");
+        std::exit(1);
+    }
 
 
     FixedParameters params;
@@ -61,6 +68,20 @@ int main(const int argc, const char** argv) {
 
     const CellIndex drillCell = findDrillCell(n, n);
     drillCell(params.initialSaturationsWater) = 1;
+
+
+    const Real milliDarcy = 1;
+    params.initialPermeabilities.resizeLike(params.initialSaturationsWater);
+
+    std::lognormal_distribution<Real> lognormalDistribution(milliDarcy, 1);
+    Rng rng;
+
+    for (int j = 0; j < params.initialPermeabilities.cols(); ++j) {
+        for (int i = 0; i < params.initialPermeabilities.rows(); ++i) {
+            params.initialPermeabilities(i, j) = lognormalDistribution(rng);
+        }
+    }
+
 
 
 
