@@ -265,7 +265,7 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
     if (initializeJustAtBeginning && currentTimelevel > 0) {
         return;
     }
-    const int numberOfRandomWalksToAdd = 1;
+    const int numberOfRandomWalksToAdd = 2;
 
 
 

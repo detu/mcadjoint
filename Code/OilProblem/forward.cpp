@@ -100,7 +100,7 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     const Real timestep = computeTimestep(fluxFunctionFactors, darcyVelocitiesX, darcyVelocitiesY, params.meshWidth, params.finalTime, simulationState.time);
 
 
-    const SparseMatrix saturationResidualsByLogPermeabilities = computeSaturationsWaterResidualsByLogPermeability(fluxesX, fluxesY, totalMobilities, firstTimestep, params.meshWidth);
+    const SparseMatrix saturationResidualsByLogPermeabilities = computeSaturationsWaterResidualsByLogPermeability(pressureDerivativesX, pressureDerivativesY, totalMobilities, firstTimestep, params.meshWidth);
     dumpThis("saturationResidualsByLogPermeabilities", saturationResidualsByLogPermeabilities);
 
 
@@ -113,7 +113,12 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
 
     SparseMatrix saturationsWaterResidualsByPressures = computeSaturationWaterResidualsDerivedByPressure(pressureSystem, fluxFunctionFactors, darcyVelocitiesX, darcyVelocitiesY, totalMobilities, timestep, params.meshWidth);
     const Matrix fluxFunctionFactorDerivatives = computeFluxFunctionFactorDerivatives(simulationState.saturationsWater, params.porosity, params.dynamicViscosityWater, params.dynamicViscosityOil);
-    SparseMatrix saturationsWaterResidualsBySaturationsWater = computeSaturationWaterResidualsDerivedBySaturationWater(fluxFunctionFactorDerivatives, darcyVelocitiesX, darcyVelocitiesY, timestep, params.meshWidth);
+    SparseMatrix saturationsWaterResidualsBySaturationsWater = computeSaturationWaterResidualsDerivedBySaturationWater(
+          fluxFunctionFactors, fluxFunctionFactorDerivatives,
+          darcyVelocitiesX, darcyVelocitiesY,
+          pressureDerivativesX, pressureDerivativesY,
+          totalMobilities, totalMobilitiesDerivedBySaturationsWater,
+          timestep, params.meshWidth);
 
     const DiagonalMatrix inverseDiagonalPressureByPressure = extractInverseDiagonalMatrix(pressureResidualsByPressures);
 
@@ -171,7 +176,7 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
 
 
 
-    constexpr bool showResidualDerivatives = false;
+    constexpr bool showResidualDerivatives = true;
 
     if (showResidualDerivatives) {
         log()->debug("pressure residuals by pressure =\n{}", pressureResidualsByPressures);
