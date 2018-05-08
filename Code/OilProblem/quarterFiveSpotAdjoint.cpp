@@ -37,11 +37,12 @@ int main(const int argc, const char** argv) {
     parseCommandLine(argc, argv);
     //StefFenv_CrashOnFPEs(FE_ALL_EXCEPT & ~FE_INEXACT & ~FE_UNDERFLOW);
 
-    auto sharedLogger = stefCommonHeaders::setUpLog<omp_mutex>(level);
-    LOGGER = sharedLogger.get();
+
+
+    spdlog::register_logger(stefCommonHeaders::setUpLog<stefCommonHeaders::NoMutex>(level));
 
     if (n < 0) {
-        logger().error("Didn't specify a positive n. Are you sure you passed a positive value with the -n flag?");
+        log()->error("Didn't specify a positive n. Are you sure you passed a positive value with the -n flag?");
         std::exit(1);
     }
 
@@ -49,21 +50,21 @@ int main(const int argc, const char** argv) {
     FixedParameters params;
     const Real atmosphericPressure = 1;
     params.overPressureDrill = [=] (const Real time) {
-        return 2 * atmosphericPressure;
+        return atmosphericPressure;
     };
 
     constexpr Real fieldWidth = 1;
 
     params.meshWidth = fieldWidth / Real(n);
-    params.finalTime = 0.02;
+    params.finalTime = 1;
     params.inflowPerUnitDepthWater = [&] (const Real time) {
-        return 3;
+        return 1;
     };
 
     params.dynamicViscosityOil = 0.630; // SAE motor oil 20°C
     params.dynamicViscosityWater = 0.0010518; // Water 20°C
 
-    params.porosity = 0.5;
+    params.porosity = 1;
     params.initialSaturationsWater.resize(n, n);
     params.initialSaturationsWater.setConstant(0);
 
@@ -74,19 +75,26 @@ int main(const int argc, const char** argv) {
     const Real milliDarcy = 1;
     params.initialPermeabilities.resizeLike(params.initialSaturationsWater);
 
-    std::lognormal_distribution<Real> lognormalDistribution(milliDarcy, 1);
-    Rng rng;
+    constexpr bool useLognormal = false;
+    if (useLognormal) {
+        std::lognormal_distribution<Real> lognormalDistribution(milliDarcy, 1);
+        Rng rng;
 
-    for (int j = 0; j < params.initialPermeabilities.cols(); ++j) {
-        for (int i = 0; i < params.initialPermeabilities.rows(); ++i) {
-            params.initialPermeabilities(i, j) = lognormalDistribution(rng);
+        for (int j = 0; j < params.initialPermeabilities.cols(); ++j) {
+            for (int i = 0; i < params.initialPermeabilities.rows(); ++i) {
+                params.initialPermeabilities(i, j) = lognormalDistribution(rng);
+            }
         }
+    } else {
+        params.initialPermeabilities.setOnes();
     }
 
 
 
 
-    (void) matchWithPermeabilities(params, n, n, 1e-3, 100);
+    (void) matchWithPermeabilities(params, n, n, 1e-6, 100);
+
+    spdlog::drop_all();
 
     return 0;
 

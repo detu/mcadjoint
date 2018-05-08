@@ -13,7 +13,6 @@
 #include <argh.h>
 #include <stefCommonHeaders/logging.hpp>
 #include <memory>
-#include "
 
 int n = -1;
 std::unique_ptr<SimulationState> simulationState = nullptr;
@@ -36,7 +35,7 @@ void parseCommandLine(const int argc, const char** argv) {
     cmdl("-n") >> n;
     cmdl({"-l", "--level"}) >> levelName;
 
-    LOGGER = stefCommonHeaders::setUpLog<(spdlog::level::from_str(levelName));
+    log() = stefCommonHeaders::setUpLog<(spdlog::level::from_str(levelName));
     simulationState = std::unique_ptr<SimulationState>(new SimulationState(n, n));
 
 }
@@ -91,15 +90,15 @@ int main(const int argc, const char** argv) {
 
     while (simulationState->time < params.finalTime) {
         const bool breakThroughHappened = stepForwardProblem(params, permeabilities, *simulationState);
-        logger().debug("saturations water =\n{}", simulationState->saturationsWater);
-        logger().info("time = {}", simulationState->time);
+        log()->debug("saturations water =\n{}", simulationState->saturationsWater);
+        log()->info("time = {}", simulationState->time);
         if (breakThroughHappened) {
-            logger().info("Water broke though to well.");
+            log()->info("Water broke though to well.");
             break;
         }
     }
 
-    logger().debug("dim sat water = ({}, {})", simulationState->saturationsWater.rows(), simulationState->saturationsWater.cols());
+    log()->debug("dim sat water = ({}, {})", simulationState->saturationsWater.rows(), simulationState->saturationsWater.cols());
 
     writeToFileAndExit(0);
     return 0;

@@ -7,6 +7,19 @@
 #include <spdlog/fmt/ostr.h>
 #include <memory>
 
-extern spdlog::logger* LOGGER;
 
+#ifdef MULTITHREADING
+#include <stefCommonHeaders/omp_mutex.hpp>
+extern omp_mutex LOG_MUTEX;
+#endif
+
+
+inline std::shared_ptr<spdlog::logger> log() {
+    #ifdef MULTITHREADING
+    std::lock_guard<omp_mutex> lockGuard(LOG_MUTEX);
+    #endif
+
+    return spdlog::get("logger");
+
+}
 

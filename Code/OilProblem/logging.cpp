@@ -1,11 +1,9 @@
 //
-// Created by Stefano Weidmann on 05.04.18.
+// Created by Stefano Weidmann on 08.05.18.
 //
 
 #include "logging.hpp"
-#include <stefCommonHeaders/logging.hpp>
 
-using namespace std;
-using namespace spdlog;
-
-logger* LOGGER = nullptr;
+#ifdef MULTITHREADING
+omp_mutex LOG_MUTEX;
+#endif

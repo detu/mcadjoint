@@ -4,8 +4,15 @@
 #include "dumpToMatFile.hpp"
 #include <unordered_map>
 #include <cstdlib>
-#include <mutex>
 #include <csignal>
+
+
+#ifdef MULTITHREADED
+#include <omp.h>
+#endif
+
+#include <stefCommonHeaders/omp_mutex.hpp>
+#include "logging.hpp"
 
 using MatricesToDump = std::unordered_map<std::string, Matrix>;
 using SparseMatricesToDump = std::unordered_map<std::string, SparseMatrix>;
@@ -16,8 +23,9 @@ static SparseMatricesToDump SPARSE_MATRICES_TO_DUMP;
 static std::string MAT_FILE_NAME = "";
 
 
-static std::mutex MAT_MUTEX;
-
+#ifdef MULTITHREADED
+static omp_mutex MAT_MUTEX;
+#endif
 
 static void dumpMatricesWithoutLock() {
     if (!MAT_FILE_NAME.empty()) {
@@ -35,12 +43,16 @@ static void dumpMatricesWithoutLock() {
 }
 
 void writeToMatFile() {
-    std::lock_guard<std::mutex> lockGuard(MAT_MUTEX);
+    #ifdef MULTITHREADED
+    std::lock_guard<omp_mutex> lockGuard(MAT_MUTEX);
+    #endif
     dumpMatricesWithoutLock();
 }
 
 void dumpInThisMatFile(const std::string& matFileName) {
-    std::lock_guard<std::mutex> lockGuard(MAT_MUTEX);
+#ifdef MULTITHREADED
+    std::lock_guard<omp_mutex> lockGuard(MAT_MUTEX);
+#endif
     MAT_FILE_NAME = matFileName;
 
 }
@@ -51,7 +63,9 @@ void dumpInThisMatFile(const std::string& matFileName) {
 
 
 void dumpThis(const char* varName, ConstMatrixRef matrix) {
-    std::lock_guard<std::mutex> lockGuard(MAT_MUTEX);
+#ifdef MULTITHREADED
+    std::lock_guard<omp_mutex> lockGuard(MAT_MUTEX);
+#endif
 
     Matrix& matrixToDump = MATRICES_TO_DUMP[std::string(varName)];
     matrixToDump.resizeLike(matrix);
@@ -65,11 +79,51 @@ void dumpThis(const char* varName, const Real scalar) {
 }
 
 void dumpThis(const char* varName, const SparseMatrix& matrix) {
-    std::lock_guard<std::mutex> lockGuard(MAT_MUTEX);
+#ifdef MULTITHREADED
+    std::lock_guard<omp_mutex> lockGuard(MAT_MUTEX);
+#endif
 
     SparseMatrix& matrixToDump = SPARSE_MATRICES_TO_DUMP[std::string(varName)];
     matrixToDump.resize(matrix.rows(), matrix.cols());
     matrixToDump.resizeNonZeros(matrix.nonZeros());
 
     matrixToDump = matrix;
+}
+
+void dumpThis(const char* varName, const std::vector<Real>& vector) {
+    return dumpThis(varName, Eigen::Map<const Vector>(vector.data(), vector.size()));
+}
+
+void dumpThis(const char* varName, const std::vector<Matrix>& matrices) {
+    if (matrices.empty()) {
+        return;
+    }
+
+    const int rowsOfFirstMatrix = matrices[0].rows();
+
+    int totalCols = 0;
+
+    for (const Matrix& matrix: matrices) {
+        const int rowsOfThisMatrix = matrix.rows();
+        if (rowsOfThisMatrix != rowsOfFirstMatrix) {
+            throw std::logic_error("Rows aren't constant!");
+        }
+
+        const int colsOfThisMatrix = matrix.cols();
+        totalCols += colsOfThisMatrix;
+    }
+
+    Matrix megaMatrix(rowsOfFirstMatrix, totalCols);
+
+    int beginColIndex = 0;
+
+    for (const Matrix& matrix: matrices) {
+        const int colsOfThisMatrix = matrix.cols();
+
+        megaMatrix.middleCols(beginColIndex, colsOfThisMatrix) = matrix;
+
+        beginColIndex += colsOfThisMatrix;
+    }
+
+    return dumpThis(varName, megaMatrix);
 }

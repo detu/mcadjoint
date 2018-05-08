@@ -98,7 +98,7 @@ Matrix computeFluxFunctionFactorDerivatives(ConstMatrixRef saturationsWater, con
     const auto saturationsOilArray = 1 - saturationsWaterArray;
 
     return (2 * dynamicViscosityOil * dynamicViscosityWater * saturationsOilArray * saturationsWaterArray).cwiseQuotient(
-          porosity * (dynamicViscosityWater * saturationsOilArray.square() + dynamicViscosityOil * saturationsWaterArray.square())).matrix();
+          porosity * (dynamicViscosityWater * saturationsOilArray.square() + dynamicViscosityOil * saturationsWaterArray.square()).square()).matrix();
 }
 
 

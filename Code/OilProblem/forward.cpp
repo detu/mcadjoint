@@ -12,28 +12,31 @@
 #include "adjoint.hpp"
 #include "dumpToMatFile.hpp"
 #include "utils.hpp"
+
+#ifdef MULTITHREADED
 #include <omp.h>
+#endif
 
 
 bool stepForwardProblem(const FixedParameters& params, const Eigen::Ref<const Matrix>& permeabilities,
                         SimulationState& currentState) {
     const Matrix totalMobilities = computeTotalMobilities(params.dynamicViscosityOil, params.dynamicViscosityWater, permeabilities, currentState.saturationsWater);
 
-    //logger().debug("total mobilities {}", totalMobilities);
+    //log()->debug("total mobilities {}", totalMobilities);
     const Real pressureDrillNow = params.overPressureDrill(currentState.time);
     const SparseMatrix pressureSystem = assemblePressureSystemWithBC(totalMobilities);
 
-    //logger().debug("pressure system {}", pressureSystem);
+    //log()->debug("pressure system {}", pressureSystem);
 
 
     const Real sourceAtDrillNow = std::abs(params.inflowPerUnitDepthWater(currentState.time));
 
 
-    //logger().debug("pressure rhs {}", pressureRhs);
+    //log()->debug("pressure rhs {}", pressureRhs);
     const Vector pressureRhs = computeRhsForPressureSystem(sourceAtDrillNow, currentState.saturationsWater.rows(), currentState.saturationsWater.cols());
     currentState.pressures = solvePressurePoissonProblem(pressureSystem, pressureRhs);
 
-    //logger().debug("pressures {}", currentState.pressures.vec);
+    //log()->debug("pressures {}", currentState.pressures.vec);
     return advanceSaturationsInTime(params, currentState.saturationsWater, currentState.pressures.map, totalMobilities, currentState.time);
 }
 
@@ -53,7 +56,7 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     }
 
     dumpThis("saturationsWater", simulationState.saturationsWater);
-    logger().debug("permeabilities =\n{}", permeabilities);
+    log()->debug("permeabilities =\n{}", permeabilities);
 
     const Matrix totalMobilities = computeTotalMobilities(params.dynamicViscosityOil, params.dynamicViscosityWater, permeabilities, simulationState.saturationsWater);
 
@@ -70,8 +73,8 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
 
 
     dumpThis("pressures", Matrix(simulationState.pressures.map));
-    logger().debug("pressures =\n{}", simulationState.pressures.map);
-    logger().debug("saturations Water =\n{}", simulationState.saturationsWater);
+    log()->debug("pressures =\n{}", simulationState.pressures.map);
+    log()->debug("saturations Water =\n{}", simulationState.saturationsWater);
 
 
     const CellIndex drillCell = findDrillCell(numberOfRows, numberOfCols);
@@ -132,15 +135,12 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     SparseMatrix correctedSaturationsWaterResidualsBySaturationsWater = saturationsWaterResidualsBySaturationsWater;
 
 
-    constexpr bool useFrobeniusFactor = true;
+    constexpr bool useConvergenceFactor = true;
     Real convergenceFactor = 1;
-    if (useFrobeniusFactor) {
-        const Real currentFrobeniusFactor = 1 / std::sqrt(frobeniusNormSquared(correctedPressureResidualsByPressures) + frobeniusNormSquared(correctedPressureResidualsBySaturationsWater)
-                                                   + frobeniusNormSquared(correctedSaturationsWaterResidualsByPressures) + frobeniusNormSquared(correctedSaturationsWaterResidualsBySaturationsWater));
+    if (useConvergenceFactor) {
 
-        simulationState.accumulatedConvergenceFactor *= currentFrobeniusFactor;
-
-        convergenceFactor = simulationState.accumulatedConvergenceFactor;
+        convergenceFactor = 1.0 / (sumOfAbsEntries(correctedPressureResidualsByPressures) + sumOfAbsEntries(correctedPressureResidualsBySaturationsWater)
+                                   + sumOfAbsEntries(correctedSaturationsWaterResidualsByPressures) + sumOfAbsEntries(correctedSaturationsWaterResidualsBySaturationsWater) + numberOfParameters);
 
     }
 
@@ -159,7 +159,7 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     const CMatrixSurrogate c(pressureResidualsByLogPermeabilities, saturationResidualsByLogPermeabilities,
                              numberOfRows, numberOfCols);
 
-    constexpr bool startAddingRandomWalksAtBeginning = false;
+    constexpr bool startAddingRandomWalksAtBeginning = true;
     const bool shouldAddRandomWalks = startAddingRandomWalksAtBeginning || (simulationState.saturationsWater.diagonal(-1).array() > 0).any();
 
     if (shouldAddRandomWalks) {
@@ -174,43 +174,61 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     constexpr bool showResidualDerivatives = false;
 
     if (showResidualDerivatives) {
-        logger().debug("pressure residuals by pressure =\n{}", pressureResidualsByPressures);
-        logger().debug("pressure residuals by satwater =\n{}", pressureResidualsBySaturationsWater);
-        logger().debug("satwater residuals by satwater =\n{}", saturationsWaterResidualsBySaturationsWater);
-        logger().debug("satwater residuals by pressure =\n{}", saturationsWaterResidualsByPressures);
+        log()->debug("pressure residuals by pressure =\n{}", pressureResidualsByPressures);
+        log()->debug("pressure residuals by satwater =\n{}", pressureResidualsBySaturationsWater);
+        log()->debug("satwater residuals by satwater =\n{}", saturationsWaterResidualsBySaturationsWater);
+        log()->debug("satwater residuals by pressure =\n{}", saturationsWaterResidualsByPressures);
 
-        logger().debug("corrected pressure residuals by pressure =\n{}", correctedPressureResidualsByPressures);
-        logger().debug("corrected pressure residuals by satwater =\n{}", correctedPressureResidualsBySaturationsWater);
-        logger().debug("corrected sat water residuals by sat water =\n{}", correctedSaturationsWaterResidualsBySaturationsWater);
-        logger().debug("corrected saturation residuals by pressure =\n{}",
+        log()->debug("corrected pressure residuals by pressure =\n{}", correctedPressureResidualsByPressures);
+        log()->debug("corrected pressure residuals by satwater =\n{}", correctedPressureResidualsBySaturationsWater);
+        log()->debug("corrected sat water residuals by sat water =\n{}", correctedSaturationsWaterResidualsBySaturationsWater);
+        log()->debug("corrected saturation residuals by pressure =\n{}",
                       correctedSaturationsWaterResidualsByPressures);
     }
 
     int advancedRandomWalks = 0;
     constexpr bool outputProgressTransitioning = false;
-    logger().debug("convergence factor = {}", convergenceFactor);
+    log()->debug("convergence factor = {}", convergenceFactor);
 
-    #pragma omp parallel for schedule(dynamic) reduction(+: advancedRandomWalks)
-    for (int randomWalkIndex = 0; randomWalkIndex < randomWalks.size(); ++randomWalkIndex) {
-        RandomWalkState& randomWalk = randomWalks[randomWalkIndex];
+    #ifdef MULTITHREADED
+    #pragma omp parallel
+    #endif
+    {
+        #ifdef MULTITHREADED
         Rng& rng = rngs[omp_get_thread_num()];
-        bool stillInTheSameTimestep = false;
-        do {
-            stillInTheSameTimestep = transitionState(randomWalk, b, correctedPressureResidualsByPressures,
-                                                     correctedPressureResidualsBySaturationsWater,
-                                                     correctedSaturationsWaterResidualsByPressures,
-                                                     correctedSaturationsWaterResidualsBySaturationsWater, convergenceFactor,
-                                                     numberOfRows, numberOfCols, rng);
-        } while (stillInTheSameTimestep);
+        #else
+        Rng& rng = rngs[0];
+        #endif
 
-        ++advancedRandomWalks;
+        #ifdef MULTITHREADED
+        #pragma omp for schedule(dynamic) reduction(+: advancedRandomWalks)
+        #endif
+        for (int randomWalkIndex = 0; randomWalkIndex < randomWalks.size(); ++randomWalkIndex) {
+            RandomWalkState& randomWalk = randomWalks[randomWalkIndex];
 
-        if (outputProgressTransitioning) {
-            logger().info("Random walk {} / {}", advancedRandomWalks, randomWalks.size());
+
+
+            bool stillInTheSameTimestep = false;
+            do {
+                stillInTheSameTimestep = transitionState(randomWalk, b, correctedPressureResidualsByPressures,
+                                                         correctedPressureResidualsBySaturationsWater,
+                                                         correctedSaturationsWaterResidualsByPressures,
+                                                         correctedSaturationsWaterResidualsBySaturationsWater,
+                                                         convergenceFactor,
+                                                         numberOfRows, numberOfCols, rng);
+            } while (stillInTheSameTimestep);
+
+            ++advancedRandomWalks;
+
+            if (outputProgressTransitioning) {
+                log()->info("Random walk {} / {}", advancedRandomWalks, randomWalks.size());
+            }
         }
     }
 
     logStatisticsAboutRandomWalks(randomWalks);
+
+
 
 
     const Matrix saturationsWaterDivergences = computeSaturationDivergences(fluxFunctionFactors, fluxesX, fluxesY, params.meshWidth);
