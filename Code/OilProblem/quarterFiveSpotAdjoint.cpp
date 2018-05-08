@@ -10,6 +10,7 @@
 #include "cellindex.hpp"
 #include "specialCells.hpp"
 #include <random>
+#include <stefCommonHeaders/omp_mutex.hpp>
 
 int n = -1;
 
@@ -36,7 +37,7 @@ int main(const int argc, const char** argv) {
     parseCommandLine(argc, argv);
     //StefFenv_CrashOnFPEs(FE_ALL_EXCEPT & ~FE_INEXACT & ~FE_UNDERFLOW);
 
-    auto sharedLogger = stefCommonHeaders::setUpLog(level);
+    auto sharedLogger = stefCommonHeaders::setUpLog<omp_mutex>(level);
     LOGGER = sharedLogger.get();
 
     if (n < 0) {

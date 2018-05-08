@@ -7,6 +7,6 @@
 #include <spdlog/fmt/ostr.h>
 #include <memory>
 
-
+extern spdlog::logger* LOGGER;
 
 

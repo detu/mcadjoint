@@ -13,6 +13,7 @@
 #include <argh.h>
 #include <stefCommonHeaders/logging.hpp>
 #include <memory>
+#include "
 
 int n = -1;
 std::unique_ptr<SimulationState> simulationState = nullptr;
@@ -35,7 +36,7 @@ void parseCommandLine(const int argc, const char** argv) {
     cmdl("-n") >> n;
     cmdl({"-l", "--level"}) >> levelName;
 
-    LOGGER = stefCommonHeaders::setUpLog(spdlog::level::from_str(levelName));
+    LOGGER = stefCommonHeaders::setUpLog<(spdlog::level::from_str(levelName));
     simulationState = std::unique_ptr<SimulationState>(new SimulationState(n, n));
 
 }
