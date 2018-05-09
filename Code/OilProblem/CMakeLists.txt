@@ -52,7 +52,7 @@ if(useCotire)
   cotire(commonLib)
 endif()
 
-
+set(quarterFiveSpotTraditionalSources quarterFiveSpotTraditional.cpp)
 set(quarterFiveSpotSources quarterFiveSpot.cpp)
 set(quarterFiveSpotAdjointSources quarterFiveSpotAdjoint.cpp)
 set(mainSources main.cpp)
@@ -65,7 +65,7 @@ add_executable(QuarterFiveSpot ${quarterFiveSpotSources})
 add_executable(QuarterFiveSpotAdjoint ${quarterFiveSpotAdjointSources})
 target_compile_definitions(TestVerbose PUBLIC -DVERBOSE_TESTS)
 add_executable(OilProblem ${mainSources})
-
+add_executable(QuarterFiveSpotTraditional ${quarterFiveSpotTraditionalSources})
 
 
 add_definitions(-DEIGEN_DEFAULT_DENSE_INDEX_TYPE=int -DEIGEN_NO_AUTOMATIC_RESIZING)
@@ -74,7 +74,7 @@ if (lowercaseBuildType STREQUAL "debug")
 endif()
 
 string(TOLOWER CMAKE_BUILD_TYPE lowercaseBuildType)
-foreach(executable IN ITEMS Test TestVerbose OilProblem QuarterFiveSpot QuarterFiveSpotAdjoint)
+foreach(executable IN ITEMS Test TestVerbose OilProblem QuarterFiveSpot QuarterFiveSpotAdjoint QuarterFiveSpotTraditional)
     target_link_libraries(${executable} commonLib)
     if (useCotire)
         cotire(${executable})

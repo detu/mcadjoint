@@ -10,8 +10,50 @@
 #include "pressure.hpp"
 #include "darcyVelocity.hpp"
 #include "dumpToMatFile.hpp"
+#include <ctime>
+#include <random>
 
 const char* MAT_FILE_NAME = "test.mat";
+
+Rng RNG(std::time(NULL));
+
+
+using NullaryExpression = std::function<Real()>;
+Matrix randomMatrix(const int numberOfRows, const int numberOfCols, const NullaryExpression& functor) {
+    Matrix matrix(numberOfRows, numberOfCols);
+
+    for (int j = 0; j < numberOfCols; ++j) {
+        for (int i = 0; i < numberOfRows; ++i) {
+            matrix(i, j) = functor();
+        }
+    }
+
+    return matrix;
+
+}
+
+Matrix randomLogNormalMatrix(const int n) {
+
+    std::lognormal_distribution<Real> lognormalDistribution(0, 1);
+
+    return randomMatrix(n, n, [&] () {return lognormalDistribution(RNG); });
+
+}
+
+Matrix randomNormalMatrix(const int n) {
+    std::normal_distribution<Real> normalDistribution(2, 100);
+    return randomMatrix(n, n, [&] () {return normalDistribution(RNG);});
+}
+
+
+
+
+void testPressureByPressureDerivative() {
+    const int n = 20;
+
+    const Matrix totalMobilities = randomLogNormalMatrix(n);
+
+}
 
 void testPressurePoisson() {
     const int n = 100;

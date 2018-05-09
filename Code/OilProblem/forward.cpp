@@ -144,11 +144,10 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     Real convergenceFactor = 1;
     if (useConvergenceFactor) {
 
-        convergenceFactor = 1.0 / (sumOfAbsEntries(correctedPressureResidualsByPressures) + sumOfAbsEntries(correctedPressureResidualsBySaturationsWater)
-                                   + sumOfAbsEntries(correctedSaturationsWaterResidualsByPressures) + sumOfAbsEntries(correctedSaturationsWaterResidualsBySaturationsWater) + numberOfParameters);
+        convergenceFactor = 1.0 / (sumOfAbsEntries(correctedPressureResidualsByPressures)); // + sumOfAbsEntries(correctedPressureResidualsBySaturationsWater)
+                                        //+ sumOfAbsEntries(correctedSaturationsWaterResidualsByPressures) + sumOfAbsEntries(correctedSaturationsWaterResidualsBySaturationsWater) + numberOfParameters);
 
     }
-
 
 
 
@@ -233,6 +232,133 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
 
     logStatisticsAboutRandomWalks(randomWalks);
 
+
+
+
+    const Matrix saturationsWaterDivergences = computeSaturationDivergences(fluxFunctionFactors, fluxesX, fluxesY, params.meshWidth);
+    simulationState.saturationsWater -= timestep * saturationsWaterDivergences;
+    dumpThis("saturationsWaterDivergences", saturationsWaterDivergences);
+    simulationState.time += timestep;
+    drillCell(simulationState.saturationsWater) = 1;
+
+    const CellIndex wellCell = findWellCell(numberOfRows, numberOfCols);
+    const bool breakthroughHappened = std::abs(wellCell(simulationState.saturationsWater)) > 1e-16;
+
+    if (currentTimelevel % 10 == 0) {
+        writeToMatFile();
+    }
+
+    return breakthroughHappened;
+}
+
+
+bool stepForwardAndAdjointProblemTraditional(const FixedParameters& params, const Eigen::Ref<const Matrix>& permeabilities,
+                                  const int currentTimelevel, SimulationState& simulationState, Matrix& adjointMatrix, Vector& adjointRhs) {
+    const int numberOfRows = permeabilities.rows();
+    const int numberOfCols = permeabilities.cols();
+    const int numberOfParameters = permeabilities.size();
+
+    const bool isFirstTimestep = simulationState.time <= 0;
+
+    if (isFirstTimestep) {
+        simulationState.saturationsWater.resizeLike(params.initialSaturationsWater);
+        simulationState.saturationsWater = params.initialSaturationsWater;
+    }
+
+    dumpThis("saturationsWater", simulationState.saturationsWater);
+    log()->debug("permeabilities =\n{}", permeabilities);
+
+    const Matrix totalMobilities = computeTotalMobilities(params.dynamicViscosityOil, params.dynamicViscosityWater, permeabilities, simulationState.saturationsWater);
+
+    // solve pressure system
+
+    const Real pressureDrillNow = params.overPressureDrill(simulationState.time);
+    const SparseMatrix pressureSystem = assemblePressureSystemWithBC(totalMobilities);
+    const Real sourceAtDrillNow = std::abs(params.inflowPerUnitDepthWater(simulationState.time));
+
+
+    const Vector pressureRhs = computeRhsForPressureSystem(sourceAtDrillNow, simulationState.saturationsWater.rows(),
+                                                           simulationState.saturationsWater.cols());
+    simulationState.pressures = solvePressurePoissonProblem(pressureSystem, pressureRhs);
+
+
+    dumpThis("pressures", Matrix(simulationState.pressures.map));
+    log()->debug("pressures =\n{}", simulationState.pressures.map);
+    log()->debug("saturations Water =\n{}", simulationState.saturationsWater);
+
+
+    const CellIndex drillCell = findDrillCell(numberOfRows, numberOfCols);
+    const Real computedPressureAtDrillCell = drillCell(simulationState.pressures.map);
+    const Real measuredPressureAtDrillCell = params.overPressureDrill(0);
+
+
+    const Real firstTimestep = getFirstTimestep();
+    const SparseMatrix pressureResidualsByLogPermeabilities = computePressureResidualsByLogPermeability(simulationState.pressures.map, totalMobilities);
+    dumpThis("pressureResidualsByLogPermeabilities", pressureResidualsByLogPermeabilities);
+
+    const Matrix fluxFunctionFactors = computeFluxFunctionFactors(simulationState.saturationsWater, params.porosity, params.dynamicViscosityWater, params.dynamicViscosityOil);
+    dumpThis("fluxFunctionFactors", fluxFunctionFactors);
+
+    const Matrix pressureDerivativesX = computeXDerivative(simulationState.pressures.map, params.meshWidth);
+    const Matrix darcyVelocitiesX = computeTotalDarcyVelocitiesX(totalMobilities, pressureDerivativesX);
+    const Matrix fluxesX = computeFluxesX(fluxFunctionFactors, darcyVelocitiesX);
+
+    const Matrix pressureDerivativesY = computeYDerivative(simulationState.pressures.map, params.meshWidth);
+    const Matrix darcyVelocitiesY = computeTotalDarcyVelocitiesY(totalMobilities, pressureDerivativesY);
+    const Matrix fluxesY = computeFluxesY(fluxFunctionFactors, darcyVelocitiesY);
+
+    const Real timestep = computeTimestep(fluxFunctionFactors, darcyVelocitiesX, darcyVelocitiesY, params.meshWidth, params.finalTime, simulationState.time);
+
+
+    const SparseMatrix saturationResidualsByLogPermeabilities = computeSaturationsWaterResidualsByLogPermeability(pressureDerivativesX, pressureDerivativesY, totalMobilities, firstTimestep, params.meshWidth);
+    dumpThis("saturationResidualsByLogPermeabilities", saturationResidualsByLogPermeabilities);
+
+
+
+    SparseMatrix pressureResidualsByPressures = computePressureResidualsDerivedByPressure(pressureSystem);
+
+
+    const Matrix totalMobilitiesDerivedBySaturationsWater = computeTotalMobilitiesDerivedBySaturationsWater(permeabilities, simulationState.saturationsWater, params.dynamicViscosityOil, params.dynamicViscosityWater);
+    SparseMatrix pressureResidualsBySaturationsWater = computePressureResidualsDerivedBySaturationWater(simulationState.pressures.map, totalMobilities, totalMobilitiesDerivedBySaturationsWater);
+
+    SparseMatrix saturationsWaterResidualsByPressures = computeSaturationWaterResidualsDerivedByPressure(pressureSystem, fluxFunctionFactors, darcyVelocitiesX, darcyVelocitiesY, totalMobilities, timestep, params.meshWidth);
+    const Matrix fluxFunctionFactorDerivatives = computeFluxFunctionFactorDerivatives(simulationState.saturationsWater, params.porosity, params.dynamicViscosityWater, params.dynamicViscosityOil);
+    SparseMatrix saturationsWaterResidualsBySaturationsWater = computeSaturationWaterResidualsDerivedBySaturationWater(
+          fluxFunctionFactors, fluxFunctionFactorDerivatives,
+          darcyVelocitiesX, darcyVelocitiesY,
+          pressureDerivativesX, pressureDerivativesY,
+          totalMobilities, totalMobilitiesDerivedBySaturationsWater,
+          timestep, params.meshWidth);
+
+    const int n = numberOfRows;
+    const int stateSize = 2 * n * n;
+    auto adjointMatrixDiagonalBlock = adjointMatrix.block(stateSize * currentTimelevel, stateSize * currentTimelevel, stateSize, stateSize);
+    adjointMatrixDiagonalBlock << Matrix(pressureResidualsByPressures.transpose()), Matrix(saturationsWaterResidualsByPressures.transpose()),
+          Matrix::Zero(n*n, n*n), Matrix::Zero(n*n, n*n);
+
+
+
+    if (stateSize * (currentTimelevel+1) < adjointMatrix.cols()) {
+        auto adjointMatrixOffDiagonalBlock = adjointMatrix.block(stateSize * currentTimelevel,
+                                                                 stateSize * (currentTimelevel + 1), stateSize,
+                                                                 stateSize);
+
+        adjointMatrixOffDiagonalBlock << Matrix::Zero(n * n, n * n), Matrix::Zero(n * n, n * n),
+              Matrix(pressureResidualsBySaturationsWater.transpose()), Matrix(
+              saturationsWaterResidualsBySaturationsWater.transpose());
+    }
+
+
+
+
+    const int drillCellLinearIndex = drillCell.linearIndex(numberOfRows);
+
+    auto adjointRhsSegment = adjointRhs.segment(stateSize * currentTimelevel, stateSize);
+    const BVectorSurrogate b(computedPressureAtDrillCell, measuredPressureAtDrillCell, numberOfRows, numberOfCols);
+
+    for (int i = 0; i < stateSize; ++i) {
+        adjointRhsSegment(i) = b(i);
+    }
 
 
 

@@ -72,7 +72,7 @@ bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
         // for pressures there's the probability to stay at the same place
         const CellIndex meToMyself = pressureToTransmissibilityIndex(currentState.cell, currentState.cell, numberOfRows);
 
-        const Real correspondingEntryOfAMatrix = (1 - meToMyself(pressureResidualsByPressures)) * convergenceFactor;
+        const Real correspondingEntryOfAMatrix = 1 - meToMyself(pressureResidualsByPressures) * convergenceFactor;
         const Real correspondingEntryOfBVector = b(currentState.cell, iAmAPressure) * convergenceFactor;
         const Real unnormalizedProbabilityOfStayingHere = std::abs(1 - meToMyself(pressureResidualsByPressures));
 

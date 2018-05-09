@@ -1,6 +1,7 @@
 //
-// Created by Stefano Weidmann on 30.04.18.
+// Created by Stefano Weidmann on 09.05.18.
 //
+
 #include "minimizer.hpp"
 #include "dumpToMatFile.hpp"
 #include <argh.h>
@@ -10,6 +11,7 @@
 #include "cellindex.hpp"
 #include "specialCells.hpp"
 #include <random>
+#include "forward.hpp"
 
 int n = -1;
 
@@ -20,7 +22,7 @@ void parseCommandLine(const int argc, const char** argv) {
     cmdl.parse(argc, argv, argh::parser::PREFER_PARAM_FOR_UNREG_OPTION);
 
     std::string levelName = "info";
-    std::string matFileName = "fieldsQuarterFiveSpotAdjoint.mat";
+    std::string matFileName = "fieldsQuarterFiveSpotTraditional.mat";
     cmdl({"-n", "--dimension"}) >> n;
     cmdl({"-l", "--level"}) >> levelName;
     cmdl({"-m", "--matfile"}) >> matFileName;
@@ -31,8 +33,7 @@ void parseCommandLine(const int argc, const char** argv) {
     dumpInThisMatFile(matFileName);
 }
 
-
-int main(const int argc, const char** argv) {
+int main(int argc, const char** argv) {
     parseCommandLine(argc, argv);
     //StefFenv_CrashOnFPEs(FE_ALL_EXCEPT & ~FE_INEXACT & ~FE_UNDERFLOW);
 
@@ -55,7 +56,8 @@ int main(const int argc, const char** argv) {
     constexpr Real fieldWidth = 1;
 
     params.meshWidth = fieldWidth / Real(n);
-    params.finalTime = 1;
+
+    params.finalTime = 0.1;
     params.inflowPerUnitDepthWater = [&] (const Real time) {
         return 1;
     };
@@ -73,42 +75,32 @@ int main(const int argc, const char** argv) {
 
     const Real milliDarcy = 1;
     params.initialPermeabilities.resizeLike(params.initialSaturationsWater);
+    params.initialPermeabilities.setOnes();
 
-    constexpr bool useLognormal = false;
-    constexpr bool constantOne = true;
-    constexpr bool channel = false;
-    if (useLognormal) {
-        std::lognormal_distribution<Real> lognormalDistribution(milliDarcy, 1);
-        Rng rng;
 
-        for (int j = 0; j < params.initialPermeabilities.cols(); ++j) {
-            for (int i = 0; i < params.initialPermeabilities.rows(); ++i) {
-                params.initialPermeabilities(i, j) = lognormalDistribution(rng);
-            }
-        }
-    } else if (constantOne) {
-        params.initialPermeabilities.setOnes();
-    } else if (channel) {
-        params.initialPermeabilities.setConstant(1e-5);
-        CellIndex pos = findDrillCell(n, n);
-        const CellIndex last = findWellCell(n, n);
+    const int numberOfTimesteps = 2;
 
-        do {
-            pos(params.initialPermeabilities) = 1;
-            pos.i--;
-            pos.j++;
-        } while (pos != last);
+    const int stateSize = 2*n*n;
+    Matrix adjointMatrix(stateSize * numberOfTimesteps, stateSize * numberOfTimesteps);
+    Vector adjointRhs(stateSize * numberOfTimesteps);
 
-        last(params.initialPermeabilities) = 1;
+    adjointRhs.setZero();
+    adjointMatrix.setZero();
 
+    SimulationState simulationState(n, n);
+
+    for (int currentTimelevel = 0; currentTimelevel < numberOfTimesteps; ++currentTimelevel) {
+        (void) stepForwardAndAdjointProblemTraditional(params, params.initialPermeabilities, currentTimelevel, simulationState, adjointMatrix, adjointRhs);
     }
 
+    dumpThis("adjointMatrix", adjointMatrix);
+    dumpThis("adjointRhs", adjointRhs);
 
 
-
-    (void) matchWithPermeabilities(params, n, n, 1e-6, 100);
-
-    spdlog::drop_all();
+    const Vector adjoint = adjointMatrix.lu().solve(adjointRhs);
+    std::cout << "Adjoint =\n" << adjoint;
+    dumpThis("adjoint", adjoint);
+    writeToMatFile();
 
     return 0;
 
