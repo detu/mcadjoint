@@ -2,6 +2,7 @@
 // Created by Stefano Weidmann on 13.03.18.
 //
 
+#include <cmath>
 #include <algorithm>
 #include "utils.hpp"
 #include "logging.hpp"
@@ -45,4 +46,29 @@ Real sumOfAbsEntries(const SparseMatrix& matrix) {
     }
 
     return absSum;
+}
+
+bool allOf(const SparseMatrix& matrix, const Predicate<Real>& predicate) {
+    return std::all_of(matrix.valuePtr(), matrix.valuePtr() + matrix.nonZeros(), predicate);
+}
+
+bool allOf(ConstMatrixRef matrix, const Predicate<Real>& predicate) {
+    return std::all_of(matrix.data(), matrix.data() + matrix.size(), predicate);
+}
+
+bool anyOf(const SparseMatrix& matrix, const Predicate<Real>& predicate) {
+    return std::any_of(matrix.valuePtr(), matrix.valuePtr() + matrix.nonZeros(), predicate);
+
+}
+
+bool anyOf(ConstMatrixRef matrix, const Predicate<Real>& predicate) {
+    return std::any_of(matrix.data(), matrix.data() + matrix.size(), predicate);
+}
+
+bool allFinite(ConstMatrixRef matrix) {
+    return allOf(matrix, [] (const Real x) { return std::abs(x) < 1e20; });
+}
+
+bool allFinite(const SparseMatrix& matrix) {
+    return allOf(matrix,[] (const Real x) { return std::abs(x) < 1e20; });
 }

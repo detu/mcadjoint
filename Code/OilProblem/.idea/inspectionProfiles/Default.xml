@@ -79,6 +79,16 @@
     <inspection_tool class="FlowJSConfig" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="FlowJSFlagCommentPlacement" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="FormatSpecifiers" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="FortranConstructNameMismatch" enabled="false" level="ERROR" enabled_by_default="false" />
+    <inspection_tool class="FortranContinue" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="FortranLabeledDo" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="FortranNonstandardKind" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="FortranObsoleteOperator" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="FortranProgramUnitNameMismatch" enabled="false" level="ERROR" enabled_by_default="false" />
+    <inspection_tool class="FortranStmtOrder" enabled="false" level="ERROR" enabled_by_default="false" />
+    <inspection_tool class="FortranUnresolvedLabel" enabled="false" level="ERROR" enabled_by_default="false" />
+    <inspection_tool class="FortranUnusedConstructName" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="FortranUnusedLabel" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="FunctionImplicitDeclarationInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="HardwiredNamespacePrefix" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="HidesUpperScope" enabled="false" level="WARNING" enabled_by_default="false" />
@@ -192,6 +202,7 @@
     <inspection_tool class="LocalValueEscapesScope" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="LoopStatementThatDoesntLoopJS" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="LossyEncoding" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="MarkdownUnresolvedFileReference" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="MissingReturn" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="MissingSwitchCase" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="NonAsciiCharacters" enabled="false" level="WARNING" enabled_by_default="false" />

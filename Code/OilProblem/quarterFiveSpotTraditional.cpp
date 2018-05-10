@@ -2,6 +2,10 @@
 // Created by Stefano Weidmann on 09.05.18.
 //
 
+#ifndef JUST_COMPUTE_ADJOINT
+    #error "MUST DEFINE JUST_COMPUTE_ADJOINT"
+#endif
+
 #include "minimizer.hpp"
 #include "dumpToMatFile.hpp"
 #include <argh.h>
@@ -12,6 +16,9 @@
 #include "specialCells.hpp"
 #include <random>
 #include "forward.hpp"
+#include "utils.hpp"
+#include "sensitivity.hpp"
+#include <vector>
 
 int n = -1;
 
@@ -35,7 +42,6 @@ void parseCommandLine(const int argc, const char** argv) {
 
 int main(int argc, const char** argv) {
     parseCommandLine(argc, argv);
-    //StefFenv_CrashOnFPEs(FE_ALL_EXCEPT & ~FE_INEXACT & ~FE_UNDERFLOW);
 
 
 
@@ -65,9 +71,11 @@ int main(int argc, const char** argv) {
     params.dynamicViscosityOil = 1;//0.630; // SAE motor oil 20°C
     params.dynamicViscosityWater = 1;//0.0010518; // Water 20°C
 
+    const int numberOfTimesteps = 2;
     params.porosity = 1;
     params.initialSaturationsWater.resize(n, n);
     params.initialSaturationsWater.setConstant(0);
+    params.maxNumberOfTimesteps = numberOfTimesteps;
 
     const CellIndex drillCell = findDrillCell(n, n);
     drillCell(params.initialSaturationsWater) = 1;
@@ -78,7 +86,6 @@ int main(int argc, const char** argv) {
     params.initialPermeabilities.setOnes();
 
 
-    const int numberOfTimesteps = 2;
 
     const int stateSize = 2*n*n;
     Matrix adjointMatrix(stateSize * numberOfTimesteps, stateSize * numberOfTimesteps);
@@ -87,19 +94,39 @@ int main(int argc, const char** argv) {
     adjointRhs.setZero();
     adjointMatrix.setZero();
 
-    SimulationState simulationState(n, n);
 
+    SimulationState simulationState(n, n);
+    SimulationState mcSimulationState(n, n);
     for (int currentTimelevel = 0; currentTimelevel < numberOfTimesteps; ++currentTimelevel) {
         (void) stepForwardAndAdjointProblemTraditional(params, params.initialPermeabilities, currentTimelevel, simulationState, adjointMatrix, adjointRhs);
+        //(void) stepForwardAndAdjointProblem(params, params.initialPermeabilities, currentTimelevel, mcSimulationState);
+
+        dumpThis("adjointMatrixTrad", adjointMatrix);
+        dumpThis("adjointRhsTrad", adjointRhs);
+        writeToMatFile();
+        ASSERT(allFinite(adjointMatrix));
+        ASSERT(allFinite(adjointRhs));
     }
 
-    dumpThis("adjointMatrix", adjointMatrix);
-    dumpThis("adjointRhs", adjointRhs);
+
+    std::vector<Rng> rngs(1);
+    const auto sensitivityAndCost = computeSensitivityAndCost(params, params.initialPermeabilities, rngs);
+
+    dumpThis("adjointMC", sensitivityAndCost.sensitivity);
+
+    ASSERT(allFinite(adjointMatrix));
+    ASSERT(allFinite(adjointRhs));
+
+    dumpThis("adjointMatrixTrad", adjointMatrix);
+    dumpThis("adjointMatrixTradEigenvalues", Vector(adjointMatrix.eigenvalues().array().abs().matrix()));
+    dumpThis("adjointRhsTrad", adjointRhs);
+    dumpThis("correctedAdjointMatrixTradEigenvalues", (adjointMatrix.diagonal().asDiagonal().inverse() * adjointMatrix).eigenvalues().array().abs().matrix());
 
 
     const Vector adjoint = adjointMatrix.lu().solve(adjointRhs);
-    std::cout << "Adjoint =\n" << adjoint;
-    dumpThis("adjoint", adjoint);
+    dumpThis("adjointTrad", adjoint);
+
+
     writeToMatFile();
 
     return 0;

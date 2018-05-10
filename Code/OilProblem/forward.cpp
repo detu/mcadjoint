@@ -143,8 +143,8 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     constexpr bool useConvergenceFactor = true;
     Real convergenceFactor = 1;
     if (useConvergenceFactor) {
-
-        convergenceFactor = 1.0 / (sumOfAbsEntries(correctedPressureResidualsByPressures)); // + sumOfAbsEntries(correctedPressureResidualsBySaturationsWater)
+        convergenceFactor = 0.2;
+        /*convergenceFactor = 1.0 / (sumOfAbsEntries(correctedPressureResidualsByPressures)); // + sumOfAbsEntries(correctedPressureResidualsBySaturationsWater)*/
                                         //+ sumOfAbsEntries(correctedSaturationsWaterResidualsByPressures) + sumOfAbsEntries(correctedSaturationsWaterResidualsBySaturationsWater) + numberOfParameters);
 
     }
@@ -254,6 +254,10 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
 
 bool stepForwardAndAdjointProblemTraditional(const FixedParameters& params, const Eigen::Ref<const Matrix>& permeabilities,
                                   const int currentTimelevel, SimulationState& simulationState, Matrix& adjointMatrix, Vector& adjointRhs) {
+
+    ASSERT(allFinite(adjointMatrix));
+    ASSERT(allFinite(adjointRhs));
+
     const int numberOfRows = permeabilities.rows();
     const int numberOfCols = permeabilities.cols();
     const int numberOfParameters = permeabilities.size();
@@ -317,11 +321,13 @@ bool stepForwardAndAdjointProblemTraditional(const FixedParameters& params, cons
 
     SparseMatrix pressureResidualsByPressures = computePressureResidualsDerivedByPressure(pressureSystem);
 
-
     const Matrix totalMobilitiesDerivedBySaturationsWater = computeTotalMobilitiesDerivedBySaturationsWater(permeabilities, simulationState.saturationsWater, params.dynamicViscosityOil, params.dynamicViscosityWater);
     SparseMatrix pressureResidualsBySaturationsWater = computePressureResidualsDerivedBySaturationWater(simulationState.pressures.map, totalMobilities, totalMobilitiesDerivedBySaturationsWater);
+    ASSERT(allFinite(pressureResidualsBySaturationsWater));
 
     SparseMatrix saturationsWaterResidualsByPressures = computeSaturationWaterResidualsDerivedByPressure(pressureSystem, fluxFunctionFactors, darcyVelocitiesX, darcyVelocitiesY, totalMobilities, timestep, params.meshWidth);
+    ASSERT(allFinite(saturationsWaterResidualsByPressures));
+
     const Matrix fluxFunctionFactorDerivatives = computeFluxFunctionFactorDerivatives(simulationState.saturationsWater, params.porosity, params.dynamicViscosityWater, params.dynamicViscosityOil);
     SparseMatrix saturationsWaterResidualsBySaturationsWater = computeSaturationWaterResidualsDerivedBySaturationWater(
           fluxFunctionFactors, fluxFunctionFactorDerivatives,
@@ -330,22 +336,41 @@ bool stepForwardAndAdjointProblemTraditional(const FixedParameters& params, cons
           totalMobilities, totalMobilitiesDerivedBySaturationsWater,
           timestep, params.meshWidth);
 
+    dumpThis("saturationsWaterResidualsBySaturationsWaterTrad", saturationsWaterResidualsBySaturationsWater);
+    dumpThis("saturationsWaterResidualsByPressuresTrad", saturationsWaterResidualsByPressures);
+    dumpThis("pressureResidualsBySaturationsWaterTrad", pressureResidualsBySaturationsWater);
+    dumpThis("pressureResidualsByPressuresTrad", pressureResidualsByPressures);
+    writeToMatFile();
+
     const int n = numberOfRows;
     const int stateSize = 2 * n * n;
-    auto adjointMatrixDiagonalBlock = adjointMatrix.block(stateSize * currentTimelevel, stateSize * currentTimelevel, stateSize, stateSize);
-    adjointMatrixDiagonalBlock << Matrix(pressureResidualsByPressures.transpose()), Matrix(saturationsWaterResidualsByPressures.transpose()),
-          Matrix::Zero(n*n, n*n), Matrix::Zero(n*n, n*n);
+    const int fromDiagRow = stateSize * currentTimelevel;
+    const int fromDiagCol = fromDiagRow;
+    log()->debug("Diagonal block ({}-{}) x ({}-{})", fromDiagRow, fromDiagRow + stateSize, fromDiagCol, fromDiagCol + stateSize);
+    adjointMatrix.block(fromDiagRow, fromDiagCol, stateSize/2, stateSize/2) = pressureResidualsByPressures.transpose();
+    adjointMatrix.block(fromDiagRow, fromDiagCol + stateSize/2, stateSize/2, stateSize/2) = saturationsWaterResidualsByPressures.transpose();
+    adjointMatrix.block(fromDiagRow + stateSize/2, fromDiagCol + stateSize/2, stateSize/2, stateSize/2).setIdentity();
+
+
+    log()->debug("Pressure by pressure = \n{}", pressureResidualsByPressures);
+    log()->debug("Saturations water residuals by pressure =\n{}", saturationsWaterResidualsByPressures);
+
+    ASSERT(allFinite(pressureResidualsByPressures));
+    ASSERT(allFinite(saturationsWaterResidualsByPressures));
 
 
 
-    if (stateSize * (currentTimelevel+1) < adjointMatrix.cols()) {
-        auto adjointMatrixOffDiagonalBlock = adjointMatrix.block(stateSize * currentTimelevel,
-                                                                 stateSize * (currentTimelevel + 1), stateSize,
-                                                                 stateSize);
+    const int fromOffDiagRow = stateSize * currentTimelevel;
+    const int fromOffDiagCol = fromDiagRow + stateSize;
+    if (fromOffDiagCol < adjointMatrix.cols()) {
 
-        adjointMatrixOffDiagonalBlock << Matrix::Zero(n * n, n * n), Matrix::Zero(n * n, n * n),
-              Matrix(pressureResidualsBySaturationsWater.transpose()), Matrix(
-              saturationsWaterResidualsBySaturationsWater.transpose());
+
+        log()->debug("Off diagonal block ({}-{}) x ({}-{})", fromOffDiagRow, fromOffDiagRow + stateSize, fromOffDiagCol, fromOffDiagCol + stateSize);
+
+
+        adjointMatrix.block(fromOffDiagRow + stateSize/2, fromOffDiagCol, stateSize/2, stateSize/2) = pressureResidualsBySaturationsWater.transpose();
+        adjointMatrix.block(fromOffDiagRow + stateSize/2, fromOffDiagCol + stateSize/2, stateSize/2, stateSize/2) = saturationsWaterResidualsBySaturationsWater.transpose();
+
     }
 
 
@@ -353,18 +378,17 @@ bool stepForwardAndAdjointProblemTraditional(const FixedParameters& params, cons
 
     const int drillCellLinearIndex = drillCell.linearIndex(numberOfRows);
 
-    auto adjointRhsSegment = adjointRhs.segment(stateSize * currentTimelevel, stateSize);
     const BVectorSurrogate b(computedPressureAtDrillCell, measuredPressureAtDrillCell, numberOfRows, numberOfCols);
 
     for (int i = 0; i < stateSize; ++i) {
-        adjointRhsSegment(i) = b(i);
+        adjointRhs.segment(stateSize * currentTimelevel, stateSize)(i) = b(i);
     }
 
 
 
     const Matrix saturationsWaterDivergences = computeSaturationDivergences(fluxFunctionFactors, fluxesX, fluxesY, params.meshWidth);
     simulationState.saturationsWater -= timestep * saturationsWaterDivergences;
-    dumpThis("saturationsWaterDivergences", saturationsWaterDivergences);
+    dumpThis("saturationsWaterDivergencesTrad", saturationsWaterDivergences);
     simulationState.time += timestep;
     drillCell(simulationState.saturationsWater) = 1;
 

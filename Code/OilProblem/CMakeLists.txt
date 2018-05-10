@@ -11,6 +11,10 @@ if (useOpenMP)
     add_definitions(-DMULTITHREADED)
 endif()
 
+if (CMAKE_COMPILER_IS_GNUCC)
+    set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall")
+endif()
+
 option(USE_MKL_IF_PRESENT "Use Intel MKL if present" OFF)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -21,7 +25,7 @@ get_filename_component(thirdPartyDir "${CMAKE_CURRENT_SOURCE_DIR}/../thirdParty"
 include("${thirdPartyDir}/stefcommonheaders/CMakeLists.txt")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}")
 
-set(useCotire ON)
+set(useCotire OFF)
 
 if (useCotire)
     set(COTIRE_UNITY_SOURCE_MAXIMUM_NUMBER_OF_INCLUDES -j)
@@ -45,12 +49,8 @@ set(baseLibSources control.cpp gnuplot_i.cpp utils.cpp logging.cpp)
 set(oilLibHeaders typedefs.hpp cellindex.hpp vectorToBeMappedAsMatrix.hpp fixedParameters.hpp simulationState.hpp specialCells.hpp bVectorSurrogate.hpp cMatrixSurrogate.hpp randomWalkState.hpp
         pressure.hpp darcyVelocity.hpp saturation.hpp forward.hpp derivativesForAdjoint.hpp adjoint.hpp sensitivity.hpp dumpToMatFile.hpp)
 set(oilLibSources pressure.cpp darcyVelocity.cpp saturation.cpp forward.cpp derivativesForAdjoint.cpp adjoint.cpp sensitivity.cpp minimizer.cpp dumpToMatFile.cpp)
-add_library(commonLib STATIC ${oilLibSources} ${oilLibHeaders} ${baseLibSources} ${baseLibHeaders})
-target_link_libraries(commonLib stefCommonHeaders simplematio)
+set(allCommonHeadersAndSources ${oilLibSources} ${oilLibHeaders} ${baseLibSources} ${baseLibHeaders})
 
-if(useCotire)
-  cotire(commonLib)
-endif()
 
 set(quarterFiveSpotTraditionalSources quarterFiveSpotTraditional.cpp)
 set(quarterFiveSpotSources quarterFiveSpot.cpp)
@@ -72,10 +72,12 @@ add_definitions(-DEIGEN_DEFAULT_DENSE_INDEX_TYPE=int -DEIGEN_NO_AUTOMATIC_RESIZI
 if (lowercaseBuildType STREQUAL "debug")
     add_definitions(-DEIGEN_INITIALIZE_MATRICES_BY_NAN)
 endif()
+target_compile_definitions(QuarterFiveSpotTraditional PUBLIC -DJUST_COMPUTE_ADJOINT)
 
 string(TOLOWER CMAKE_BUILD_TYPE lowercaseBuildType)
 foreach(executable IN ITEMS Test TestVerbose OilProblem QuarterFiveSpot QuarterFiveSpotAdjoint QuarterFiveSpotTraditional)
-    target_link_libraries(${executable} commonLib)
+    target_sources("${executable}" PUBLIC "${allCommonHeadersAndSources}")
+    target_link_libraries("${executable}" stefCommonHeaders simplematio)
     if (useCotire)
         cotire(${executable})
     endif()

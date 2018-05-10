@@ -8,6 +8,10 @@
 #include "pressure.hpp"
 #include "utils.hpp"
 
+#ifdef JUST_COMPUTE_ADJOINT
+    #pragma message("Computing adjoint in mcmc")
+#endif
+
 struct CMatrixSurrogate {
 
     inline CMatrixSurrogate(const SparseMatrix& pressureResidualsByLogPermeability, const SparseMatrix& saturationWaterResidualsByLogPermeability, const int numberOfRows, const int numberOfCols):
@@ -21,27 +25,24 @@ struct CMatrixSurrogate {
     const int endIndexInPressurePart;
     const int numberOfRows;
 
-    inline Real operator()(int linearStateIndex, const int linearParameterIndex) const {
-
-        const bool isAPressure = linearStateIndex < endIndexInPressurePart;
-
-        if (!isAPressure) {
-            linearStateIndex -= endIndexInPressurePart;
-        }
-
-        const CellIndex stateCell = CellIndex::fromLinearIndex(linearStateIndex, numberOfRows);
-        const CellIndex parameterCell = CellIndex::fromLinearIndex(linearParameterIndex, numberOfRows);
-
-
-    }
 
     inline Real operator() (const CellIndex stateCell, const CellIndex parameterCell, const bool isAPressure) const {
-        const CellIndex derivativeCell = pressureToTransmissibilityIndex(stateCell, parameterCell, numberOfRows);
+        CellIndex derivativeCell = pressureToTransmissibilityIndex(stateCell, parameterCell, numberOfRows);
+
+
+        #ifdef JUST_COMPUTE_ADJOINT
+        if (!isAPressure) {
+            derivativeCell.j += endIndexInPressurePart;
+        }
+        return -Real(derivativeCell.i == derivativeCell.j);
+        #else
+
         if (isAPressure) {
             return derivativeCell(pressureResidualsByLogPermeability);
         } else {
             return derivativeCell(saturationWaterResidualsByLogPermeability);
         }
+        #endif
     }
 
 };

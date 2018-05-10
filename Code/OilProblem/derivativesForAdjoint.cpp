@@ -6,7 +6,7 @@
 #include "darcyVelocity.hpp"
 #include "specialCells.hpp"
 #include "pressure.hpp"
-#include <stefCommonHeaders/dev.hpp>
+#include "utils.hpp"
 
 inline static Real hmeanDerivedBySecond(const Real a, const Real b) {
     return 2*std::pow(a/(a+b), 2);
@@ -14,6 +14,7 @@ inline static Real hmeanDerivedBySecond(const Real a, const Real b) {
 
 
 SparseMatrix computePressureResidualsDerivedByPressure(const SparseMatrix& pressureSystem) {
+    ASSERT(allFinite(pressureSystem));
     return pressureSystem;
 }
 
@@ -94,6 +95,7 @@ SparseMatrix computePressureResidualsDerivedBySaturationWater(ConstMatrixRef pre
 
 
     derivatives.makeCompressed();
+    ASSERT(allFinite(derivatives));
     return derivatives;
 }
 
@@ -204,6 +206,7 @@ SparseMatrix computeSaturationWaterResidualsDerivedBySaturationWater(
     }
 
     derivatives.makeCompressed();
+    ASSERT(allFinite(derivatives));
     return derivatives;
 }
 
@@ -286,6 +289,8 @@ SparseMatrix computeSaturationWaterResidualsDerivedByPressure(const SparseMatrix
     }
 
     derivatives.makeCompressed();
+    ASSERT(allFinite(derivatives));
+
     return derivatives;
 
 }
@@ -338,6 +343,10 @@ SparseMatrix computePressureResidualsByLogPermeability(ConstMatrixRef pressures,
             meToMyself(derivatives) *= myMobility;
         }
     }
+
+    derivatives.makeCompressed();
+
+    ASSERT(allFinite(derivatives));
 
     return derivatives;
 
@@ -397,6 +406,8 @@ SparseMatrix computeSaturationsWaterResidualsByLogPermeability(ConstMatrixRef pr
         }
     }
 
+    derivatives.makeCompressed();
+    ASSERT(allFinite(derivatives));
     return derivatives;
 
 }

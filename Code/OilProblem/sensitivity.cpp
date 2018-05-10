@@ -47,7 +47,7 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, cons
         log()->info("contribution to cost = {}", contributionToCost);
         sensitivityAndCost.cost += contributionToCost;
         ++currentTimeLevel;
-    } while (!breakthroughHappened && simulationState.time < params.finalTime);
+    } while (!breakthroughHappened && simulationState.time < params.finalTime && currentTimeLevel < params.maxNumberOfTimesteps);
 
     Vector numberOfRandomWalksPerParameter(Vector::Zero(numberOfParameters));
 

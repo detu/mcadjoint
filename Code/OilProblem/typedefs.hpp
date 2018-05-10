@@ -38,4 +38,5 @@ struct Point {
 
 using SparseMatrix = Eigen::SparseMatrix<Real, Eigen::ColMajor>;
 
-
+template <class... Args>
+using Predicate = std::function<bool(Args...)>;

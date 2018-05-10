@@ -379,12 +379,12 @@ for cells which are not nearest to the well
 and by
 \begin{align}
 \pdiff{\Sigma_K^{(i)}}{S_K^{(i)}} &= 1 \\
-\pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_K^{(i-1)}} &=  -1 + f^\prime({S_{\text{w}}}_K^{(i-1)}) \frac{\Delta t}{h}\cdot \biggr(\indicator(v_\text{tot, x}\lvert_E > 0) v_\text{tot, x}\lvert_E \\&+ \indicator(v_\text{tot, x}\lvert_W < 0) v_\text{tot, x}\lvert_W + \indicator(v_\text{tot, y}\lvert_N > 0) v_\text{tot, y}\lvert_N  \nonumber\\&+ \indicator(v_\text{tot, y}\lvert_S < 0) v_\text{tot, y}\lvert_S\biggr) \nonumber\\ 
-\pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_R^{(i-1)}} &= f^\prime({S_{\text{w}}}_R^{(i-1)}) \frac{\Delta t}{h}\cdot \indicator(v_\text{tot, x}\lvert_E < 0) v_\text{tot, x}\lvert_E \\
-\pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_L^{(i-1)}} &= f^\prime({S_{\text{w}}}_L^{(i-1)}) \frac{\Delta t}{h}\cdot \indicator(v_\text{tot, x}\lvert_W > 0) v_\text{tot, x}\lvert_W \\
-\pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_U^{(i-1)}} &= f^\prime({S_{\text{w}}}_U^{(i-1)}) \frac{\Delta t}{h}\cdot \indicator(v_\text{tot, y}\lvert_N < 0) v_\text{tot, y}\lvert_N \\
-\pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_D^{(i-1)}} &= f^\prime({S_{\text{w}}}_D^{(i-1)}) \frac{\Delta t}{h}\cdot \indicator(v_\text{tot, y}\lvert_S > 0) v_\text{tot, x}\lvert_S,
+\pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_K^{(i-1)}} &=  -1 + f^\prime({S_{\text{w}}}_K^{(i-1)}) \frac{\Delta t}{h}\cdot \biggr(\indicator(v_\text{tot, x}\lvert_E > 0) v_\text{tot, x}\lvert_E \\&- \indicator(v_\text{tot, x}\lvert_W < 0) v_\text{tot, x}\lvert_W + \indicator(v_\text{tot, y}\lvert_N > 0) v_\text{tot, y}\lvert_N  \nonumber\\&- \indicator(v_\text{tot, y}\lvert_S < 0) v_\text{tot, y}\lvert_S\biggr) \nonumber\\ &+\frac{\Delta t}{h}\cdot\biggr(-f({S_{\text{w}}}_K^{(i-1)})\lvert_E \pdiff{\hmean}{b}(\nonumber\\&\lambda_{\text{tot, }R}, \lambda_{\text{tot, }K}) \pdiff{\lambda}{S_\text{w}}\lvert_K \ddiff{p}{x}\lvert_E\pm \ldots\biggr) \nonumber\\
+\pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_R^{(i-1)}} &= f^\prime({S_{\text{w}}}_R^{(i-1)}) \frac{\Delta t}{h}\cdot \indicator(v_\text{tot, x}\lvert_E < 0) v_\text{tot, x}\lvert_E \nonumber\\&- \frac{\Delta t}{h} \pdiff{\hmean}{b}(\lambda_{\text{tot, }K}, \lambda_{\text{tot, }R}) \pdiff{\lambda}{S_\text{w}}\lvert_R \ddiff{p}{x}\lvert_E
 \end{align}
+%\pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_L^{(i-1)}} &= -f^\prime({S_{\text{w}}}_L^{(i-1)}) \frac{\Delta t}{h}\cdot \indicator(v_\text{tot, x}\lvert_W > 0) v_\text{tot, x}\lvert_W \nonumber\\&+ \frac{\Delta t}{h} \pdiff{\hmean}{b}(\lambda_{\text{tot, }K}, \lambda_{\text{tot, }}) \pdiff{\lambda}{S_\text{w}}\lvert_R \ddiff{p}{x}\lvert_E
+%\pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_U^{(i-1)}} &= f^\prime({S_{\text{w}}}_U^{(i-1)}) \frac{\Delta t}{h}\cdot \indicator(v_\text{tot, y}\lvert_N < 0) v_\text{tot, y}\lvert_N \\
+%\pdiff{\Sigma_K^{(i)}}{{S_{\text{w}}}_D^{(i-1)}} &= -f^\prime({S_{\text{w}}}_D^{(i-1)}) \frac{\Delta t}{h}\cdot \indicator(v_\text{tot, y}\lvert_S > 0) v_\text{tot, x}\lvert_S,
 where
 \begin{align}
 f^\prime(S_\text{w}) &=  \frac{2\mu_\text{o}\mu_\text{w} (1 - S_\text{w})S_\text{w}}{\phi \cdot \left(\mu_\text{w}(1 - S_\text{w})^2 + \mu_\text{o}S_\text{w}^2\right)^2}\\

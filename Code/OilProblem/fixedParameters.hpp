@@ -15,6 +15,8 @@ struct FixedParameters {
 
     Real meshWidth;
 
+    int maxNumberOfTimesteps;
+
 
     WellFunction inflowPerUnitDepthWater;
 

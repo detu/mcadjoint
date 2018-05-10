@@ -22,7 +22,7 @@ struct BVectorSurrogate {
 
     inline Real operator()(int linearStateIndex) const {
         const bool isAPressure = linearStateIndex < endOfPressurePart;
-        if (isAPressure) {
+        if (!isAPressure) {
             linearStateIndex -= endOfPressurePart;
         }
         const CellIndex stateCell = CellIndex::fromLinearIndex(linearStateIndex, numberOfRows);
