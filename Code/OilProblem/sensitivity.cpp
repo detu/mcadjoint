@@ -26,7 +26,7 @@ Real computeContributionToCost(const FixedParameters& parameters, const Simulati
 }
 
 SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, const Eigen::Ref<const Matrix>& permeabilities,
-                                             std::vector<Rng>& rngs) {
+                                             Rng& rng) {
     const int numberOfCols = permeabilities.cols();
     const int numberOfRows = permeabilities.rows();
     const int numberOfParameters = permeabilities.size();
@@ -42,7 +42,7 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, cons
         log()->info("-----------------------------------");
         log()->info("time = {}", simulationState.time);
         breakthroughHappened = stepForwardAndAdjointProblem(params, permeabilities, currentTimeLevel, simulationState,
-                                                            randomWalks, rngs);
+                                                            randomWalks, rng);
         const Real contributionToCost = computeContributionToCost(params, simulationState);
         log()->info("contribution to cost = {}", contributionToCost);
         sensitivityAndCost.cost += contributionToCost;

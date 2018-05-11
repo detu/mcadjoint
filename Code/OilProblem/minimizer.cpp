@@ -10,9 +10,6 @@
 #include <stefCommonHeaders/xoroshiro.h>
 #include <LBFGS.h>
 
-#ifdef MULTITHREADED
-#include <omp.h>
-#endif
 
 PermeabilitiesAndCost
 matchWithPermeabilities(const FixedParameters& params, const int numberOfRows, const int numberOfCols,
@@ -22,19 +19,7 @@ matchWithPermeabilities(const FixedParameters& params, const int numberOfRows, c
 
     const int numberOfCells = numberOfCols * numberOfRows;
 
-
-
-    std::vector<Rng> rngs;
-
-    #ifdef MULTITHREADED
-    const int numberOfThreads = omp_get_num_threads();
-    #else
-    const int numberOfThreads = 1;
-    #endif
-
-    for (int threadNumber = 0; threadNumber < numberOfThreads; ++threadNumber) {
-        rngs.emplace_back(seed, threadNumber);
-    }
+    Rng rng(seed);
 
 
     std::vector<Real> costHistory;
@@ -45,7 +30,7 @@ matchWithPermeabilities(const FixedParameters& params, const int numberOfRows, c
         const Vector permeabilitiesAsVector = logPermeabilitiesAsVector.array().exp().matrix();
         const Eigen::Map<const Matrix> permeabilities(permeabilitiesAsVector.data(), numberOfRows, numberOfCols);
 
-        const SensitivityAndCost sensitivityAndCost = computeSensitivityAndCost(params, permeabilities, rngs);
+        const SensitivityAndCost sensitivityAndCost = computeSensitivityAndCost(params, permeabilities, rng);
 
         dumpThis("sensitivities", sensitivityAndCost.sensitivity);
         dumpThis("permeabilities", permeabilities);

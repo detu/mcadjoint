@@ -27,14 +27,12 @@ struct CMatrixSurrogate {
 
 
     inline Real operator() (const CellIndex stateCell, const CellIndex parameterCell, const bool isAPressure) const {
-        CellIndex derivativeCell = pressureToTransmissibilityIndex(stateCell, parameterCell, numberOfRows);
 
 
         #ifdef JUST_COMPUTE_ADJOINT
-        if (!isAPressure) {
-            derivativeCell.j += endIndexInPressurePart;
-        }
-        return -Real(derivativeCell.i == derivativeCell.j);
+
+        return -Real(isAPressure && stateCell == parameterCell);
+
         #else
 
         if (isAPressure) {
@@ -46,3 +44,5 @@ struct CMatrixSurrogate {
     }
 
 };
+
+#pragma GCC poison CMatrixSurrogate

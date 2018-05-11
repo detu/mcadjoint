@@ -1,16 +1,6 @@
 cmake_minimum_required(VERSION 3.9)
 project(OilProblem LANGUAGES CXX)
 
-set(useOpenMP OFF)
-
-if (useOpenMP)
-    find_package(OpenMP REQUIRED)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
-    add_definitions(-DMULTITHREADED)
-endif()
-
 if (CMAKE_COMPILER_IS_GNUCC)
     set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall")
 endif()
@@ -45,7 +35,7 @@ set(simplematioBinaryDir "${CMAKE_BINARY_DIR}/simplematio")
 add_subdirectory("${simplematioDir}" "${simplematioBinaryDir}")
 
 set(baseLibHeaders control.h gnuplot_i.h utils.hpp logging.hpp)
-set(baseLibSources control.cpp gnuplot_i.cpp utils.cpp logging.cpp)
+set(baseLibSources control.cpp gnuplot_i.cpp utils.cpp)
 set(oilLibHeaders typedefs.hpp cellindex.hpp vectorToBeMappedAsMatrix.hpp fixedParameters.hpp simulationState.hpp specialCells.hpp bVectorSurrogate.hpp cMatrixSurrogate.hpp randomWalkState.hpp
         pressure.hpp darcyVelocity.hpp saturation.hpp forward.hpp derivativesForAdjoint.hpp adjoint.hpp sensitivity.hpp dumpToMatFile.hpp)
 set(oilLibSources pressure.cpp darcyVelocity.cpp saturation.cpp forward.cpp derivativesForAdjoint.cpp adjoint.cpp sensitivity.cpp minimizer.cpp dumpToMatFile.cpp)

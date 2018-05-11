@@ -43,6 +43,8 @@ void parseCommandLine(const int argc, const char** argv) {
 int main(int argc, const char** argv) {
     parseCommandLine(argc, argv);
 
+    feenableexcept(FE_ALL_EXCEPT & ~FE_INEXACT);
+
 
 
     spdlog::register_logger(stefCommonHeaders::setUpLog<stefCommonHeaders::NoMutex>(level));
@@ -108,9 +110,8 @@ int main(int argc, const char** argv) {
         ASSERT(allFinite(adjointRhs));
     }
 
-
-    std::vector<Rng> rngs(1);
-    const auto sensitivityAndCost = computeSensitivityAndCost(params, params.initialPermeabilities, rngs);
+    Rng rng;
+    const auto sensitivityAndCost = computeSensitivityAndCost(params, params.initialPermeabilities, rng);
 
     dumpThis("adjointMC", sensitivityAndCost.sensitivity);
 

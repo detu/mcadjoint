@@ -4,13 +4,13 @@
 #include "bVectorSurrogate.hpp"
 #include "cMatrixSurrogate.hpp"
 
-bool transitionState(RandomWalkState& currentState, const BVectorSurrogate& b,
+bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
                      const SparseMatrix& pressureResidualsByPressures,
                      const SparseMatrix& pressureResidualsBySaturationsWater,
                      const SparseMatrix& saturationsWaterResidualsByPressure,
-                     const SparseMatrix& saturationsWaterResidualsBySaturationsWater, const Real convergenceFactor,
-                     const int numberOfRows, const int numberOfCols, Rng& rng);
+                     const SparseMatrix& saturationsWaterResidualsBySaturationsWater, const int numberOfRows,
+                     const int numberOfCols, Rng& rng);
 void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int numberOfParameters,
-                       const int currentTimelevel, const BVectorSurrogate& b, const CMatrixSurrogate& c,
+                       const int currentTimelevel, ConstVectorRef b, const CMatrixSurrogate& c,
                        std::vector<RandomWalkState>& candidates, Rng& rng);
 void logStatisticsAboutRandomWalks(const std::vector<RandomWalkState>& randomWalks);

@@ -51,3 +51,4 @@ struct BVectorSurrogate {
 
     const CellIndex drillCell;
 };
+#pragma GCC poison BVectorSurrogate

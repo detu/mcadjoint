@@ -4,13 +4,6 @@
 #include "dumpToMatFile.hpp"
 #include <unordered_map>
 #include <cstdlib>
-#include <csignal>
-
-
-#ifdef MULTITHREADED
-#include <omp.h>
-#endif
-
 #include <stefCommonHeaders/omp_mutex.hpp>
 #include "logging.hpp"
 
@@ -22,10 +15,6 @@ static SparseMatricesToDump SPARSE_MATRICES_TO_DUMP;
 
 static std::string MAT_FILE_NAME = "";
 
-
-#ifdef MULTITHREADED
-static omp_mutex MAT_MUTEX;
-#endif
 
 static void dumpMatricesWithoutLock() {
     if (!MAT_FILE_NAME.empty()) {
@@ -43,18 +32,11 @@ static void dumpMatricesWithoutLock() {
 }
 
 void writeToMatFile() {
-    #ifdef MULTITHREADED
-    std::lock_guard<omp_mutex> lockGuard(MAT_MUTEX);
-    #endif
     dumpMatricesWithoutLock();
 }
 
 void dumpInThisMatFile(const std::string& matFileName) {
-#ifdef MULTITHREADED
-    std::lock_guard<omp_mutex> lockGuard(MAT_MUTEX);
-#endif
     MAT_FILE_NAME = matFileName;
-
 }
 
 
@@ -63,10 +45,6 @@ void dumpInThisMatFile(const std::string& matFileName) {
 
 
 void dumpThis(const char* varName, ConstMatrixRef matrix) {
-#ifdef MULTITHREADED
-    std::lock_guard<omp_mutex> lockGuard(MAT_MUTEX);
-#endif
-
     Matrix& matrixToDump = MATRICES_TO_DUMP[std::string(varName)];
     matrixToDump.resizeLike(matrix);
     matrixToDump = matrix;
@@ -79,10 +57,6 @@ void dumpThis(const char* varName, const Real scalar) {
 }
 
 void dumpThis(const char* varName, const SparseMatrix& matrix) {
-#ifdef MULTITHREADED
-    std::lock_guard<omp_mutex> lockGuard(MAT_MUTEX);
-#endif
-
     SparseMatrix& matrixToDump = SPARSE_MATRICES_TO_DUMP[std::string(varName)];
     matrixToDump.resize(matrix.rows(), matrix.cols());
     matrixToDump.resizeNonZeros(matrix.nonZeros());

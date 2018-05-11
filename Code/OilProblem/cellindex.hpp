@@ -166,7 +166,7 @@ struct CellIndex {
 
 
     inline std::vector<CellIndex> neighbors(const int numberOfRows, const int numberOfCols) {
-        std::vector<CellIndex> foundNeighbors(4);
+        std::vector<CellIndex> foundNeighbors;
 
         constexpr static std::array<Direction, 4> directionsToCheck = {
               Direction::EAST, Direction::WEST, Direction::NORTH, Direction::SOUTH

@@ -7,5 +7,6 @@ struct SensitivityAndCost {
     Real cost;
 };
 
-SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, const Eigen::Ref<const Matrix>& permeabilities,
-                                             std::vector<Rng>& rngs);
+SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params,
+                                             const Eigen::Ref<const Matrix>& permeabilities,
+                                             Rng& rng);

@@ -13,10 +13,6 @@
 #include "dumpToMatFile.hpp"
 #include "utils.hpp"
 
-#ifdef MULTITHREADED
-#include <omp.h>
-#endif
-
 
 bool stepForwardProblem(const FixedParameters& params, const Eigen::Ref<const Matrix>& permeabilities,
                         SimulationState& currentState) {
@@ -43,7 +39,7 @@ bool stepForwardProblem(const FixedParameters& params, const Eigen::Ref<const Ma
 
 bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Ref<const Matrix>& permeabilities,
                                   const int currentTimelevel, SimulationState& simulationState,
-                                  std::vector<RandomWalkState>& randomWalks, std::vector<Rng>& rngs) {
+                                  std::vector<RandomWalkState>& randomWalks, Rng& rng) {
     const int numberOfRows = permeabilities.rows();
     const int numberOfCols = permeabilities.cols();
     const int numberOfParameters = permeabilities.size();
@@ -69,7 +65,11 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
 
     const Vector pressureRhs = computeRhsForPressureSystem(sourceAtDrillNow, simulationState.saturationsWater.rows(),
                                                                  simulationState.saturationsWater.cols());
-    simulationState.pressures = solvePressurePoissonProblem(pressureSystem, pressureRhs);
+
+
+    Eigen::SparseLU<SparseMatrix> pressureSolver(pressureSystem);
+
+    simulationState.pressures = Vector(pressureSolver.solve(pressureRhs));
 
 
     dumpThis("pressures", Matrix(simulationState.pressures.map));
@@ -120,11 +120,9 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
           totalMobilities, totalMobilitiesDerivedBySaturationsWater,
           timestep, params.meshWidth);
 
-    const DiagonalMatrix inverseDiagonalPressureByPressure = extractInverseDiagonalMatrix(pressureResidualsByPressures);
 
 
     const int drillCellLinearIndex = drillCell.linearIndex(numberOfRows);
-    Real correspondingFactorForRhs = inverseDiagonalPressureByPressure.diagonal()(drillCellLinearIndex);
 
 
 
@@ -134,20 +132,15 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     //const DiagonalMatrix inverseDiagonalSaturationBySaturation = extractInverseDiagonalMatrix(saturationsWaterResidualsBySaturationsWater);
 
 
-    SparseMatrix correctedPressureResidualsByPressures = pressureResidualsByPressures * inverseDiagonalPressureByPressure ;
+    SparseMatrix correctedPressureResidualsByPressures(numberOfParameters, numberOfParameters);
+    correctedPressureResidualsByPressures.setIdentity();
+
     SparseMatrix correctedPressureResidualsBySaturationsWater = pressureResidualsBySaturationsWater;
-    SparseMatrix correctedSaturationsWaterResidualsByPressures = saturationsWaterResidualsByPressures * inverseDiagonalPressureByPressure;
+    const SparseMatrix saturationsWaterResidualsByPressuresTransposed = saturationsWaterResidualsByPressures.transpose();
+    SparseMatrix correctedSaturationsWaterResidualsByPressures = pressureSolver.solve(saturationsWaterResidualsByPressuresTransposed).transpose();
     SparseMatrix correctedSaturationsWaterResidualsBySaturationsWater = saturationsWaterResidualsBySaturationsWater;
 
 
-    constexpr bool useConvergenceFactor = true;
-    Real convergenceFactor = 1;
-    if (useConvergenceFactor) {
-        convergenceFactor = 0.2;
-        /*convergenceFactor = 1.0 / (sumOfAbsEntries(correctedPressureResidualsByPressures)); // + sumOfAbsEntries(correctedPressureResidualsBySaturationsWater)*/
-                                        //+ sumOfAbsEntries(correctedSaturationsWaterResidualsByPressures) + sumOfAbsEntries(correctedSaturationsWaterResidualsBySaturationsWater) + numberOfParameters);
-
-    }
 
 
 
@@ -159,7 +152,13 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
 
 
 
-    const BVectorSurrogate b(computedPressureAtDrillCell * correspondingFactorForRhs, measuredPressureAtDrillCell * correspondingFactorForRhs, numberOfRows, numberOfCols);
+
+    Vector b(2*numberOfParameters);
+    b.setZero();
+    b(drillCellLinearIndex) = 2 * (computedPressureAtDrillCell - measuredPressureAtDrillCell);
+
+    b.head(numberOfParameters) = pressureSolver.solve(b.head(numberOfParameters));
+
     const CMatrixSurrogate c(pressureResidualsByLogPermeabilities, saturationResidualsByLogPermeabilities,
                              numberOfRows, numberOfCols);
 
@@ -168,7 +167,7 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
 
     if (shouldAddRandomWalks) {
         addNewRandomWalks(numberOfRows, numberOfCols, numberOfParameters, currentTimelevel, b, c, randomWalks,
-                          rngs[0]);
+                          rng);
     }
 
 
@@ -192,21 +191,8 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
 
     int advancedRandomWalks = 0;
     constexpr bool outputProgressTransitioning = false;
-    log()->debug("convergence factor = {}", convergenceFactor);
 
-    #ifdef MULTITHREADED
-    #pragma omp parallel
-    #endif
-    {
-        #ifdef MULTITHREADED
-        Rng& rng = rngs[omp_get_thread_num()];
-        #else
-        Rng& rng = rngs[0];
-        #endif
 
-        #ifdef MULTITHREADED
-        #pragma omp for schedule(dynamic) reduction(+: advancedRandomWalks)
-        #endif
         for (int randomWalkIndex = 0; randomWalkIndex < randomWalks.size(); ++randomWalkIndex) {
             RandomWalkState& randomWalk = randomWalks[randomWalkIndex];
 
@@ -218,8 +204,8 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
                                                          correctedPressureResidualsBySaturationsWater,
                                                          correctedSaturationsWaterResidualsByPressures,
                                                          correctedSaturationsWaterResidualsBySaturationsWater,
-                                                         convergenceFactor,
-                                                         numberOfRows, numberOfCols, rng);
+                                                         numberOfRows,
+                                                         numberOfCols, rng);
             } while (stillInTheSameTimestep);
 
             ++advancedRandomWalks;
@@ -228,7 +214,6 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
                 log()->info("Random walk {} / {}", advancedRandomWalks, randomWalks.size());
             }
         }
-    }
 
     logStatisticsAboutRandomWalks(randomWalks);
 
