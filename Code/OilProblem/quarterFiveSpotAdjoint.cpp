@@ -66,6 +66,7 @@ int main(const int argc, const char** argv) {
     params.porosity = 1;
     params.initialSaturationsWater.resize(n, n);
     params.initialSaturationsWater.setConstant(0);
+    params.maxNumberOfTimesteps = 1e6;
 
     const CellIndex drillCell = findDrillCell(n, n);
     drillCell(params.initialSaturationsWater) = 1;

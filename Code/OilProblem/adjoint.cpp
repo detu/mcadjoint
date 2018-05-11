@@ -9,7 +9,8 @@
 #include <stefCommonHeaders/xoroshiro.h>
 #include <iostream>
 #include "logging.hpp"
-
+#include "pressure.hpp"
+#include "utils.hpp"
 
 
 static inline int cellIndexToBIndex(const CellIndex& cellIndex, const bool isAPressure, const int numberOfRows, const int numberOfCols) {
@@ -264,7 +265,7 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
     if (initializeJustAtBeginning && currentTimelevel > 0) {
         return;
     }
-    const int numberOfRandomWalksToAdd = 2000;
+    const int numberOfRandomWalksToAdd = 1000;
 
 
 

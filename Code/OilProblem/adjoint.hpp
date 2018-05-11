@@ -1,8 +1,6 @@
 #pragma once
 #include "randomWalkState.hpp"
 #include <vector>
-#include "bVectorSurrogate.hpp"
-#include "cMatrixSurrogate.hpp"
 
 bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
                      const SparseMatrix& pressureResidualsByPressures,
