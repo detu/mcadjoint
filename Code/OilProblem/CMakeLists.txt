@@ -36,7 +36,7 @@ add_subdirectory("${simplematioDir}" "${simplematioBinaryDir}")
 
 set(baseLibHeaders control.h gnuplot_i.h utils.hpp logging.hpp)
 set(baseLibSources control.cpp gnuplot_i.cpp utils.cpp)
-set(oilLibHeaders typedefs.hpp cellindex.hpp vectorToBeMappedAsMatrix.hpp fixedParameters.hpp simulationState.hpp specialCells.hpp bVectorSurrogate.hpp cMatrixSurrogate.hpp randomWalkState.hpp
+set(oilLibHeaders typedefs.hpp cellindex.hpp vectorToBeMappedAsMatrix.hpp fixedParameters.hpp simulationState.hpp specialCells.hpp randomWalkState.hpp
         pressure.hpp darcyVelocity.hpp saturation.hpp forward.hpp derivativesForAdjoint.hpp adjoint.hpp sensitivity.hpp dumpToMatFile.hpp)
 set(oilLibSources pressure.cpp darcyVelocity.cpp saturation.cpp forward.cpp derivativesForAdjoint.cpp adjoint.cpp sensitivity.cpp minimizer.cpp dumpToMatFile.cpp)
 set(allCommonHeadersAndSources ${oilLibSources} ${oilLibHeaders} ${baseLibSources} ${baseLibHeaders})
@@ -45,7 +45,6 @@ set(allCommonHeadersAndSources ${oilLibSources} ${oilLibHeaders} ${baseLibSource
 set(quarterFiveSpotTraditionalSources quarterFiveSpotTraditional.cpp)
 set(quarterFiveSpotSources quarterFiveSpot.cpp)
 set(quarterFiveSpotAdjointSources quarterFiveSpotAdjoint.cpp)
-set(mainSources main.cpp)
 set(testSources test.cpp)
 
 
@@ -54,7 +53,6 @@ add_executable(TestVerbose ${testSources})
 add_executable(QuarterFiveSpot ${quarterFiveSpotSources})
 add_executable(QuarterFiveSpotAdjoint ${quarterFiveSpotAdjointSources})
 target_compile_definitions(TestVerbose PUBLIC -DVERBOSE_TESTS)
-add_executable(OilProblem ${mainSources})
 add_executable(QuarterFiveSpotTraditional ${quarterFiveSpotTraditionalSources})
 
 
@@ -65,7 +63,7 @@ endif()
 target_compile_definitions(QuarterFiveSpotTraditional PUBLIC -DJUST_COMPUTE_ADJOINT)
 
 string(TOLOWER CMAKE_BUILD_TYPE lowercaseBuildType)
-foreach(executable IN ITEMS Test TestVerbose OilProblem QuarterFiveSpot QuarterFiveSpotAdjoint QuarterFiveSpotTraditional)
+foreach(executable IN ITEMS Test TestVerbose QuarterFiveSpot QuarterFiveSpotAdjoint QuarterFiveSpotTraditional)
     target_sources("${executable}" PUBLIC "${allCommonHeadersAndSources}")
     target_link_libraries("${executable}" stefCommonHeaders simplematio)
     if (useCotire)
