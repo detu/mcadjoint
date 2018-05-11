@@ -24,3 +24,5 @@ bool anyOf(ConstMatrixRef matrix, const Predicate<Real>& predicate);
 
 bool allFinite(ConstMatrixRef matrix);
 bool allFinite(const SparseMatrix& matrix);
+SparseMatrix concatVertically(const SparseMatrix& above,
+                              const SparseMatrix& below);

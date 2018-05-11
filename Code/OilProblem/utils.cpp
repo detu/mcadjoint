@@ -72,3 +72,29 @@ bool allFinite(ConstMatrixRef matrix) {
 bool allFinite(const SparseMatrix& matrix) {
     return allOf(matrix,[] (const Real x) { return std::abs(x) < 1e20; });
 }
+
+SparseMatrix concatVertically(const SparseMatrix& above,
+      const SparseMatrix& below) {
+    SparseMatrix M(above.rows() + below.rows(), above.cols());
+    M.reserve(above.nonZeros() + below.nonZeros());
+    for (int c = 0; c < above.cols(); ++c) {
+        SparseMatrix::InnerIterator aboveIterator(above, c);
+        SparseMatrix::InnerIterator belowIterator(below, c);
+
+        if (aboveIterator || belowIterator) {
+            M.startVec(c);
+        }
+
+        for (; aboveIterator; ++aboveIterator) {
+            const int aboveRow = aboveIterator.row();
+            M.insertBack(aboveRow, c) = aboveIterator.value();
+        }
+        for (; belowIterator; ++belowIterator) {
+            M.insertBack(belowIterator.row() + above.rows(), c) = belowIterator.value();
+        }
+    }
+    M.finalize();
+    M.makeCompressed();
+
+    return M;
+}

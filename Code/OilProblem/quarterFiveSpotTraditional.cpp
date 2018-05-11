@@ -110,7 +110,7 @@ int main(int argc, const char** argv) {
         ASSERT(allFinite(adjointRhs));
     }
 
-    Rng rng;
+    Rng rng(88);
     const auto sensitivityAndCost = computeSensitivityAndCost(params, params.initialPermeabilities, rng);
 
     dumpThis("adjointMC", sensitivityAndCost.sensitivity);

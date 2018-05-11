@@ -37,6 +37,18 @@ bool stepForwardProblem(const FixedParameters& params, const Eigen::Ref<const Ma
 }
 
 
+static Vector computeBVector(const Real computedPressureAtDrillCell, const Real measuredPressureAtDrillCell,
+                            const int numberOfParameters, const int numberOfRows, const int numberOfCols) {
+
+    const CellIndex drillCell = findDrillCell(numberOfRows, numberOfCols);
+    const int drillCellLinearIndex = drillCell.linearIndex(numberOfRows);
+
+    Vector b(2 * numberOfParameters);
+    b.setZero();
+    b(numberOfRows) = 2 * (computedPressureAtDrillCell - measuredPressureAtDrillCell);
+    return b;
+}
+
 bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Ref<const Matrix>& permeabilities,
                                   const int currentTimelevel, SimulationState& simulationState,
                                   std::vector<RandomWalkState>& randomWalks, Rng& rng) {
@@ -122,7 +134,6 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
 
 
 
-    const int drillCellLinearIndex = drillCell.linearIndex(numberOfRows);
 
 
 
@@ -151,16 +162,23 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
              correctedSaturationsWaterResidualsBySaturationsWater);
 
 
-
-
-    Vector b(2*numberOfParameters);
-    b.setZero();
-    b(drillCellLinearIndex) = 2 * (computedPressureAtDrillCell - measuredPressureAtDrillCell);
+    Vector b = computeBVector(computedPressureAtDrillCell, measuredPressureAtDrillCell, numberOfParameters,
+                              numberOfRows, numberOfCols);
 
     b.head(numberOfParameters) = pressureSolver.solve(b.head(numberOfParameters));
 
-    const CMatrixSurrogate c(pressureResidualsByLogPermeabilities, saturationResidualsByLogPermeabilities,
-                             numberOfRows, numberOfCols);
+
+    #ifdef JUST_COMPUTE_ADJOINT
+    SparseMatrix c(numberOfParameters*2, numberOfParameters);
+    for (int j = 0; j < std::min(c.cols(), c.rows()); ++j) {
+            c.coeffRef(j, j) = -1;
+    }
+
+    #else
+    const SparseMatrix c = concatVertically(pressureResidualsByLogPermeabilities, saturationResidualsByLogPermeabilities);
+    #endif
+
+    dumpThis("c", c);
 
     constexpr bool startAddingRandomWalksAtBeginning = true;
     const bool shouldAddRandomWalks = startAddingRandomWalksAtBeginning || (simulationState.saturationsWater.diagonal(-1).array() > 0).any();
@@ -361,10 +379,7 @@ bool stepForwardAndAdjointProblemTraditional(const FixedParameters& params, cons
 
 
 
-    const int drillCellLinearIndex = drillCell.linearIndex(numberOfRows);
-
-    const BVectorSurrogate b(computedPressureAtDrillCell, measuredPressureAtDrillCell, numberOfRows, numberOfCols);
-
+    const Vector b = computeBVector(computedPressureAtDrillCell, measuredPressureAtDrillCell, numberOfParameters, numberOfRows, numberOfCols);
     for (int i = 0; i < stateSize; ++i) {
         adjointRhs.segment(stateSize * currentTimelevel, stateSize)(i) = b(i);
     }

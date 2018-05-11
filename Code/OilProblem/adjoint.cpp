@@ -259,9 +259,16 @@ void logStatisticsAboutRandomWalks(const std::vector<RandomWalkState>& randomWal
 
 }
 
+static inline CellIndex cellIndexToCIndex(const CellIndex& cellIndex, const CellIndex& parameterIndex, const bool isAPressure, const int numberOfRows, const int numberOfCols) {
+    CellIndex derivativeIndex = pressureToTransmissibilityIndex(cellIndex, parameterIndex, numberOfRows);
+    if (!isAPressure) {
+        derivativeIndex.i += numberOfCols * numberOfRows;
+    }
 
+    return derivativeIndex;
+}
 void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int numberOfParameters,
-                       const int currentTimelevel, ConstVectorRef b, const CMatrixSurrogate& c,
+                       const int currentTimelevel, ConstVectorRef b, const SparseMatrix& c,
                        std::vector<RandomWalkState>& randomWalks, Rng& rng) {
 
     constexpr bool initializeJustAtBeginning = false;
@@ -301,7 +308,7 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
 
         constexpr std::array<bool, 2> pressureRequired = {true, false};
 
-        const Real cNorm = sumOfAbsEntries(c.pressureResidualsByLogPermeability.col(parameterIndex)) + sumOfAbsEntries(c.saturationWaterResidualsByLogPermeability.col(parameterIndex));
+        const Real cNorm = sumOfAbsEntries(c.col(parameterIndex));
 
         if (cNorm < 1e-12) {
             continue;
@@ -310,7 +317,7 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
 
             for (const CellIndex& neighborOrMyself: neighborsAndMyself) {
 
-                const Real cValue = c(neighborOrMyself, cell, wantAPressure);
+                const Real cValue = cellIndexToCIndex(neighborOrMyself, cell, wantAPressure, numberOfRows, numberOfCols)(c);
 
 
                 const Real prob = std::abs(cValue) / cNorm;
@@ -323,14 +330,6 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
                 initialState.isAPressure = wantAPressure;
                 initialState.currentTimelevel = currentTimelevel;
                 initialState.W =  cValue / prob;
-
-                constexpr bool outputInitialization = false;
-                if (outputInitialization) {
-                    log()->debug("Initialization: want pressure = {}", wantAPressure);
-                    log()->debug("Initialization: neighborOrMyself = {}", neighborOrMyself);
-                    log()->debug("Initialization: cell = {}", cell);
-                    log()->debug("Initialization c-value = {}", c(neighborOrMyself, cell, wantAPressure));
-                }
 
                 initialState.D = initialState.W * b(cellIndexToBIndex(neighborOrMyself, wantAPressure, numberOfRows, numberOfCols));
                 initialState.parameterIndex = parameterIndex;
