@@ -181,6 +181,13 @@ struct CellIndex {
         return foundNeighbors;
     }
 
+    inline std::vector<CellIndex> neighborsAndMyself(const int numberOfRows, const int numberOfCols) {
+        std::vector<CellIndex> foundNeighborsAndMyself = neighbors(numberOfRows, numberOfCols);
+        foundNeighborsAndMyself.push_back(*this);
+
+        return foundNeighborsAndMyself;
+    }
+
     inline CellIndex transpose() const {
         return {j, i};
     }

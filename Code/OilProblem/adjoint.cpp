@@ -71,51 +71,33 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
 
     Real sumOfUnnormalizedProbabilities = 0;
 
-    if (false) {
-        const SparseMatrix& correspondingDiagonalMatrix = currentState.isAPressure? pressureResidualsByPressures: saturationsWaterResidualsBySaturationsWater;
-        const CellIndex meToMyself = pressureToTransmissibilityIndex(currentState.cell, currentState.cell,
-                                                                     numberOfRows);
 
-        const Real correspondingEntryOfAMatrix = 1 - meToMyself(correspondingDiagonalMatrix);
-        const Real correspondingEntryOfBVector = b(cellIndexToBIndex(currentState.cell, currentState.isAPressure, numberOfRows, numberOfCols));
-        const Real unnormalizedProbabilityOfStayingHere = std::abs(correspondingEntryOfAMatrix);
-
-        if (unnormalizedProbabilityOfStayingHere > 0) {
-            Candidate candidate = {currentState.cell, currentState.isAPressure, correspondingEntryOfAMatrix,
-                                   correspondingEntryOfBVector};
-            candidates.push_back(std::move(candidate));
-            candidateUnnormalizedProbabilities.push_back(unnormalizedProbabilityOfStayingHere);
-        }
-
-        sumOfUnnormalizedProbabilities += unnormalizedProbabilityOfStayingHere;
-    }
-
-    // add neighbors
-    for (const auto neighbor: currentState.cell.neighbors(numberOfRows, numberOfCols)) {
-        ASSERT(neighbor.i >= 0);
-        ASSERT(neighbor.j >= 0);
-        ASSERT(neighbor.i < numberOfRows);
-        ASSERT(neighbor.j < numberOfCols);
+    for (const CellIndex& target: currentState.cell.neighborsAndMyself(numberOfRows, numberOfCols)) {
+        ASSERT(target.i >= 0);
+        ASSERT(target.j >= 0);
+        ASSERT(target.i < numberOfRows);
+        ASSERT(target.j < numberOfCols);
 
 
-        for (const bool neighborIsPressure: std::array<bool, 2>({true, false})) {
-            const SparseMatrix& correspondingDerivative = neighborIsPressure? pressureResidualsDerived
+        for (const bool targetIsPressure: std::array<bool, 2>({true, false})) {
+            const SparseMatrix& correspondingDerivative = targetIsPressure? pressureResidualsDerived
                                                                             : saturationWaterResidualsDerived;
 
 
-            const CellIndex neighborToMe = pressureToTransmissibilityIndex(neighbor, currentState.cell, numberOfRows);
+            const CellIndex neighborToMe = pressureToTransmissibilityIndex(target, currentState.cell, numberOfRows);
 
-            const Real correspondingEntryOfAMatrix = -neighborToMe(correspondingDerivative);
+            const Real correspondingEntryOfAMatrix = Real(targetIsPressure && currentState.isAPressure && target == currentState.cell) - neighborToMe(correspondingDerivative);
+            //log()->debug("from ({}, {}) to ({}, {})", currentState.cell, currentState.isAPressure, target, targetIsPressure);
+            //log()->debug("corresponding entry of a matrix = {}", correspondingEntryOfAMatrix);
             ASSERT(std::isfinite(correspondingEntryOfAMatrix));
-            const Real correspondingEntryOfBVector = b(cellIndexToBIndex(neighbor, neighborIsPressure, numberOfRows, numberOfCols));
+            const Real correspondingEntryOfBVector = b(cellIndexToBIndex(target, targetIsPressure, numberOfRows, numberOfCols));
             ASSERT(std::isfinite(correspondingEntryOfBVector));
 
             const Real candidateUnnormalizedProbability = std::abs(correspondingEntryOfAMatrix);
 
 
             if (candidateUnnormalizedProbability > 0) {
-                ASSERT(!(currentState.isAPressure &&neighborIsPressure));
-                Candidate candidatePressure = {neighbor, neighborIsPressure, correspondingEntryOfAMatrix,
+                Candidate candidatePressure = {target, targetIsPressure, correspondingEntryOfAMatrix,
                                                correspondingEntryOfBVector};
                 candidates.push_back(std::move(candidatePressure));
                 candidateUnnormalizedProbabilities.push_back(candidateUnnormalizedProbability);
@@ -139,7 +121,7 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
                                                        ? 1e8: std::abs(b(cellIndexToBIndex(currentState.cell, currentState.isAPressure, numberOfRows, numberOfCols)));
         ASSERT(std::isfinite(unnormalizedAbsorptionProbability));
 
-        if (unnormalizedAbsorptionProbability > 0) {
+        if (unnormalizedAbsorptionProbability > 0 && false) {
             candidates.push_back(absorptionCandidate);
             candidateUnnormalizedProbabilities.push_back(unnormalizedAbsorptionProbability);
         }
@@ -153,7 +135,7 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
     }
 
 
-
+    //ASSERT(!candidates.empty());
     if (candidates.empty()) {
         ASSERT(candidateUnnormalizedProbabilities.empty());
         candidates.push_back(absorptionCandidate);
@@ -339,11 +321,17 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
             }
         }
 
-        std::discrete_distribution<int> choose(probabilities.cbegin(), probabilities.cend());
+        for (int candidateIndex = 0; candidateIndex < candidates.size(); ++candidateIndex) {
+            ASSERT(probabilities[candidateIndex] > 0 && probabilities[candidateIndex] <= 1);
+            const int copiesToAddOfThisCandidate = std::round(numberOfRandomWalksToAdd * probabilities[candidateIndex]);
+            const RandomWalkState& candidate = candidates[candidateIndex];
 
-        for (int i = 0; i < numberOfRandomWalksToAdd; ++i) {
-            randomWalks.push_back(candidates[choose(rng)]);
+            for (int i = 0; i < copiesToAddOfThisCandidate; ++i) {
+                randomWalks.push_back(candidate);
+            }
+
         }
+
     }
 
     if (initializeJustAtBeginning) {

@@ -73,7 +73,7 @@ int main(int argc, const char** argv) {
     params.dynamicViscosityOil = 1;//0.630; // SAE motor oil 20°C
     params.dynamicViscosityWater = 1;//0.0010518; // Water 20°C
 
-    const int numberOfTimesteps = 2;
+    const int numberOfTimesteps = 10;
     params.porosity = 1;
     params.initialSaturationsWater.resize(n, n);
     params.initialSaturationsWater.setConstant(0);
