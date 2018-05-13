@@ -12,5 +12,4 @@ struct PermeabilitiesAndCost {
 };
 
 PermeabilitiesAndCost
-matchWithPermeabilities(const FixedParameters& params, const int numberOfRows, const int numberOfCols,
-                        const Real tolerance, const int maxIterations);
+matchWithPermeabilities(const FixedParameters& params, const Real tolerance, const int maxIterations);

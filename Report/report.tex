@@ -363,7 +363,7 @@ Q_\text{tot, K}^{(i)} := Q_\text{tot}(i\Delta t) \cdot \begin{cases} 1, &\text{i
 
 The saturation residuals are given by
 \begin{multline}
-\Sigma_K^{(i)} := S_\text{w}^{(i)}\lvert_K - S_\text{w}^{(i-1)}\lvert_{K} \\+ \frac{\Delta t}{h} \biggr((f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_E - (f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_W \\+ (f(S_\text{w}^{(i-1)})v_{\text{tot }, y}^{(i-1)})\lvert_N - (f(S_\text{w}^{(i-1)})v_{\text{tot }, y}^{(i-1)})\lvert_S\biggr) - \Delta t Q_\text{tot, K}^{(i-1)}.
+\Sigma_K^{(i)} := S_\text{w}^{(i)}\lvert_K - S_\text{w}^{(i-1)}\lvert_{K} \\+ \frac{\Delta t}{h} \biggr((f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i)})\lvert_E - (f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i)})\lvert_W \\+ (f(S_\text{w}^{(i-1)})v_{\text{tot }, y}^{(i)})\lvert_N - (f(S_\text{w}^{(i-1)})v_{\text{tot }, y}^{(i-1)})\lvert_S\biggr) - \Delta t Q_\text{tot, K}^{(i)}.
 \end{multline}
 
 The nonzero derivatives for the diagonal blocks are given by
@@ -394,11 +394,11 @@ f^\prime(S_\text{w}) &=  \frac{2\mu_\text{o}\mu_\text{w} (1 - S_\text{w})S_\text
 
 For the off diagonal blocks, we have
 \begin{align}
-\pdiff{\Sigma_K^{(i)}}{p_K^{(i)}} &= -\frac{\Delta t}{h^2} \biggr(T_E^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_E \\&+ T_W^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_W \nonumber\\&+ T_N^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_N \nonumber\\&+T_S^{(i-1)}  f(S_\text{w}^{(i-1)})\lvert_S\biggr) \nonumber\\
-\pdiff{\Sigma_K^{(i)}}{p_R^{(i)}} &= +\frac{\Delta t}{h^2}T_E^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_E \\
-\pdiff{\Sigma_K^{(i)}}{p_L^{(i)}} &= +\frac{\Delta t}{h^2}T_W^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_W \\\\
-\pdiff{\Sigma_K^{(i)}}{p_U^{(i)}} &= +\frac{\Delta t}{h^2}T_N^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_N \\
-\pdiff{\Sigma_K^{(i)}}{p_D^{(i)}} &= +\frac{\Delta t}{h^2}T_S^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_S,
+\pdiff{\Sigma_K^{(i)}}{p_K^{(i)}} &= +\frac{\Delta t}{h^2} \biggr(T_E^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_E \\&+ T_W^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_W \nonumber\\&+ T_N^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_N \nonumber\\&+T_S^{(i-1)}  f(S_\text{w}^{(i-1)})\lvert_S\biggr) \nonumber\\
+\pdiff{\Sigma_K^{(i)}}{p_R^{(i)}} &= -\frac{\Delta t}{h^2}T_E^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_E \\
+\pdiff{\Sigma_K^{(i)}}{p_L^{(i)}} &= -\frac{\Delta t}{h^2}T_W^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_W \\\\
+\pdiff{\Sigma_K^{(i)}}{p_U^{(i)}} &= -\frac{\Delta t}{h^2}T_N^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_N \\
+\pdiff{\Sigma_K^{(i)}}{p_D^{(i)}} &= -\frac{\Delta t}{h^2}T_S^{(i-1)} f(S_\text{w}^{(i-1)})\lvert_S,
 \end{align}
 for cells not nearest to the well and
 \begin{align}
@@ -436,11 +436,12 @@ where
 On the other hand, the saturation residuals $\Sigma_K$ lead to the following derivatives
 
 \begin{align}
-\pdiff{\Sigma_K}{\ln(k)_K} &= \lambda_{\text{tot}}^{(i-1)}\lvert_K \frac{\Delta t}{h} \biggr(\\&(f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_E\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_E, \lambda_\text{tot}^{(i-1)}\lvert_K)  \nonumber\\&- (f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_W\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_W, \lambda_\text{tot}^{(i-1)}\lvert_K) \nonumber\\&+ (f(S_\text{w}^{(i-1)})v_{\text{tot }, y}^{(i-1)})\lvert_N\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_N, \lambda_\text{tot}^{(i-1)}\lvert_K) \nonumber\\&- (f(S_\text{w}^{(i-1)})v_{\text{tot }, y}^{(i-1)})\lvert_S\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_E, \lambda_\text{tot}^{(i-1)}\lvert_S)\nonumber\\&\biggr) \nonumber \\
-\pdiff{\Sigma_K}{\ln(K)_R} &= \lambda_{\text{tot}}^{(i-1)}\lvert_R \frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_E\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_E) \\
-\pdiff{\Sigma_K}{\ln(K)_L} &= -\lambda_{\text{tot}}^{(i-1)}\lvert_L\frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_W\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_L) \\
-\pdiff{\Sigma_K}{\ln(K)_U} &= \lambda_{\text{tot}}^{(i-1)}\lvert_U \frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_N\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_U) \\
-\pdiff{\Sigma_K}{\ln(K)_D} &= -\lambda_{\text{tot}}^{(i-1)}\lvert_D\frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_S\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_D)
+INVALID \\
+%\pdiff{\Sigma_K}{\ln(k)_K} &= \lambda_{\text{tot}}^{(i-1)}\lvert_K \frac{\Delta t}{h} \biggr(\\&(f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_E\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_E, \lambda_\text{tot}^{(i-1)}\lvert_K)  \nonumber\\&- (f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_W\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_W, \lambda_\text{tot}^{(i-1)}\lvert_K) \nonumber\\&+ (f(S_\text{w}^{(i-1)})v_{\text{tot }, y}^{(i-1)})\lvert_N\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_N, \lambda_\text{tot}^{(i-1)}\lvert_K) \nonumber\\&- (f(S_\text{w}^{(i-1)})v_{\text{tot }, y}^{(i-1)})\lvert_S\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_E, \lambda_\text{tot}^{(i-1)}\lvert_S)\nonumber\\&\biggr) \nonumber \\
+%\pdiff{\Sigma_K}{\ln(K)_R} &= \lambda_{\text{tot}}^{(i-1)}\lvert_R \frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_E\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_E) \\
+%\pdiff{\Sigma_K}{\ln(K)_L} &= -\lambda_{\text{tot}}^{(i-1)}\lvert_L\frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_W\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_L) \\
+%\pdiff{\Sigma_K}{\ln(K)_U} &= \lambda_{\text{tot}}^{(i-1)}\lvert_U \frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_N\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_U) \\
+%\pdiff{\Sigma_K}{\ln(K)_D} &= -\lambda_{\text{tot}}^{(i-1)}\lvert_D\frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_S\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_D)
 \end{align}
 %\bibliographystyle{IEEEtran}
 %\bibliography{references}

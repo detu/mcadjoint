@@ -76,20 +76,12 @@ SparseMatrix computePressureResidualsDerivedBySaturationWater(ConstMatrixRef pre
                 const CellIndex meToNeighbor = pressureToTransmissibilityIndex(myself, neighbor, numberOfRows);
 
 
-                const Real myMobilityFraction = myMobility / (myMobility + neighborMobility);
-                const Real neighborMobilityFraction = neighborMobility / (myMobility + neighborMobility);
+
 
                 const Real pressureDifference = myPressure - neighborPressure;
-
-
-                meToMyself(derivatives) += std::pow(neighborMobilityFraction, 2) * pressureDifference;
-                meToNeighbor(derivatives) = 2 * neighborDerivativeOfMobility * pressureDifference * std::pow(myMobilityFraction, 2);
-
+                meToMyself(derivatives) += pressureDifference * hmeanDerivedBySecond(neighborMobility, myMobility) * myDerivativeOfMobility;
+                meToNeighbor(derivatives) += pressureDifference * hmeanDerivedBySecond(myMobility, neighborMobility) * neighborDerivativeOfMobility;
             }
-
-            meToMyself(derivatives) *= 2 * myDerivativeOfMobility;
-
-
         }
     }
 
@@ -144,9 +136,6 @@ SparseMatrix computeSaturationWaterResidualsDerivedBySaturationWater(
 
     CellIndex myself = {0, 0};
 
-    const Real referenceVelocity = meshWidth / timestep;
-
-
     for (myself.j = 0; myself.j < numberOfCols; ++myself.j) {
         for (myself.i = 0; myself.i < numberOfRows; ++myself.i) {
 
@@ -177,30 +166,25 @@ SparseMatrix computeSaturationWaterResidualsDerivedBySaturationWater(
                 const Real upstreamFluxFunction = fluxGoesToNeighbor? myself(fluxFunctionFactors): neighbor(fluxFunctionFactors);
                 const Real pressureGradientAtBoundary = getDerivativeAtCellBorder(myself, pressureDerivativesX, pressureDerivativesY, direction);
 
-                const Real myMobility = myself(totalMobilities);
-                const Real neighborMobility = neighbor(totalMobilities);
 
-                const Real myMobilityDerivative = myself(totalMobilitiesDerivedBySaturationsWater);
-                const Real neighborMobilityDerivative = neighbor(totalMobilitiesDerivedBySaturationsWater);
 
-                const Real mobilityTermMyself = hmeanDerivedBySecond(neighborMobility, myMobility) * myMobilityDerivative;
-                const Real mobilityTermNeighbor = hmeanDerivedBySecond(myMobility, neighborMobility) * neighborMobilityDerivative;
-
+                // flux function derived * normal darcy velocity
                 if (fluxGoesToNeighbor) {
-                    meToMyself(derivatives) += sign * relevantDarcyVelocity;
+                    meToMyself(derivatives) += sign * relevantDarcyVelocity * myself(fluxFunctionDerivatives) * timestep / meshWidth;
                 } else {
-                    meToNeighbor(derivatives) = neighbor(fluxFunctionDerivatives) * relevantDarcyVelocity;
+                    meToNeighbor(derivatives) += sign * relevantDarcyVelocity * neighbor(fluxFunctionDerivatives) * timestep / meshWidth;
                 }
 
-                meToNeighbor(derivatives) -= mobilityTermNeighbor * pressureGradientAtBoundary;
-                meToNeighbor(derivatives) *= sign / referenceVelocity;
+                // normal flux function times derived darcy velocity
 
-                meToMyself(derivatives) -= sign * pressureGradientAtBoundary * mobilityTermMyself;
+                const Real myTotalMobility = myself(totalMobilities);
+                const Real neighborTotalMobility = neighbor(totalMobilities);
+
+                meToMyself(derivatives) -= upstreamFluxFunction * timestep / meshWidth * sign * pressureGradientAtBoundary * hmeanDerivedBySecond(neighborTotalMobility, myTotalMobility) * myself(totalMobilitiesDerivedBySaturationsWater);
+                meToNeighbor(derivatives) -= upstreamFluxFunction * timestep / meshWidth * sign * pressureGradientAtBoundary * hmeanDerivedBySecond(myTotalMobility, neighborTotalMobility) * neighbor(totalMobilitiesDerivedBySaturationsWater);
+
+
             }
-
-
-            meToMyself(derivatives) *= myself(fluxFunctionDerivatives) / referenceVelocity;
-            meToMyself(derivatives) -= 1;
 
         }
     }
@@ -208,24 +192,6 @@ SparseMatrix computeSaturationWaterResidualsDerivedBySaturationWater(
     derivatives.makeCompressed();
     ASSERT(allFinite(derivatives));
     return derivatives;
-}
-
-Real computeCostFunctionDerivedByPressureEntry(const Real computedPressureAtDrill, const Real measuredPressureAtDrill,
-                                               const int numberOfRows, const int numberOfCols,
-                                               const CellIndex& derivedByCell) {
-
-    const CellIndex drillCell = findDrillCell(numberOfRows, numberOfCols);
-    if (drillCell == derivedByCell) {
-        return 2 * (computedPressureAtDrill - measuredPressureAtDrill);
-    } else {
-        return 0;
-    }
-
-}
-
-Real computeCostFunctionDerivedBySaturationsWaterEntry(const int numberOfRows, const int numberOfCols,
-                                                       const CellIndex& derivedByCell) {
-    return 0;
 }
 
 
@@ -276,12 +242,12 @@ SparseMatrix computeSaturationWaterResidualsDerivedByPressure(const SparseMatrix
                 const Real neighborFunctionFactor = neighbor(fluxFunctionFactors);
 
                 const Real upwindFluxFunctionFactor = fluxGoesToNeighbor? myFluxFunctionFactor: neighborFunctionFactor;
-                const Real borderTransmissibility = iAmTheCellInTheWell? computeTransmissibility(mobilities, myself, neighbor): -meToNeighbor(pressureSystem);
+                const Real borderTransmissibility = computeTransmissibility(mobilities, myself, neighbor);
 
                 const Real borderContribution = borderTransmissibility * upwindFluxFunctionFactor * discretizationFactor;
 
-                meToMyself(derivatives) -= borderContribution;
-                meToNeighbor(derivatives) = borderContribution;
+                meToMyself(derivatives) += borderContribution;
+                meToNeighbor(derivatives) -= borderContribution;
 
             }
 
@@ -352,7 +318,9 @@ SparseMatrix computePressureResidualsByLogPermeability(ConstMatrixRef pressures,
 
 }
 
-SparseMatrix computeSaturationsWaterResidualsByLogPermeability(ConstMatrixRef pressureGradientsX, ConstMatrixRef pressureGradientsY, ConstMatrixRef mobilities, const Real timestep, const Real meshWidth) {
+SparseMatrix computeSaturationsWaterResidualsByLogPermeability(ConstMatrixRef pressureGradientsX, ConstMatrixRef pressureGradientsY,
+                                                               ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY,
+                                                               ConstMatrixRef mobilities, ConstMatrixRef fluxFunctionFactors, const Real timestep, const Real meshWidth) {
     const int numberOfRows = mobilities.rows();
     const int numberOfCols = mobilities.cols();
     const int numberOfPairs = numberOfCols * numberOfRows;
@@ -390,19 +358,22 @@ SparseMatrix computeSaturationsWaterResidualsByLogPermeability(ConstMatrixRef pr
                     continue;
                 }
 
-                const Real signedPressureGradient = -directionSign * getDerivativeAtCellBorder(myself, pressureGradientsX, pressureGradientsY, direction);
+                const Real pressureGradient = getDerivativeAtCellBorder(myself, pressureGradientsX, pressureGradientsY, direction);
+
 
                 const CellIndex neighbor = myself.neighbor(direction);
                 const Real mobilityNeighbor = neighbor(mobilities);
                 const CellIndex meToNeighbor = pressureToTransmissibilityIndex(myself, neighbor, numberOfRows);
 
+                const bool fluxGoesToNeighbor = checkWhetherFluxGoesToNeighbor(myself, direction, darcyVelocitiesX, darcyVelocitiesY);
+                const Real upwindFluxFunctionFactor = fluxGoesToNeighbor? myself(fluxFunctionFactors): neighbor(fluxFunctionFactors);
 
-                meToMyself(derivatives) += signedPressureGradient * hmeanDerivedBySecond(mobilityNeighbor, myMobility);
-                meToNeighbor(derivatives) = signedPressureGradient * hmeanDerivedBySecond(myMobility, mobilityNeighbor) * timestep / meshWidth * mobilityNeighbor;
+
+                meToMyself(derivatives) += directionSign * (-pressureGradient) * hmeanDerivedBySecond(mobilityNeighbor, myMobility) * myMobility * upwindFluxFunctionFactor * timestep / meshWidth;
+                meToNeighbor(derivatives) = directionSign * (-pressureGradient) * hmeanDerivedBySecond(myMobility, mobilityNeighbor) * mobilityNeighbor * upwindFluxFunctionFactor * timestep / meshWidth;
 
             }
 
-            meToMyself(derivatives) *= timestep / meshWidth * myMobility;
         }
     }
 

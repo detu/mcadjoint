@@ -14,15 +14,12 @@ SparseMatrix computeSaturationWaterResidualsDerivedBySaturationWater(
       const Real timestep, const Real meshWidth
 );
 
-Real computeCostFunctionDerivedByPressureEntry(const Real computedPressureAtDrill, const Real measuredPressureAtDrill,
-                                               const int numberOfRows, const int numberOfCols,
-                                               const CellIndex& derivedByCell);
-Real computeCostFunctionDerivedBySaturationsWaterEntry(const int numberOfRows, const int numberOfCols,
-                                                       const CellIndex& derivedByCell);
 
 SparseMatrix computeSaturationWaterResidualsDerivedByPressure(const SparseMatrix& pressureSystem, ConstMatrixRef fluxFunctionFactors,
                                                               ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY,
                                                               ConstMatrixRef mobilities,
                                                               const Real timestep, const Real meshWidth);
 SparseMatrix computePressureResidualsByLogPermeability(ConstMatrixRef pressures, ConstMatrixRef totalMobilities);
-SparseMatrix computeSaturationsWaterResidualsByLogPermeability(ConstMatrixRef pressureGradientsX, ConstMatrixRef pressureGradientsY, ConstMatrixRef mobilities, const Real timestep, const Real meshWidth);
+SparseMatrix computeSaturationsWaterResidualsByLogPermeability(ConstMatrixRef pressureGradientsX, ConstMatrixRef pressureGradientsY,
+                                                               ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY,
+                                                               ConstMatrixRef mobilities, ConstMatrixRef fluxFunctionFactors, const Real timestep, const Real meshWidth);

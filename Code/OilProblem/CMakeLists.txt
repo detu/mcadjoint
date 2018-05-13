@@ -1,31 +1,27 @@
 cmake_minimum_required(VERSION 3.9)
 project(OilProblem LANGUAGES CXX)
 
-if (CMAKE_COMPILER_IS_GNUCC)
+if (CMAKE_COMPILER_ID MATCHES "GNU")
     set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall")
 endif()
 
-option(USE_MKL_IF_PRESENT "Use Intel MKL if present" OFF)
-
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+find_package(Threads REQUIRED)
 
 get_filename_component(thirdPartyDir "${CMAKE_CURRENT_SOURCE_DIR}/../thirdParty" REALPATH)
 
 include("${thirdPartyDir}/stefcommonheaders/CMakeLists.txt")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}")
 
-set(useCotire OFF)
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
 
-if (useCotire)
-    set(COTIRE_UNITY_SOURCE_MAXIMUM_NUMBER_OF_INCLUDES -j)
-    set(COTIRE_ADDITIONAL_PREFIX_HEADER_IGNORE_PATH "${thirdPartyDir}")
-    #set_property(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" PROPERTY COTIRE_ENABLE_PRECOMPILED_HEADER FALSE)
-    include(cotire)
-endif()
 
-set(bgfsIncludeDir "${thirdPartyDir}/LBFGSpp/include")
-include_directories("${bgfsIncludeDir}")
+set(optimizerIncludeDir "${thirdPartyDir}/CppNumericalSolvers/include")
+include_directories("${optimizerIncludeDir}" )
 
 set(eigenIncludeDir "${thirdPartyDir}/eigen")
 include_directories("${eigenIncludeDir}")
@@ -65,27 +61,6 @@ target_compile_definitions(QuarterFiveSpotTraditional PUBLIC -DJUST_COMPUTE_ADJO
 string(TOLOWER CMAKE_BUILD_TYPE lowercaseBuildType)
 foreach(executable IN ITEMS Test TestVerbose QuarterFiveSpot QuarterFiveSpotAdjoint QuarterFiveSpotTraditional)
     target_sources("${executable}" PUBLIC "${allCommonHeadersAndSources}")
-    target_link_libraries("${executable}" stefCommonHeaders simplematio)
-    if (useCotire)
-        cotire(${executable})
-    endif()
+    target_link_libraries("${executable}" stefCommonHeaders simplematio Threads::Threads)
 endforeach()
 
-
-if (USE_MKL_IF_PRESENT)
-    message("Using MKL enabled by user")
-    set(BUILD_SHARED_LIBS OFF)
-    find_package(MKL)
-    if (MKL_FOUND)
-        message("MKL found, using that")
-        include_directories(${MKL_INCLUDE_DIRS})
-        link_directories(${MKL_LIB_DIRS})
-        target_link_libraries(OilProblem ${MKL_LIBRARIES})
-        target_link_libraries(Test ${MKL_LIBRARIES})
-        add_definitions(-DEIGEN_USE_MKL_ALL -DUSE_PARDISO)
-    else()
-        message("MKL not found, using builtin eigen")
-    endif()
-else()
-    message("Using MKL disabled")
-endif()
