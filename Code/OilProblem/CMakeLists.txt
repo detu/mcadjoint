@@ -33,8 +33,8 @@ add_subdirectory("${simplematioDir}" "${simplematioBinaryDir}")
 set(baseLibHeaders control.h gnuplot_i.h utils.hpp logging.hpp)
 set(baseLibSources control.cpp gnuplot_i.cpp utils.cpp)
 set(oilLibHeaders typedefs.hpp cellindex.hpp vectorToBeMappedAsMatrix.hpp fixedParameters.hpp simulationState.hpp specialCells.hpp randomWalkState.hpp
-        pressure.hpp darcyVelocity.hpp saturation.hpp forward.hpp derivativesForAdjoint.hpp adjoint.hpp sensitivity.hpp dumpToMatFile.hpp)
-set(oilLibSources pressure.cpp darcyVelocity.cpp saturation.cpp forward.cpp derivativesForAdjoint.cpp adjoint.cpp sensitivity.cpp minimizer.cpp dumpToMatFile.cpp)
+        pressure.hpp darcyVelocity.hpp saturation.hpp forward.hpp derivativesForAdjoint.hpp derivativesForAdjointFD.hpp adjoint.hpp sensitivity.hpp dumpToMatFile.hpp)
+set(oilLibSources pressure.cpp darcyVelocity.cpp saturation.cpp forward.cpp derivativesForAdjoint.cpp derivativesForAdjointFD.cpp adjoint.cpp sensitivity.cpp minimizer.cpp dumpToMatFile.cpp)
 set(allCommonHeadersAndSources ${oilLibSources} ${oilLibHeaders} ${baseLibSources} ${baseLibHeaders})
 
 
@@ -50,7 +50,7 @@ add_executable(QuarterFiveSpot ${quarterFiveSpotSources})
 add_executable(QuarterFiveSpotAdjoint ${quarterFiveSpotAdjointSources})
 target_compile_definitions(TestVerbose PUBLIC -DVERBOSE_TESTS)
 add_executable(QuarterFiveSpotTraditional ${quarterFiveSpotTraditionalSources})
-
+add_executable(DerivativesForAdjointTest derivativesForAdjointTest.cpp)
 
 add_definitions(-DEIGEN_DEFAULT_DENSE_INDEX_TYPE=int -DEIGEN_NO_AUTOMATIC_RESIZING)
 if (lowercaseBuildType STREQUAL "debug")
@@ -59,7 +59,7 @@ endif()
 target_compile_definitions(QuarterFiveSpotTraditional PUBLIC -DJUST_COMPUTE_ADJOINT)
 
 string(TOLOWER CMAKE_BUILD_TYPE lowercaseBuildType)
-foreach(executable IN ITEMS Test TestVerbose QuarterFiveSpot QuarterFiveSpotAdjoint QuarterFiveSpotTraditional)
+foreach(executable IN ITEMS Test TestVerbose QuarterFiveSpot QuarterFiveSpotAdjoint QuarterFiveSpotTraditional DerivativesForAdjointTest)
     target_sources("${executable}" PUBLIC "${allCommonHeadersAndSources}")
     target_link_libraries("${executable}" stefCommonHeaders simplematio Threads::Threads)
 endforeach()

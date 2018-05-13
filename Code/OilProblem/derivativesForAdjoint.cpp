@@ -8,9 +8,7 @@
 #include "pressure.hpp"
 #include "utils.hpp"
 
-inline static Real hmeanDerivedBySecond(const Real a, const Real b) {
-    return 2*std::pow(a/(a+b), 2);
-}
+
 
 
 SparseMatrix computePressureResidualsDerivedByPressure(const SparseMatrix& pressureSystem) {

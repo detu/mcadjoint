@@ -7,21 +7,27 @@
 #include "specialCells.hpp"
 #include "pressure.hpp"
 
+static inline Real harmonicMean(const Real a, const Real b) {
+    return 2 * a * b / (a + b);
+}
 
 Real computeTransmissibility(ConstMatrixRef totalMobilities, const CellIndex& fromCell, const CellIndex& toCell) {
     // transmissibility is harmonic mean of total mobility coefficients
 
-    const double lambdaFrom = fromCell(totalMobilities);
-    const double lambdaTo = toCell(totalMobilities);
+    const Real lambdaFrom = fromCell(totalMobilities);
+    const Real lambdaTo = toCell(totalMobilities);
 
-    return 2.0 * lambdaFrom * lambdaTo / (lambdaFrom + lambdaTo);
+    return harmonicMean(lambdaFrom, lambdaTo);
 }
 
 
+Real computeTransmissibility(const Real dynamicViscosityOil, const Real dynamicViscosityWater, ConstMatrixRef permeabilities, ConstMatrixRef saturationsWater, const CellIndex& fromCell, const CellIndex& toCell) {
+    const Real lambdaFrom = computeTotalMobility(dynamicViscosityOil, dynamicViscosityWater, permeabilities, saturationsWater, fromCell);
+    const Real lambdaTo = computeTotalMobility(dynamicViscosityOil, dynamicViscosityWater, permeabilities, saturationsWater, toCell);
 
+    return harmonicMean(fromCell, toCell);
 
-
-
+}
 
 SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
     //log()->debug("Starting to assemble system");
@@ -140,5 +146,8 @@ Matrix computeTotalMobilities(const Real dynamicViscosityOil, const Real dynamic
     return permeabilities.array() * (saturationsWater.array().square() / dynamicViscosityWater + (1.0 - saturationsWater.array()).square() / dynamicViscosityOil);
 }
 
-
+Real computeTotalMobility(const Real dynamicViscosityOil, const Real dynamicViscosityWater, ConstMatrixRef permeabilities, ConstMatrixRef saturationsWater, const CellIndex entry) {
+    const Real saturation = entry(saturationsWater);
+    return entry(permeabilities) * (std::pow(saturation, 2) / dynamicViscosityWater + std::pow(1 - saturation, 2) / dynamicViscosityOil);
+}
 

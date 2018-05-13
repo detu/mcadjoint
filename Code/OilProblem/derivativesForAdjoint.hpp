@@ -23,3 +23,7 @@ SparseMatrix computePressureResidualsByLogPermeability(ConstMatrixRef pressures,
 SparseMatrix computeSaturationsWaterResidualsByLogPermeability(ConstMatrixRef pressureGradientsX, ConstMatrixRef pressureGradientsY,
                                                                ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY,
                                                                ConstMatrixRef mobilities, ConstMatrixRef fluxFunctionFactors, const Real timestep, const Real meshWidth);
+
+inline static Real hmeanDerivedBySecond(const Real a, const Real b) {
+    return 2*std::pow(a/(a+b), 2);
+}
