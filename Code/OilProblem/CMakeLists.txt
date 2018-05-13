@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.9)
 project(OilProblem LANGUAGES CXX)
 
-if (CMAKE_COMPILER_ID MATCHES "GNU")
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall")
 endif()
 

@@ -10,6 +10,7 @@
 #include <stefCommonHeaders/assert.h>
 #include <cstdlib>
 #include <stdlib.h>
+#include <cstdlib>
 
 #if !defined(__GNUC__) && !defined(__attribute__)
     #define __attribute__(ignored)
@@ -142,6 +143,8 @@ struct CellIndex {
                 return {i, j-1};
             }
         }
+
+        std::abort();
     }
 
     inline bool hasNeighbor(const Direction direction, const long numberOfRows, const long numberOfCols) const {
@@ -162,10 +165,13 @@ struct CellIndex {
                 return j > 0;
             }
         }
+
+        std::abort();
+
     }
 
 
-    inline std::vector<CellIndex> neighbors(const int numberOfRows, const int numberOfCols) {
+    inline std::vector<CellIndex> neighbors(const int numberOfRows, const int numberOfCols) const {
         std::vector<CellIndex> foundNeighbors;
 
         constexpr static std::array<Direction, 4> directionsToCheck = {
@@ -181,7 +187,7 @@ struct CellIndex {
         return foundNeighbors;
     }
 
-    inline std::vector<CellIndex> neighborsAndMyself(const int numberOfRows, const int numberOfCols) {
+    inline std::vector<CellIndex> neighborsAndMyself(const int numberOfRows, const int numberOfCols) const {
         std::vector<CellIndex> foundNeighborsAndMyself = neighbors(numberOfRows, numberOfCols);
         foundNeighborsAndMyself.push_back(*this);
 

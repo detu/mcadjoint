@@ -62,7 +62,7 @@ Real computePressureResidualFDEntry(
     return (shiftedResidualValue - unshiftedResidualValue) / shift.amount;
 }
 
-Matrix computePressureResidualsDerivedFD(ConstMatrixRef pressures, Matrix saturations, ConstMatrixRef logPermeabilities, const Shift::ShiftWhere derivedBy, const FixedParameters& params) {
+Matrix computePressureResidualsDerivedFD(Matrix pressures, Matrix saturations, Matrix logPermeabilities, const Shift::ShiftWhere derivedBy, const FixedParameters& params) {
     const int numberOfRows = pressures.rows();
     const int numberOfCols = pressures.cols();
     const int numberOfPairs = numberOfRows * numberOfCols;
@@ -73,8 +73,8 @@ Matrix computePressureResidualsDerivedFD(ConstMatrixRef pressures, Matrix satura
 
     for (cell.j = 0; cell.j < numberOfCols; ++cell.j) {
         for (cell.i = 0; cell.i < numberOfRows; ++cell.i) {
-            for (shiftCell.j = 0; cell.j < numberOfCols; ++cell.j) {
-                for (shiftCell.i = 0; cell.i < numberOfRows; ++cell.i) {
+            for (shiftCell.j = 0; shiftCell.j < numberOfCols; ++shiftCell.j) {
+                for (shiftCell.i = 0; shiftCell.i < numberOfRows; ++shiftCell.i) {
                     const CellIndex meToShift = pressureToTransmissibilityIndex(cell, shiftCell, numberOfRows);
                     const Shift shift = {shiftCell, derivedBy, 1e-6};
                     meToShift(derivatives) = computePressureResidualFDEntry(pressures, saturations, logPermeabilities, cell, shift, params);
@@ -82,6 +82,8 @@ Matrix computePressureResidualsDerivedFD(ConstMatrixRef pressures, Matrix satura
             }
         }
     }
+
+    return derivatives;
 
 }
 

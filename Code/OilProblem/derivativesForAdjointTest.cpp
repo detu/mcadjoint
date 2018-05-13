@@ -9,13 +9,12 @@
 #include "logging.hpp"
 
 int main() {
-    const int n = 5;
+    const int n = 2;
 
-    const auto logger = stefCommonHeaders::setUpLog(spdlog::level::level_enum::debug, true, "fd.log");
+    auto logger = stefCommonHeaders::setUpLog<stefCommonHeaders::NoMutex>(spdlog::level::level_enum::debug, true, "fd.log");
 
 
     const Matrix pressures(Matrix::Random(n, n));
-    pressures.setRandom();
 
     const Matrix saturationsWater(Matrix::Random(n, n));
 
@@ -44,15 +43,15 @@ int main() {
         return 1;
     };
 
-    const Matrix totalMobilities = computeTotalMobilities(dynamicViscosityOil, dynamicViscosityWater);
+    const Matrix totalMobilities = computeTotalMobilities(dynamicViscosityOil, dynamicViscosityWater, permeabilities, saturationsWater);
     const Matrix totalMobilitiesBySatWater = computeTotalMobilitiesDerivedBySaturationsWater(permeabilities, saturationsWater, dynamicViscosityOil, dynamicViscosityWater);
     const SparseMatrix analyticPressureBySaturation = computePressureResidualsDerivedBySaturationWater(pressures, totalMobilities, totalMobilitiesBySatWater);
 
     const Matrix numericPressureBySaturation = computePressureResidualsDerivedFD(pressures, saturationsWater, logPermeabilities, Shift::ShiftWhere::SATURATIONS, params);
 
 
-    log()->debug("numeric pressure by saturation =\n{}", numericPressureBySaturation);
-    log()->debug("analytic pressure by saturation =\n{}", analyticPressureBySaturation);
+    logger->debug("numeric pressure by saturation =\n{}", numericPressureBySaturation);
+    logger->debug("analytic pressure by saturation =\n{}", analyticPressureBySaturation);
 
     spdlog::drop_all();
 

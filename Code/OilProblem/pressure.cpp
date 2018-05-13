@@ -25,7 +25,7 @@ Real computeTransmissibility(const Real dynamicViscosityOil, const Real dynamicV
     const Real lambdaFrom = computeTotalMobility(dynamicViscosityOil, dynamicViscosityWater, permeabilities, saturationsWater, fromCell);
     const Real lambdaTo = computeTotalMobility(dynamicViscosityOil, dynamicViscosityWater, permeabilities, saturationsWater, toCell);
 
-    return harmonicMean(fromCell, toCell);
+    return harmonicMean(lambdaFrom, lambdaTo);
 
 }
 
