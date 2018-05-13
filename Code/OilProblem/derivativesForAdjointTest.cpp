@@ -16,7 +16,12 @@ int main() {
 
     const Matrix pressures(Matrix::Random(n, n));
 
-    const Matrix saturationsWater(Matrix::Random(n, n));
+    logger->debug("pressure =\n{}", pressures);
+
+    ASSERT(n == 2);
+    Matrix saturationsWater(n, n);
+    saturationsWater << 0.7, 0.1,
+                        0.01, 0.8;
 
     const Matrix permeabilities(Matrix::Ones(n, n));
     const Matrix logPermeabilities = permeabilities.array().log().matrix();
@@ -44,7 +49,10 @@ int main() {
     };
 
     const Matrix totalMobilities = computeTotalMobilities(dynamicViscosityOil, dynamicViscosityWater, permeabilities, saturationsWater);
+    logger->debug("total Mobilities =\n{}", totalMobilities);
+
     const Matrix totalMobilitiesBySatWater = computeTotalMobilitiesDerivedBySaturationsWater(permeabilities, saturationsWater, dynamicViscosityOil, dynamicViscosityWater);
+    logger->debug("tot mob sat water =\n{}", totalMobilitiesBySatWater);
     const SparseMatrix analyticPressureBySaturation = computePressureResidualsDerivedBySaturationWater(pressures, totalMobilities, totalMobilitiesBySatWater);
 
     const Matrix numericPressureBySaturation = computePressureResidualsDerivedFD(pressures, saturationsWater, logPermeabilities, Shift::ShiftWhere::SATURATIONS, params);

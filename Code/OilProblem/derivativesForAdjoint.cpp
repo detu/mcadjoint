@@ -17,14 +17,7 @@ SparseMatrix computePressureResidualsDerivedByPressure(const SparseMatrix& press
 }
 
 Matrix computeTotalMobilitiesDerivedBySaturationsWater(ConstMatrixRef permeabilities, ConstMatrixRef saturationsWater, const Real dynamicViscosityOil, const Real dynamicViscosityWater) {
-    const int numberOfRows = permeabilities.rows();
-    const int numberOfCols = permeabilities.cols();
-
-
-    const auto saturationsArray = saturationsWater.array();
-    const auto permeabilitiesArray = permeabilities.array();
-
-    return (2*permeabilitiesArray * ((saturationsArray - 1) / dynamicViscosityOil + saturationsArray / dynamicViscosityWater)).matrix();
+    return (2*permeabilities.array() * ((saturationsWater.array() - 1) / dynamicViscosityOil + saturationsWater.array() / dynamicViscosityWater)).matrix();
 }
 
 SparseMatrix computePressureResidualsDerivedBySaturationWater(ConstMatrixRef pressures, ConstMatrixRef totalMobilities, ConstMatrixRef totalMobilitiesDerivedBySaturationsWater) {
@@ -55,6 +48,8 @@ SparseMatrix computePressureResidualsDerivedBySaturationWater(ConstMatrixRef pre
             const Real myDerivativeOfMobility = myself(totalMobilitiesDerivedBySaturationsWater);
             const Real myMobility = myself(totalMobilities);
 
+            const Real myPressure = myself(pressures);
+
 
 
             for (const auto direction: directionsToCheck) {
@@ -67,7 +62,6 @@ SparseMatrix computePressureResidualsDerivedBySaturationWater(ConstMatrixRef pre
                 const Real neighborMobility = neighbor(totalMobilities);
 
 
-                const Real myPressure = myself(pressures);
                 const Real neighborPressure = neighbor(pressures);
 
 
@@ -78,7 +72,7 @@ SparseMatrix computePressureResidualsDerivedBySaturationWater(ConstMatrixRef pre
 
                 const Real pressureDifference = myPressure - neighborPressure;
                 meToMyself(derivatives) += pressureDifference * hmeanDerivedBySecond(neighborMobility, myMobility) * myDerivativeOfMobility;
-                meToNeighbor(derivatives) += pressureDifference * hmeanDerivedBySecond(myMobility, neighborMobility) * neighborDerivativeOfMobility;
+                meToNeighbor(derivatives) = pressureDifference * hmeanDerivedBySecond(myMobility, neighborMobility) * neighborDerivativeOfMobility;
             }
         }
     }
@@ -114,6 +108,8 @@ static inline bool checkWhetherFluxGoesToNeighbor(const CellIndex cell, const Ce
             return centerIndexToBorderIndex(cell, direction)(darcyVelocitiesY) < 0;
         }
     }
+
+    std::abort();
 }
 
 

@@ -44,22 +44,30 @@ Real computePressureResidualFDEntry(
 
     const Real unshiftedValue = valueToShift;
 
-    const Real unshiftedResidualValue = computePressureResidualEntry(pressures, saturations, permeabilities);
-
     if (shift.where == Shift::ShiftWhere::LOG_PERMEABILITIES) {
-        valueToShift *= std::exp(shift.amount);
+        valueToShift *= std::exp(shift.amount/2);
     } else {
-        valueToShift += shift.amount;
+        valueToShift += shift.amount/2;
     }
 
-    const Real shiftedResidualValue = computePressureResidualEntry(pressures, saturations, permeabilities);
+    const Real upShiftedResidualValue = computePressureResidualEntry(pressures, saturations, permeabilities);
+    valueToShift = unshiftedValue;
+
+
+    if (shift.where == Shift::ShiftWhere::LOG_PERMEABILITIES) {
+        valueToShift /= std::exp(shift.amount/2);
+    } else {
+        valueToShift -= shift.amount/2;
+    }
+
+    const Real downshiftedResidualValue = computePressureResidualEntry(pressures, saturations, permeabilities);
 
     valueToShift = unshiftedValue;
 
 
 
 
-    return (shiftedResidualValue - unshiftedResidualValue) / shift.amount;
+    return (upShiftedResidualValue - downshiftedResidualValue) / shift.amount;
 }
 
 Matrix computePressureResidualsDerivedFD(Matrix pressures, Matrix saturations, Matrix logPermeabilities, const Shift::ShiftWhere derivedBy, const FixedParameters& params) {
@@ -76,7 +84,7 @@ Matrix computePressureResidualsDerivedFD(Matrix pressures, Matrix saturations, M
             for (shiftCell.j = 0; shiftCell.j < numberOfCols; ++shiftCell.j) {
                 for (shiftCell.i = 0; shiftCell.i < numberOfRows; ++shiftCell.i) {
                     const CellIndex meToShift = pressureToTransmissibilityIndex(cell, shiftCell, numberOfRows);
-                    const Shift shift = {shiftCell, derivedBy, 1e-6};
+                    const Shift shift = {shiftCell, derivedBy, 1e-8};
                     meToShift(derivatives) = computePressureResidualFDEntry(pressures, saturations, logPermeabilities, cell, shift, params);
                 }
             }
