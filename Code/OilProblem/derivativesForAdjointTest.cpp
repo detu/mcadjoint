@@ -50,6 +50,8 @@ int main() {
         return 1;
     };
 
+    const Real timestep = 1e-5;
+
     const Matrix totalMobilities = computeTotalMobilities(dynamicViscosityOil, dynamicViscosityWater, permeabilities, saturationsWater);
     logger->debug("total Mobilities =\n{}", totalMobilities);
 
@@ -60,22 +62,22 @@ int main() {
     const Matrix numericPressureBySaturation = deriveResidualsWithFiniteDifferences(pressures, saturationsWater,
                                                                                     logPermeabilities,
                                                                                     WhichResidual::PRESSURE, Shift::ShiftWhere::SATURATIONS,
-                                                                                    params, 1e-5);
+                                                                                    params, timestep);
 
     const SparseMatrix pressureSystem = assemblePressureSystemWithBC(totalMobilities);
     const SparseMatrix analyticPressureByPressure = derivePressureResidualsByPresures(pressureSystem);
     const Matrix numericPressureByPressure = deriveResidualsWithFiniteDifferences(pressures, saturationsWater,
                                                                                   logPermeabilities, WhichResidual::PRESSURE,
-                                                                                  Shift::ShiftWhere::PRESSURES, params, 1e-5);
+                                                                                  Shift::ShiftWhere::PRESSURES, params, timestep);
 
 
     const SparseMatrix analyticPressureByLogPermeabilities = derivePressureResidualsByLogPermeabilities(pressures, totalMobilities);
     const Matrix numericPressureByLogPermeabilities = deriveResidualsWithFiniteDifferences(pressures, saturationsWater,
                                                                                            logPermeabilities,
                                                                                            WhichResidual::PRESSURE, Shift::ShiftWhere::LOG_PERMEABILITIES,
-                                                                                           params, 1e-5);
+                                                                                           params, timestep);
 
-    const Matrix numericSaturationBySaturation = deriveResidualsWithFiniteDifferences(pressures, saturationsWater, logPermeabilities, WhichResidual::SATURATION, Shift::ShiftWhere::SATURATIONS, params, 1e-5);
+    const Matrix numericSaturationBySaturation = deriveResidualsWithFiniteDifferences(pressures, saturationsWater, logPermeabilities, WhichResidual::SATURATION, Shift::ShiftWhere::SATURATIONS, params, timestep);
 
     const Matrix fluxFunctionFactors = computeFluxFunctionFactors(saturationsWater, params.porosity, params.dynamicViscosityWater, params.dynamicViscosityOil);
     const Matrix fluxFunctionDerivatives = deriveFluxFunctionFactorsBySaturations(saturationsWater, params.porosity, params.dynamicViscosityWater, params.dynamicViscosityOil);
@@ -86,7 +88,11 @@ int main() {
     const Matrix analyticSaturationBySaturation = deriveSaturationResidualsBySaturations(fluxFunctionFactors, fluxFunctionDerivatives,
                                                                                          darcyVelocitiesX, darcyVelocitiesY,
                                                                                          pressureDerivativesX, pressureDerivativesY,
-                                                                                         totalMobilities, totalMobilitiesBySatWater, 1e-5, params.meshWidth);
+                                                                                         totalMobilities, totalMobilitiesBySatWater, timestep, params.meshWidth);
+
+
+    const Matrix analyticSaturationByPressure = deriveSaturationResidualsByPressures(pressureSystem, fluxFunctionFactors, darcyVelocitiesX, darcyVelocitiesY, totalMobilities, timestep, params.meshWidth);
+    const Matrix numericSaturationByPressure = deriveResidualsWithFiniteDifferences(pressures, saturationsWater, logPermeabilities, WhichResidual::SATURATION, Shift::ShiftWhere::PRESSURES, params, timestep);
     logger->debug("numeric pressure by pressure =\n{}", numericPressureByPressure);
     logger->debug("analytic pressure by pressure =\n{}", analyticPressureByPressure);
 
@@ -117,6 +123,16 @@ int main() {
     logger->debug("difference saturation by saturation =\n{}", numericSaturationBySaturation - analyticSaturationBySaturation);
 
     logger->debug("max error saturation by saturation =\n{}", Matrix(numericSaturationBySaturation - analyticSaturationBySaturation).array().abs().maxCoeff());
+
+
+    logger->debug("numeric saturation by pressure =\n{}", numericSaturationByPressure);
+    logger->debug("analytic saturation by pressure =\n{}", analyticSaturationByPressure);
+
+    logger->debug("difference saturation by pressure =\n{}", numericSaturationByPressure - analyticSaturationByPressure);
+
+    logger->debug("max error saturation by pressure =\n{}", Matrix(numericSaturationByPressure - analyticSaturationByPressure).array().abs().maxCoeff());
+
+
 
     logger->debug("Darcy velocities X =\n{}", darcyVelocitiesX);
     logger->debug("Darcy velocities Y =\n{}", darcyVelocitiesY);
