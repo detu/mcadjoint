@@ -73,6 +73,8 @@ CellIndex borderIndexToCenterIndex(CellIndex borderIndex, const CellIndex::Direc
             return borderIndex;
         }
     }
+
+    std::abort();
 }
 
 CellIndex centerIndexToBorderIndex(CellIndex centerIndex, const CellIndex::Direction whichBorder) {
@@ -92,6 +94,8 @@ CellIndex centerIndexToBorderIndex(CellIndex centerIndex, const CellIndex::Direc
             return centerIndex;
         }
     }
+
+    std::abort();
 }
 
 

@@ -70,7 +70,7 @@ Real computePressureResidualFDEntry(
     return (upShiftedResidualValue - downshiftedResidualValue) / shift.amount;
 }
 
-Matrix computePressureResidualsDerivedFD(Matrix pressures, Matrix saturations, Matrix logPermeabilities, const Shift::ShiftWhere derivedBy, const FixedParameters& params) {
+Matrix derivePressureResidualsWithFiniteDifferences(Matrix pressures, Matrix saturations, Matrix logPermeabilities, const Shift::ShiftWhere derivedBy, const FixedParameters& params) {
     const int numberOfRows = pressures.rows();
     const int numberOfCols = pressures.cols();
     const int numberOfPairs = numberOfRows * numberOfCols;

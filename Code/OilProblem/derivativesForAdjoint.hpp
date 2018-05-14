@@ -2,11 +2,11 @@
 #include "typedefs.hpp"
 #include "cellindex.hpp"
 
-SparseMatrix computePressureResidualsDerivedByPressure(const SparseMatrix& pressureSystem);
-Matrix computeTotalMobilitiesDerivedBySaturationsWater(ConstMatrixRef permeabilities, ConstMatrixRef saturationsWater, const Real dynamicViscosityOil, const Real dynamicViscosityWater);
-SparseMatrix computePressureResidualsDerivedBySaturationWater(ConstMatrixRef pressures, ConstMatrixRef totalMobilities, ConstMatrixRef totalMobilitiesDerivedBySaturationsWater);
-Matrix computeFluxFunctionFactorDerivatives(ConstMatrixRef saturationsWater, const Real porosity, const Real dynamicViscosityWater, const Real dynamicViscosityOil);
-SparseMatrix computeSaturationWaterResidualsDerivedBySaturationWater(
+SparseMatrix derivePressureResidualsByPresures(const SparseMatrix& pressureSystem);
+Matrix deriveTotalMobilitiesBySaturations(ConstMatrixRef permeabilities, ConstMatrixRef saturationsWater, const Real dynamicViscosityOil, const Real dynamicViscosityWater);
+SparseMatrix derivePressureResidualsBySaturations(ConstMatrixRef pressures, ConstMatrixRef totalMobilities, ConstMatrixRef totalMobilitiesDerivedBySaturationsWater);
+Matrix deriveFluxFunctionFactorsBySaturations(ConstMatrixRef saturationsWater, const Real porosity, const Real dynamicViscosityWater, const Real dynamicViscosityOil);
+SparseMatrix deriveSaturationResidualsBySaturations(
       ConstMatrixRef fluxFunctionFactors, ConstMatrixRef fluxFunctionDerivatives,
       ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY,
       ConstMatrixRef pressureDerivativesX, ConstMatrixRef pressureDerivativesY,
@@ -15,14 +15,14 @@ SparseMatrix computeSaturationWaterResidualsDerivedBySaturationWater(
 );
 
 
-SparseMatrix computeSaturationsWaterResidualsDerivedByPressure(const SparseMatrix& pressureSystem,
+SparseMatrix deriveSaturationResidualsByPressures(const SparseMatrix& pressureSystem,
                                                                ConstMatrixRef fluxFunctionFactors,
                                                                ConstMatrixRef darcyVelocitiesX,
                                                                ConstMatrixRef darcyVelocitiesY,
                                                                ConstMatrixRef mobilities,
                                                                const Real timestep, const Real meshWidth);
-SparseMatrix computePressureResidualsDerivedByLogPermeability(ConstMatrixRef pressures, ConstMatrixRef totalMobilities);
-SparseMatrix computeSaturationsWaterResidualsDerivedByLogPermeability(ConstMatrixRef pressureGradientsX,
+SparseMatrix derivePressureResidualsByLogPermeabilities(ConstMatrixRef pressures, ConstMatrixRef totalMobilities);
+SparseMatrix deriveSaturationResidualsByLogPermeabilities(ConstMatrixRef pressureGradientsX,
                                                                       ConstMatrixRef pressureGradientsY,
                                                                       ConstMatrixRef darcyVelocitiesX,
                                                                       ConstMatrixRef darcyVelocitiesY,

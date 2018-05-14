@@ -20,4 +20,4 @@ struct Shift {
     const Real amount;
 };
 
-Matrix computePressureResidualsDerivedFD(Matrix pressures, Matrix saturations, Matrix logPermeabilities, const Shift::ShiftWhere derivedBy, const FixedParameters& params);
+Matrix derivePressureResidualsWithFiniteDifferences(Matrix pressures, Matrix saturations, Matrix logPermeabilities, const Shift::ShiftWhere derivedBy, const FixedParameters& params);

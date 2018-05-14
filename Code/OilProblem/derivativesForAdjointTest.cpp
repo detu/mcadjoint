@@ -51,19 +51,19 @@ int main() {
     const Matrix totalMobilities = computeTotalMobilities(dynamicViscosityOil, dynamicViscosityWater, permeabilities, saturationsWater);
     logger->debug("total Mobilities =\n{}", totalMobilities);
 
-    const Matrix totalMobilitiesBySatWater = computeTotalMobilitiesDerivedBySaturationsWater(permeabilities, saturationsWater, dynamicViscosityOil, dynamicViscosityWater);
+    const Matrix totalMobilitiesBySatWater = deriveTotalMobilitiesBySaturations(permeabilities, saturationsWater, dynamicViscosityOil, dynamicViscosityWater);
     logger->debug("tot mob sat water =\n{}", totalMobilitiesBySatWater);
-    const SparseMatrix analyticPressureBySaturation = computePressureResidualsDerivedBySaturationWater(pressures, totalMobilities, totalMobilitiesBySatWater);
+    const SparseMatrix analyticPressureBySaturation = derivePressureResidualsBySaturations(pressures, totalMobilities, totalMobilitiesBySatWater);
 
-    const Matrix numericPressureBySaturation = computePressureResidualsDerivedFD(pressures, saturationsWater, logPermeabilities, Shift::ShiftWhere::SATURATIONS, params);
+    const Matrix numericPressureBySaturation = derivePressureResidualsWithFiniteDifferences(pressures, saturationsWater, logPermeabilities, Shift::ShiftWhere::SATURATIONS, params);
 
     const SparseMatrix pressureSystem = assemblePressureSystemWithBC(totalMobilities);
-    const SparseMatrix analyticPressureByPressure = computePressureResidualsDerivedByPressure(pressureSystem);
-    const Matrix numericPressureByPressure = computePressureResidualsDerivedFD(pressures, saturationsWater, logPermeabilities, Shift::ShiftWhere::PRESSURES, params);
+    const SparseMatrix analyticPressureByPressure = derivePressureResidualsByPresures(pressureSystem);
+    const Matrix numericPressureByPressure = derivePressureResidualsWithFiniteDifferences(pressures, saturationsWater, logPermeabilities, Shift::ShiftWhere::PRESSURES, params);
 
 
-    const SparseMatrix analyticPressureByLogPermeabilities = computePressureResidualsDerivedByLogPermeability(pressures, totalMobilities);
-    const Matrix numericPressureByLogPermeabilities = computePressureResidualsDerivedFD(pressures, saturationsWater, logPermeabilities, Shift::ShiftWhere::LOG_PERMEABILITIES, params);
+    const SparseMatrix analyticPressureByLogPermeabilities = derivePressureResidualsByLogPermeabilities(pressures, totalMobilities);
+    const Matrix numericPressureByLogPermeabilities = derivePressureResidualsWithFiniteDifferences(pressures, saturationsWater, logPermeabilities, Shift::ShiftWhere::LOG_PERMEABILITIES, params);
 
 
     logger->debug("numeric pressure by pressure =\n{}", numericPressureByPressure);

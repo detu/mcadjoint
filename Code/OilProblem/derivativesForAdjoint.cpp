@@ -11,16 +11,16 @@
 
 
 
-SparseMatrix computePressureResidualsDerivedByPressure(const SparseMatrix& pressureSystem) {
+SparseMatrix derivePressureResidualsByPresures(const SparseMatrix& pressureSystem) {
     ASSERT(allFinite(pressureSystem));
     return pressureSystem;
 }
 
-Matrix computeTotalMobilitiesDerivedBySaturationsWater(ConstMatrixRef permeabilities, ConstMatrixRef saturationsWater, const Real dynamicViscosityOil, const Real dynamicViscosityWater) {
+Matrix deriveTotalMobilitiesBySaturations(ConstMatrixRef permeabilities, ConstMatrixRef saturationsWater, const Real dynamicViscosityOil, const Real dynamicViscosityWater) {
     return (2*permeabilities.array() * ((saturationsWater.array() - 1) / dynamicViscosityOil + saturationsWater.array() / dynamicViscosityWater)).matrix();
 }
 
-SparseMatrix computePressureResidualsDerivedBySaturationWater(ConstMatrixRef pressures, ConstMatrixRef totalMobilities, ConstMatrixRef totalMobilitiesDerivedBySaturationsWater) {
+SparseMatrix derivePressureResidualsBySaturations(ConstMatrixRef pressures, ConstMatrixRef totalMobilities, ConstMatrixRef totalMobilitiesDerivedBySaturationsWater) {
     const int numberOfRows = pressures.rows();
     const int numberOfCols = pressures.cols();
     const int numberOfPairs = numberOfCols * numberOfRows;
@@ -84,7 +84,7 @@ SparseMatrix computePressureResidualsDerivedBySaturationWater(ConstMatrixRef pre
 }
 
 
-Matrix computeFluxFunctionFactorDerivatives(ConstMatrixRef saturationsWater, const Real porosity, const Real dynamicViscosityWater, const Real dynamicViscosityOil) {
+Matrix deriveFluxFunctionFactorsBySaturations(ConstMatrixRef saturationsWater, const Real porosity, const Real dynamicViscosityWater, const Real dynamicViscosityOil) {
     const auto saturationsWaterArray = saturationsWater.array();
     const auto saturationsOilArray = 1 - saturationsWaterArray;
 
@@ -113,7 +113,7 @@ static inline bool checkWhetherFluxGoesToNeighbor(const CellIndex cell, const Ce
 }
 
 
-SparseMatrix deriveSaturationsBySaturations(
+SparseMatrix deriveSaturationResidualsBySaturations(
       ConstMatrixRef fluxFunctionFactors, ConstMatrixRef fluxFunctionDerivatives,
       ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY,
       ConstMatrixRef pressureDerivativesX, ConstMatrixRef pressureDerivativesY,
@@ -190,7 +190,7 @@ SparseMatrix deriveSaturationsBySaturations(
 
 
 
-SparseMatrix deriveSaturationsByPressures(const SparseMatrix& pressureSystem, ConstMatrixRef fluxFunctionFactors,
+SparseMatrix deriveSaturationResidualsByPressures(const SparseMatrix& pressureSystem, ConstMatrixRef fluxFunctionFactors,
                                           ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY,
                                           ConstMatrixRef mobilities,
                                           const Real timestep, const Real meshWidth) {
@@ -257,7 +257,7 @@ SparseMatrix deriveSaturationsByPressures(const SparseMatrix& pressureSystem, Co
 
 
 
-SparseMatrix computePressureResidualsDerivedByLogPermeability(ConstMatrixRef pressures, ConstMatrixRef totalMobilities) {
+SparseMatrix derivePressureResidualsByLogPermeabilities(ConstMatrixRef pressures, ConstMatrixRef totalMobilities) {
     const int numberOfRows = pressures.rows();
     const int numberOfCols = pressures.cols();
     const int numberOfPairs = numberOfCols * numberOfRows;
@@ -312,7 +312,7 @@ SparseMatrix computePressureResidualsDerivedByLogPermeability(ConstMatrixRef pre
 
 }
 
-SparseMatrix computeSaturationsWaterResidualsDerivedByLogPermeability(ConstMatrixRef pressureGradientsX, ConstMatrixRef pressureGradientsY,
+SparseMatrix deriveSaturationResidualsByLogPermeabilities(ConstMatrixRef pressureGradientsX, ConstMatrixRef pressureGradientsY,
                                                                ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY,
                                                                ConstMatrixRef mobilities, ConstMatrixRef fluxFunctionFactors, const Real timestep, const Real meshWidth) {
     const int numberOfRows = mobilities.rows();
