@@ -34,7 +34,7 @@ Real computePressureResidualFDEntry(
         } else {
             Real residual = 0;
             for (const auto& neighbor: cell.neighbors(numberOfRows, numberOfCols)) {
-                residual += computeTransmissibility(params.dynamicViscosityOil, params.dynamicViscosityWater, saturations, permeabilities, cell, neighbor) * (cell(pressures) - neighbor(pressures));
+                residual += computeTransmissibility(params.dynamicViscosityOil, params.dynamicViscosityWater, permeabilities, saturations, cell, neighbor) * (cell(pressures) - neighbor(pressures));
             }
 
             return residual;
