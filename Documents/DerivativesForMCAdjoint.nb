@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     14924,        469]
-NotebookOptionsPosition[     12392,        402]
-NotebookOutlinePosition[     12748,        418]
-CellTagsIndexPosition[     12705,        415]
+NotebookDataLength[     43585,       1240]
+NotebookOptionsPosition[     40193,       1155]
+NotebookOutlinePosition[     40550,       1171]
+CellTagsIndexPosition[     40507,       1168]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -395,13 +395,766 @@ d5bcdeb1e8ed"],
 
 Cell[BoxData[
  RowBox[{"saturationConstraint", " ", ":=", " ", 
-  RowBox[{"sknow", " ", "-", " ", "skbefore", " "}]}]], "Input",
- CellChangeTimes->{{3.73478418346548*^9, 
-  3.734784215594255*^9}},ExpressionUUID->"1efb9c53-43db-4ac2-8c43-\
-5bffdab9bb2b"]
+  RowBox[{"sknow", " ", "-", " ", "skbefore", "  ", "+", " ", 
+   RowBox[{
+    RowBox[{"timestep", " ", "/", " ", "h"}], " ", "*", " ", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"upwindF", "[", 
+        RowBox[{"skbefore", ",", "sebefore", ",", " ", "vxe"}], "]"}], " ", 
+       "*", " ", "vxe"}], " ", "-", "  ", 
+      RowBox[{
+       RowBox[{"upwindF", "[", 
+        RowBox[{"skbefore", ",", "swbefore", ",", " ", "vxw"}], "]"}], " ", 
+       "*", " ", "vxw"}], " ", "+", " ", 
+      RowBox[{
+       RowBox[{"upwindF", "[", 
+        RowBox[{"skbefore", ",", "snbefore", ",", " ", "vyn"}], "]"}], " ", 
+       "*", " ", "vyn"}], " ", "-", " ", 
+      RowBox[{
+       RowBox[{"upwindF", "[", 
+        RowBox[{"skbefore", ",", "ssbefore", ",", " ", "vys"}], "]"}], " ", 
+       "*", " ", "vys"}]}], ")"}]}]}]}]], "Input",
+ CellChangeTimes->{{3.73478418346548*^9, 3.734784215594255*^9}, {
+  3.735286502626293*^9, 3.735286521609445*^9}, {3.735286558547183*^9, 
+  3.735286749979723*^9}},ExpressionUUID->"1efb9c53-43db-4ac2-8c43-\
+5bffdab9bb2b"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"upwindF", "[", 
+   RowBox[{"sk_", ",", " ", "sn_", ",", " ", "v_"}], "]"}], " ", ":=", " ", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"HeavisideTheta", "[", "v", "]"}], " ", "*", " ", 
+    RowBox[{"F", "[", "sk", "]"}]}], " ", "+", " ", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"1", " ", "-", " ", 
+      RowBox[{"HeavisideTheta", "[", "v", "]"}]}], ")"}], " ", "*", " ", 
+    RowBox[{"F", "[", "sn", "]"}]}]}]}]], "Input",
+ CellChangeTimes->{{3.735286766081534*^9, 
+  3.7352868983774347`*^9}},ExpressionUUID->"19732302-0ac5-4fb8-84d6-\
+14647ff9bf4d"],
+
+Cell[BoxData[
+ RowBox[{"vxe", " ", ":=", " ", 
+  RowBox[{
+   RowBox[{"-", " ", 
+    RowBox[{"hmean", "[", 
+     RowBox[{
+      RowBox[{"lambda", "[", 
+       RowBox[{"skbefore", ",", " ", "lnk"}], "]"}], ",", " ", 
+      RowBox[{"lambda", "[", 
+       RowBox[{"sebefore", ",", "lne"}], "]"}]}], "]"}]}], " ", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"pe", " ", "-", " ", "pk"}], ")"}], " ", "/", "h", 
+    " "}]}]}]], "Input",
+ CellChangeTimes->{{3.735286904874642*^9, 
+  3.735287035756077*^9}},ExpressionUUID->"e3fe45a6-dba8-461a-9213-\
+cb075bcb78fa"],
+
+Cell[BoxData[
+ RowBox[{"vxw", " ", ":=", " ", 
+  RowBox[{
+   RowBox[{"-", " ", 
+    RowBox[{"hmean", "[", 
+     RowBox[{
+      RowBox[{"lambda", "[", 
+       RowBox[{"skbefore", ",", " ", "lnk"}], "]"}], ",", " ", 
+      RowBox[{"lambda", "[", 
+       RowBox[{"swbefore", ",", "lnw"}], "]"}]}], "]"}]}], " ", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"pk", " ", "-", " ", "pw"}], ")"}], " ", "/", "h", 
+    " "}]}]}]], "Input",
+ CellChangeTimes->{{3.7352870531155787`*^9, 
+  3.735287079257946*^9}},ExpressionUUID->"41dec174-3c77-4a16-82f2-\
+07b3b700cf02"],
+
+Cell[BoxData[
+ RowBox[{"vyn", " ", ":=", " ", 
+  RowBox[{
+   RowBox[{"-", " ", 
+    RowBox[{"hmean", "[", 
+     RowBox[{
+      RowBox[{"lambda", "[", 
+       RowBox[{"skbefore", ",", " ", "lnk"}], "]"}], ",", " ", 
+      RowBox[{"lambda", "[", 
+       RowBox[{"snbefore", ",", "lnn"}], "]"}]}], "]"}]}], " ", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"pn", " ", "-", " ", "pk"}], ")"}], " ", "/", "h", 
+    " "}]}]}]], "Input",
+ CellChangeTimes->{{3.7352870858616533`*^9, 
+  3.7352871004994907`*^9}},ExpressionUUID->"62734858-5283-4908-99da-\
+21fba927c924"],
+
+Cell[BoxData[
+ RowBox[{"vys", " ", ":=", " ", 
+  RowBox[{
+   RowBox[{"-", " ", 
+    RowBox[{"hmean", "[", 
+     RowBox[{
+      RowBox[{"lambda", "[", 
+       RowBox[{"skbefore", ",", " ", "lnk"}], "]"}], ",", " ", 
+      RowBox[{"lambda", "[", 
+       RowBox[{"ssbefore", ",", "lns"}], "]"}]}], "]"}]}], " ", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"pk", " ", "-", " ", "ps"}], ")"}], " ", "/", "h", 
+    " "}]}]}]], "Input",
+ CellChangeTimes->{{3.735287105946682*^9, 
+  3.7352871242493277`*^9}},ExpressionUUID->"012e5d3a-b7c1-43c9-aa60-\
+4318f883c3cc"],
+
+Cell[BoxData[{
+ RowBox[{"Clear", "[", 
+  RowBox[{
+  "lambda", ",", " ", "vxe", ",", " ", "vxw", ",", " ", "vyn", ",", " ", 
+   "vys"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"vxe", " ", ":=", " ", 
+  RowBox[{"vxef", "[", 
+   RowBox[{
+   "skbefore", ",", " ", "lnk", ",", " ", "sebefore", ",", " ", "lne", ",", 
+    " ", "pe", ",", " ", "pk"}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"vxw", " ", ":=", " ", 
+  RowBox[{"vxwf", "[", 
+   RowBox[{
+   "skbefore", ",", " ", "lnk", ",", " ", "swbefore", ",", " ", "lnw", ",", 
+    " ", "pw", ",", " ", "pk"}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"vys", " ", ":=", " ", 
+  RowBox[{"vysf", "[", 
+   RowBox[{
+   "skbefore", ",", " ", "lnk", ",", " ", "ssbefore", ",", " ", "lns", ",", 
+    " ", "ps", ",", " ", "pk"}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"vyn", " ", ":=", " ", 
+  RowBox[{"vynf", "[", 
+   RowBox[{
+   "skbefore", ",", " ", "lnk", ",", " ", "snbefore", ",", " ", "lnn", ",", 
+    " ", "pn", ",", " ", "pk"}], "]"}]}]}], "Input",
+ CellChangeTimes->{{3.735287127065065*^9, 3.735287170683264*^9}, {
+  3.73528730395228*^9, 3.73528732410544*^9}, {3.735287359416573*^9, 
+  3.735287365818844*^9}, {3.735287426908443*^9, 
+  3.735287511499434*^9}},ExpressionUUID->"19d88ea9-40b0-465c-ac9a-\
+7a68bc5bfd2d"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"FullSimplify", "[", 
+  RowBox[{"D", "[", 
+   RowBox[{"saturationConstraint", ",", " ", "skbefore"}], "]"}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.735287174379361*^9, 
+  3.735287188587487*^9}},ExpressionUUID->"95744756-87c2-4ca8-97a1-\
+981b72d38e38"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"-", "1"}], "+", 
+  RowBox[{
+   FractionBox["1", "h"], 
+   RowBox[{"timestep", " ", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{
+       FractionBox["1", "h"], 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"pe", "-", "pk"}], ")"}], " ", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"-", 
+              RowBox[{"F", "[", "sebefore", "]"}]}], "+", 
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"F", "[", "sebefore", "]"}], "-", 
+                RowBox[{"F", "[", "skbefore", "]"}]}], ")"}], " ", 
+              RowBox[{"HeavisideTheta", "[", 
+               FractionBox[
+                RowBox[{
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"-", "pe"}], "+", "pk"}], ")"}], " ", 
+                 RowBox[{"hmean", "[", 
+                  RowBox[{
+                   RowBox[{"lambda", "[", 
+                    RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+                   RowBox[{"lambda", "[", 
+                    RowBox[{"sebefore", ",", "lne"}], "]"}]}], "]"}]}], "h"], 
+               "]"}]}]}], ")"}], " ", 
+           RowBox[{
+            SuperscriptBox["hmean", 
+             TagBox[
+              RowBox[{"(", 
+               RowBox[{"1", ",", "0"}], ")"}],
+              Derivative],
+             MultilineFunction->None], "[", 
+            RowBox[{
+             RowBox[{"lambda", "[", 
+              RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+             RowBox[{"lambda", "[", 
+              RowBox[{"sebefore", ",", "lne"}], "]"}]}], "]"}]}], "-", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"-", "pk"}], "+", "pn"}], ")"}], " ", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"F", "[", "snbefore", "]"}], "+", 
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"F", "[", "skbefore", "]"}], "-", 
+                RowBox[{"F", "[", "snbefore", "]"}]}], ")"}], " ", 
+              RowBox[{"HeavisideTheta", "[", 
+               FractionBox[
+                RowBox[{
+                 RowBox[{"(", 
+                  RowBox[{"pk", "-", "pn"}], ")"}], " ", 
+                 RowBox[{"hmean", "[", 
+                  RowBox[{
+                   RowBox[{"lambda", "[", 
+                    RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+                   RowBox[{"lambda", "[", 
+                    RowBox[{"snbefore", ",", "lnn"}], "]"}]}], "]"}]}], "h"], 
+               "]"}]}]}], ")"}], " ", 
+           RowBox[{
+            SuperscriptBox["hmean", 
+             TagBox[
+              RowBox[{"(", 
+               RowBox[{"1", ",", "0"}], ")"}],
+              Derivative],
+             MultilineFunction->None], "[", 
+            RowBox[{
+             RowBox[{"lambda", "[", 
+              RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+             RowBox[{"lambda", "[", 
+              RowBox[{"snbefore", ",", "lnn"}], "]"}]}], "]"}]}], "+", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"pk", "-", "ps"}], ")"}], " ", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"F", "[", "ssbefore", "]"}], "+", 
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"F", "[", "skbefore", "]"}], "-", 
+                RowBox[{"F", "[", "ssbefore", "]"}]}], ")"}], " ", 
+              RowBox[{"HeavisideTheta", "[", 
+               FractionBox[
+                RowBox[{
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"-", "pk"}], "+", "ps"}], ")"}], " ", 
+                 RowBox[{"hmean", "[", 
+                  RowBox[{
+                   RowBox[{"lambda", "[", 
+                    RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+                   RowBox[{"lambda", "[", 
+                    RowBox[{"ssbefore", ",", "lns"}], "]"}]}], "]"}]}], "h"], 
+               "]"}]}]}], ")"}], " ", 
+           RowBox[{
+            SuperscriptBox["hmean", 
+             TagBox[
+              RowBox[{"(", 
+               RowBox[{"1", ",", "0"}], ")"}],
+              Derivative],
+             MultilineFunction->None], "[", 
+            RowBox[{
+             RowBox[{"lambda", "[", 
+              RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+             RowBox[{"lambda", "[", 
+              RowBox[{"ssbefore", ",", "lns"}], "]"}]}], "]"}]}], "+", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"pk", "-", "pw"}], ")"}], " ", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"F", "[", "swbefore", "]"}], "+", 
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"F", "[", "skbefore", "]"}], "-", 
+                RowBox[{"F", "[", "swbefore", "]"}]}], ")"}], " ", 
+              RowBox[{"HeavisideTheta", "[", 
+               FractionBox[
+                RowBox[{
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"-", "pk"}], "+", "pw"}], ")"}], " ", 
+                 RowBox[{"hmean", "[", 
+                  RowBox[{
+                   RowBox[{"lambda", "[", 
+                    RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+                   RowBox[{"lambda", "[", 
+                    RowBox[{"swbefore", ",", "lnw"}], "]"}]}], "]"}]}], "h"], 
+               "]"}]}]}], ")"}], " ", 
+           RowBox[{
+            SuperscriptBox["hmean", 
+             TagBox[
+              RowBox[{"(", 
+               RowBox[{"1", ",", "0"}], ")"}],
+              Derivative],
+             MultilineFunction->None], "[", 
+            RowBox[{
+             RowBox[{"lambda", "[", 
+              RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+             RowBox[{"lambda", "[", 
+              RowBox[{"swbefore", ",", "lnw"}], "]"}]}], "]"}]}]}], ")"}], 
+        " ", 
+        RowBox[{
+         SuperscriptBox["lambda", 
+          TagBox[
+           RowBox[{"(", 
+            RowBox[{"1", ",", "0"}], ")"}],
+           Derivative],
+          MultilineFunction->None], "[", 
+         RowBox[{"skbefore", ",", "lnk"}], "]"}]}]}], "+", 
+      RowBox[{
+       FractionBox["1", "h"], 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"-", "pe"}], "+", "pk"}], ")"}], " ", 
+        RowBox[{"hmean", "[", 
+         RowBox[{
+          RowBox[{"lambda", "[", 
+           RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+          RowBox[{"lambda", "[", 
+           RowBox[{"sebefore", ",", "lne"}], "]"}]}], "]"}], " ", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"HeavisideTheta", "[", 
+            FractionBox[
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"-", "pe"}], "+", "pk"}], ")"}], " ", 
+              RowBox[{"hmean", "[", 
+               RowBox[{
+                RowBox[{"lambda", "[", 
+                 RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+                RowBox[{"lambda", "[", 
+                 RowBox[{"sebefore", ",", "lne"}], "]"}]}], "]"}]}], "h"], 
+            "]"}], " ", 
+           RowBox[{
+            SuperscriptBox["F", "\[Prime]",
+             MultilineFunction->None], "[", "skbefore", "]"}]}], "+", 
+          RowBox[{
+           FractionBox["1", "h"], 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"pe", "-", "pk"}], ")"}], " ", 
+            RowBox[{"DiracDelta", "[", 
+             FractionBox[
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{"pe", "-", "pk"}], ")"}], " ", 
+               RowBox[{"hmean", "[", 
+                RowBox[{
+                 RowBox[{"lambda", "[", 
+                  RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+                 RowBox[{"lambda", "[", 
+                  RowBox[{"sebefore", ",", "lne"}], "]"}]}], "]"}]}], "h"], 
+             "]"}], " ", 
+            RowBox[{"F", "[", "sebefore", "]"}], " ", 
+            RowBox[{
+             SuperscriptBox["hmean", 
+              TagBox[
+               RowBox[{"(", 
+                RowBox[{"1", ",", "0"}], ")"}],
+               Derivative],
+              MultilineFunction->None], "[", 
+             RowBox[{
+              RowBox[{"lambda", "[", 
+               RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+              RowBox[{"lambda", "[", 
+               RowBox[{"sebefore", ",", "lne"}], "]"}]}], "]"}], " ", 
+            RowBox[{
+             SuperscriptBox["lambda", 
+              TagBox[
+               RowBox[{"(", 
+                RowBox[{"1", ",", "0"}], ")"}],
+               Derivative],
+              MultilineFunction->None], "[", 
+             RowBox[{"skbefore", ",", "lnk"}], "]"}]}]}], "+", 
+          RowBox[{
+           FractionBox["1", "h"], 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{
+              RowBox[{"-", "pe"}], "+", "pk"}], ")"}], " ", 
+            RowBox[{"DiracDelta", "[", 
+             FractionBox[
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{"pe", "-", "pk"}], ")"}], " ", 
+               RowBox[{"hmean", "[", 
+                RowBox[{
+                 RowBox[{"lambda", "[", 
+                  RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+                 RowBox[{"lambda", "[", 
+                  RowBox[{"sebefore", ",", "lne"}], "]"}]}], "]"}]}], "h"], 
+             "]"}], " ", 
+            RowBox[{"F", "[", "skbefore", "]"}], " ", 
+            RowBox[{
+             SuperscriptBox["hmean", 
+              TagBox[
+               RowBox[{"(", 
+                RowBox[{"1", ",", "0"}], ")"}],
+               Derivative],
+              MultilineFunction->None], "[", 
+             RowBox[{
+              RowBox[{"lambda", "[", 
+               RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+              RowBox[{"lambda", "[", 
+               RowBox[{"sebefore", ",", "lne"}], "]"}]}], "]"}], " ", 
+            RowBox[{
+             SuperscriptBox["lambda", 
+              TagBox[
+               RowBox[{"(", 
+                RowBox[{"1", ",", "0"}], ")"}],
+               Derivative],
+              MultilineFunction->None], "[", 
+             RowBox[{"skbefore", ",", "lnk"}], "]"}]}]}]}], ")"}]}]}], "+", 
+      RowBox[{
+       FractionBox["1", "h"], 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"pk", "-", "pn"}], ")"}], " ", 
+        RowBox[{"hmean", "[", 
+         RowBox[{
+          RowBox[{"lambda", "[", 
+           RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+          RowBox[{"lambda", "[", 
+           RowBox[{"snbefore", ",", "lnn"}], "]"}]}], "]"}], " ", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"HeavisideTheta", "[", 
+            FractionBox[
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{"pk", "-", "pn"}], ")"}], " ", 
+              RowBox[{"hmean", "[", 
+               RowBox[{
+                RowBox[{"lambda", "[", 
+                 RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+                RowBox[{"lambda", "[", 
+                 RowBox[{"snbefore", ",", "lnn"}], "]"}]}], "]"}]}], "h"], 
+            "]"}], " ", 
+           RowBox[{
+            SuperscriptBox["F", "\[Prime]",
+             MultilineFunction->None], "[", "skbefore", "]"}]}], "+", 
+          RowBox[{
+           FractionBox["1", "h"], 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"pk", "-", "pn"}], ")"}], " ", 
+            RowBox[{"DiracDelta", "[", 
+             FractionBox[
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{"pk", "-", "pn"}], ")"}], " ", 
+               RowBox[{"hmean", "[", 
+                RowBox[{
+                 RowBox[{"lambda", "[", 
+                  RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+                 RowBox[{"lambda", "[", 
+                  RowBox[{"snbefore", ",", "lnn"}], "]"}]}], "]"}]}], "h"], 
+             "]"}], " ", 
+            RowBox[{"F", "[", "skbefore", "]"}], " ", 
+            RowBox[{
+             SuperscriptBox["hmean", 
+              TagBox[
+               RowBox[{"(", 
+                RowBox[{"1", ",", "0"}], ")"}],
+               Derivative],
+              MultilineFunction->None], "[", 
+             RowBox[{
+              RowBox[{"lambda", "[", 
+               RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+              RowBox[{"lambda", "[", 
+               RowBox[{"snbefore", ",", "lnn"}], "]"}]}], "]"}], " ", 
+            RowBox[{
+             SuperscriptBox["lambda", 
+              TagBox[
+               RowBox[{"(", 
+                RowBox[{"1", ",", "0"}], ")"}],
+               Derivative],
+              MultilineFunction->None], "[", 
+             RowBox[{"skbefore", ",", "lnk"}], "]"}]}]}], "+", 
+          RowBox[{
+           FractionBox["1", "h"], 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{
+              RowBox[{"-", "pk"}], "+", "pn"}], ")"}], " ", 
+            RowBox[{"DiracDelta", "[", 
+             FractionBox[
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{"pk", "-", "pn"}], ")"}], " ", 
+               RowBox[{"hmean", "[", 
+                RowBox[{
+                 RowBox[{"lambda", "[", 
+                  RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+                 RowBox[{"lambda", "[", 
+                  RowBox[{"snbefore", ",", "lnn"}], "]"}]}], "]"}]}], "h"], 
+             "]"}], " ", 
+            RowBox[{"F", "[", "snbefore", "]"}], " ", 
+            RowBox[{
+             SuperscriptBox["hmean", 
+              TagBox[
+               RowBox[{"(", 
+                RowBox[{"1", ",", "0"}], ")"}],
+               Derivative],
+              MultilineFunction->None], "[", 
+             RowBox[{
+              RowBox[{"lambda", "[", 
+               RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+              RowBox[{"lambda", "[", 
+               RowBox[{"snbefore", ",", "lnn"}], "]"}]}], "]"}], " ", 
+            RowBox[{
+             SuperscriptBox["lambda", 
+              TagBox[
+               RowBox[{"(", 
+                RowBox[{"1", ",", "0"}], ")"}],
+               Derivative],
+              MultilineFunction->None], "[", 
+             RowBox[{"skbefore", ",", "lnk"}], "]"}]}]}]}], ")"}]}]}], "+", 
+      RowBox[{
+       FractionBox["1", "h"], 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"pk", "-", "ps"}], ")"}], " ", 
+        RowBox[{"hmean", "[", 
+         RowBox[{
+          RowBox[{"lambda", "[", 
+           RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+          RowBox[{"lambda", "[", 
+           RowBox[{"ssbefore", ",", "lns"}], "]"}]}], "]"}], " ", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"HeavisideTheta", "[", 
+            FractionBox[
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"-", "pk"}], "+", "ps"}], ")"}], " ", 
+              RowBox[{"hmean", "[", 
+               RowBox[{
+                RowBox[{"lambda", "[", 
+                 RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+                RowBox[{"lambda", "[", 
+                 RowBox[{"ssbefore", ",", "lns"}], "]"}]}], "]"}]}], "h"], 
+            "]"}], " ", 
+           RowBox[{
+            SuperscriptBox["F", "\[Prime]",
+             MultilineFunction->None], "[", "skbefore", "]"}]}], "+", 
+          RowBox[{
+           FractionBox["1", "h"], 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{
+              RowBox[{"-", "pk"}], "+", "ps"}], ")"}], " ", 
+            RowBox[{"DiracDelta", "[", 
+             FractionBox[
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{"pk", "-", "ps"}], ")"}], " ", 
+               RowBox[{"hmean", "[", 
+                RowBox[{
+                 RowBox[{"lambda", "[", 
+                  RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+                 RowBox[{"lambda", "[", 
+                  RowBox[{"ssbefore", ",", "lns"}], "]"}]}], "]"}]}], "h"], 
+             "]"}], " ", 
+            RowBox[{"F", "[", "skbefore", "]"}], " ", 
+            RowBox[{
+             SuperscriptBox["hmean", 
+              TagBox[
+               RowBox[{"(", 
+                RowBox[{"1", ",", "0"}], ")"}],
+               Derivative],
+              MultilineFunction->None], "[", 
+             RowBox[{
+              RowBox[{"lambda", "[", 
+               RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+              RowBox[{"lambda", "[", 
+               RowBox[{"ssbefore", ",", "lns"}], "]"}]}], "]"}], " ", 
+            RowBox[{
+             SuperscriptBox["lambda", 
+              TagBox[
+               RowBox[{"(", 
+                RowBox[{"1", ",", "0"}], ")"}],
+               Derivative],
+              MultilineFunction->None], "[", 
+             RowBox[{"skbefore", ",", "lnk"}], "]"}]}]}], "+", 
+          RowBox[{
+           FractionBox["1", "h"], 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"pk", "-", "ps"}], ")"}], " ", 
+            RowBox[{"DiracDelta", "[", 
+             FractionBox[
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{"pk", "-", "ps"}], ")"}], " ", 
+               RowBox[{"hmean", "[", 
+                RowBox[{
+                 RowBox[{"lambda", "[", 
+                  RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+                 RowBox[{"lambda", "[", 
+                  RowBox[{"ssbefore", ",", "lns"}], "]"}]}], "]"}]}], "h"], 
+             "]"}], " ", 
+            RowBox[{"F", "[", "ssbefore", "]"}], " ", 
+            RowBox[{
+             SuperscriptBox["hmean", 
+              TagBox[
+               RowBox[{"(", 
+                RowBox[{"1", ",", "0"}], ")"}],
+               Derivative],
+              MultilineFunction->None], "[", 
+             RowBox[{
+              RowBox[{"lambda", "[", 
+               RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+              RowBox[{"lambda", "[", 
+               RowBox[{"ssbefore", ",", "lns"}], "]"}]}], "]"}], " ", 
+            RowBox[{
+             SuperscriptBox["lambda", 
+              TagBox[
+               RowBox[{"(", 
+                RowBox[{"1", ",", "0"}], ")"}],
+               Derivative],
+              MultilineFunction->None], "[", 
+             RowBox[{"skbefore", ",", "lnk"}], "]"}]}]}]}], ")"}]}]}], "+", 
+      RowBox[{
+       FractionBox["1", "h"], 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"pk", "-", "pw"}], ")"}], " ", 
+        RowBox[{"hmean", "[", 
+         RowBox[{
+          RowBox[{"lambda", "[", 
+           RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+          RowBox[{"lambda", "[", 
+           RowBox[{"swbefore", ",", "lnw"}], "]"}]}], "]"}], " ", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"HeavisideTheta", "[", 
+            FractionBox[
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"-", "pk"}], "+", "pw"}], ")"}], " ", 
+              RowBox[{"hmean", "[", 
+               RowBox[{
+                RowBox[{"lambda", "[", 
+                 RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+                RowBox[{"lambda", "[", 
+                 RowBox[{"swbefore", ",", "lnw"}], "]"}]}], "]"}]}], "h"], 
+            "]"}], " ", 
+           RowBox[{
+            SuperscriptBox["F", "\[Prime]",
+             MultilineFunction->None], "[", "skbefore", "]"}]}], "+", 
+          RowBox[{
+           FractionBox["1", "h"], 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{
+              RowBox[{"-", "pk"}], "+", "pw"}], ")"}], " ", 
+            RowBox[{"DiracDelta", "[", 
+             FractionBox[
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{"pk", "-", "pw"}], ")"}], " ", 
+               RowBox[{"hmean", "[", 
+                RowBox[{
+                 RowBox[{"lambda", "[", 
+                  RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+                 RowBox[{"lambda", "[", 
+                  RowBox[{"swbefore", ",", "lnw"}], "]"}]}], "]"}]}], "h"], 
+             "]"}], " ", 
+            RowBox[{"F", "[", "skbefore", "]"}], " ", 
+            RowBox[{
+             SuperscriptBox["hmean", 
+              TagBox[
+               RowBox[{"(", 
+                RowBox[{"1", ",", "0"}], ")"}],
+               Derivative],
+              MultilineFunction->None], "[", 
+             RowBox[{
+              RowBox[{"lambda", "[", 
+               RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+              RowBox[{"lambda", "[", 
+               RowBox[{"swbefore", ",", "lnw"}], "]"}]}], "]"}], " ", 
+            RowBox[{
+             SuperscriptBox["lambda", 
+              TagBox[
+               RowBox[{"(", 
+                RowBox[{"1", ",", "0"}], ")"}],
+               Derivative],
+              MultilineFunction->None], "[", 
+             RowBox[{"skbefore", ",", "lnk"}], "]"}]}]}], "+", 
+          RowBox[{
+           FractionBox["1", "h"], 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"pk", "-", "pw"}], ")"}], " ", 
+            RowBox[{"DiracDelta", "[", 
+             FractionBox[
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{"pk", "-", "pw"}], ")"}], " ", 
+               RowBox[{"hmean", "[", 
+                RowBox[{
+                 RowBox[{"lambda", "[", 
+                  RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+                 RowBox[{"lambda", "[", 
+                  RowBox[{"swbefore", ",", "lnw"}], "]"}]}], "]"}]}], "h"], 
+             "]"}], " ", 
+            RowBox[{"F", "[", "swbefore", "]"}], " ", 
+            RowBox[{
+             SuperscriptBox["hmean", 
+              TagBox[
+               RowBox[{"(", 
+                RowBox[{"1", ",", "0"}], ")"}],
+               Derivative],
+              MultilineFunction->None], "[", 
+             RowBox[{
+              RowBox[{"lambda", "[", 
+               RowBox[{"skbefore", ",", "lnk"}], "]"}], ",", 
+              RowBox[{"lambda", "[", 
+               RowBox[{"swbefore", ",", "lnw"}], "]"}]}], "]"}], " ", 
+            RowBox[{
+             SuperscriptBox["lambda", 
+              TagBox[
+               RowBox[{"(", 
+                RowBox[{"1", ",", "0"}], ")"}],
+               Derivative],
+              MultilineFunction->None], "[", 
+             RowBox[{"skbefore", ",", "lnk"}], "]"}]}]}]}], ")"}]}]}]}], 
+     ")"}]}]}]}]], "Output",
+ CellChangeTimes->{3.7352871904273853`*^9, 3.735287519156646*^9, 
+  3.7352876866697073`*^9},ExpressionUUID->"bb862f32-88a0-4b5c-bbed-\
+70a7347ad0ac"]
+}, Open  ]]
 },
 WindowSize->{808, 674},
-WindowMargins->{{222, Automatic}, {Automatic, 39}},
+WindowMargins->{{Automatic, 114}, {-86, Automatic}},
 FrontEndVersion->"11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 18, \
 2017)",
 StyleDefinitions->"Default.nb"
@@ -469,8 +1222,26 @@ Cell[11441, 374, 513, 14, 32, "Input", "ExpressionUUID" -> \
 "5e066f53-a4d9-42f5-b5e7-510e74721938"],
 Cell[11957, 390, 175, 3, 32, "Input", "ExpressionUUID" -> \
 "44734e29-1c6d-4b7b-af80-d5bcdeb1e8ed"],
-Cell[12135, 395, 253, 5, 32, "Input", "ExpressionUUID" -> \
-"1efb9c53-43db-4ac2-8c43-5bffdab9bb2b"]
+Cell[12135, 395, 1126, 26, 117, "Input", "ExpressionUUID" -> \
+"1efb9c53-43db-4ac2-8c43-5bffdab9bb2b"],
+Cell[13264, 423, 583, 15, 32, "Input", "ExpressionUUID" -> \
+"19732302-0ac5-4fb8-84d6-14647ff9bf4d"],
+Cell[13850, 440, 555, 16, 32, "Input", "ExpressionUUID" -> \
+"e3fe45a6-dba8-461a-9213-cb075bcb78fa"],
+Cell[14408, 458, 557, 16, 32, "Input", "ExpressionUUID" -> \
+"41dec174-3c77-4a16-82f2-07b3b700cf02"],
+Cell[14968, 476, 559, 16, 32, "Input", "ExpressionUUID" -> \
+"62734858-5283-4908-99da-21fba927c924"],
+Cell[15530, 494, 557, 16, 32, "Input", "ExpressionUUID" -> \
+"012e5d3a-b7c1-43c9-aa60-4318f883c3cc"],
+Cell[16090, 512, 1269, 29, 117, "Input", "ExpressionUUID" -> \
+"19d88ea9-40b0-465c-ac9a-7a68bc5bfd2d"],
+Cell[CellGroupData[{
+Cell[17384, 545, 277, 7, 32, "Input", "ExpressionUUID" -> \
+"95744756-87c2-4ca8-97a1-981b72d38e38"],
+Cell[17664, 554, 22513, 598, 1586, "Output", "ExpressionUUID" -> \
+"bb862f32-88a0-4b5c-bbed-70a7347ad0ac"]
+}, Open  ]]
 }
 ]
 *)
