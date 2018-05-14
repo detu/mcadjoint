@@ -30,8 +30,8 @@ set(simplematioDir "${thirdPartyDir}/simplematio")
 set(simplematioBinaryDir "${CMAKE_BINARY_DIR}/simplematio")
 add_subdirectory("${simplematioDir}" "${simplematioBinaryDir}")
 
-set(baseLibHeaders control.h gnuplot_i.h utils.hpp logging.hpp)
-set(baseLibSources control.cpp gnuplot_i.cpp utils.cpp)
+set(baseLibHeaders utils.hpp logging.hpp)
+set(baseLibSources utils.cpp)
 set(oilLibHeaders typedefs.hpp cellindex.hpp vectorToBeMappedAsMatrix.hpp fixedParameters.hpp simulationState.hpp specialCells.hpp randomWalkState.hpp
         pressure.hpp darcyVelocity.hpp saturation.hpp forward.hpp derivativesForAdjoint.hpp derivativesForAdjointFD.hpp adjoint.hpp sensitivity.hpp dumpToMatFile.hpp)
 set(oilLibSources pressure.cpp darcyVelocity.cpp saturation.cpp forward.cpp derivativesForAdjoint.cpp derivativesForAdjointFD.cpp adjoint.cpp sensitivity.cpp minimizer.cpp dumpToMatFile.cpp)

@@ -127,13 +127,14 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
         }
     }
 
-
+    #ifndef NDEBUG
     for (const auto& candidate: candidates) {
         ASSERT(candidate.cellIndex.i >= -1);
         ASSERT(candidate.cellIndex.j >= -1);
         ASSERT(candidate.cellIndex.i < numberOfRows);
         ASSERT(candidate.cellIndex.j < numberOfCols);
     }
+    #endif
 
 
     //ASSERT(!candidates.empty());

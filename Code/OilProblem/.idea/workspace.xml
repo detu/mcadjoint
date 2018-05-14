@@ -27,13 +27,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="243856ce-78f7-4963-8ee2-7f94acac5c1e" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" afterPath="$PROJECT_DIR$/CMakeLists.txt" />
       <change beforePath="$PROJECT_DIR$/adjoint.cpp" afterPath="$PROJECT_DIR$/adjoint.cpp" />
-      <change beforePath="$PROJECT_DIR$/darcyVelocity.cpp" afterPath="$PROJECT_DIR$/darcyVelocity.cpp" />
-      <change beforePath="$PROJECT_DIR$/minimizer.cpp" afterPath="$PROJECT_DIR$/minimizer.cpp" />
+      <change beforePath="$PROJECT_DIR$/control.cpp" afterPath="$PROJECT_DIR$/unneeded/control.cpp" />
+      <change beforePath="$PROJECT_DIR$/control.h" afterPath="$PROJECT_DIR$/unneeded/control.h" />
+      <change beforePath="$PROJECT_DIR$/gnuplot_i.cpp" afterPath="$PROJECT_DIR$/unneeded/gnuplot_i.cpp" />
+      <change beforePath="$PROJECT_DIR$/gnuplot_i.h" afterPath="$PROJECT_DIR$/unneeded/gnuplot_i.h" />
       <change beforePath="$PROJECT_DIR$/../thirdParty/CppNumericalSolvers" afterPath="$PROJECT_DIR$/../thirdParty/CppNumericalSolvers" />
       <change beforePath="$PROJECT_DIR$/../thirdParty/stefcommonheaders" afterPath="$PROJECT_DIR$/../thirdParty/stefcommonheaders" />
-      <change beforePath="$PROJECT_DIR$/../../Documents/DerivativesForMCAdjoint.nb" afterPath="$PROJECT_DIR$/../../Documents/DerivativesForMCAdjoint.nb" />
-      <change beforePath="$PROJECT_DIR$/../../Run/fieldsQuarterFiveSpotAdjoint.mat" afterPath="$PROJECT_DIR$/../../Run/fieldsQuarterFiveSpotAdjoint.mat" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/cmake-build-release/" />
@@ -52,28 +54,6 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Release" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="derivativesForAdjoint.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/derivativesForAdjoint.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="106">
-              <caret line="205" column="0" lean-forward="false" selection-start-line="205" selection-start-column="0" selection-end-line="205" selection-end-column="0" />
-              <folding>
-                <element signature="e#51#87#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="sensitivity.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sensitivity.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="172">
-              <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="forward.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/forward.cpp">
           <provider selected="true" editor-type-id="text-editor">
@@ -116,12 +96,24 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="106">
+              <caret line="32" column="19" lean-forward="false" selection-start-line="32" selection-start-column="19" selection-end-line="32" selection-end-column="19" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="adjoint.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/adjoint.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="172">
-              <caret line="324" column="52" lean-forward="false" selection-start-line="324" selection-start-column="52" selection-end-line="324" selection-end-column="52" />
-              <folding />
+            <state relative-caret-position="351">
+              <caret line="138" column="0" lean-forward="false" selection-start-line="138" selection-start-column="0" selection-end-line="138" selection-end-column="0" />
+              <folding>
+                <element signature="e#5053#5298#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -253,7 +245,6 @@
         <option value="$PROJECT_DIR$/residuals.cpp" />
         <option value="$PROJECT_DIR$/pressure.hpp" />
         <option value="$PROJECT_DIR$/pressure.cpp" />
-        <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/cellindex.hpp" />
         <option value="$PROJECT_DIR$/derivativesForAdjoint.hpp" />
         <option value="$PROJECT_DIR$/derivativesForAdjointFD.hpp" />
@@ -264,8 +255,9 @@
         <option value="$PROJECT_DIR$/forward.cpp" />
         <option value="$PROJECT_DIR$/quarterFiveSpotTraditional.cpp" />
         <option value="$PROJECT_DIR$/darcyVelocity.cpp" />
-        <option value="$PROJECT_DIR$/adjoint.cpp" />
         <option value="$PROJECT_DIR$/minimizer.cpp" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/adjoint.cpp" />
       </list>
     </option>
   </component>
@@ -383,11 +375,12 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../thirdParty/stefcommonheaders/include/stefCommonHeaders/logging.hpp" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/../thirdParty/stefcommonheaders/include/stefCommonHeaders" />
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/unneeded" />
       <recent name="$PROJECT_DIR$" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/../thirdParty/stefcommonheaders/include/stefCommonHeaders" />
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
@@ -524,7 +517,7 @@
       <workItem from="1525423569241" duration="31456000" />
       <workItem from="1525774031077" duration="52065000" />
       <workItem from="1526042675330" duration="22421000" />
-      <workItem from="1526233828815" duration="14947000" />
+      <workItem from="1526233828815" duration="15339000" />
     </task>
     <task id="LOCAL-00001" summary="TODO mainloop">
       <created>1524994887598</created>
@@ -544,7 +537,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="404835000" />
+    <option name="totallyTimeSpent" value="405227000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -561,7 +554,7 @@
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32962668" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32925585" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2211127" sideWeight="0.6099034" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2211127" sideWeight="0.6099034" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24591836" sideWeight="0.83272946" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32536975" sideWeight="0.3900966" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.45649073" sideWeight="0.4853058" order="1" side_tool="false" content_ui="tabs" />
@@ -627,13 +620,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/quarterFiveSpot.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="273">
-          <caret line="47" column="6" lean-forward="false" selection-start-line="47" selection-start-column="6" selection-end-line="47" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/logging.cpp" />
     <entry file="file://$PROJECT_DIR$/dumpToMatFile.hpp">
       <provider selected="true" editor-type-id="text-editor">
@@ -723,17 +709,19 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/cMatrixSurrogate.hpp" />
-    <entry file="file://$PROJECT_DIR$/gnuplot_i.h">
+    <entry file="file://$PROJECT_DIR$/unneeded/gnuplot_i.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gnuplot_i.cpp">
+    <entry file="file://$PROJECT_DIR$/unneeded/gnuplot_i.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -829,14 +817,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="14" lean-forward="false" selection-start-line="3" selection-start-column="14" selection-end-line="3" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cellindex.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-64">
@@ -914,7 +894,7 @@
         <state relative-caret-position="106">
           <caret line="205" column="0" lean-forward="false" selection-start-line="205" selection-start-column="0" selection-end-line="205" selection-end-column="0" />
           <folding>
-            <element signature="e#51#87#0" expanded="true" />
+            <element signature="e#51#87#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -985,11 +965,29 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/vectorToBeMappedAsMatrix.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="24" column="0" lean-forward="true" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="106">
+          <caret line="32" column="19" lean-forward="false" selection-start-line="32" selection-start-column="19" selection-end-line="32" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/adjoint.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="172">
-          <caret line="324" column="52" lean-forward="false" selection-start-line="324" selection-start-column="52" selection-end-line="324" selection-end-column="52" />
-          <folding />
+        <state relative-caret-position="351">
+          <caret line="138" column="0" lean-forward="false" selection-start-line="138" selection-start-column="0" selection-end-line="138" selection-end-column="0" />
+          <folding>
+            <element signature="e#5053#5298#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
