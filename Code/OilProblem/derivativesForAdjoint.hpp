@@ -15,14 +15,20 @@ SparseMatrix computeSaturationWaterResidualsDerivedBySaturationWater(
 );
 
 
-SparseMatrix computeSaturationWaterResidualsDerivedByPressure(const SparseMatrix& pressureSystem, ConstMatrixRef fluxFunctionFactors,
-                                                              ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY,
-                                                              ConstMatrixRef mobilities,
-                                                              const Real timestep, const Real meshWidth);
-SparseMatrix computePressureResidualsByLogPermeability(ConstMatrixRef pressures, ConstMatrixRef totalMobilities);
-SparseMatrix computeSaturationsWaterResidualsByLogPermeability(ConstMatrixRef pressureGradientsX, ConstMatrixRef pressureGradientsY,
-                                                               ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY,
-                                                               ConstMatrixRef mobilities, ConstMatrixRef fluxFunctionFactors, const Real timestep, const Real meshWidth);
+SparseMatrix computeSaturationsWaterResidualsDerivedByPressure(const SparseMatrix& pressureSystem,
+                                                               ConstMatrixRef fluxFunctionFactors,
+                                                               ConstMatrixRef darcyVelocitiesX,
+                                                               ConstMatrixRef darcyVelocitiesY,
+                                                               ConstMatrixRef mobilities,
+                                                               const Real timestep, const Real meshWidth);
+SparseMatrix computePressureResidualsDerivedByLogPermeability(ConstMatrixRef pressures, ConstMatrixRef totalMobilities);
+SparseMatrix computeSaturationsWaterResidualsDerivedByLogPermeability(ConstMatrixRef pressureGradientsX,
+                                                                      ConstMatrixRef pressureGradientsY,
+                                                                      ConstMatrixRef darcyVelocitiesX,
+                                                                      ConstMatrixRef darcyVelocitiesY,
+                                                                      ConstMatrixRef mobilities,
+                                                                      ConstMatrixRef fluxFunctionFactors,
+                                                                      const Real timestep, const Real meshWidth);
 
 inline static Real hmeanDerivedBySecond(const Real a, const Real b) {
     return 2*std::pow(a/(a+b), 2);

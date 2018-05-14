@@ -96,7 +96,8 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
 
 
     const Real firstTimestep = getFirstTimestep();
-    const SparseMatrix pressureResidualsByLogPermeabilities = computePressureResidualsByLogPermeability(simulationState.pressures.map, totalMobilities);
+    const SparseMatrix pressureResidualsByLogPermeabilities = computePressureResidualsDerivedByLogPermeability(
+          simulationState.pressures.map, totalMobilities);
     dumpThis("pressureResidualsByLogPermeabilities", pressureResidualsByLogPermeabilities);
 
     const Matrix fluxFunctionFactors = computeFluxFunctionFactors(simulationState.saturationsWater, params.porosity, params.dynamicViscosityWater, params.dynamicViscosityOil);
@@ -113,8 +114,10 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     const Real timestep = computeTimestep(fluxFunctionFactors, darcyVelocitiesX, darcyVelocitiesY, params.meshWidth, params.finalTime, simulationState.time);
 
 
-    const SparseMatrix saturationResidualsByLogPermeabilities = computeSaturationsWaterResidualsByLogPermeability(pressureDerivativesX, pressureDerivativesY, darcyVelocitiesX, darcyVelocitiesY, totalMobilities, fluxFunctionFactors,
-                                                                                                                  timestep, params.meshWidth);
+    const SparseMatrix saturationResidualsByLogPermeabilities = computeSaturationsWaterResidualsDerivedByLogPermeability(
+          pressureDerivativesX, pressureDerivativesY, darcyVelocitiesX, darcyVelocitiesY, totalMobilities,
+          fluxFunctionFactors,
+          timestep, params.meshWidth);
     dumpThis("saturationResidualsByLogPermeabilities", saturationResidualsByLogPermeabilities);
 
 
@@ -125,7 +128,9 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     const Matrix totalMobilitiesDerivedBySaturationsWater = computeTotalMobilitiesDerivedBySaturationsWater(permeabilities, simulationState.saturationsWater, params.dynamicViscosityOil, params.dynamicViscosityWater);
     SparseMatrix pressureResidualsBySaturationsWater = computePressureResidualsDerivedBySaturationWater(simulationState.pressures.map, totalMobilities, totalMobilitiesDerivedBySaturationsWater);
 
-    SparseMatrix saturationsWaterResidualsByPressures = computeSaturationWaterResidualsDerivedByPressure(pressureSystem, fluxFunctionFactors, darcyVelocitiesX, darcyVelocitiesY, totalMobilities, timestep, params.meshWidth);
+    SparseMatrix saturationsWaterResidualsByPressures = computeSaturationsWaterResidualsDerivedByPressure(
+          pressureSystem, fluxFunctionFactors, darcyVelocitiesX, darcyVelocitiesY, totalMobilities, timestep,
+          params.meshWidth);
     const Matrix fluxFunctionFactorDerivatives = computeFluxFunctionFactorDerivatives(simulationState.saturationsWater, params.porosity, params.dynamicViscosityWater, params.dynamicViscosityOil);
     SparseMatrix saturationsWaterResidualsBySaturationsWater = computeSaturationWaterResidualsDerivedBySaturationWater(
           fluxFunctionFactors, fluxFunctionFactorDerivatives,
@@ -302,7 +307,8 @@ bool stepForwardAndAdjointProblemTraditional(const FixedParameters& params, cons
 
 
     const Real firstTimestep = getFirstTimestep();
-    const SparseMatrix pressureResidualsByLogPermeabilities = computePressureResidualsByLogPermeability(simulationState.pressures.map, totalMobilities);
+    const SparseMatrix pressureResidualsByLogPermeabilities = computePressureResidualsDerivedByLogPermeability(
+          simulationState.pressures.map, totalMobilities);
     dumpThis("pressureResidualsByLogPermeabilities", pressureResidualsByLogPermeabilities);
 
     const Matrix fluxFunctionFactors = computeFluxFunctionFactors(simulationState.saturationsWater, params.porosity, params.dynamicViscosityWater, params.dynamicViscosityOil);
@@ -319,8 +325,10 @@ bool stepForwardAndAdjointProblemTraditional(const FixedParameters& params, cons
     const Real timestep = computeTimestep(fluxFunctionFactors, darcyVelocitiesX, darcyVelocitiesY, params.meshWidth, params.finalTime, simulationState.time);
 
 
-    const SparseMatrix saturationResidualsByLogPermeabilities = computeSaturationsWaterResidualsByLogPermeability(pressureDerivativesX, pressureDerivativesY, darcyVelocitiesX, darcyVelocitiesY, totalMobilities, fluxFunctionFactors,
-    timestep, params.meshWidth);
+    const SparseMatrix saturationResidualsByLogPermeabilities = computeSaturationsWaterResidualsDerivedByLogPermeability(
+          pressureDerivativesX, pressureDerivativesY, darcyVelocitiesX, darcyVelocitiesY, totalMobilities,
+          fluxFunctionFactors,
+          timestep, params.meshWidth);
     dumpThis("saturationResidualsByLogPermeabilities", saturationResidualsByLogPermeabilities);
 
 
@@ -331,7 +339,9 @@ bool stepForwardAndAdjointProblemTraditional(const FixedParameters& params, cons
     SparseMatrix pressureResidualsBySaturationsWater = computePressureResidualsDerivedBySaturationWater(simulationState.pressures.map, totalMobilities, totalMobilitiesDerivedBySaturationsWater);
     ASSERT(allFinite(pressureResidualsBySaturationsWater));
 
-    SparseMatrix saturationsWaterResidualsByPressures = computeSaturationWaterResidualsDerivedByPressure(pressureSystem, fluxFunctionFactors, darcyVelocitiesX, darcyVelocitiesY, totalMobilities, timestep, params.meshWidth);
+    SparseMatrix saturationsWaterResidualsByPressures = computeSaturationsWaterResidualsDerivedByPressure(
+          pressureSystem, fluxFunctionFactors, darcyVelocitiesX, darcyVelocitiesY, totalMobilities, timestep,
+          params.meshWidth);
     ASSERT(allFinite(saturationsWaterResidualsByPressures));
 
     const Matrix fluxFunctionFactorDerivatives = computeFluxFunctionFactorDerivatives(simulationState.saturationsWater, params.porosity, params.dynamicViscosityWater, params.dynamicViscosityOil);

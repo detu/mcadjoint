@@ -113,7 +113,7 @@ static inline bool checkWhetherFluxGoesToNeighbor(const CellIndex cell, const Ce
 }
 
 
-SparseMatrix computeSaturationWaterResidualsDerivedBySaturationWater(
+SparseMatrix deriveSaturationsBySaturations(
       ConstMatrixRef fluxFunctionFactors, ConstMatrixRef fluxFunctionDerivatives,
       ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY,
       ConstMatrixRef pressureDerivativesX, ConstMatrixRef pressureDerivativesY,
@@ -190,10 +190,10 @@ SparseMatrix computeSaturationWaterResidualsDerivedBySaturationWater(
 
 
 
-SparseMatrix computeSaturationWaterResidualsDerivedByPressure(const SparseMatrix& pressureSystem, ConstMatrixRef fluxFunctionFactors,
-                                                        ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY,
-                                                        ConstMatrixRef mobilities,
-                                                        const Real timestep, const Real meshWidth) {
+SparseMatrix deriveSaturationsByPressures(const SparseMatrix& pressureSystem, ConstMatrixRef fluxFunctionFactors,
+                                          ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY,
+                                          ConstMatrixRef mobilities,
+                                          const Real timestep, const Real meshWidth) {
 
     const int numberOfRows = fluxFunctionFactors.rows();
     const int numberOfCols = fluxFunctionFactors.cols();
@@ -257,7 +257,7 @@ SparseMatrix computeSaturationWaterResidualsDerivedByPressure(const SparseMatrix
 
 
 
-SparseMatrix computePressureResidualsByLogPermeability(ConstMatrixRef pressures, ConstMatrixRef totalMobilities) {
+SparseMatrix computePressureResidualsDerivedByLogPermeability(ConstMatrixRef pressures, ConstMatrixRef totalMobilities) {
     const int numberOfRows = pressures.rows();
     const int numberOfCols = pressures.cols();
     const int numberOfPairs = numberOfCols * numberOfRows;
@@ -312,7 +312,7 @@ SparseMatrix computePressureResidualsByLogPermeability(ConstMatrixRef pressures,
 
 }
 
-SparseMatrix computeSaturationsWaterResidualsByLogPermeability(ConstMatrixRef pressureGradientsX, ConstMatrixRef pressureGradientsY,
+SparseMatrix computeSaturationsWaterResidualsDerivedByLogPermeability(ConstMatrixRef pressureGradientsX, ConstMatrixRef pressureGradientsY,
                                                                ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY,
                                                                ConstMatrixRef mobilities, ConstMatrixRef fluxFunctionFactors, const Real timestep, const Real meshWidth) {
     const int numberOfRows = mobilities.rows();

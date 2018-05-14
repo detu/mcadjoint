@@ -62,6 +62,10 @@ int main() {
     const Matrix numericPressureByPressure = computePressureResidualsDerivedFD(pressures, saturationsWater, logPermeabilities, Shift::ShiftWhere::PRESSURES, params);
 
 
+    const SparseMatrix analyticPressureByLogPermeabilities = computePressureResidualsDerivedByLogPermeability(pressures, totalMobilities);
+    const Matrix numericPressureByLogPermeabilities = computePressureResidualsDerivedFD(pressures, saturationsWater, logPermeabilities, Shift::ShiftWhere::LOG_PERMEABILITIES, params);
+
+
     logger->debug("numeric pressure by pressure =\n{}", numericPressureByPressure);
     logger->debug("analytic pressure by pressure =\n{}", analyticPressureByPressure);
 
@@ -76,6 +80,14 @@ int main() {
     logger->debug("difference pressure by saturation =\n{}", numericPressureBySaturation - analyticPressureBySaturation);
 
     logger->debug("max error pressure by saturation =\n{}", Matrix(numericPressureBySaturation - analyticPressureBySaturation).array().abs().maxCoeff());
+
+
+    logger->debug("numeric pressure by logPermeability =\n{}", numericPressureByLogPermeabilities);
+    logger->debug("analytic pressure by logPermeability =\n{}", analyticPressureByLogPermeabilities);
+
+    logger->debug("difference pressure by logPermeability =\n{}", numericPressureByLogPermeabilities - analyticPressureByLogPermeabilities);
+
+    logger->debug("max error pressure by logPermeability =\n{}", Matrix(numericPressureByLogPermeabilities - analyticPressureByLogPermeabilities).array().abs().maxCoeff());
 
     spdlog::drop_all();
 
