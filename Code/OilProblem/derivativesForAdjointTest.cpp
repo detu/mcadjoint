@@ -5,6 +5,8 @@
 #include "derivativesForAdjointFD.hpp"
 #include "derivativesForAdjoint.hpp"
 #include "pressure.hpp"
+#include "darcyVelocity.hpp"
+#include "saturation.hpp"
 #include <stefCommonHeaders/logging.hpp>
 #include "logging.hpp"
 
@@ -55,17 +57,33 @@ int main() {
     logger->debug("tot mob sat water =\n{}", totalMobilitiesBySatWater);
     const SparseMatrix analyticPressureBySaturation = derivePressureResidualsBySaturations(pressures, totalMobilities, totalMobilitiesBySatWater);
 
-    const Matrix numericPressureBySaturation = derivePressureResidualsWithFiniteDifferences(pressures, saturationsWater, logPermeabilities, Shift::ShiftWhere::SATURATIONS, params);
+    const Matrix numericPressureBySaturation = deriveResidualsWithFiniteDifferences(pressures, saturationsWater,
+                                                                                    logPermeabilities,
+                                                                                    WhichResidual::PRESSURE, Shift::ShiftWhere::SATURATIONS,
+                                                                                    params, 1e-5);
 
     const SparseMatrix pressureSystem = assemblePressureSystemWithBC(totalMobilities);
     const SparseMatrix analyticPressureByPressure = derivePressureResidualsByPresures(pressureSystem);
-    const Matrix numericPressureByPressure = derivePressureResidualsWithFiniteDifferences(pressures, saturationsWater, logPermeabilities, Shift::ShiftWhere::PRESSURES, params);
+    const Matrix numericPressureByPressure = deriveResidualsWithFiniteDifferences(pressures, saturationsWater,
+                                                                                  logPermeabilities, WhichResidual::PRESSURE,
+                                                                                  Shift::ShiftWhere::PRESSURES, params, 1e-5);
 
 
     const SparseMatrix analyticPressureByLogPermeabilities = derivePressureResidualsByLogPermeabilities(pressures, totalMobilities);
-    const Matrix numericPressureByLogPermeabilities = derivePressureResidualsWithFiniteDifferences(pressures, saturationsWater, logPermeabilities, Shift::ShiftWhere::LOG_PERMEABILITIES, params);
+    const Matrix numericPressureByLogPermeabilities = deriveResidualsWithFiniteDifferences(pressures, saturationsWater,
+                                                                                           logPermeabilities,
+                                                                                           WhichResidual::PRESSURE, Shift::ShiftWhere::LOG_PERMEABILITIES,
+                                                                                           params, 1e-5);
 
+    const Matrix numericSaturationBySaturation = deriveResidualsWithFiniteDifferences(pressures, saturationsWater, logPermeabilities, WhichResidual::SATURATION, Shift::ShiftWhere::SATURATIONS, params, 1e-5);
 
+    const Matrix fluxFunctionFactors = computeFluxFunctionFactors(saturationsWater, params.porosity, params.dynamicViscosityWater, params.dynamicViscosityOil);
+    const Matrix fluxFunctionDerivatives = deriveFluxFunctionFactorsBySaturations(saturationsWater, params.porosity, params.dynamicViscosityWater, params.dynamicViscosityOil);
+    const Matrix pressureDerivativesX = computeXDerivative(pressures, params.meshWidth);
+    const Matrix darcyVelocitiesX = computeTotalDarcyVelocitiesX(totalMobilities, pressureDerivativesX);
+    const Matrix pressureDerivativesY = computeYDerivative(pressures, params.meshWidth);
+    const Matrix darcyVelocitiesY = computeTotalDarcyVelocitiesY(totalMobilities, pressureDerivativesY);
+    const Matrix analyticSaturationBySaturation = deriveSaturationResidualsBySaturations(fluxFunctionFactors, fluxFunctionDerivatives, darcyVelocitiesX, darcyVelocitiesY, pressureDerivativesX, pressureDerivativesY, totalMobilities, totalMobilitiesBySatWater, 1e-5, params.meshWidth);
     logger->debug("numeric pressure by pressure =\n{}", numericPressureByPressure);
     logger->debug("analytic pressure by pressure =\n{}", analyticPressureByPressure);
 
@@ -88,6 +106,17 @@ int main() {
     logger->debug("difference pressure by logPermeability =\n{}", numericPressureByLogPermeabilities - analyticPressureByLogPermeabilities);
 
     logger->debug("max error pressure by logPermeability =\n{}", Matrix(numericPressureByLogPermeabilities - analyticPressureByLogPermeabilities).array().abs().maxCoeff());
+
+
+    logger->debug("numeric saturation by saturation =\n{}", numericSaturationBySaturation);
+    logger->debug("analytic saturation by saturation =\n{}", analyticSaturationBySaturation);
+
+    logger->debug("difference saturation by saturation =\n{}", numericSaturationBySaturation - analyticSaturationBySaturation);
+
+    logger->debug("max error saturation by saturation =\n{}", Matrix(numericSaturationBySaturation - analyticSaturationBySaturation).array().abs().maxCoeff());
+
+
+
 
     spdlog::drop_all();
 

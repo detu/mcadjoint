@@ -5,16 +5,17 @@
 #include "derivativesForAdjointFD.hpp"
 #include "specialCells.hpp"
 #include "pressure.hpp"
+#include "saturation.hpp"
+#include "darcyVelocity.hpp"
 #include <array>
+#include <functional>
 
 
 
 
-
-
-
-Real computePressureResidualFDEntry(
-      MatrixRef pressures, MatrixRef saturations, MatrixRef logPermeabilities, const CellIndex& cell, const Shift& shift, const FixedParameters& params
+Real computeResidualsFDEntry(
+      MatrixRef pressures, MatrixRef saturations, MatrixRef logPermeabilities, const CellIndex& cell,
+      const Shift& shift, const FixedParameters& params, const WhichResidual whichResidual, const Real timestep
 ) {
 
     Matrix permeabilities = logPermeabilities.array().exp().matrix();
@@ -28,18 +29,57 @@ Real computePressureResidualFDEntry(
 
     const CellIndex wellCell = findWellCell(numberOfRows, numberOfCols);
 
-    const auto computePressureResidualEntry = [&wellCell, &cell, numberOfRows, numberOfCols, &params] (ConstMatrixRef pressures, ConstMatrixRef saturations, ConstMatrixRef permeabilities) -> Real {
-        if (cell == wellCell) {
-            return wellCell(pressures);
-        } else {
-            Real residual = 0;
-            for (const auto& neighbor: cell.neighbors(numberOfRows, numberOfCols)) {
-                residual += computeTransmissibility(params.dynamicViscosityOil, params.dynamicViscosityWater, permeabilities, saturations, cell, neighbor) * (cell(pressures) - neighbor(pressures));
-            }
+    std::function<Real(ConstMatrixRef, ConstMatrixRef, ConstMatrixRef)> computeResidualEntry = nullptr;
 
-            return residual;
+    switch (whichResidual) {
+        case WhichResidual::PRESSURE: {
+
+            computeResidualEntry = [&wellCell, &cell, numberOfRows, numberOfCols, &params] (ConstMatrixRef pressures, ConstMatrixRef saturations, ConstMatrixRef permeabilities) -> Real {
+                if (cell == wellCell) {
+                    return wellCell(pressures);
+                } else {
+                    Real residual = 0;
+                    for (const auto& neighbor: cell.neighbors(numberOfRows, numberOfCols)) {
+                        residual += computeTransmissibility(params.dynamicViscosityOil, params.dynamicViscosityWater, permeabilities, saturations, cell, neighbor) * (cell(pressures) - neighbor(pressures));
+                    }
+
+                    return residual;
+                }
+            };
+
+            break;
+
         }
-    };
+
+        case WhichResidual::SATURATION: {
+            computeResidualEntry = [&cell, numberOfRows, numberOfCols, &params, timestep] (ConstMatrixRef pressures, ConstMatrixRef saturations, ConstMatrixRef permeabilities) -> Real {
+                Real residual = 0;
+
+                residual -= cell(saturations);
+
+                const Matrix totalMobilities = computeTotalMobilities(params.dynamicViscosityOil, params.dynamicViscosityWater, permeabilities, saturations);
+
+                const Matrix fluxFunctionFactors = computeFluxFunctionFactors(saturations, params.porosity, params.dynamicViscosityWater, params.dynamicViscosityOil);
+                const Matrix pressureDerivativeX = computeXDerivative(pressures, params.meshWidth);
+                const Matrix pressureDerivativeY = computeYDerivative(pressures, params.meshWidth);
+
+                const Matrix darcyVelocitiesX = computeTotalDarcyVelocitiesX(totalMobilities, pressureDerivativeX);
+                const Matrix darcyVelocitiesY = computeTotalDarcyVelocitiesX(totalMobilities, pressureDerivativeY);
+
+
+                const Matrix fluxesX = computeFluxesX(fluxFunctionFactors, darcyVelocitiesX);
+                const Matrix fluxesY = computeFluxesY(fluxFunctionFactors, darcyVelocitiesY);
+                const Matrix saturationDivergences = computeSaturationDivergences(fluxFunctionFactors, fluxesX, fluxesY, params.meshWidth);
+
+                residual += cell(saturationDivergences) * timestep;
+
+                return residual;
+            };
+
+            break;
+        }
+    }
+
 
 
     const Real unshiftedValue = valueToShift;
@@ -50,7 +90,7 @@ Real computePressureResidualFDEntry(
         valueToShift += shift.amount/2;
     }
 
-    const Real upShiftedResidualValue = computePressureResidualEntry(pressures, saturations, permeabilities);
+    const Real upShiftedResidualValue = computeResidualEntry(pressures, saturations, permeabilities);
     valueToShift = unshiftedValue;
 
 
@@ -60,7 +100,7 @@ Real computePressureResidualFDEntry(
         valueToShift -= shift.amount/2;
     }
 
-    const Real downshiftedResidualValue = computePressureResidualEntry(pressures, saturations, permeabilities);
+    const Real downshiftedResidualValue = computeResidualEntry(pressures, saturations, permeabilities);
 
     valueToShift = unshiftedValue;
 
@@ -70,7 +110,8 @@ Real computePressureResidualFDEntry(
     return (upShiftedResidualValue - downshiftedResidualValue) / shift.amount;
 }
 
-Matrix derivePressureResidualsWithFiniteDifferences(Matrix pressures, Matrix saturations, Matrix logPermeabilities, const Shift::ShiftWhere derivedBy, const FixedParameters& params) {
+Matrix deriveResidualsWithFiniteDifferences(Matrix pressures, Matrix saturations, Matrix logPermeabilities,
+                                            const WhichResidual whichResidual, const Shift::ShiftWhere derivedBy, const FixedParameters& params, const Real timestep) {
     const int numberOfRows = pressures.rows();
     const int numberOfCols = pressures.cols();
     const int numberOfPairs = numberOfRows * numberOfCols;
@@ -85,7 +126,8 @@ Matrix derivePressureResidualsWithFiniteDifferences(Matrix pressures, Matrix sat
                 for (shiftCell.i = 0; shiftCell.i < numberOfRows; ++shiftCell.i) {
                     const CellIndex meToShift = pressureToTransmissibilityIndex(cell, shiftCell, numberOfRows);
                     const Shift shift = {shiftCell, derivedBy, 1e-8};
-                    meToShift(derivatives) = computePressureResidualFDEntry(pressures, saturations, logPermeabilities, cell, shift, params);
+                    meToShift(derivatives) = computeResidualsFDEntry(pressures, saturations, logPermeabilities,
+                                                                             cell, shift, params, whichResidual, timestep);
                 }
             }
         }
@@ -94,4 +136,3 @@ Matrix derivePressureResidualsWithFiniteDifferences(Matrix pressures, Matrix sat
     return derivatives;
 
 }
-
