@@ -121,7 +121,7 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
                                                        ? 1e8: std::abs(b(cellIndexToBIndex(currentState.cell, currentState.isAPressure, numberOfRows, numberOfCols)));
         ASSERT(std::isfinite(unnormalizedAbsorptionProbability));
 
-        if (unnormalizedAbsorptionProbability > 0 && false) {
+        if (unnormalizedAbsorptionProbability > 0) {
             candidates.push_back(absorptionCandidate);
             candidateUnnormalizedProbabilities.push_back(unnormalizedAbsorptionProbability);
         }
@@ -266,7 +266,7 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
     if (initializeJustAtBeginning && currentTimelevel > 0) {
         return;
     }
-    const int numberOfRandomWalksToAdd = 1000;
+    const int numberOfRandomWalksToAdd = 10000;
 
 
 

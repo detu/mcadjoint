@@ -54,6 +54,7 @@ struct PermeabilitiesProblem: public Problem<Real> {
             dumpThis("permeabilitiesHistory", permeabilitiesHistory);
             dumpThis("sensitivity", computedSensitivityAndCost.sensitivity);
             dumpThis("cost", computedSensitivityAndCost.cost);
+            dumpThis("permeabilities", permeabilities);
             writeToMatFile();
 
 
@@ -114,12 +115,16 @@ matchWithPermeabilities(const FixedParameters& params, const Real tolerance, con
     const Vector initialPermeabilitiesAsVector = Eigen::Map<const Vector>(params.initialPermeabilities.data(), params.initialPermeabilities.size());
     Vector logPermeabilitiesAsVector = initialPermeabilitiesAsVector.array().log().matrix();
 
-    log()->info("Checking gradient implementation\n-----------------------------------------------------------------------");
-    if (!permeabilitiesProblem.checkGradient(logPermeabilitiesAsVector, 1)) {
-       throw std::logic_error("MC and FD gradients don't match!");
-    }
-    log()->info("-----------------------------------------------------------------------\nGradient implementation OK");
 
+    if (false) {
+        log()->info(
+              "Checking gradient implementation\n-----------------------------------------------------------------------");
+        if (!permeabilitiesProblem.checkGradient(logPermeabilitiesAsVector, 1)) {
+            throw std::logic_error("MC and FD gradients don't match!");
+        }
+        log()->info(
+              "-----------------------------------------------------------------------\nGradient implementation OK");
+    }
 
     solver.minimize(permeabilitiesProblem, logPermeabilitiesAsVector);
 
