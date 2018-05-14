@@ -93,6 +93,10 @@ int main() {
 
     const Matrix analyticSaturationByPressure = deriveSaturationResidualsByPressures(pressureSystem, fluxFunctionFactors, darcyVelocitiesX, darcyVelocitiesY, totalMobilities, timestep, params.meshWidth);
     const Matrix numericSaturationByPressure = deriveResidualsWithFiniteDifferences(pressures, saturationsWater, logPermeabilities, WhichResidual::SATURATION, Shift::ShiftWhere::PRESSURES, params, timestep);
+
+    const Matrix analyticSaturationByLogPermeabilities = deriveSaturationResidualsByLogPermeabilities(pressureDerivativesX, pressureDerivativesY, darcyVelocitiesX, darcyVelocitiesY, totalMobilities, fluxFunctionFactors, timestep, params.meshWidth);
+    const Matrix numericSaturationByLogPermeabilities = deriveResidualsWithFiniteDifferences(pressures, saturationsWater, logPermeabilities, WhichResidual::SATURATION, Shift::ShiftWhere::LOG_PERMEABILITIES, params, timestep);
+
     logger->debug("numeric pressure by pressure =\n{}", numericPressureByPressure);
     logger->debug("analytic pressure by pressure =\n{}", analyticPressureByPressure);
 
@@ -131,6 +135,15 @@ int main() {
     logger->debug("difference saturation by pressure =\n{}", numericSaturationByPressure - analyticSaturationByPressure);
 
     logger->debug("max error saturation by pressure =\n{}", Matrix(numericSaturationByPressure - analyticSaturationByPressure).array().abs().maxCoeff());
+
+
+    logger->debug("numeric saturation by logPermeability =\n{}", numericSaturationByLogPermeabilities);
+    logger->debug("analytic saturation by logPermeability =\n{}", analyticSaturationByLogPermeabilities);
+
+    logger->debug("difference saturation by logPermeability =\n{}", numericSaturationByLogPermeabilities - analyticSaturationByLogPermeabilities);
+
+    logger->debug("max error saturation by logPermeability =\n{}", Matrix(numericSaturationByLogPermeabilities - analyticSaturationByLogPermeabilities).array().abs().maxCoeff());
+
 
 
 

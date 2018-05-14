@@ -85,9 +85,6 @@ SparseMatrix derivePressureResidualsBySaturations(ConstMatrixRef pressures, Cons
 
 
 Matrix deriveFluxFunctionFactorsBySaturations(ConstMatrixRef saturationsWater, const Real porosity, const Real dynamicViscosityWater, const Real dynamicViscosityOil) {
-    const auto saturationsWaterArray = saturationsWater.array();
-    const auto saturationsOilArray = 1 - saturationsWaterArray;
-
     return (2 * dynamicViscosityOil * dynamicViscosityWater * (1 - saturationsWater.array()) * saturationsWater.array()).cwiseQuotient(
           porosity * (dynamicViscosityWater * (1 - saturationsWater.array()).square() + dynamicViscosityOil * saturationsWater.array().square()).square()).matrix();
 }
@@ -323,17 +320,12 @@ SparseMatrix deriveSaturationResidualsByLogPermeabilities(ConstMatrixRef pressur
 
     SparseMatrix derivatives(numberOfPairs, numberOfPairs);
 
-    const CellIndex wellCell = findWellCell(numberOfRows, numberOfCols);
 
     CellIndex myself = {0, 0};
 
     for (myself.j = 0; myself.j < numberOfCols; ++myself.j) {
         for (myself.i = 0; myself.i < numberOfRows; ++myself.i) {
-            const bool iAmTheCellInTheWell = myself == wellCell;
 
-            if (iAmTheCellInTheWell) {
-                continue;
-            }
 
             const CellIndex meToMyself = pressureToTransmissibilityIndex(myself, myself, numberOfRows);
             const Real myMobility = myself(mobilities);
