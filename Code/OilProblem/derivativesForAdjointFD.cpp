@@ -64,7 +64,7 @@ Real computeResidualsFDEntry(
                 const Matrix pressureDerivativeY = computeYDerivative(pressures, params.meshWidth);
 
                 const Matrix darcyVelocitiesX = computeTotalDarcyVelocitiesX(totalMobilities, pressureDerivativeX);
-                const Matrix darcyVelocitiesY = computeTotalDarcyVelocitiesX(totalMobilities, pressureDerivativeY);
+                const Matrix darcyVelocitiesY = computeTotalDarcyVelocitiesY(totalMobilities, pressureDerivativeY);
 
 
                 const Matrix fluxesX = computeFluxesX(fluxFunctionFactors, darcyVelocitiesX);

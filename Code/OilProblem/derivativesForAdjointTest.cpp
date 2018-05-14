@@ -83,7 +83,10 @@ int main() {
     const Matrix darcyVelocitiesX = computeTotalDarcyVelocitiesX(totalMobilities, pressureDerivativesX);
     const Matrix pressureDerivativesY = computeYDerivative(pressures, params.meshWidth);
     const Matrix darcyVelocitiesY = computeTotalDarcyVelocitiesY(totalMobilities, pressureDerivativesY);
-    const Matrix analyticSaturationBySaturation = deriveSaturationResidualsBySaturations(fluxFunctionFactors, fluxFunctionDerivatives, darcyVelocitiesX, darcyVelocitiesY, pressureDerivativesX, pressureDerivativesY, totalMobilities, totalMobilitiesBySatWater, 1e-5, params.meshWidth);
+    const Matrix analyticSaturationBySaturation = deriveSaturationResidualsBySaturations(fluxFunctionFactors, fluxFunctionDerivatives,
+                                                                                         darcyVelocitiesX, darcyVelocitiesY,
+                                                                                         pressureDerivativesX, pressureDerivativesY,
+                                                                                         totalMobilities, totalMobilitiesBySatWater, 1e-5, params.meshWidth);
     logger->debug("numeric pressure by pressure =\n{}", numericPressureByPressure);
     logger->debug("analytic pressure by pressure =\n{}", analyticPressureByPressure);
 
@@ -115,8 +118,8 @@ int main() {
 
     logger->debug("max error saturation by saturation =\n{}", Matrix(numericSaturationBySaturation - analyticSaturationBySaturation).array().abs().maxCoeff());
 
-
-
+    logger->debug("Darcy velocities X =\n{}", darcyVelocitiesX);
+    logger->debug("Darcy velocities Y =\n{}", darcyVelocitiesY);
 
     spdlog::drop_all();
 

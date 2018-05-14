@@ -27,8 +27,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="243856ce-78f7-4963-8ee2-7f94acac5c1e" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/derivativesForAdjoint.cpp" afterPath="$PROJECT_DIR$/derivativesForAdjoint.cpp" />
       <change beforePath="$PROJECT_DIR$/derivativesForAdjointFD.cpp" afterPath="$PROJECT_DIR$/derivativesForAdjointFD.cpp" />
-      <change beforePath="$PROJECT_DIR$/derivativesForAdjointFD.hpp" afterPath="$PROJECT_DIR$/derivativesForAdjointFD.hpp" />
       <change beforePath="$PROJECT_DIR$/derivativesForAdjointTest.cpp" afterPath="$PROJECT_DIR$/derivativesForAdjointTest.cpp" />
       <change beforePath="$PROJECT_DIR$/../thirdParty/CppNumericalSolvers" afterPath="$PROJECT_DIR$/../thirdParty/CppNumericalSolvers" />
       <change beforePath="$PROJECT_DIR$/../thirdParty/stefcommonheaders" afterPath="$PROJECT_DIR$/../thirdParty/stefcommonheaders" />
@@ -53,21 +53,11 @@
       <file leaf-file-name="derivativesForAdjoint.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/derivativesForAdjoint.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="184">
-              <caret line="314" column="57" lean-forward="false" selection-start-line="314" selection-start-column="13" selection-end-line="314" selection-end-column="57" />
+            <state relative-caret-position="290">
+              <caret line="176" column="41" lean-forward="false" selection-start-line="176" selection-start-column="41" selection-end-line="176" selection-end-column="41" />
               <folding>
                 <element signature="e#51#87#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pressure.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pressure.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1186">
-              <caret line="145" column="36" lean-forward="false" selection-start-line="145" selection-start-column="36" selection-end-line="145" selection-end-column="36" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -94,11 +84,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="derivativesForAdjointFD.cpp" pinned="false" current-in-tab="false">
+      <file leaf-file-name="derivativesForAdjointFD.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/derivativesForAdjointFD.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="57" column="0" lean-forward="false" selection-start-line="57" selection-start-column="0" selection-end-line="57" selection-end-column="0" />
+            <state relative-caret-position="-521">
+              <caret line="72" column="0" lean-forward="false" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
               <folding>
                 <element signature="e#51#89#0" expanded="true" />
               </folding>
@@ -116,11 +106,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="derivativesForAdjointTest.cpp" pinned="false" current-in-tab="true">
+      <file leaf-file-name="derivativesForAdjointTest.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/derivativesForAdjointTest.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="406">
-              <caret line="115" column="53" lean-forward="false" selection-start-line="115" selection-start-column="53" selection-end-line="115" selection-end-column="53" />
+            <state relative-caret-position="402">
+              <caret line="94" column="103" lean-forward="false" selection-start-line="94" selection-start-column="103" selection-end-line="94" selection-end-column="103" />
               <folding>
                 <element signature="e#51#89#0" expanded="true" />
               </folding>
@@ -151,8 +141,18 @@
       <file leaf-file-name="saturation.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/saturation.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="29" column="5" lean-forward="false" selection-start-line="29" selection-start-column="5" selection-end-line="29" selection-end-column="5" />
+            <state relative-caret-position="285">
+              <caret line="25" column="53" lean-forward="false" selection-start-line="25" selection-start-column="53" selection-end-line="25" selection-end-column="53" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="adjoint.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/adjoint.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="412">
+              <caret line="289" column="9" lean-forward="false" selection-start-line="289" selection-start-column="9" selection-end-line="289" selection-end-column="9" />
               <folding />
             </state>
           </provider>
@@ -165,8 +165,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>build</find>
-      <find>initialSimulationState</find>
       <find>registered</find>
       <find>reg</find>
       <find>regi</find>
@@ -193,8 +191,10 @@
       <find>computeSaturationsWater</find>
       <find>computeSaturatio</find>
       <find>computeSaturation</find>
-      <find>compu</find>
       <find>saturation</find>
+      <find>compu</find>
+      <find>fluxFunctionDer</find>
+      <find>logPermeabilities</find>
     </findStrings>
     <replaceStrings>
       <replace>int</replace>
@@ -263,11 +263,11 @@
         <option value="$PROJECT_DIR$/cellindex.hpp" />
         <option value="$PROJECT_DIR$/derivativesForAdjoint.hpp" />
         <option value="$PROJECT_DIR$/darcyVelocity.cpp" />
-        <option value="$PROJECT_DIR$/derivativesForAdjoint.cpp" />
         <option value="$PROJECT_DIR$/forward.cpp" />
         <option value="$PROJECT_DIR$/derivativesForAdjointFD.hpp" />
-        <option value="$PROJECT_DIR$/derivativesForAdjointFD.cpp" />
+        <option value="$PROJECT_DIR$/derivativesForAdjoint.cpp" />
         <option value="$PROJECT_DIR$/derivativesForAdjointTest.cpp" />
+        <option value="$PROJECT_DIR$/derivativesForAdjointFD.cpp" />
       </list>
     </option>
   </component>
@@ -526,7 +526,7 @@
       <workItem from="1525423569241" duration="31456000" />
       <workItem from="1525774031077" duration="52065000" />
       <workItem from="1526042675330" duration="22421000" />
-      <workItem from="1526233828815" duration="11647000" />
+      <workItem from="1526233828815" duration="13278000" />
     </task>
     <task id="LOCAL-00001" summary="TODO mainloop">
       <created>1524994887598</created>
@@ -546,7 +546,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="401535000" />
+    <option name="totallyTimeSpent" value="403166000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -567,11 +567,11 @@
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24591836" sideWeight="0.83272946" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32536975" sideWeight="0.3900966" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.45649073" sideWeight="0.4853058" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2293578" sideWeight="0.2652899" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22824536" sideWeight="0.2652899" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32959184" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32952926" sideWeight="0.4813344" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32952926" sideWeight="0.4813344" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -751,13 +751,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/adjoint.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="512">
-          <caret line="289" column="9" lean-forward="false" selection-start-line="289" selection-start-column="9" selection-end-line="289" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cMatrixSurrogate.hpp" />
     <entry file="file://$PROJECT_DIR$/gnuplot_i.h">
       <provider selected="true" editor-type-id="text-editor">
@@ -904,16 +897,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/derivativesForAdjoint.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="314" column="57" lean-forward="false" selection-start-line="314" selection-start-column="13" selection-end-line="314" selection-end-column="57" />
-          <folding>
-            <element signature="e#51#87#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/saturation.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
@@ -938,11 +921,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/saturation.cpp">
+    <entry file="file://$PROJECT_DIR$/derivativesForAdjointFD.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="29" column="5" lean-forward="false" selection-start-line="29" selection-start-column="5" selection-end-line="29" selection-end-column="5" />
-          <folding />
+        <state relative-caret-position="405">
+          <caret line="27" column="166" lean-forward="false" selection-start-line="27" selection-start-column="166" selection-end-line="27" selection-end-column="166" />
+          <folding>
+            <element signature="e#64#87#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -954,30 +939,46 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/derivativesForAdjointFD.hpp">
+    <entry file="file://$PROJECT_DIR$/saturation.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="27" column="166" lean-forward="false" selection-start-line="27" selection-start-column="166" selection-end-line="27" selection-end-column="166" />
-          <folding>
-            <element signature="e#64#87#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="285">
+          <caret line="25" column="53" lean-forward="false" selection-start-line="25" selection-start-column="53" selection-end-line="25" selection-end-column="53" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/derivativesForAdjointFD.cpp">
+    <entry file="file://$PROJECT_DIR$/adjoint.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="57" column="0" lean-forward="false" selection-start-line="57" selection-start-column="0" selection-end-line="57" selection-end-column="0" />
+        <state relative-caret-position="412">
+          <caret line="289" column="9" lean-forward="false" selection-start-line="289" selection-start-column="9" selection-end-line="289" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/derivativesForAdjoint.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="290">
+          <caret line="176" column="41" lean-forward="false" selection-start-line="176" selection-start-column="41" selection-end-line="176" selection-end-column="41" />
           <folding>
-            <element signature="e#51#89#0" expanded="true" />
+            <element signature="e#51#87#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/derivativesForAdjointTest.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="406">
-          <caret line="115" column="53" lean-forward="false" selection-start-line="115" selection-start-column="53" selection-end-line="115" selection-end-column="53" />
+        <state relative-caret-position="402">
+          <caret line="94" column="103" lean-forward="false" selection-start-line="94" selection-start-column="103" selection-end-line="94" selection-end-column="103" />
+          <folding>
+            <element signature="e#51#89#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/derivativesForAdjointFD.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-521">
+          <caret line="72" column="0" lean-forward="false" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
           <folding>
             <element signature="e#51#89#0" expanded="true" />
           </folding>

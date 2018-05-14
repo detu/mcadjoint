@@ -88,8 +88,8 @@ Matrix deriveFluxFunctionFactorsBySaturations(ConstMatrixRef saturationsWater, c
     const auto saturationsWaterArray = saturationsWater.array();
     const auto saturationsOilArray = 1 - saturationsWaterArray;
 
-    return (2 * dynamicViscosityOil * dynamicViscosityWater * saturationsOilArray * saturationsWaterArray).cwiseQuotient(
-          porosity * (dynamicViscosityWater * saturationsOilArray.square() + dynamicViscosityOil * saturationsWaterArray.square()).square()).matrix();
+    return (2 * dynamicViscosityOil * dynamicViscosityWater * (1 - saturationsWater.array()) * saturationsWater.array()).cwiseQuotient(
+          porosity * (dynamicViscosityWater * (1 - saturationsWater.array()).square() + dynamicViscosityOil * saturationsWater.array().square()).square()).matrix();
 }
 
 
@@ -179,6 +179,8 @@ SparseMatrix deriveSaturationResidualsBySaturations(
 
 
             }
+
+            meToMyself(derivatives) -= 1;
 
         }
     }
