@@ -20,7 +20,6 @@ bool stepForwardProblem(const FixedParameters& params, const Eigen::Ref<const Ma
     const Matrix totalMobilities = computeTotalMobilities(params.dynamicViscosityOil, params.dynamicViscosityWater, permeabilities, currentState.saturationsWater);
 
     //log()->debug("total mobilities {}", totalMobilities);
-    const Real pressureDrillNow = params.overPressureDrill(currentState.time);
     const SparseMatrix pressureSystem = assemblePressureSystemWithBC(totalMobilities);
 
     //log()->debug("pressure system {}", pressureSystem);
@@ -46,7 +45,7 @@ static Vector computeBVector(const Real computedPressureAtDrillCell, const Real 
 
     Vector b(2 * numberOfParameters);
     b.setZero();
-    b(numberOfRows) = 2 * (computedPressureAtDrillCell - measuredPressureAtDrillCell);
+    b(drillCellLinearIndex) = 2 * (computedPressureAtDrillCell - measuredPressureAtDrillCell);
     return b;
 }
 
@@ -216,7 +215,7 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     constexpr bool outputProgressTransitioning = false;
 
 
-        for (int randomWalkIndex = 0; randomWalkIndex < randomWalks.size(); ++randomWalkIndex) {
+        for (int randomWalkIndex = 0; randomWalkIndex < int(randomWalks.size()); ++randomWalkIndex) {
             RandomWalkState& randomWalk = randomWalks[randomWalkIndex];
 
 

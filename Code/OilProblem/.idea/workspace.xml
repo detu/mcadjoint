@@ -27,8 +27,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="243856ce-78f7-4963-8ee2-7f94acac5c1e" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/derivativesForAdjoint.cpp" afterPath="$PROJECT_DIR$/derivativesForAdjoint.cpp" />
-      <change beforePath="$PROJECT_DIR$/derivativesForAdjointTest.cpp" afterPath="$PROJECT_DIR$/derivativesForAdjointTest.cpp" />
+      <change beforePath="$PROJECT_DIR$/forward.cpp" afterPath="$PROJECT_DIR$/forward.cpp" />
+      <change beforePath="$PROJECT_DIR$/quarterFiveSpotTraditional.cpp" afterPath="$PROJECT_DIR$/quarterFiveSpotTraditional.cpp" />
+      <change beforePath="$PROJECT_DIR$/sensitivity.cpp" afterPath="$PROJECT_DIR$/sensitivity.cpp" />
       <change beforePath="$PROJECT_DIR$/../thirdParty/CppNumericalSolvers" afterPath="$PROJECT_DIR$/../thirdParty/CppNumericalSolvers" />
       <change beforePath="$PROJECT_DIR$/../thirdParty/stefcommonheaders" afterPath="$PROJECT_DIR$/../thirdParty/stefcommonheaders" />
       <change beforePath="$PROJECT_DIR$/../../Documents/DerivativesForMCAdjoint.nb" afterPath="$PROJECT_DIR$/../../Documents/DerivativesForMCAdjoint.nb" />
@@ -50,11 +53,11 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="derivativesForAdjoint.cpp" pinned="false" current-in-tab="true">
+      <file leaf-file-name="derivativesForAdjoint.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/derivativesForAdjoint.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3653">
-              <caret line="86" column="167" lean-forward="false" selection-start-line="86" selection-start-column="167" selection-end-line="86" selection-end-column="167" />
+            <state relative-caret-position="106">
+              <caret line="205" column="0" lean-forward="false" selection-start-line="205" selection-start-column="0" selection-end-line="205" selection-end-column="0" />
               <folding>
                 <element signature="e#51#87#0" expanded="true" />
               </folding>
@@ -62,23 +65,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="derivativesForAdjointFD.hpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/derivativesForAdjointFD.hpp">
+      <file leaf-file-name="sensitivity.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sensitivity.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="27" column="166" lean-forward="false" selection-start-line="27" selection-start-column="166" selection-end-line="27" selection-end-column="166" />
-              <folding>
-                <element signature="e#64#87#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="darcyVelocity.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/darcyVelocity.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-347">
-              <caret line="83" column="9" lean-forward="false" selection-start-line="83" selection-start-column="9" selection-end-line="83" selection-end-column="9" />
+            <state relative-caret-position="172">
+              <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -92,16 +83,6 @@
               <folding>
                 <element signature="e#51#89#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="derivativesForAdjoint.hpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/derivativesForAdjoint.hpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="248">
-              <caret line="33" column="33" lean-forward="false" selection-start-line="33" selection-start-column="32" selection-end-line="33" selection-end-column="33" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -121,30 +102,50 @@
       <file leaf-file-name="forward.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/forward.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="465">
-              <caret line="112" column="0" lean-forward="false" selection-start-line="112" selection-start-column="0" selection-end-line="112" selection-end-column="0" />
+            <state relative-caret-position="157">
+              <caret line="217" column="79" lean-forward="false" selection-start-line="217" selection-start-column="79" selection-end-line="217" selection-end-column="79" />
               <folding>
-                <marker date="1526286756000" expanded="false" signature="8602:8761" ph="..." />
+                <marker date="1526301221000" expanded="false" signature="8706:8824" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="saturation.hpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/saturation.hpp">
+      <file leaf-file-name="UnaryFunctors.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../thirdParty/eigen/Eigen/src/Core/functors/UnaryFunctors.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="5" column="5" lean-forward="false" selection-start-line="5" selection-start-column="5" selection-end-line="5" selection-end-column="5" />
+            <state relative-caret-position="210">
+              <caret line="595" column="0" lean-forward="false" selection-start-line="595" selection-start-column="0" selection-end-line="595" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="saturation.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/saturation.cpp">
+      <file leaf-file-name="quarterFiveSpotTraditional.cpp" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/quarterFiveSpotTraditional.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="25" column="53" lean-forward="false" selection-start-line="25" selection-start-column="53" selection-end-line="25" selection-end-column="53" />
+            <state relative-caret-position="363">
+              <caret line="112" column="0" lean-forward="false" selection-start-line="112" selection-start-column="0" selection-end-line="112" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TriangularSolverVector.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../thirdParty/eigen/Eigen/src/Core/products/TriangularSolverVector.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="147">
+              <caret line="117" column="0" lean-forward="false" selection-start-line="117" selection-start-column="0" selection-end-line="117" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AssignEvaluator.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../thirdParty/eigen/Eigen/src/Core/AssignEvaluator.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="147">
+              <caret line="835" column="0" lean-forward="false" selection-start-line="835" selection-start-column="0" selection-end-line="835" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -246,10 +247,8 @@
         <option value="$PROJECT_DIR$/bVectorSurrogate.hpp" />
         <option value="$PROJECT_DIR$/utils.hpp" />
         <option value="$PROJECT_DIR$/utils.cpp" />
-        <option value="$PROJECT_DIR$/quarterFiveSpotTraditional.cpp" />
         <option value="$PROJECT_DIR$/adjoint.hpp" />
         <option value="$PROJECT_DIR$/quarterFiveSpotAdjoint.cpp" />
-        <option value="$PROJECT_DIR$/sensitivity.cpp" />
         <option value="$PROJECT_DIR$/adjoint.cpp" />
         <option value="$PROJECT_DIR$/finiteDifferencesForAdjoints.cpp" />
         <option value="$PROJECT_DIR$/finiteDifferencesForAdjoints.hpp" />
@@ -265,11 +264,13 @@
         <option value="$PROJECT_DIR$/cellindex.hpp" />
         <option value="$PROJECT_DIR$/derivativesForAdjoint.hpp" />
         <option value="$PROJECT_DIR$/darcyVelocity.cpp" />
-        <option value="$PROJECT_DIR$/forward.cpp" />
         <option value="$PROJECT_DIR$/derivativesForAdjointFD.hpp" />
         <option value="$PROJECT_DIR$/derivativesForAdjointFD.cpp" />
         <option value="$PROJECT_DIR$/derivativesForAdjointTest.cpp" />
         <option value="$PROJECT_DIR$/derivativesForAdjoint.cpp" />
+        <option value="$PROJECT_DIR$/sensitivity.cpp" />
+        <option value="$PROJECT_DIR$/forward.cpp" />
+        <option value="$PROJECT_DIR$/quarterFiveSpotTraditional.cpp" />
       </list>
     </option>
   </component>
@@ -407,7 +408,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.QuarterFiveSpotTraditional">
+  <component name="RunManager" selected="Application.QuarterFiveSpotAdjoint">
     <configuration name="Build All" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="DerivativesForAdjointTest" EXPLICIT_BUILD_TARGET_NAME="all">
       <envs />
     </configuration>
@@ -528,7 +529,7 @@
       <workItem from="1525423569241" duration="31456000" />
       <workItem from="1525774031077" duration="52065000" />
       <workItem from="1526042675330" duration="22421000" />
-      <workItem from="1526233828815" duration="13918000" />
+      <workItem from="1526233828815" duration="14623000" />
     </task>
     <task id="LOCAL-00001" summary="TODO mainloop">
       <created>1524994887598</created>
@@ -548,7 +549,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="403806000" />
+    <option name="totallyTimeSpent" value="404511000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -564,7 +565,7 @@
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32962668" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32925585" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2211127" sideWeight="0.6099034" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2211127" sideWeight="0.6099034" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24591836" sideWeight="0.83272946" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32536975" sideWeight="0.3900966" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.45649073" sideWeight="0.4853058" order="1" side_tool="false" content_ui="tabs" />
@@ -572,7 +573,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32959184" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32952926" sideWeight="0.4813344" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32952926" sideWeight="0.4813344" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -630,20 +631,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../thirdParty/stefcommonheaders/include/stefCommonHeaders/stefFenv.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="419">
-          <caret line="101" column="49" lean-forward="false" selection-start-line="101" selection-start-column="49" selection-end-line="101" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../thirdParty/eigen/Eigen/src/LU/InverseImpl.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="337" column="0" lean-forward="false" selection-start-line="337" selection-start-column="0" selection-end-line="337" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/quarterFiveSpot.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="273">
@@ -681,6 +668,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -728,13 +716,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../thirdParty/eigen/Eigen/src/Core/functors/UnaryFunctors.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="595" column="0" lean-forward="false" selection-start-line="595" selection-start-column="0" selection-end-line="595" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/adjoint.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
@@ -742,13 +723,6 @@
           <folding>
             <element signature="e#13#43#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sensitivity.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="577">
-          <caret line="51" column="0" lean-forward="false" selection-start-line="51" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -792,13 +766,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/finiteDifferencesForAdjoints.cpp" />
     <entry file="file://$PROJECT_DIR$/finiteDifferencesForAdjoints.hpp" />
-    <entry file="file://$PROJECT_DIR$/quarterFiveSpotTraditional.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="415">
-          <caret line="62" column="0" lean-forward="false" selection-start-line="62" selection-start-column="0" selection-end-line="62" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/minimizer.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -906,16 +873,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/forward.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="465">
-          <caret line="112" column="0" lean-forward="false" selection-start-line="112" selection-start-column="0" selection-end-line="112" selection-end-column="0" />
-          <folding>
-            <marker date="1526286756000" expanded="false" signature="8602:8761" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/derivativesForAdjoint.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="248">
@@ -929,7 +886,7 @@
         <state relative-caret-position="405">
           <caret line="27" column="166" lean-forward="false" selection-start-line="27" selection-start-column="166" selection-end-line="27" selection-end-column="166" />
           <folding>
-            <element signature="e#64#87#0" expanded="true" />
+            <element signature="e#64#87#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -980,11 +937,61 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/derivativesForAdjoint.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3653">
-          <caret line="86" column="167" lean-forward="false" selection-start-line="86" selection-start-column="167" selection-end-line="86" selection-end-column="167" />
+        <state relative-caret-position="106">
+          <caret line="205" column="0" lean-forward="false" selection-start-line="205" selection-start-column="0" selection-end-line="205" selection-end-column="0" />
           <folding>
             <element signature="e#51#87#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sensitivity.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="172">
+          <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forward.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="157">
+          <caret line="217" column="79" lean-forward="false" selection-start-line="217" selection-start-column="79" selection-end-line="217" selection-end-column="79" />
+          <folding>
+            <marker date="1526301221000" expanded="false" signature="8706:8824" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../thirdParty/eigen/Eigen/src/Core/functors/UnaryFunctors.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="595" column="0" lean-forward="false" selection-start-line="595" selection-start-column="0" selection-end-line="595" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../thirdParty/eigen/Eigen/src/Core/AssignEvaluator.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="147">
+          <caret line="835" column="0" lean-forward="false" selection-start-line="835" selection-start-column="0" selection-end-line="835" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../thirdParty/eigen/Eigen/src/Core/products/TriangularSolverVector.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="147">
+          <caret line="117" column="0" lean-forward="false" selection-start-line="117" selection-start-column="0" selection-end-line="117" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/quarterFiveSpotTraditional.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="363">
+          <caret line="112" column="0" lean-forward="false" selection-start-line="112" selection-start-column="0" selection-end-line="112" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>

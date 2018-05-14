@@ -203,7 +203,6 @@ SparseMatrix deriveSaturationResidualsByPressures(const SparseMatrix& pressureSy
     derivatives.reserve(Eigen::VectorXi::Constant(derivatives.cols(), 5));
 
     CellIndex myself = {0, 0};
-    const CellIndex wellCell = findWellCell(numberOfRows, numberOfCols);
 
     const Real discretizationFactor = timestep / std::pow(meshWidth, 2);
 
@@ -212,7 +211,6 @@ SparseMatrix deriveSaturationResidualsByPressures(const SparseMatrix& pressureSy
         for (myself.i = 0; myself.i < numberOfRows; ++myself.i) {
 
             const CellIndex meToMyself = pressureToTransmissibilityIndex(myself, myself, numberOfRows);
-            const bool iAmTheCellInTheWell = myself == wellCell;
 
 
             constexpr static std::array<CellIndex::Direction, 4> directionsToCheck = {

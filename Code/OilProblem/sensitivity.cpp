@@ -30,7 +30,6 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, cons
     const int numberOfCols = permeabilities.cols();
     const int numberOfRows = permeabilities.rows();
     const int numberOfParameters = permeabilities.size();
-    const int numberOfCells = numberOfParameters;
 
     SimulationState simulationState(numberOfRows, numberOfCols);
     SensitivityAndCost sensitivityAndCost = {Vector::Zero(numberOfParameters), 0};
