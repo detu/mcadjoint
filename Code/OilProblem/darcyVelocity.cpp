@@ -54,6 +54,8 @@ Real getDerivativeAtCellBorder(CellIndex cell,
             return cell(xDerivative);
         }
     }
+
+    std::abort();
 }
 
 CellIndex borderIndexToCenterIndex(CellIndex borderIndex, const CellIndex::Direction whichBorder) {

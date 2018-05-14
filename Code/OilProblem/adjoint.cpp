@@ -42,7 +42,6 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
 
 
     constexpr bool surelyNotStillInTheSameTimestep  = false;
-    constexpr bool surelyStillInTheSameTimestep = true;
 
     if (currentState.cell == absorptionCandidate.cellIndex) {
         return surelyNotStillInTheSameTimestep;
@@ -127,6 +126,7 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
             candidateUnnormalizedProbabilities.push_back(unnormalizedAbsorptionProbability);
         }
     }
+
 
     for (const auto& candidate: candidates) {
         ASSERT(candidate.cellIndex.i >= -1);
@@ -322,7 +322,7 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
             }
         }
 
-        for (int candidateIndex = 0; candidateIndex < candidates.size(); ++candidateIndex) {
+        for (int candidateIndex = 0; candidateIndex < int(candidates.size()); ++candidateIndex) {
             ASSERT(probabilities[candidateIndex] > 0 && probabilities[candidateIndex] <= 1);
             const int copiesToAddOfThisCandidate = std::round(numberOfRandomWalksToAdd * probabilities[candidateIndex]);
             const RandomWalkState& candidate = candidates[candidateIndex];
