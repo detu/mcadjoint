@@ -57,9 +57,25 @@ int main() {
 
     const Matrix numericPressureBySaturation = computePressureResidualsDerivedFD(pressures, saturationsWater, logPermeabilities, Shift::ShiftWhere::SATURATIONS, params);
 
+    const SparseMatrix pressureSystem = assemblePressureSystemWithBC(totalMobilities);
+    const SparseMatrix analyticPressureByPressure = computePressureResidualsDerivedByPressure(pressureSystem);
+    const Matrix numericPressureByPressure = computePressureResidualsDerivedFD(pressures, saturationsWater, logPermeabilities, Shift::ShiftWhere::PRESSURES, params);
+
+
+    logger->debug("numeric pressure by pressure =\n{}", numericPressureByPressure);
+    logger->debug("analytic pressure by pressure =\n{}", analyticPressureByPressure);
+
+    logger->debug("difference pressure by pressure =\n{}", numericPressureByPressure - analyticPressureByPressure);
+
+    logger->debug("max error pressure by pressure =\n{}", Matrix(numericPressureByPressure - analyticPressureByPressure).array().abs().maxCoeff());
+
 
     logger->debug("numeric pressure by saturation =\n{}", numericPressureBySaturation);
     logger->debug("analytic pressure by saturation =\n{}", analyticPressureBySaturation);
+
+    logger->debug("difference pressure by saturation =\n{}", numericPressureBySaturation - analyticPressureBySaturation);
+
+    logger->debug("max error pressure by saturation =\n{}", Matrix(numericPressureBySaturation - analyticPressureBySaturation).array().abs().maxCoeff());
 
     spdlog::drop_all();
 
