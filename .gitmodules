@@ -1,9 +1,0 @@
-[submodule "Code/thirdParty/stefcommonheaders"]
-	path = Code/thirdParty/stefcommonheaders
-	url = https://HansiMeier@bitbucket.org/HansiMeier/stefcommonheaders.git
-[submodule "Code/thirdParty/simplematio"]
-	path = Code/thirdParty/simplematio
-	url = https://HansiMeier@bitbucket.org/HansiMeier/simplematio.git
-[submodule "Code/thirdParty/CppNumericalSolvers"]
-	path = Code/thirdParty/CppNumericalSolvers
-	url = https://github.com/PatWie/CppNumericalSolvers.git
