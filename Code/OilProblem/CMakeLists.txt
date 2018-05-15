@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.9)
 project(OilProblem LANGUAGES CXX)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-    set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall")
+    set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall -Wno-int-in-bool-context")
 endif()
 
 set(CMAKE_CXX_STANDARD 11)
@@ -54,7 +54,7 @@ add_executable(DerivativesForAdjointTest derivativesForAdjointTest.cpp)
 
 add_definitions(-DEIGEN_DEFAULT_DENSE_INDEX_TYPE=int -DEIGEN_NO_AUTOMATIC_RESIZING)
 if (lowercaseBuildType STREQUAL "debug")
-    add_definitions(-DEIGEN_INITIALIZE_MATRICES_BY_NAN)
+    add_definitions(-DEIGEN_INITIALIZE_MATRICES_BY_NAN -DEIGEN_DONT_VECTORIZE)
 endif()
 target_compile_definitions(QuarterFiveSpotTraditional PUBLIC -DJUST_COMPUTE_ADJOINT)
 

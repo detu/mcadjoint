@@ -147,6 +147,7 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     //const DiagonalMatrix inverseDiagonalSaturationBySaturation = extractInverseDiagonalMatrix(saturationsWaterResidualsBySaturationsWater);
 
 
+
     SparseMatrix correctedPressureResidualsByPressures(numberOfParameters, numberOfParameters);
     correctedPressureResidualsByPressures.setIdentity();
 
@@ -175,7 +176,7 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     #ifdef JUST_COMPUTE_ADJOINT
     SparseMatrix c(numberOfParameters*2, numberOfParameters);
     for (int j = 0; j < std::min(c.cols(), c.rows()); ++j) {
-            c.coeffRef(j, j) = -1;
+            c.coeffRef(j + numberOfParameters, j) = -1;
     }
 
     #else
@@ -358,13 +359,28 @@ bool stepForwardAndAdjointProblemTraditional(const FixedParameters& params, cons
     const int fromDiagRow = stateSize * currentTimelevel;
     const int fromDiagCol = fromDiagRow;
     log()->debug("Diagonal block ({}-{}) x ({}-{})", fromDiagRow, fromDiagRow + stateSize, fromDiagCol, fromDiagCol + stateSize);
-    adjointMatrix.block(fromDiagRow, fromDiagCol, stateSize/2, stateSize/2) = pressureResidualsByPressures.transpose();
-    adjointMatrix.block(fromDiagRow, fromDiagCol + stateSize/2, stateSize/2, stateSize/2) = saturationsWaterResidualsByPressures.transpose();
+    adjointMatrix.block(fromDiagRow, fromDiagCol, stateSize/2, stateSize/2).setIdentity();
+    ASSERT(allFinite(adjointMatrix.block(fromDiagRow, fromDiagCol, stateSize/2, stateSize/2)));
+    log()->debug("Pressure by pressure = \n{}", pressureResidualsByPressures);
+    log()->debug("Saturations water residuals by pressure =\n{}", saturationsWaterResidualsByPressures);
+    const Matrix inversePressureByPressure = Matrix(pressureResidualsByPressures).inverse();
+    const Matrix correctedSaturationsWaterResidualsByPressures = inversePressureByPressure * saturationsWaterResidualsByPressures.transpose();
+
+    std::cout << "correctedSaturationsWaterResidualsByPressures =\n" << correctedSaturationsWaterResidualsByPressures
+              << "\ninversePressureByPressure =\n" << inversePressureByPressure
+              << "\nsaturationsWaterResidualsByPressures.transpose() =\n" << saturationsWaterResidualsByPressures.transpose();
+
+    adjointMatrix.block(fromDiagRow, fromDiagCol + stateSize/2, stateSize/2, stateSize/2) = correctedSaturationsWaterResidualsByPressures;
+    dumpThis("invPP", Matrix(pressureResidualsByPressures).inverse());
+    dumpThis("block", adjointMatrix.block(fromDiagRow, fromDiagCol + stateSize/2, stateSize/2, stateSize/2));
+    writeToMatFile();
+
+    ASSERT(allFinite(adjointMatrix.block(fromDiagRow, fromDiagCol + stateSize/2, stateSize/2, stateSize/2)));
+
     adjointMatrix.block(fromDiagRow + stateSize/2, fromDiagCol + stateSize/2, stateSize/2, stateSize/2).setIdentity();
 
 
-    log()->debug("Pressure by pressure = \n{}", pressureResidualsByPressures);
-    log()->debug("Saturations water residuals by pressure =\n{}", saturationsWaterResidualsByPressures);
+
 
     ASSERT(allFinite(pressureResidualsByPressures));
     ASSERT(allFinite(saturationsWaterResidualsByPressures));
@@ -380,14 +396,16 @@ bool stepForwardAndAdjointProblemTraditional(const FixedParameters& params, cons
 
 
         adjointMatrix.block(fromOffDiagRow + stateSize/2, fromOffDiagCol, stateSize/2, stateSize/2) = pressureResidualsBySaturationsWater.transpose();
+        ASSERT(allFinite(adjointMatrix.block(fromOffDiagRow + stateSize/2, fromOffDiagCol, stateSize/2, stateSize/2)));
         adjointMatrix.block(fromOffDiagRow + stateSize/2, fromOffDiagCol + stateSize/2, stateSize/2, stateSize/2) = saturationsWaterResidualsBySaturationsWater.transpose();
-
+        ASSERT(allFinite(adjointMatrix.block(fromOffDiagRow + stateSize/2, fromOffDiagCol + stateSize/2, stateSize/2, stateSize/2)));
     }
 
 
 
 
-    const Vector b = computeBVector(computedPressureAtDrillCell, measuredPressureAtDrillCell, numberOfParameters, numberOfRows, numberOfCols);
+    Vector b = computeBVector(computedPressureAtDrillCell, measuredPressureAtDrillCell, numberOfParameters, numberOfRows, numberOfCols);
+    b.head(stateSize/2) = (inversePressureByPressure * b.head(stateSize/2)).eval();
     for (int i = 0; i < stateSize; ++i) {
         adjointRhs.segment(stateSize * currentTimelevel, stateSize)(i) = b(i);
     }

@@ -1,9 +1,6 @@
 [submodule "Code/thirdParty/stefcommonheaders"]
 	path = Code/thirdParty/stefcommonheaders
 	url = https://HansiMeier@bitbucket.org/HansiMeier/stefcommonheaders.git
-[submodule "Code/thirdParty/eigen"]
-	path = Code/thirdParty/eigen
-	url = https://github.com/eigenteam/eigen-git-mirror.git
 [submodule "Code/thirdParty/simplematio"]
 	path = Code/thirdParty/simplematio
 	url = https://HansiMeier@bitbucket.org/HansiMeier/simplematio.git

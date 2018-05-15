@@ -43,7 +43,6 @@ void parseCommandLine(const int argc, const char** argv) {
 int main(int argc, const char** argv) {
     parseCommandLine(argc, argv);
 
-    feenableexcept(FE_ALL_EXCEPT & ~FE_INEXACT);
 
 
 
@@ -73,7 +72,7 @@ int main(int argc, const char** argv) {
     params.dynamicViscosityOil = 1;//0.630; // SAE motor oil 20°C
     params.dynamicViscosityWater = 1;//0.0010518; // Water 20°C
 
-    const int numberOfTimesteps = 2;
+    const int numberOfTimesteps = 20;
     params.porosity = 1;
     params.initialSaturationsWater.resize(n, n);
     params.initialSaturationsWater.setConstant(0);
@@ -98,18 +97,23 @@ int main(int argc, const char** argv) {
 
 
     SimulationState simulationState(n, n);
+    simulationState.saturationsWater = params.initialSaturationsWater;
     SimulationState mcSimulationState(n, n);
     bool brokeThrough = false;
     for (int currentTimelevel = 0; currentTimelevel < numberOfTimesteps && !brokeThrough; ++currentTimelevel) {
         brokeThrough =  stepForwardAndAdjointProblemTraditional(params, params.initialPermeabilities, currentTimelevel, simulationState, adjointMatrix, adjointRhs);
         //(void) stepForwardAndAdjointProblem(params, params.initialPermeabilities, currentTimelevel, mcSimulationState);
 
-        dumpThis("adjointMatrixTrad", adjointMatrix);
-        dumpThis("adjointRhsTrad", adjointRhs);
-        writeToMatFile();
-        ASSERT(allFinite(adjointMatrix));
-        ASSERT(allFinite(adjointRhs));
+        if (!brokeThrough) {
+
+            dumpThis("adjointMatrixTrad", adjointMatrix);
+            dumpThis("adjointRhsTrad", adjointRhs);
+            writeToMatFile();
+            ASSERT(allFinite(adjointMatrix));
+            ASSERT(allFinite(adjointRhs));
+        }
     }
+    log()->debug("broke through? {}", brokeThrough);
 
     Rng rng(88);
     const auto sensitivityAndCost = computeSensitivityAndCost(params, params.initialPermeabilities, rng);

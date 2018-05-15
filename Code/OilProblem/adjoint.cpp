@@ -239,7 +239,7 @@ void logStatisticsAboutRandomWalks(const std::vector<RandomWalkState>& randomWal
     log()->info("{} walks are currently in saturation cells", walksInSaturation);
     log()->info("{} walks are absorbed", absorbedWalks);
 
-    ASSERT(absorbedWalks + walksInPressure + walksInSaturation == randomWalks.size());
+    ASSERT(absorbedWalks + walksInPressure + walksInSaturation == int(randomWalks.size()));
 
 }
 
@@ -266,7 +266,7 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
     if (initializeJustAtBeginning && currentTimelevel > 0) {
         return;
     }
-    const int numberOfRandomWalksToAdd = 10000;
+    const int numberOfRandomWalksToAdd = 100000;
 
 
 
