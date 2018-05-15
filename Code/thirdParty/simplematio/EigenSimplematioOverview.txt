@@ -1,0 +1,140 @@
+/*
+  ,ad8888ba,  8b           d8 88888888888 88888888ba  8b           d8 88 88888888888 I8,        8        ,8I
+ d8"'    `"8b `8b         d8' 88          88      "8b `8b         d8' 88 88          `8b       d8b       d8'
+d8'        `8b `8b       d8'  88          88      ,8P  `8b       d8'  88 88           "8,     ,8"8,     ,8"
+88          88  `8b     d8'   88aaaaa     88aaaaaa8P'   `8b     d8'   88 88aaaaa       Y8     8P Y8     8P
+88          88   `8b   d8'    88"""""     88""""88'      `8b   d8'    88 88"""""       `8b   d8' `8b   d8'
+Y8,        ,8P    `8b d8'     88          88    `8b       `8b d8'     88 88             `8a a8'   `8a a8'
+ Y8a.    .a8P      `888'      88          88     `8b       `888'      88 88              `8a8'     `8a8'
+  `"Y8888Y"'        `8'       88888888888 88      `8b       `8'       88 88888888888      `8'       `8'
+*/
+
+/**************************************************************************************************
+ **************************************************************************************************
+ **                                     GENERAL INFORMATION                                      **
+ **************************************************************************************************
+ **************************************************************************************************/
+
+/**************************************************************************************************
+ *                                          DESCRIPTION                                           *
+ **************************************************************************************************/
+
+This library reads Eigen matrices from mat files and writes them too.
+Real and complex matrices of floats and doubles are supported.
+Versions <= 5 of the mat file format can be read.
+The written mat files are in format version 5 with enabled compression.
+
+
+
+/**************************************************************************************************
+ *                                          DEPENDENCIES                                          *
+ **************************************************************************************************/
+All dependencies are required, none is optional!
+
+- zlib, any recent version; for compression
+
+- libmatio, at least version 1.5.6: will be downloaded and built automatically to ensure the correct build options
+
+
+/**************************************************************************************************
+ **************************************************************************************************
+ **                                            USAGE                                             **
+ **************************************************************************************************
+ **************************************************************************************************/
+
+/**************************************************************************************************
+ *                                       HEADERS TO INCLUDE                                       *
+ **************************************************************************************************/
+
+#include <EigenSimplematio.hpp> // also includes much of Eigen
+
+
+/**************************************************************************************************
+ *                                      LIBRARIES TO LINK TO                                      *
+ **************************************************************************************************/
+
+
+NOTE: A pkg-config file is also provided!
+
+STATIC LIBRARIES
+-lsimplematio -lmatio -lz if you want to use doubles
+-lsimplematiof -lmatio -lz , if you want to use floats
+
+/**************************************************************************************************
+ *                                        AVAILABLE TYPES                                         *
+ **************************************************************************************************/
+
+MATRIX_TYPE is one of:
+- double
+- std::complex<double>
+- Eigen::Matrix<double, ANYTHING, ANYTHING>
+- Eigen::Matrix<std::complex<double>, ANYTHING, ANYTHING>
+- Eigen::SparseMatrix<double>
+- Eigen::SparseMatrix<std::complex<double>>
+
+If you want to use floats instead of doubles in the above types, do the following steps, anything else is taken care of:
+
+i) Replace double with float in the above tyes
+ii) Define a macro SMIO_USE_FLOATS; for instance by using -DSMIO_USE_FLOATS while compiling
+iii) Link to the library simplematiof (with a trailing f) instead of simplematio
+
+
+/**************************************************************************************************
+ *                                      READING FROM MY.MAT                                       *
+ **************************************************************************************************/
+
+// opening
+// either
+SMIO::EigenMatFile matFile("my.mat");
+// or
+SMIO::EigenMatFile matFile;
+matFile.open("my.mat");
+
+// reading
+// note that you have to pass the MATRIX_TYPE as template argument
+// otherwise this library doesn't know what to read in
+MATRIX_TYPE M = matFile.readVariable<MATRIX_TYPE>("M"); // The "M" is the name of the variable as it appears in the matfile
+
+// The file is closed as soon as 'matFile' goes out of scope
+// it can be closed explicitly with .close()
+matFile.close();
+
+
+/**************************************************************************************************
+ *                                       WRITING TO MY.MAT                                        *
+ **************************************************************************************************/
+
+// CAUTION //
+This library uses the MAT 5 file format. A single variable can't contain more than 2^31 bytes.
+Trying to write bigger variables results in an error, but is at least catched.
+
+MATRIX_TYPE M = SMIO::Matrix::Identity(3, 3); // the matrix to write
+
+// opening
+// either
+SMIO::EigenMatFile matFile("my.mat");
+// or
+SMIO::EigenMatFile matFile;
+matFile.open("my.mat");
+
+// writing
+matFile.writeVariable("M", M); // The "M" is the name of the variable as it appears in the matfile
+
+// updating
+M(0, 0) = 2;
+matFile.writeVariable("M", M);
+// The variable "M" in the mat file is overwritten with a new version.
+// Unfortunately, this is very expensive, so be careful.
+
+
+// The file is closed as soon as matFile goes out of scope
+// it can be closed explicitly with .close()
+matFile.close();
+
+
+/**************************************************************************************************
+ *                                      FURTHER INFORMATION                                       *
+ **************************************************************************************************/
+
+Please look at the header EigenSimplematio.hpp
+

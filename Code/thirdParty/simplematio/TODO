@@ -1,0 +1,5 @@
+- Wait for Eigen 3.3 to use Eigen::Map<SparseMatrix>
+- Comment stuff better
+- Maybe overthink decision of splitting into simplematio and simplematiof
+
+

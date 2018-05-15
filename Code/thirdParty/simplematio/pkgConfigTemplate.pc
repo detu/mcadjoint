@@ -1,0 +1,9 @@
+includedir=@headerInstallDir@
+libdir=@libInstallDir@
+
+Name: SimpleMATIO
+Description: Simple interface to libMATIO, using @type@ as underlying type
+Version: @PROJECT_VERSION@
+Libs: -L${libdir} -lsimplematio -lmatio -lz
+Cflags: -I${includedir}@maybeFloatMacro@
+
