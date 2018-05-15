@@ -10,6 +10,7 @@
 #include <stefCommonHeaders/xoroshiro.h>
 #include <cppoptlib/problem.h>
 #include <cppoptlib/solver/gradientdescentsolver.h>
+#include <cppoptlib/solver/lbfgssolver.h>
 #include <stefCommonHeaders/assert.h>
 
 
@@ -111,7 +112,7 @@ matchWithPermeabilities(const FixedParameters& params, const Real tolerance, con
     const int numberOfCols = params.initialPermeabilities.cols();
     const int numberOfRows = params.initialPermeabilities.rows();
 
-    GradientDescentSolver<PermeabilitiesProblem> solver;
+    LbfgsSolver<PermeabilitiesProblem> solver;
     const Vector initialPermeabilitiesAsVector = Eigen::Map<const Vector>(params.initialPermeabilities.data(), params.initialPermeabilities.size());
     Vector logPermeabilitiesAsVector = initialPermeabilitiesAsVector.array().log().matrix();
 

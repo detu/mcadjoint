@@ -13,6 +13,7 @@
 #include "dumpToMatFile.hpp"
 #include "utils.hpp"
 #include "specialCells.hpp"
+#include <iostream>
 
 
 bool stepForwardProblem(const FixedParameters& params, const Eigen::Ref<const Matrix>& permeabilities,

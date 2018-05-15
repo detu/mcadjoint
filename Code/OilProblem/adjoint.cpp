@@ -252,8 +252,9 @@ static inline CellIndex cellIndexToCIndex(const CellIndex& cellIndex, const Cell
     return derivativeIndex;
 }
 void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int numberOfParameters,
-                       const int currentTimelevel, ConstVectorRef b, const SparseMatrix& c,
+                       const int currentTimelevel, ConstVectorRef b, SparseMatrix c,
                        std::vector<RandomWalkState>& randomWalks, Rng& rng) {
+
 
     constexpr bool initializeJustAtBeginning = false;
 
@@ -267,6 +268,24 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
         return;
     }
     const int numberOfRandomWalksToAdd = 100000;
+
+    constexpr bool preferSaturations = false;
+    constexpr Real preferenceForSaturations = 2;
+    const int numberOfPressures = numberOfCols * numberOfRows;
+    if (preferSaturations) {
+        log()->info("Prefering saturations with a factor of {}", preferenceForSaturations);
+        for (int outerIndex = 0; outerIndex < c.outerSize(); ++outerIndex) {
+            for (SparseMatrix::InnerIterator innerIterator(c, outerIndex); bool(innerIterator); ++innerIterator) {
+                const bool correspondsToASaturation = innerIterator.row() >= numberOfPressures;
+
+                if (correspondsToASaturation) {
+                    innerIterator.valueRef() *= preferenceForSaturations;
+                }
+            }
+        }
+    } else {
+        log()->info("Not preferring saturations over pressures");
+    }
 
 
 
