@@ -138,11 +138,7 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
           timestep, params.meshWidth);
 
 
-
-
-
-
-
+    #error "TODO: clean up absorbed states!"
 
 
 
