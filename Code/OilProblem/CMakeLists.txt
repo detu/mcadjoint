@@ -16,6 +16,7 @@ get_filename_component(thirdPartyDir "${CMAKE_CURRENT_SOURCE_DIR}/../thirdParty"
 
 include("${thirdPartyDir}/stefcommonheaders/CMakeLists.txt")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}")
+include(cotire)
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
 
@@ -33,8 +34,8 @@ add_subdirectory("${simplematioDir}" "${simplematioBinaryDir}")
 set(baseLibHeaders utils.hpp logging.hpp)
 set(baseLibSources utils.cpp)
 set(oilLibHeaders typedefs.hpp cellindex.hpp vectorToBeMappedAsMatrix.hpp fixedParameters.hpp simulationState.hpp specialCells.hpp randomWalkState.hpp
-        pressure.hpp darcyVelocity.hpp saturation.hpp forward.hpp derivativesForAdjoint.hpp derivativesForAdjointFD.hpp adjoint.hpp sensitivity.hpp dumpToMatFile.hpp)
-set(oilLibSources pressure.cpp darcyVelocity.cpp saturation.cpp forward.cpp derivativesForAdjoint.cpp derivativesForAdjointFD.cpp adjoint.cpp sensitivity.cpp minimizer.cpp dumpToMatFile.cpp)
+        pressure.hpp darcyVelocity.hpp saturation.hpp forward.hpp derivativesForAdjoint.hpp derivativesForAdjointFD.hpp adjoint.hpp sensitivity.hpp dumpToMatFile.hpp preconditioning.hpp)
+set(oilLibSources pressure.cpp darcyVelocity.cpp saturation.cpp forward.cpp derivativesForAdjoint.cpp derivativesForAdjointFD.cpp adjoint.cpp sensitivity.cpp minimizer.cpp dumpToMatFile.cpp preconditioning.cpp)
 set(allCommonHeadersAndSources ${oilLibSources} ${oilLibHeaders} ${baseLibSources} ${baseLibHeaders})
 
 
@@ -62,5 +63,6 @@ string(TOLOWER CMAKE_BUILD_TYPE lowercaseBuildType)
 foreach(executable IN ITEMS Test TestVerbose QuarterFiveSpot QuarterFiveSpotAdjoint QuarterFiveSpotTraditional DerivativesForAdjointTest)
     target_sources("${executable}" PUBLIC "${allCommonHeadersAndSources}")
     target_link_libraries("${executable}" stefCommonHeaders simplematio Threads::Threads)
+    cotire("${executable}")
 endforeach()
 

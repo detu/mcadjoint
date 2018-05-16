@@ -38,5 +38,8 @@ struct Point {
 
 using SparseMatrix = Eigen::SparseMatrix<Real, Eigen::ColMajor>;
 
+using PressureSolver = Eigen::SparseLU<SparseMatrix>;
+
+
 template <class... Args>
 using Predicate = std::function<bool(Args...)>;
