@@ -257,7 +257,7 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
                        std::vector<RandomWalkState>& randomWalks, Rng& rng) {
 
 
-    constexpr bool initializeJustAtBeginning = true;
+    constexpr bool initializeJustAtBeginning = false;
 
     if (initializeJustAtBeginning) {
         log()->info("Initializing random walks");
@@ -268,7 +268,7 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
     if (initializeJustAtBeginning && currentTimelevel > 0) {
         return;
     }
-    const int numberOfRandomWalksToAdd = 100000;
+    const int numberOfRandomWalksToAdd = 100;
 
     constexpr bool preferSaturations = false;
     constexpr Real preferenceForSaturations = 2;
