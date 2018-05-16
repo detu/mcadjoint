@@ -116,12 +116,13 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
     {
 
         constexpr bool alwaysAbsorbAtDrill = false;
+        constexpr bool enableAbsorption = true;
         const Real unnormalizedAbsorptionProbability = alwaysAbsorbAtDrill && currentState.isAPressure &&
                                                        currentState.cell == findDrillCell(numberOfRows, numberOfCols)
                                                        ? 1e8: std::abs(b(cellIndexToBIndex(currentState.cell, currentState.isAPressure, numberOfRows, numberOfCols)));
         ASSERT(std::isfinite(unnormalizedAbsorptionProbability));
 
-        if (unnormalizedAbsorptionProbability > 0) {
+        if (unnormalizedAbsorptionProbability > 0 && enableAbsorption) {
             candidates.push_back(absorptionCandidate);
             candidateUnnormalizedProbabilities.push_back(unnormalizedAbsorptionProbability);
         }
@@ -256,7 +257,7 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
                        std::vector<RandomWalkState>& randomWalks, Rng& rng) {
 
 
-    constexpr bool initializeJustAtBeginning = false;
+    constexpr bool initializeJustAtBeginning = true;
 
     if (initializeJustAtBeginning) {
         log()->info("Initializing random walks");

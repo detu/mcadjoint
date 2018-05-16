@@ -15,6 +15,104 @@
 #include "specialCells.hpp"
 #include <iostream>
 
+enum class WhichPreconditioner {
+    NONE, DIAGONAL, PRESSURE_BY_PRESSURE, Q_TRANSPOSE_FROM_QR_AND_DIAGONAL, CHOLESKY_L_INV
+};
+
+using PressureSolver = Eigen::SparseLU<SparseMatrix>;
+
+static void preconditionMatrices(SparseMatrix& pressuresByPressures, SparseMatrix& saturationsByPressures, VectorRef pressurePartOfB, const PressureSolver& pressureSolver, const WhichPreconditioner whichPreconditioner) {
+    switch (whichPreconditioner) {
+        case WhichPreconditioner::NONE: {
+            log()->info("Preconditioner: None");
+            return;
+        }
+
+        case WhichPreconditioner::DIAGONAL: {
+            log()->info("Preconditioner: inverse diagonal from pressure by pressure");
+            const SparseMatrix inversePressureByPressureDiagonal = SparseMatrix(extractInverseDiagonalMatrix(pressuresByPressures));
+            pressuresByPressures *= inversePressureByPressureDiagonal;
+            saturationsByPressures *= inversePressureByPressureDiagonal;
+            pressurePartOfB = (inversePressureByPressureDiagonal * pressurePartOfB).eval();
+
+            return;
+
+        }
+
+
+        case WhichPreconditioner::PRESSURE_BY_PRESSURE: {
+            log()->info("Preconditioner: full inverse of  pressure by pressure");
+            SparseMatrix saturationsWaterResidualsByPressuresTransposed = saturationsByPressures.transpose();
+            saturationsWaterResidualsByPressuresTransposed.makeCompressed();
+            pressuresByPressures.setIdentity();
+
+            saturationsByPressures = pressureSolver.solve(saturationsWaterResidualsByPressuresTransposed).transpose();
+            pressurePartOfB = pressureSolver.solve(pressurePartOfB);
+            return;
+        }
+
+        case WhichPreconditioner::Q_TRANSPOSE_FROM_QR_AND_DIAGONAL: {
+            const int numberOfCells = pressuresByPressures.rows();
+            log()->info("Preconditioner: Q^T from the QR decomposition of pressure by pressure + diagonal");
+
+            const Eigen::SparseQR<SparseMatrix, Eigen::NaturalOrdering<int>> qrSolver(pressuresByPressures);
+            const Eigen::SparseMatrix<Real, Eigen::RowMajor> sortedRMatrix = qrSolver.matrixR();
+            pressuresByPressures = SparseMatrix(sortedRMatrix.transpose());
+
+            const SparseMatrix inverseDiagonal = SparseMatrix(extractInverseDiagonalMatrix(pressuresByPressures));
+            pressuresByPressures = (pressuresByPressures * inverseDiagonal).eval();
+
+            SparseMatrix saturationsWaterResidualsByPressuresTransposed = saturationsByPressures.transpose();
+            saturationsWaterResidualsByPressuresTransposed.makeCompressed();
+
+            Vector denseCol(numberOfCells);
+            for (int colIndex = 0; colIndex < saturationsWaterResidualsByPressuresTransposed.cols(); ++colIndex) {
+                denseCol = saturationsWaterResidualsByPressuresTransposed.col(colIndex);
+                denseCol = (inverseDiagonal * (qrSolver.matrixQ().transpose() * denseCol)).eval();
+                Eigen::SparseVector<Real> sparseCol(denseCol.size());
+                for (int elementIndex = 0; elementIndex < denseCol.size(); ++elementIndex) {
+                    if (std::abs(denseCol(elementIndex)) > 1e-14) {
+                        sparseCol.coeffRef(elementIndex) = denseCol(elementIndex);
+                    }
+                }
+                saturationsWaterResidualsByPressuresTransposed.col(colIndex) = sparseCol;
+                pressurePartOfB = (inverseDiagonal * (qrSolver.matrixQ().transpose() * pressurePartOfB)).eval();
+            }
+
+            saturationsByPressures = saturationsWaterResidualsByPressuresTransposed.transpose();
+            return;
+        }
+
+        case WhichPreconditioner::CHOLESKY_L_INV: {
+            log()->info("Preconditioner: Cholesky L^-1");
+            const Eigen::SimplicialLLT<SparseMatrix> choleskySolver(pressuresByPressures);
+
+            pressuresByPressures = choleskySolver.matrixL();
+            const SparseMatrix inverseDiagonal = SparseMatrix(extractInverseDiagonalMatrix(pressuresByPressures));
+            pressuresByPressures = (pressuresByPressures * inverseDiagonal).eval();
+
+
+
+            SparseMatrix saturationsWaterResidualsByPressuresTransposed = saturationsByPressures.transpose();
+            saturationsWaterResidualsByPressuresTransposed.makeCompressed();
+
+            choleskySolver.matrixL().solveInPlace(saturationsWaterResidualsByPressuresTransposed);
+            saturationsByPressures = (inverseDiagonal * saturationsByPressures).eval();
+
+            saturationsByPressures = saturationsWaterResidualsByPressuresTransposed.transpose();
+
+
+            choleskySolver.matrixL().solveInPlace(pressurePartOfB);
+            pressurePartOfB = (inverseDiagonal * pressurePartOfB).eval();
+            return;
+        }
+
+
+    }
+
+    std::abort();
+}
+
 
 bool stepForwardProblem(const FixedParameters& params, const Eigen::Ref<const Matrix>& permeabilities,
                         SimulationState& currentState) {
@@ -79,7 +177,7 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
                                                                  simulationState.saturationsWater.cols());
 
 
-    Eigen::SparseLU<SparseMatrix> pressureSolver(pressureSystem);
+    PressureSolver pressureSolver(pressureSystem);
 
     simulationState.pressures = Vector(pressureSolver.solve(pressureRhs));
 
@@ -145,20 +243,21 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
 
 
 
-    //const DiagonalMatrix inverseDiagonalSaturationBySaturation = extractInverseDiagonalMatrix(saturationsWaterResidualsBySaturationsWater);
 
 
 
-    SparseMatrix correctedPressureResidualsByPressures(numberOfParameters, numberOfParameters);
-    correctedPressureResidualsByPressures.setIdentity();
+    SparseMatrix correctedPressureResidualsByPressures = pressureResidualsByPressures;
 
-    SparseMatrix correctedPressureResidualsBySaturationsWater = pressureResidualsBySaturationsWater;
-    const SparseMatrix saturationsWaterResidualsByPressuresTransposed = saturationsWaterResidualsByPressures.transpose();
-    SparseMatrix correctedSaturationsWaterResidualsByPressures = pressureSolver.solve(saturationsWaterResidualsByPressuresTransposed).transpose();
-    SparseMatrix correctedSaturationsWaterResidualsBySaturationsWater = saturationsWaterResidualsBySaturationsWater;
+    const SparseMatrix correctedPressureResidualsBySaturationsWater = pressureResidualsBySaturationsWater;
+    SparseMatrix correctedSaturationsWaterResidualsByPressures = saturationsWaterResidualsByPressures;
+    const SparseMatrix correctedSaturationsWaterResidualsBySaturationsWater = saturationsWaterResidualsBySaturationsWater;
 
 
+    Vector b = computeBVector(computedPressureAtDrillCell, measuredPressureAtDrillCell, numberOfParameters,
+                              numberOfRows, numberOfCols);
 
+    preconditionMatrices(correctedPressureResidualsByPressures, correctedSaturationsWaterResidualsByPressures, b.head(numberOfParameters),
+                         pressureSolver, WhichPreconditioner::Q_TRANSPOSE_FROM_QR_AND_DIAGONAL);
 
 
     dumpThis("correctedPressureResidualsByPressures", correctedPressureResidualsByPressures);
@@ -167,11 +266,6 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     dumpThis("correctedSaturationsWaterResidualsBySaturationsWater",
              correctedSaturationsWaterResidualsBySaturationsWater);
 
-
-    Vector b = computeBVector(computedPressureAtDrillCell, measuredPressureAtDrillCell, numberOfParameters,
-                              numberOfRows, numberOfCols);
-
-    b.head(numberOfParameters) = pressureSolver.solve(b.head(numberOfParameters));
 
 
     #ifdef JUST_COMPUTE_ADJOINT
