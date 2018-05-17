@@ -9,8 +9,10 @@
 #include "forward.hpp"
 #include "pressure.hpp"
 #include "derivativesForAdjoint.hpp"
+#include "adjoint.hpp"
 #include "logging.hpp"
 #include <cmath>
+#include <list>
 
 Real computeContributionToCost(const FixedParameters& parameters, const SimulationState& currentSimulationState) {
 
@@ -33,22 +35,28 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, cons
 
     SimulationState simulationState(numberOfRows, numberOfCols);
     SensitivityAndCost sensitivityAndCost = {Vector::Zero(numberOfParameters), 0};
-    std::vector<RandomWalkState> randomWalks;
+    std::list<RandomWalkState> randomWalks;
 
     bool breakthroughHappened = false;
     int currentTimeLevel = 0;
+
+    Eigen::VectorXi numberOfRemovedAbsorbedStates = Eigen::VectorXi::Zero(numberOfParameters);
+    Vector sumOfDValuesOfAbsorbedStates = Vector::Zero(numberOfParameters);
     do {
         log()->info("-----------------------------------");
         log()->info("time = {}", simulationState.time);
         breakthroughHappened = stepForwardAndAdjointProblem(params, permeabilities, currentTimeLevel, simulationState,
                                                             randomWalks, rng);
+
+        removeAbsorbedStates(randomWalks, numberOfRemovedAbsorbedStates, sumOfDValuesOfAbsorbedStates);
+
         const Real contributionToCost = computeContributionToCost(params, simulationState);
         log()->info("contribution to cost = {}", contributionToCost);
         sensitivityAndCost.cost += contributionToCost;
         ++currentTimeLevel;
     } while (!breakthroughHappened && simulationState.time < params.finalTime && currentTimeLevel < params.maxNumberOfTimesteps);
 
-    Vector numberOfRandomWalksPerParameter(Vector::Zero(numberOfParameters));
+    Eigen::VectorXi numberOfRandomWalksPerParameter((Eigen::VectorXi(numberOfParameters)));
 
 
     for (const RandomWalkState& randomWalk: randomWalks) {
@@ -57,9 +65,12 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, cons
         ++numberOfRandomWalksPerParameter(randomWalk.parameterIndex);
     }
 
+    sensitivityAndCost.sensitivity += sumOfDValuesOfAbsorbedStates;
+    numberOfRandomWalksPerParameter += numberOfRemovedAbsorbedStates;
+
     log()->debug("Sensitivities before division =\n{}", sensitivityAndCost.sensitivity);
 
-    sensitivityAndCost.sensitivity.array() /= numberOfRandomWalksPerParameter.array().cwiseMax(1);
+    sensitivityAndCost.sensitivity.array() /= numberOfRandomWalksPerParameter.array().cwiseMax(1).cast<Real>();
 
     sensitivityAndCost.sensitivity.array() *= -1; // see equation (3)
 

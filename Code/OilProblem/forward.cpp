@@ -52,7 +52,7 @@ static Vector computeBVector(const Real computedPressureAtDrillCell, const Real 
 
 bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Ref<const Matrix>& permeabilities,
                                   const int currentTimelevel, SimulationState& simulationState,
-                                  std::vector<RandomWalkState>& randomWalks, Rng& rng) {
+                                  std::list<RandomWalkState>& randomWalks, Rng& rng) {
     const int numberOfRows = permeabilities.rows();
     const int numberOfCols = permeabilities.cols();
     const int numberOfParameters = permeabilities.size();
@@ -211,27 +211,23 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     constexpr bool outputProgressTransitioning = false;
 
 
-        for (int randomWalkIndex = 0; randomWalkIndex < int(randomWalks.size()); ++randomWalkIndex) {
-            RandomWalkState& randomWalk = randomWalks[randomWalkIndex];
+    for (RandomWalkState& randomWalk: randomWalks) {
+        bool stillInTheSameTimestep = false;
+        do {
+            stillInTheSameTimestep = transitionState(randomWalk, b, correctedPressureResidualsByPressures,
+                                                     correctedPressureResidualsBySaturationsWater,
+                                                     correctedSaturationsWaterResidualsByPressures,
+                                                     correctedSaturationsWaterResidualsBySaturationsWater,
+                                                     numberOfRows,
+                                                     numberOfCols, rng);
+        } while (stillInTheSameTimestep);
 
+        ++advancedRandomWalks;
 
-
-            bool stillInTheSameTimestep = false;
-            do {
-                stillInTheSameTimestep = transitionState(randomWalk, b, correctedPressureResidualsByPressures,
-                                                         correctedPressureResidualsBySaturationsWater,
-                                                         correctedSaturationsWaterResidualsByPressures,
-                                                         correctedSaturationsWaterResidualsBySaturationsWater,
-                                                         numberOfRows,
-                                                         numberOfCols, rng);
-            } while (stillInTheSameTimestep);
-
-            ++advancedRandomWalks;
-
-            if (outputProgressTransitioning) {
-                log()->info("Random walk {} / {}", advancedRandomWalks, randomWalks.size());
-            }
+        if (outputProgressTransitioning) {
+            log()->info("Random walk {} / {}", advancedRandomWalks, randomWalks.size());
         }
+    }
 
     logStatisticsAboutRandomWalks(randomWalks);
 

@@ -38,7 +38,7 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
     };
 
 
-    constexpr Candidate absorptionCandidate = {CellIndex::invalidCell(), false, 0, 0};
+    static constexpr Candidate absorptionCandidate = {CellIndex::invalidCell(), false, 0, 0};
 
 
     constexpr bool surelyNotStillInTheSameTimestep  = false;
@@ -218,7 +218,7 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
     return stillInTheSameTimestep;
 }
 
-void logStatisticsAboutRandomWalks(const std::vector<RandomWalkState>& randomWalks) {
+void logStatisticsAboutRandomWalks(const std::list<RandomWalkState>& randomWalks) {
     log()->info("We have {} random walks", randomWalks.size());
 
     int absorbedWalks = 0;
@@ -252,9 +252,10 @@ static inline CellIndex cellIndexToCIndex(const CellIndex& cellIndex, const Cell
 
     return derivativeIndex;
 }
+
 void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int numberOfParameters,
                        const int currentTimelevel, ConstVectorRef b, SparseMatrix c,
-                       std::vector<RandomWalkState>& randomWalks, Rng& rng) {
+                       std::list<RandomWalkState>& randomWalks, Rng& rng) {
 
 
     constexpr bool initializeJustAtBeginning = false;
@@ -363,6 +364,44 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
     }
 
 
-
 }
 
+void removeAbsorbedStates(std::list<RandomWalkState>& randomWalks, Eigen::VectorXi& numberOfRemovedAbsorbedStates, Vector& sumOfDValuesOfAbsorbedStates) {
+
+    log()->info("Clearing absorbed states");
+    auto currentState = randomWalks.begin();
+    const auto endState = randomWalks.end();
+
+    if (currentState == endState) {
+        log()->info("Nothing to clear");
+
+        return;
+    }
+
+    constexpr CellIndex cellOfAnAbsorbedState = CellIndex::invalidCell();
+
+
+    for (;;) {
+        auto nextState = currentState;
+        ++nextState;
+
+        const bool currentStateIsAbsorbed = currentState->cell == cellOfAnAbsorbedState;
+
+        if (currentStateIsAbsorbed) {
+            const int parameterIndexOfThisAbsorbedState = currentState->parameterIndex;
+            ++numberOfRemovedAbsorbedStates(parameterIndexOfThisAbsorbedState);
+            sumOfDValuesOfAbsorbedStates(parameterIndexOfThisAbsorbedState) += currentState->D;
+            randomWalks.erase(currentState);
+        }
+
+
+        if (nextState != endState) {
+            currentState = nextState;
+        } else {
+            break;
+        }
+    }
+
+    log()->info("Cleared absorbed states");
+
+}

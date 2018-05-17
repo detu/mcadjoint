@@ -1,6 +1,6 @@
 #pragma once
 #include "randomWalkState.hpp"
-#include <vector>
+#include <list>
 
 bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
                      const SparseMatrix& pressureResidualsByPressures,
@@ -10,5 +10,10 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
                      const int numberOfCols, Rng& rng);
 void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int numberOfParameters,
                        const int currentTimelevel, ConstVectorRef b, SparseMatrix c,
-                       std::vector<RandomWalkState>& candidates, Rng& rng);
-void logStatisticsAboutRandomWalks(const std::vector<RandomWalkState>& randomWalks);
+                       std::list<RandomWalkState>& candidates, Rng& rng);
+void logStatisticsAboutRandomWalks(const std::list<RandomWalkState>& randomWalks);
+
+
+
+void removeAbsorbedStates(std::list<RandomWalkState>& randomWalks,
+                          Eigen::VectorXi& numberOfRemovedAbsorbedStates, Vector& sumOfDValuesOfAbsorbedStates);
