@@ -150,7 +150,7 @@ void preconditionMatrices(
                 Real gamma = 0;
                 for (SparseMatrix* jordanBlock: jordanBlocksInConsideration[groupIndex]) {
                     gamma += jordanBlock->col(colIndex).cwiseAbs().sum();
-                    log()->debug("gamma += {}, gamma = {}", jordanBlock->col(colIndex).cwiseAbs().sum(), gamma);
+                    //log()->debug("gamma += {}, gamma = {}", jordanBlock->col(colIndex).cwiseAbs().sum(), gamma);
                 }
 
 
@@ -165,8 +165,7 @@ void preconditionMatrices(
                       std::pow(gamma, 2) + gamma * std::abs(correspondingPartOfB(colIndex)) / estimateOfCapitalB;
 
                 if (varianceGrowthFactor > maximumVarianceGrowthFactor) {
-                    log()->debug("gamma = {}, bpart = {}, vargrowth = {}", gamma,
-                                 std::abs(correspondingPartOfB(colIndex)), varianceGrowthFactor);
+                    //log()->debug("gamma = {}, bpart = {}, vargrowth = {}", gamma, std::abs(correspondingPartOfB(colIndex)), varianceGrowthFactor);
                     maximumVarianceGrowthFactor = varianceGrowthFactor;
                     maximumVarianceGroupIndex = groupIndex;
                 }

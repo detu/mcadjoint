@@ -18,4 +18,4 @@ void logStatisticsAboutRandomWalks(const std::list<RandomWalkState>& randomWalks
 
 
 void removeAbsorbedStates(std::list<RandomWalkState>& randomWalks,
-                          Eigen::VectorXi& numberOfRemovedAbsorbedStates, Vector& sumOfDValuesOfAbsorbedStates);
+                          Eigen::VectorXi& numberOfRemovedAbsorbedStates, PreciseVector& sumOfDValuesOfAbsorbedStates);

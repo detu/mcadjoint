@@ -38,15 +38,18 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
     const int numberOfParameters = permeabilities.size();
 
     SimulationState simulationState(numberOfRows, numberOfCols);
-    SensitivityAndCost sensitivityAndCost = {Vector::Zero(numberOfParameters), 0};
     std::list<RandomWalkState> randomWalks;
     std::list<RandomWalkState> antitheticRandomWalks;
+
+    Eigen::VectorXi numberOfRandomWalksPerParameter = Eigen::VectorXi::Zero(numberOfParameters);
+    Eigen::VectorXi numberOfRandomWalksPerParameterAntithetic = Eigen::VectorXi::Zero(numberOfParameters);
+    PreciseVector sensitivities = PreciseVector::Zero(numberOfParameters);
+    PreciseVector sensitivitiesAntithetic = PreciseVector::Zero(numberOfParameters);
 
     bool breakthroughHappened = false;
     int currentTimeLevel = 0;
 
-    Eigen::VectorXi numberOfRemovedAbsorbedStates = Eigen::VectorXi::Zero(numberOfParameters);
-    Vector sumOfDValuesOfAbsorbedStates = Vector::Zero(numberOfParameters);
+    Real cost = 0;
 
     do {
         log()->info("-----------------------------------");
@@ -59,15 +62,16 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
             log()->info("Antithetic sampling disabled");
         }
 
-        removeAbsorbedStates(randomWalks, numberOfRemovedAbsorbedStates, sumOfDValuesOfAbsorbedStates);
+        if (true) {
+            removeAbsorbedStates(randomWalks, numberOfRandomWalksPerParameter, sensitivities);
+        }
 
         const Real contributionToCost = computeContributionToCost(params, simulationState);
         log()->info("contribution to cost = {}", contributionToCost);
-        sensitivityAndCost.cost += contributionToCost;
+        cost += contributionToCost;
         ++currentTimeLevel;
     } while (!breakthroughHappened && simulationState.time < params.finalTime && currentTimeLevel < params.maxNumberOfTimesteps);
 
-    Eigen::VectorXi numberOfRandomWalksPerParameter = Eigen::VectorXi(numberOfParameters);
 
 
     using RandomWalkIterator = typename std::list<RandomWalkState>::iterator;
@@ -75,29 +79,50 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
     RandomWalkIterator antitheticRandomWalkIterator = antitheticRandomWalks.begin();
     const RandomWalkIterator randomWalkEnd = randomWalks.end();
 
-    const auto processRandomWalkIterator = [&sensitivityAndCost, &numberOfRandomWalksPerParameter](const RandomWalkIterator& randomWalkIterator) -> void {
-          ASSERT(!std::isnan(randomWalkIterator->D));
-          sensitivityAndCost.sensitivity(randomWalkIterator->parameterIndex) += randomWalkIterator->D;
-          ++numberOfRandomWalksPerParameter(randomWalkIterator->parameterIndex);
-    };
 
     while (randomWalkIterator != randomWalkEnd) {
-        processRandomWalkIterator(randomWalkIterator);
+        sensitivities(randomWalkIterator->parameterIndex) += randomWalkIterator->D;
+        ++numberOfRandomWalksPerParameter(randomWalkIterator->parameterIndex);
         ++randomWalkIterator;
         if (enableAntitheticSampling) {
-            processRandomWalkIterator(antitheticRandomWalkIterator);
+            sensitivitiesAntithetic(antitheticRandomWalkIterator->parameterIndex) += antitheticRandomWalkIterator->D;
+            ++numberOfRandomWalksPerParameterAntithetic(antitheticRandomWalkIterator->parameterIndex);
             ++antitheticRandomWalkIterator;
         }
     }
 
-    sensitivityAndCost.sensitivity += sumOfDValuesOfAbsorbedStates;
-    numberOfRandomWalksPerParameter += numberOfRemovedAbsorbedStates;
+
+    sensitivities.array() /= numberOfRandomWalksPerParameter.array().cwiseMax(1).cast<long double>();
+
+    if (enableAntitheticSampling) {
+        sensitivitiesAntithetic.array() /= numberOfRandomWalksPerParameterAntithetic.array().cwiseMax(1).cast<long double>();
+
+    }
 
 
-    sensitivityAndCost.sensitivity.array() /= numberOfRandomWalksPerParameter.array().cwiseMax(1).cast<Real>();
+    Real antitheticPart = 0;
+    if (enableAntitheticSampling) {
+        antitheticPart = 0;
+    }
 
-    sensitivityAndCost.sensitivity.array() *= -1; // see equation (3)
+    SensitivityAndCost sensitivityAndCost;
+    sensitivityAndCost.sensitivity.resizeLike(sensitivities);
 
+    sensitivityAndCost.cost = cost;
+
+    log()->info("sensitivities norm = {}", sensitivities.norm());
+
+
+    if (enableAntitheticSampling) {
+        sensitivityAndCost.sensitivity =
+              ((1.0 - antitheticPart) * sensitivities + antitheticPart * sensitivitiesAntithetic).cast<Real>();
+
+        log()->info("antithetic sensitivities norm = {}", sensitivitiesAntithetic.norm());
+    } else {
+        sensitivityAndCost.sensitivity = sensitivities.cast<Real>();
+    }
+
+    sensitivityAndCost.sensitivity *= -1;
 
     if (enableRegularization) {
         log()->info("Regularization enabled");

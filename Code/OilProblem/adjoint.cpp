@@ -13,6 +13,7 @@
 #include "logging.hpp"
 #include "pressure.hpp"
 #include "utils.hpp"
+#include "pickAnIndex.hpp"
 #include <random>
 
 
@@ -75,7 +76,7 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
     const SparseMatrix& saturationWaterResidualsDerived = currentState.isAPressure? saturationsWaterResidualsByPressure: saturationsWaterResidualsBySaturationsWater;
 
 
-    Real sumOfUnnormalizedProbabilities = 0;
+    long double sumOfUnnormalizedProbabilities = 0;
 
 
     for (const CellIndex& target: currentState.cell.neighborsAndMyself(numberOfRows, numberOfCols)) {
@@ -96,7 +97,7 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
             //log()->debug("from ({}, {}) to ({}, {})", currentState.cell, currentState.isAPressure, target, targetIsPressure);
             //log()->debug("corresponding entry of a matrix = {}", correspondingEntryOfAMatrix);
             ASSERT(std::isfinite(correspondingEntryOfAMatrix));
-            const Real correspondingEntryOfBVector = b(cellIndexToBIndex(target, targetIsPressure, numberOfRows, numberOfCols));
+            const Real  correspondingEntryOfBVector = b(cellIndexToBIndex(target, targetIsPressure, numberOfRows, numberOfCols));
             ASSERT(std::isfinite(correspondingEntryOfBVector));
 
             const Real candidateUnnormalizedProbability = std::abs(correspondingEntryOfAMatrix);
@@ -150,10 +151,9 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
         candidateUnnormalizedProbabilities.push_back(1);
     }
 
-    fast_discrete_distribution<int> choose(candidateUnnormalizedProbabilities);
 
 
-    const int nextIndex = choose(standardUniformNumber);
+    const int nextIndex = pickAnIndex(candidateUnnormalizedProbabilities, standardUniformNumber);
 
     const Candidate chosenCandidate = candidates[nextIndex];
     ASSERT(candidates.size() == candidateUnnormalizedProbabilities.size());
@@ -182,12 +182,13 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
 
 
 
+
     // update W (pg. 6199, top)
     ASSERT(std::isfinite(currentState.W));
     ASSERT(std::isfinite(sumOfUnnormalizedProbabilities));
     ASSERT(std::isfinite(chosenCandidate.correspondingEntryOfAMatrix));
 
-    const Real probabilityOfChoosingThisCandidate = candidateUnnormalizedProbabilities[nextIndex] / sumOfUnnormalizedProbabilities;
+    const long double  probabilityOfChoosingThisCandidate = candidateUnnormalizedProbabilities[nextIndex] / sumOfUnnormalizedProbabilities;
     ASSERT(sumOfUnnormalizedProbabilities > 0);
     ASSERT(probabilityOfChoosingThisCandidate > 0);
     currentState.W *= chosenCandidate.correspondingEntryOfAMatrix / probabilityOfChoosingThisCandidate;
@@ -263,6 +264,7 @@ static inline void addCopiesOfState(const RandomWalkState& toAdd, const Real pro
 void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int numberOfParameters,
                        const int currentTimelevel, ConstVectorRef b, SparseMatrix c,
                        std::list<RandomWalkState>& randomWalks, std::list<RandomWalkState>& antitheticRandomWalks, Rng& rng) {
+    ASSERT(!enableAntitheticSampling ||antitheticRandomWalks.size() == randomWalks.size());
 
 
 
@@ -326,7 +328,7 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
                 const Real cValue = cellIndexToCIndex(neighborOrMyself, cell, wantAPressure, numberOfRows, numberOfCols)(c);
 
 
-                const Real prob = std::abs(cValue) / cNorm;
+                const long double prob = std::abs(cValue) / cNorm;
                 if (prob < minimumProbabilityToBeAddedAtLeastOnce) {
                     continue;
                 }
@@ -335,7 +337,7 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
                 initialState.cell = neighborOrMyself;
                 initialState.isAPressure = wantAPressure;
                 initialState.currentTimelevel = currentTimelevel;
-                initialState.W =  cValue / prob;
+                initialState.W =  ((long double) cValue) / prob;
 
                 initialState.D = initialState.W * b(cellIndexToBIndex(neighborOrMyself, wantAPressure, numberOfRows, numberOfCols));
                 initialState.parameterIndex = parameterIndex;
@@ -343,14 +345,18 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
                 addCopiesOfState(initialState, prob, randomWalks);
 
                 if (enableAntitheticSampling) {
-                    addCopiesOfState(initialState, 1.0 - prob, antitheticRandomWalks);
+                    addCopiesOfState(initialState, prob, antitheticRandomWalks);
                 }
 
             }
         }
 
 
+
     }
+
+    ASSERT(!enableAntitheticSampling ||antitheticRandomWalks.size() == randomWalks.size());
+
 
     if (initializeJustAtBeginning) {
         log()->info("Finished initializing {} random walks", randomWalks.size());
@@ -361,7 +367,7 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
 
 }
 
-void removeAbsorbedStates(std::list<RandomWalkState>& randomWalks, Eigen::VectorXi& numberOfRemovedAbsorbedStates, Vector& sumOfDValuesOfAbsorbedStates) {
+void removeAbsorbedStates(std::list<RandomWalkState>& randomWalks, Eigen::VectorXi& numberOfRemovedAbsorbedStates, PreciseVector& sumOfDValuesOfAbsorbedStates) {
 
     if (enableAntitheticSampling) {
         log()->info("Not clearing absorbed states for antithetic sampling because the the numbering would be off");
@@ -381,9 +387,7 @@ void removeAbsorbedStates(std::list<RandomWalkState>& randomWalks, Eigen::Vector
     constexpr CellIndex cellOfAnAbsorbedState = CellIndex::invalidCell();
 
 
-    for (;;) {
-        auto nextState = currentState;
-        ++nextState;
+    while (currentState != endState) {
 
         const bool currentStateIsAbsorbed = currentState->cell == cellOfAnAbsorbedState;
 
@@ -391,15 +395,11 @@ void removeAbsorbedStates(std::list<RandomWalkState>& randomWalks, Eigen::Vector
             const int parameterIndexOfThisAbsorbedState = currentState->parameterIndex;
             ++numberOfRemovedAbsorbedStates(parameterIndexOfThisAbsorbedState);
             sumOfDValuesOfAbsorbedStates(parameterIndexOfThisAbsorbedState) += currentState->D;
-            randomWalks.erase(currentState);
-        }
-
-
-        if (nextState != endState) {
-            currentState = nextState;
+            currentState = randomWalks.erase(currentState);
         } else {
-            break;
+            ++currentState;
         }
+
     }
 
     log()->info("Cleared absorbed states");

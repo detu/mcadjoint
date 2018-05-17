@@ -215,6 +215,7 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
 
     int advancedRandomWalks = 0;
     constexpr bool outputProgressTransitioning = false;
+    Real standardUniformNumber;
 
     std::uniform_real_distribution<Real> standardUniformDistribution;
     auto randomWalkIterator = randomWalks.begin();
@@ -225,7 +226,7 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
         bool stillInTheSameTimestep = true;
         bool stillInTheSameTimestepAntithetic = enableAntitheticSampling;
         do {
-            const Real standardUniformNumber = standardUniformDistribution(rng);
+            standardUniformNumber = standardUniformDistribution(rng);
 
             if (stillInTheSameTimestep) {
 

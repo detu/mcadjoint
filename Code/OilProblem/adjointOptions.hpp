@@ -4,11 +4,11 @@
 
 #pragma once
 static constexpr bool alwaysAbsorbAtDrill = false;
-static constexpr bool enableAbsorption = true;
-static constexpr bool initializeJustAtBeginning = false;
+static constexpr bool enableAbsorption = false;
+static constexpr bool initializeJustAtBeginning = true;
 
 static constexpr bool preferSaturations = false;
 static constexpr Real preferenceForSaturations = 2;
 
-static constexpr int numberOfRandomWalksToAdd = 100;
+static constexpr int numberOfRandomWalksToAdd = 1000;
 static constexpr Real minimumProbabilityToBeAddedAtLeastOnce = 0.5 / Real(numberOfRandomWalksToAdd);

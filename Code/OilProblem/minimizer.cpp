@@ -108,7 +108,7 @@ PermeabilitiesAndCost
 matchWithPermeabilities(const FixedParameters& params, const Real tolerance, const int maxIterations) {
 
     using namespace cppoptlib;
-    PermeabilitiesProblem permeabilitiesProblem(params, 42, maxIterations, tolerance);
+    PermeabilitiesProblem permeabilitiesProblem(params, 96, maxIterations, tolerance);
 
 
 
