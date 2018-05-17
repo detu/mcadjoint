@@ -102,7 +102,7 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
 
     Real antitheticPart = 0;
     if (enableAntitheticSampling) {
-        antitheticPart = 0;
+        antitheticPart = 0.5;
     }
 
     SensitivityAndCost sensitivityAndCost;

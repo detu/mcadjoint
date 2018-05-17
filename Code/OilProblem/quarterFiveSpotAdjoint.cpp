@@ -107,7 +107,7 @@ int main(const int argc, const char** argv) {
 
 
 
-    (void) matchWithPermeabilities(params, 1e-6, 100);
+    (void) matchWithPermeabilities(params, 1e-6, 10000);
 
     spdlog::drop_all();
 
