@@ -35,6 +35,7 @@ void parseCommandLine(const int argc, const char** argv) {
 int main(const int argc, const char** argv) {
     parseCommandLine(argc, argv);
     //StefFenv_CrashOnFPEs(FE_ALL_EXCEPT & ~FE_INEXACT & ~FE_UNDERFLOW);
+    SMIO_DisableCompression();
 
 
 
@@ -76,7 +77,7 @@ int main(const int argc, const char** argv) {
     params.initialPermeabilities.resizeLike(params.initialSaturationsWater);
 
     constexpr bool useLognormal = false;
-    constexpr bool constantOne = true;
+    constexpr bool constant = true;
     constexpr bool channel = false;
     if (useLognormal) {
         std::lognormal_distribution<Real> lognormalDistribution(milliDarcy, 1);
@@ -87,8 +88,8 @@ int main(const int argc, const char** argv) {
                 params.initialPermeabilities(i, j) = lognormalDistribution(rng);
             }
         }
-    } else if (constantOne) {
-        params.initialPermeabilities.setOnes();
+    } else if (constant) {
+        params.initialPermeabilities.setConstant(2);
     } else if (channel) {
         params.initialPermeabilities.setConstant(1e-5);
         CellIndex pos = findDrillCell(n, n);

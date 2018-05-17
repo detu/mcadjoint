@@ -67,7 +67,6 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
         }
 
         const Real contributionToCost = computeContributionToCost(params, simulationState);
-        log()->info("contribution to cost = {}", contributionToCost);
         cost += contributionToCost;
         ++currentTimeLevel;
     } while (!breakthroughHappened && simulationState.time < params.finalTime && currentTimeLevel < params.maxNumberOfTimesteps);
