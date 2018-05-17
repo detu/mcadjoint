@@ -116,7 +116,8 @@ int main(int argc, const char** argv) {
     log()->debug("broke through? {}", brokeThrough);
 
     Rng rng(88);
-    const auto sensitivityAndCost = computeSensitivityAndCost(params, params.initialPermeabilities, rng);
+    const auto sensitivityAndCost = computeSensitivityAndCost(params, params.initialPermeabilities, params.initialPermeabilities.array().log().matrix(),
+                                                              rng);
 
     dumpThis("adjointMC", sensitivityAndCost.sensitivity);
 

@@ -14,8 +14,12 @@
 #include "utils.hpp"
 #include "specialCells.hpp"
 #include "preconditioning.hpp"
+#include "forwardOptions.hpp"
+#include "antitheticOptions.hpp"
 
 #include <iostream>
+#include <random>
+
 bool stepForwardProblem(const FixedParameters& params, const Eigen::Ref<const Matrix>& permeabilities,
                         SimulationState& currentState) {
     const Matrix totalMobilities = computeTotalMobilities(params.dynamicViscosityOil, params.dynamicViscosityWater, permeabilities, currentState.saturationsWater);
@@ -52,7 +56,7 @@ static Vector computeBVector(const Real computedPressureAtDrillCell, const Real 
 
 bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Ref<const Matrix>& permeabilities,
                                   const int currentTimelevel, SimulationState& simulationState,
-                                  std::list<RandomWalkState>& randomWalks, Rng& rng) {
+                                  std::list<RandomWalkState>& randomWalks, std::list<RandomWalkState>& antitheticRandomWalks, Rng& rng) {
     const int numberOfRows = permeabilities.rows();
     const int numberOfCols = permeabilities.cols();
     const int numberOfParameters = permeabilities.size();
@@ -80,6 +84,8 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
 
 
     PressureSolver pressureSolver(pressureSystem);
+
+
 
     simulationState.pressures = Vector(pressureSolver.solve(pressureRhs));
 
@@ -157,7 +163,7 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     ASSERT(allFinite(b));
     preconditionMatrices(correctedPressureResidualsByPressures, correctedSaturationsWaterResidualsByPressures,
                          correctedPressureResidualsBySaturationsWater, correctedSaturationsWaterResidualsBySaturationsWater, b,
-                         pressureSolver, WhichPreconditioner::Q_TRANSPOSE_FROM_QR_AND_DIAGONAL);
+                         pressureSolver, preconditionerToUse);
 
 
     dumpThis("correctedPressureResidualsByPressures", correctedPressureResidualsByPressures);
@@ -184,7 +190,7 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     const bool shouldAddRandomWalks = startAddingRandomWalksAtBeginning || (simulationState.saturationsWater.diagonal(-1).array() > 0).any();
 
     if (shouldAddRandomWalks) {
-        addNewRandomWalks(numberOfRows, numberOfCols, numberOfParameters, currentTimelevel, b, c, randomWalks,
+        addNewRandomWalks(numberOfRows, numberOfCols, numberOfParameters, currentTimelevel, b, c, randomWalks, antitheticRandomWalks,
                           rng);
     }
 
@@ -210,17 +216,42 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     int advancedRandomWalks = 0;
     constexpr bool outputProgressTransitioning = false;
 
+    std::uniform_real_distribution<Real> standardUniformDistribution;
+    auto randomWalkIterator = randomWalks.begin();
+    const auto endRandomWalk = randomWalks.end();
+    auto antitheticRandomWalkIterator = antitheticRandomWalks.begin();
 
-    for (RandomWalkState& randomWalk: randomWalks) {
-        bool stillInTheSameTimestep = false;
+    while (randomWalkIterator != endRandomWalk) {
+        bool stillInTheSameTimestep = true;
+        bool stillInTheSameTimestepAntithetic = enableAntitheticSampling;
         do {
-            stillInTheSameTimestep = transitionState(randomWalk, b, correctedPressureResidualsByPressures,
-                                                     correctedPressureResidualsBySaturationsWater,
-                                                     correctedSaturationsWaterResidualsByPressures,
-                                                     correctedSaturationsWaterResidualsBySaturationsWater,
-                                                     numberOfRows,
-                                                     numberOfCols, rng);
-        } while (stillInTheSameTimestep);
+            const Real standardUniformNumber = standardUniformDistribution(rng);
+
+            if (stillInTheSameTimestep) {
+
+                stillInTheSameTimestep = transitionState(*randomWalkIterator, b, correctedPressureResidualsByPressures,
+                                                         correctedPressureResidualsBySaturationsWater,
+                                                         correctedSaturationsWaterResidualsByPressures,
+                                                         correctedSaturationsWaterResidualsBySaturationsWater,
+                                                         numberOfRows,
+                                                         numberOfCols, standardUniformNumber);
+            }
+
+            if (stillInTheSameTimestepAntithetic) {
+                stillInTheSameTimestepAntithetic = transitionState(*antitheticRandomWalkIterator, b, correctedPressureResidualsByPressures,
+                                                           correctedPressureResidualsBySaturationsWater,
+                                                           correctedSaturationsWaterResidualsByPressures,
+                                                           correctedSaturationsWaterResidualsBySaturationsWater,
+                                                           numberOfRows,
+                                                           numberOfCols, 1.0 - standardUniformNumber);
+            }
+
+        } while (stillInTheSameTimestep || stillInTheSameTimestepAntithetic);
+
+        ++randomWalkIterator;
+        if (enableAntitheticSampling) {
+            ++antitheticRandomWalkIterator;
+        }
 
         ++advancedRandomWalks;
 
@@ -230,6 +261,10 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     }
 
     logStatisticsAboutRandomWalks(randomWalks);
+
+    if (enableAntitheticSampling) {
+        logStatisticsAboutRandomWalks(antitheticRandomWalks);
+    }
 
 
 

@@ -17,6 +17,7 @@ Real computeTransmissibility(ConstMatrixRef totalMobilities, const CellIndex& fr
     const Real lambdaFrom = fromCell(totalMobilities);
     const Real lambdaTo = toCell(totalMobilities);
 
+
     return harmonicMean(lambdaFrom, lambdaTo);
 }
 

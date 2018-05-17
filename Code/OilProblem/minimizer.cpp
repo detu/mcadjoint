@@ -43,7 +43,10 @@ struct PermeabilitiesProblem: public Problem<Real> {
 
             const Vector permeabilitiesAsVector = logPermeabilitiesAsRowVector.array().exp().matrix();
             const Eigen::Map<const Matrix> permeabilities(permeabilitiesAsVector.data(), numberOfRows, numberOfCols);
-            const auto computedSensitivityAndCost = computeSensitivityAndCost(params, permeabilities, rng);
+            const Eigen::Map<const Matrix> logPermeabilities(logPermeabilitiesAsRowVector.data(), numberOfRows, numberOfCols);
+
+            const auto computedSensitivityAndCost = computeSensitivityAndCost(params, permeabilities, logPermeabilities,
+                                                                              rng);
 
             sensitivitiesAndCosts.insert(std::make_pair(logPermeabilitiesAsRowVector, computedSensitivityAndCost));
 

@@ -6,6 +6,7 @@
 #include "pressure.hpp"
 #include "logging.hpp"
 #include "utils.hpp"
+#include "preconditioningOptions.hpp"
 
 
 void preconditionMatrices(
@@ -125,8 +126,7 @@ void preconditionMatrices(
         Real maximumVarianceGrowthFactor = 0;
         Real maximumGamma = 0;
         int maximumVarianceGroupIndex = -1;
-        constexpr bool doTryToCorrectForGrowth = false;
-        constexpr bool onlyCorrectPressurePart = true;
+
 
 
         if (doTryToCorrectForGrowth) {
