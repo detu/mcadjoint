@@ -55,7 +55,7 @@ int main(const int argc, const char** argv) {
     constexpr Real fieldWidth = 1;
 
     params.meshWidth = fieldWidth / Real(n);
-    params.finalTime = 1;
+    params.finalTime = 0.1;
     params.inflowPerUnitDepthWater = [&] (const Real time) {
         return 1;
     };

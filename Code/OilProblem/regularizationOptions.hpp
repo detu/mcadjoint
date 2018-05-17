@@ -3,4 +3,4 @@
 //
 
 #pragma once
-static constexpr bool enableRegularization = true;
+static constexpr bool enableRegularization = false;
