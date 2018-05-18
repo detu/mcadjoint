@@ -253,7 +253,7 @@ static inline CellIndex cellIndexToCIndex(const CellIndex& cellIndex, const Cell
     return derivativeIndex;
 }
 
-static inline void addCopiesOfState(const RandomWalkState& toAdd, const Real probability, std::list<RandomWalkState>& randomWalksToAddTo) {
+static inline void addCopiesOfState(const RandomWalkState& toAdd, const Real probability, const int numberOfRandomWalksToAdd, std::list<RandomWalkState>& randomWalksToAddTo) {
     const int numberOfCopiesToAdd = std::round(probability * numberOfRandomWalksToAdd);
 
     for (int copyIndex = 0; copyIndex < numberOfCopiesToAdd; ++copyIndex) {
@@ -262,7 +262,7 @@ static inline void addCopiesOfState(const RandomWalkState& toAdd, const Real pro
 }
 
 void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int numberOfParameters,
-                       const int currentTimelevel, ConstVectorRef b, SparseMatrix c,
+                       const int currentTimelevel, const int numberOfRandomWalksToAdd, ConstVectorRef b, SparseMatrix c,
                        std::list<RandomWalkState>& randomWalks, std::list<RandomWalkState>& antitheticRandomWalks, Rng& rng) {
     ASSERT(!enableAntitheticSampling ||antitheticRandomWalks.size() == randomWalks.size());
 
@@ -329,9 +329,7 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
 
 
                 const long double prob = std::abs(cValue) / cNorm;
-                if (prob < minimumProbabilityToBeAddedAtLeastOnce) {
-                    continue;
-                }
+
 
                 RandomWalkState initialState;
                 initialState.cell = neighborOrMyself;
@@ -342,10 +340,10 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
                 initialState.D = initialState.W * b(cellIndexToBIndex(neighborOrMyself, wantAPressure, numberOfRows, numberOfCols));
                 initialState.parameterIndex = parameterIndex;
 
-                addCopiesOfState(initialState, prob, randomWalks);
+                addCopiesOfState(initialState, prob, numberOfRandomWalksToAdd, randomWalks);
 
                 if (enableAntitheticSampling) {
-                    addCopiesOfState(initialState, prob, antitheticRandomWalks);
+                    addCopiesOfState(initialState, prob, numberOfRandomWalksToAdd, antitheticRandomWalks);
                 }
 
             }

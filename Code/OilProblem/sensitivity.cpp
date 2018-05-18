@@ -14,6 +14,8 @@
 #include "logging.hpp"
 #include "regularization.hpp"
 #include "regularizationOptions.hpp"
+#include "dumpToMatFile.hpp"
+#include "utils.hpp"
 
 #include <cmath>
 #include <list>
@@ -31,6 +33,59 @@ Real computeContributionToCost(const FixedParameters& parameters, const Simulati
     return std::pow(measuredPressureAtDrill - computedPressureAtDrill, 2);
 }
 
+SensitivityAndCost computeSensitivityAndCostTraditional(const FixedParameters& params, ConstMatrixRef permeabilities,
+                          ConstMatrixRef logPermeabilities) {
+    const int numberOfRows = params.initialPermeabilities.rows();
+    const int numberOfCols = params.initialPermeabilities.cols();
+    const int numberOfParameters = numberOfRows * numberOfCols;
+
+    const int numberOfTimesteps = params.maxNumberOfTimesteps;
+
+    SimulationState simulationState(numberOfRows, numberOfCols);
+    const int stateSize = 2 * numberOfCols * numberOfRows;
+    Matrix adjointMatrix = Matrix::Zero(stateSize * numberOfTimesteps, stateSize * numberOfTimesteps);
+    Vector adjointRhs = Vector::Zero(stateSize * numberOfTimesteps);
+    Matrix completeC = Matrix::Zero(stateSize * numberOfTimesteps, numberOfParameters);
+
+    bool brokeThrough = false;
+    Real cost = 0;
+    for (int currentTimelevel = 0; currentTimelevel < numberOfTimesteps && !brokeThrough; ++currentTimelevel) {
+        brokeThrough = stepForwardAndAdjointProblemTraditional(params, params.initialPermeabilities, currentTimelevel, simulationState, adjointMatrix, adjointRhs, completeC);
+
+        cost += computeContributionToCost(params, simulationState);
+        if (!brokeThrough) {
+
+            dumpThis("adjointMatrixTrad", adjointMatrix);
+            dumpThis("adjointRhsTrad", adjointRhs);
+            dumpThis("completeCTrad", completeC);
+            writeToMatFile();
+            ASSERT(allFinite(adjointMatrix));
+            ASSERT(allFinite(adjointRhs));
+        }
+    }
+    log()->debug("broke through? {}", brokeThrough);
+
+    const Vector adjoint = adjointMatrix.lu().solve(adjointRhs);
+    dumpThis("adjointTrad", adjoint);
+
+    const Vector sensitivities = -completeC.transpose() * adjoint;
+
+
+    SensitivityAndCost sensitivityAndCost;
+    sensitivityAndCost.sensitivity.resizeLike(sensitivities);
+
+    sensitivityAndCost.cost = cost;
+    sensitivityAndCost.sensitivity = sensitivities;
+    applyRegularizationIfEnabled(params, logPermeabilities, sensitivityAndCost);
+
+    dumpThis("sensitivityTrad", sensitivityAndCost.sensitivity);
+    writeToMatFile();
+
+    return sensitivityAndCost;
+
+
+}
+
 SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, ConstMatrixRef permeabilities,
                                              ConstMatrixRef logPermeabilities, Rng& rng) {
     const int numberOfCols = permeabilities.cols();
@@ -40,6 +95,7 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
     SimulationState simulationState(numberOfRows, numberOfCols);
     std::list<RandomWalkState> randomWalks;
     std::list<RandomWalkState> antitheticRandomWalks;
+
 
     Eigen::VectorXi numberOfRandomWalksPerParameter = Eigen::VectorXi::Zero(numberOfParameters);
     Eigen::VectorXi numberOfRandomWalksPerParameterAntithetic = Eigen::VectorXi::Zero(numberOfParameters);
@@ -54,7 +110,7 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
     do {
         log()->info("-----------------------------------");
         log()->info("time = {}", simulationState.time);
-        breakthroughHappened = stepForwardAndAdjointProblem(params, permeabilities, currentTimeLevel, simulationState,
+        breakthroughHappened = stepForwardAndAdjointProblem(params, permeabilities, currentTimeLevel, params.numberOfRandomWalksToAdd, simulationState,
                                                             randomWalks, antitheticRandomWalks, rng);
         if (enableAntitheticSampling) {
             log()->info("Antithetic sampling enabled");
@@ -123,21 +179,7 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
 
     sensitivityAndCost.sensitivity *= -1;
 
-    if (enableRegularization) {
-        log()->info("Regularization enabled");
-
-        const Vector regularizationPenalty = deriveRegularizationPenaltyByLogPermeabilities(logPermeabilities, params.meshWidth);
-        log()->info("Regularization penalty norm = {}", regularizationPenalty.norm());
-        sensitivityAndCost.sensitivity += regularizationPenalty;
-
-        const Real regularizationPenaltyCost = computeRegularizationPenalty(logPermeabilities, params.meshWidth);
-        log()->info("Regularization penalty cost = {}", regularizationPenaltyCost);
-        sensitivityAndCost.cost += regularizationPenaltyCost;
-
-
-    } else {
-        log()->info("Regularization disabled");
-    }
+    applyRegularizationIfEnabled(params, logPermeabilities, sensitivityAndCost);
 
     log()->debug("Sensitivities =\n{}", sensitivityAndCost.sensitivity);
 

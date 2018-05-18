@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <cstdlib>
 #include <stefCommonHeaders/omp_mutex.hpp>
+#include <stefCommonHeaders/assert.h>
 #include "logging.hpp"
 
 using MatricesToDump = std::unordered_map<std::string, Matrix>;
@@ -28,6 +29,9 @@ static void dumpMatricesWithoutLock() {
         }
 
         matFile.close();
+
+        MATRICES_TO_DUMP.clear();
+        SPARSE_MATRICES_TO_DUMP.clear();
     }
 }
 
@@ -45,6 +49,7 @@ void dumpInThisMatFile(const std::string& matFileName) {
 
 
 void dumpThis(const char* varName, ConstMatrixRef matrix) {
+    ASSERT(matrix.size() > 0 && matrix.data() != nullptr);
     Matrix& matrixToDump = MATRICES_TO_DUMP[std::string(varName)];
     matrixToDump.resizeLike(matrix);
     matrixToDump = matrix;
@@ -57,11 +62,15 @@ void dumpThis(const char* varName, const Real scalar) {
 }
 
 void dumpThis(const char* varName, const SparseMatrix& matrix) {
+
     SparseMatrix& matrixToDump = SPARSE_MATRICES_TO_DUMP[std::string(varName)];
     matrixToDump.resize(matrix.rows(), matrix.cols());
     matrixToDump.resizeNonZeros(matrix.nonZeros());
 
     matrixToDump = matrix;
+    matrixToDump.makeCompressed();
+
+
 }
 
 void dumpThis(const char* varName, const std::vector<Real>& vector) {

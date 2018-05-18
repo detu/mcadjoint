@@ -9,6 +9,7 @@
 #include "specialCells.hpp"
 #include "darcyVelocity.hpp"
 #include "fixedParameters.hpp"
+#include "saturationOptions.hpp"
 
 Matrix computeFluxFunctionFactors(ConstMatrixRef saturationsWater, const Real porosity, const Real dynamicViscosityWater, const Real dynamicViscosityOil) {
     const auto map = [&] (const Real saturationWater) {
@@ -82,11 +83,15 @@ static inline Real computeCflTimestep(const Real maximumAdvectionVelocity, const
 }
 
 Real getFirstTimestep() {
-    return 1e-5;
+    return 1e-3;
 }
 
 
 Real computeTimestep(ConstMatrixRef fluxFunctionFactors, ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY, const Real meshWidth, const Real finalTime, const Real time) {
+    if (useFixedTimestep) {
+        log()->info("Using fixed timestep of {}", getFirstTimestep());
+        return getFirstTimestep();
+    }
 
     const Matrix advectionVelocitiesX = computeXDerivative(fluxFunctionFactors, meshWidth).cwiseProduct(darcyVelocitiesX);
     const Matrix advectionVelocitiesY = computeYDerivative(fluxFunctionFactors, meshWidth).cwiseProduct(darcyVelocitiesY);
@@ -104,6 +109,8 @@ Real computeTimestep(ConstMatrixRef fluxFunctionFactors, ConstMatrixRef darcyVel
 
     log()->debug("max advection speed x = {}", maximumAdvectionSpeedX);
     log()->debug("max advection speed y = {}", maximumAdvectionSpeedY);
+
+    log()->info("Using variable timestep of {}", timestep);
 
     return timestep;
 }

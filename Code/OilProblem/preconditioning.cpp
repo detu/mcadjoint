@@ -44,13 +44,19 @@ void preconditionMatrices(
         case WhichPreconditioner::PRESSURE_BY_PRESSURE: {
             log()->info("Preconditioner: full inverse of  pressure by pressure");
             SparseMatrix saturationsWaterResidualsByPressuresTransposed = saturationsByPressures.transpose();
-            saturationsWaterResidualsByPressuresTransposed.makeCompressed();
+            log()->debug("nonzeros in saturationsByPressures = {}", saturationsByPressures.nonZeros());
             pressuresByPressures.setIdentity();
 
 
-            saturationsByPressures = pressureSolver.solve(saturationsWaterResidualsByPressuresTransposed).transpose();
-            pressurePartOfB = pressureSolver.solve(pressurePartOfB);
+            const SparseMatrix  saturationsByPressuresPreconditioned = pressureSolver.solve(saturationsWaterResidualsByPressuresTransposed).transpose();
+            ASSERT(pressureSolver.info() == Eigen::Success);
 
+            saturationsByPressures = saturationsByPressuresPreconditioned;
+
+
+            saturationsByPressures.makeCompressed();
+            ASSERT(saturationsByPressures.valuePtr() != nullptr);
+            pressurePartOfB = pressureSolver.solve(pressurePartOfB);
 
             break;
         }
@@ -92,7 +98,8 @@ void preconditionMatrices(
 
 
             saturationsByPressures = saturationsWaterResidualsByPressuresTransposed.transpose();
-
+            saturationsByPressures.makeCompressed();
+            ASSERT(saturationsByPressures.valuePtr());
             break;
         }
 
@@ -207,6 +214,6 @@ void preconditionMatrices(
         log()->info("Maximum gamma = {}", maximumGamma);
     }
 
-
-
+    saturationsByPressures.makeCompressed();
+    pressuresByPressures.makeCompressed();
 }

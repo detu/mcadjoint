@@ -40,6 +40,7 @@ struct Point {
 
 
 using SparseMatrix = Eigen::SparseMatrix<Real, Eigen::ColMajor>;
+using SparseMatrixRowMajor = Eigen::SparseMatrix<Real, Eigen::RowMajor>;
 
 using PressureSolver = Eigen::SparseLU<SparseMatrix>;
 

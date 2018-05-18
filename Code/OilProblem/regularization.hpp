@@ -4,7 +4,10 @@
 
 #pragma once
 #include "typedefs.hpp"
+#include "fixedParameters.hpp"
+#include "sensitivity.hpp"
 
-Real computeRegularizationPenalty(ConstMatrixRef logPermeabilities, const Real meshWidth);
-
-Vector deriveRegularizationPenaltyByLogPermeabilities(ConstMatrixRef logPermeabilities, const Real meshWidth);
+Real computeRegularizationPenalty(ConstMatrixRef logPermeabilities, const Real referenceLogPermeability, const Real regularizationParameter);
+Real computeReferenceLogPermeability(const FixedParameters& params);
+Vector deriveRegularizationPenaltyByLogPermeabilities(ConstMatrixRef logPermeabilities, const Real referenceLogPermeability, const Real regularizationParameter);
+void applyRegularizationIfEnabled(const FixedParameters& params, ConstMatrixRef logPermeabilities, SensitivityAndCost& sensitivityAndCost);

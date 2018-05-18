@@ -10,7 +10,7 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
                      const int numberOfCols, const Real standardUniformNumber);
 
 void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int numberOfParameters,
-                       const int currentTimelevel, ConstVectorRef b, SparseMatrix c,
+                       const int currentTimelevel, const int numberOfRandomWalksToAdd, ConstVectorRef b, SparseMatrix c,
                        std::list<RandomWalkState>& randomWalks, std::list<RandomWalkState>& antitheticRandomWalks, Rng& rng);
 
 void logStatisticsAboutRandomWalks(const std::list<RandomWalkState>& randomWalks);

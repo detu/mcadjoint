@@ -9,3 +9,6 @@ struct SensitivityAndCost {
 
 SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, ConstMatrixRef permeabilities,
                                              ConstMatrixRef logPermeabilities, Rng& rng);
+
+SensitivityAndCost computeSensitivityAndCostTraditional(const FixedParameters& params, ConstMatrixRef permeabilities,
+                                                        ConstMatrixRef logPermeabilities);

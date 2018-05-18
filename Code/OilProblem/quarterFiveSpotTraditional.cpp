@@ -89,8 +89,7 @@ int main(int argc, const char** argv) {
 
 
     const int stateSize = 2*n*n;
-    Matrix adjointMatrix(stateSize * numberOfTimesteps, stateSize * numberOfTimesteps);
-    Vector adjointRhs(stateSize * numberOfTimesteps);
+
 
     adjointRhs.setZero();
     adjointMatrix.setZero();
@@ -99,21 +98,7 @@ int main(int argc, const char** argv) {
     SimulationState simulationState(n, n);
     simulationState.saturationsWater = params.initialSaturationsWater;
     SimulationState mcSimulationState(n, n);
-    bool brokeThrough = false;
-    for (int currentTimelevel = 0; currentTimelevel < numberOfTimesteps && !brokeThrough; ++currentTimelevel) {
-        brokeThrough =  stepForwardAndAdjointProblemTraditional(params, params.initialPermeabilities, currentTimelevel, simulationState, adjointMatrix, adjointRhs);
-        //(void) stepForwardAndAdjointProblem(params, params.initialPermeabilities, currentTimelevel, mcSimulationState);
 
-        if (!brokeThrough) {
-
-            dumpThis("adjointMatrixTrad", adjointMatrix);
-            dumpThis("adjointRhsTrad", adjointRhs);
-            writeToMatFile();
-            ASSERT(allFinite(adjointMatrix));
-            ASSERT(allFinite(adjointRhs));
-        }
-    }
-    log()->debug("broke through? {}", brokeThrough);
 
     Rng rng(88);
     const auto sensitivityAndCost = computeSensitivityAndCost(params, params.initialPermeabilities, params.initialPermeabilities.array().log().matrix(),

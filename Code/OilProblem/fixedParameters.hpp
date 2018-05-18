@@ -25,5 +25,7 @@ struct FixedParameters {
     Matrix initialSaturationsWater;
     Matrix initialPermeabilities;
 
+    int numberOfRandomWalksToAdd;
+
 
 };

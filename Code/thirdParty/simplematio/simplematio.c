@@ -676,7 +676,7 @@ SMIO_WriteSparseRealMatrix(
     const SMIO_SparseRealMatrix_t* matrix
 ) {
 
-    assert(matFile && matrix && matrix->data);
+    assert(matFile && matrix);
     SMIO_FailIfSparseMatrixTooBig(variableName, matrix->numberOfNonzeroEntries, sizeof(SMIO_RealScalar_t));
 
     size_t dimensions[2] = {matrix->rows, matrix->cols};

@@ -9,11 +9,15 @@
 #include <stefCommonHeaders/stefFenv.h>
 #include "cellindex.hpp"
 #include "specialCells.hpp"
+#include "sensitivity.hpp"
 #include <random>
 
 int n = -1;
 
 spdlog::level::level_enum level = spdlog::level::level_enum::off;
+int maxNumberOfTimesteps = -1;
+bool compareSensitivities;
+int numberOfRandomWalksToAdd = -1;
 
 void parseCommandLine(const int argc, const char** argv) {
     argh::parser cmdl;
@@ -21,9 +25,13 @@ void parseCommandLine(const int argc, const char** argv) {
 
     std::string levelName = "info";
     std::string matFileName = "fieldsQuarterFiveSpotAdjoint.mat";
+    compareSensitivities = bool(cmdl[{"-s"}]);
+
+    cmdl({"-r", "--random-walks"}) >> numberOfRandomWalksToAdd;
     cmdl({"-n", "--dimension"}) >> n;
     cmdl({"-l", "--level"}) >> levelName;
     cmdl({"-m", "--matfile"}) >> matFileName;
+    cmdl({"-M", "--max-timesteps"}) >> maxNumberOfTimesteps;
 
     level = spdlog::level::from_str(levelName);
 
@@ -46,6 +54,16 @@ int main(const int argc, const char** argv) {
         std::exit(1);
     }
 
+    if (maxNumberOfTimesteps < 0) {
+        log()->error("Didn't specify a positive maximum number of timesteps. Are you sure you passed a positive value with the -M flag?");
+        std::exit(1);
+    }
+
+    if (numberOfRandomWalksToAdd < 0) {
+        log()->error("Didn't specify a positive maximum number of random walks to add. Are you sure you passed a positive value with the -r flag?");
+        std::exit(1);
+    }
+
 
     FixedParameters params;
     const Real atmosphericPressure = 1;
@@ -56,7 +74,7 @@ int main(const int argc, const char** argv) {
     constexpr Real fieldWidth = 1;
 
     params.meshWidth = fieldWidth / Real(n);
-    params.finalTime = 0.04;
+    params.finalTime = 0.1;
     params.inflowPerUnitDepthWater = [&] (const Real time) {
         return 1;
     };
@@ -67,10 +85,7 @@ int main(const int argc, const char** argv) {
     params.porosity = 1;
     params.initialSaturationsWater.resize(n, n);
     params.initialSaturationsWater.setConstant(0);
-    params.maxNumberOfTimesteps = 1e6;
-
-    const CellIndex drillCell = findDrillCell(n, n);
-    drillCell(params.initialSaturationsWater) = 1;
+    params.maxNumberOfTimesteps = maxNumberOfTimesteps;
 
 
     const Real milliDarcy = 1;
@@ -106,9 +121,27 @@ int main(const int argc, const char** argv) {
     }
 
 
+    if (compareSensitivities) {
+        log()->info("Just comparing sensitivities");
 
+        const Matrix permeabilitiesToTest = params.initialPermeabilities;
+        const Matrix logPermeabilitiesToTest = permeabilitiesToTest.array().log().matrix();
+        Rng compareSensitivitiesRng;
 
-    (void) matchWithPermeabilities(params, 1e-6, 10000);
+        const SensitivityAndCost sensitivityAndCostMC = computeSensitivityAndCost(params,
+                                                                                  permeabilitiesToTest, logPermeabilitiesToTest,
+                                                                                  compareSensitivitiesRng);
+
+        const SensitivityAndCost sensitivityAndCostTrad = computeSensitivityAndCostTraditional(params, permeabilitiesToTest, logPermeabilitiesToTest);
+
+        log()->info("Cost traditional = {}, cost MC = {} (should be equal!)", sensitivityAndCostTrad.cost, sensitivityAndCostMC.cost);
+
+        log()->info("Sensitivities traditional =\n{}\n\nSensitivities MC =\n{}\n\n", sensitivityAndCostTrad.sensitivity, sensitivityAndCostMC.sensitivity);
+    } else {
+        (void) matchWithPermeabilities(params, 1e-6, 10000);
+
+    }
+
 
     spdlog::drop_all();
 
