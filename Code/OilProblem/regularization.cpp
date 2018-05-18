@@ -5,7 +5,7 @@
 #include "regularization.hpp"
 #include "darcyVelocity.hpp"
 
-static constexpr Real regularizationWeight = 1e3;
+static constexpr Real regularizationWeight = 1e-3;
 
 Real computeRegularizationPenalty(ConstMatrixRef logPermeabilities, const Real meshWidth) {
     return (computeXDerivative(logPermeabilities, meshWidth).cwiseAbs2().sum() + computeYDerivative(logPermeabilities, meshWidth).cwiseAbs2().sum()) * regularizationWeight;

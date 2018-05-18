@@ -13,6 +13,7 @@
 #include <cppoptlib/solver/lbfgssolver.h>
 #include <cppoptlib/solver/lbfgsbsolver.h>
 #include <stefCommonHeaders/assert.h>
+#include "logging.hpp"
 
 
 using namespace cppoptlib;
@@ -23,15 +24,18 @@ struct PermeabilitiesProblem: public BoundedProblem<Real> {
     using typename BoundedProblem<Real>::TVector;
 
 
-
-
-
     PermeabilitiesProblem(const FixedParameters& params, const int seed, const int maxIterations, const Real tolerance):
-          params(params), maxIterations(maxIterations), tolerance(tolerance), rng(seed) {};
+          BoundedProblem<Real>(params.initialSaturationsWater.size()), params(params), maxIterations(maxIterations), tolerance(tolerance), rng(seed) {};
 
 
     double value(const TVector& logPermeabilitiesAsRowVector) override {
+        if (!isValid(logPermeabilitiesAsRowVector)) {
+            return 1e10;
+        }
         const Real foundCost = findSensitivityAndCost(logPermeabilitiesAsRowVector).cost;
+
+
+
         return foundCost;
     }
 
@@ -126,8 +130,8 @@ matchWithPermeabilities(const FixedParameters& params, const Real tolerance, con
     const Vector initialPermeabilitiesAsVector = Eigen::Map<const Vector>(params.initialPermeabilities.data(), params.initialPermeabilities.size());
     Vector logPermeabilitiesAsVector = initialPermeabilitiesAsVector.array().log().matrix();
 
-    const TVector lowerBounds = TVector::Constant(logPermeabilitiesAsVector.size(), -36);
-    const TVector upperBounds = TVector::Constant(lowerBounds.size(), 40);
+    const TVector lowerBounds = TVector::Constant(logPermeabilitiesAsVector.size(), -13.8155);
+    const TVector upperBounds = TVector::Constant(lowerBounds.size(), +13.8155);
 
     permeabilitiesProblem.setBoxConstraint(lowerBounds, upperBounds);
 

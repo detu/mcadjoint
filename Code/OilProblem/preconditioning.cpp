@@ -47,8 +47,11 @@ void preconditionMatrices(
             saturationsWaterResidualsByPressuresTransposed.makeCompressed();
             pressuresByPressures.setIdentity();
 
+
             saturationsByPressures = pressureSolver.solve(saturationsWaterResidualsByPressuresTransposed).transpose();
             pressurePartOfB = pressureSolver.solve(pressurePartOfB);
+
+
             break;
         }
 
@@ -60,9 +63,15 @@ void preconditionMatrices(
             const Eigen::SparseMatrix<Real, Eigen::RowMajor> sortedRMatrix = qrSolver.matrixR();
             pressuresByPressures = SparseMatrix(sortedRMatrix.transpose());
 
-            const SparseMatrix inverseDiagonal = SparseMatrix(extractInverseDiagonalMatrix(pressuresByPressures));
+            SparseMatrix inverseDiagonal = SparseMatrix(extractInverseDiagonalMatrix(pressuresByPressures));
             ASSERT(allFinite(inverseDiagonal));
+            for (int colIndex = 0; colIndex < inverseDiagonal.cols(); ++colIndex) {
+                inverseDiagonal.coeffRef(colIndex, colIndex) /= std::max(1.0,
+                                                                         pressuresByPressures.col(colIndex).cwiseAbs().sum());
+            }
             pressuresByPressures = (pressuresByPressures * inverseDiagonal).eval();
+
+
 
             SparseMatrix saturationsWaterResidualsByPressuresTransposed = saturationsByPressures.transpose();
             saturationsWaterResidualsByPressuresTransposed.makeCompressed();
@@ -83,6 +92,7 @@ void preconditionMatrices(
 
 
             saturationsByPressures = saturationsWaterResidualsByPressuresTransposed.transpose();
+
             break;
         }
 
