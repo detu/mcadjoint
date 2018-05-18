@@ -11,14 +11,16 @@
 #include <cppoptlib/problem.h>
 #include <cppoptlib/solver/gradientdescentsolver.h>
 #include <cppoptlib/solver/lbfgssolver.h>
+#include <cppoptlib/solver/lbfgsbsolver.h>
 #include <stefCommonHeaders/assert.h>
 
 
 using namespace cppoptlib;
 
-struct PermeabilitiesProblem: public Problem<Real> {
-    using typename Problem<Real>::Scalar;
-    using typename Problem<Real>::TVector;
+
+struct PermeabilitiesProblem: public BoundedProblem<Real> {
+    using typename BoundedProblem<Real>::Scalar;
+    using typename BoundedProblem<Real>::TVector;
 
 
 
@@ -28,7 +30,7 @@ struct PermeabilitiesProblem: public Problem<Real> {
           params(params), maxIterations(maxIterations), tolerance(tolerance), rng(seed) {};
 
 
-    Real value(const TVector& logPermeabilitiesAsRowVector) override {
+    double value(const TVector& logPermeabilitiesAsRowVector) override {
         const Real foundCost = findSensitivityAndCost(logPermeabilitiesAsRowVector).cost;
         return foundCost;
     }
@@ -108,17 +110,26 @@ PermeabilitiesAndCost
 matchWithPermeabilities(const FixedParameters& params, const Real tolerance, const int maxIterations) {
 
     using namespace cppoptlib;
+    using TVector = PermeabilitiesProblem::TVector;
     PermeabilitiesProblem permeabilitiesProblem(params, 96, maxIterations, tolerance);
+
+
 
 
 
     const int numberOfCols = params.initialPermeabilities.cols();
     const int numberOfRows = params.initialPermeabilities.rows();
 
-    GradientDescentSolver<PermeabilitiesProblem> solver;
+
+
+    LbfgsbSolver<PermeabilitiesProblem> solver;
     const Vector initialPermeabilitiesAsVector = Eigen::Map<const Vector>(params.initialPermeabilities.data(), params.initialPermeabilities.size());
     Vector logPermeabilitiesAsVector = initialPermeabilitiesAsVector.array().log().matrix();
 
+    const TVector lowerBounds = TVector::Constant(logPermeabilitiesAsVector.size(), -36);
+    const TVector upperBounds = TVector::Constant(lowerBounds.size(), 40);
+
+    permeabilitiesProblem.setBoxConstraint(lowerBounds, upperBounds);
 
     if (false) {
         log()->info(
