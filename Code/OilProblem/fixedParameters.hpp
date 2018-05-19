@@ -27,5 +27,7 @@ struct FixedParameters {
 
     int numberOfRandomWalksToAdd;
 
+    bool enableAntitheticSampling;
+
 
 };

@@ -15,7 +15,6 @@
 #include "specialCells.hpp"
 #include "preconditioning.hpp"
 #include "forwardOptions.hpp"
-#include "antitheticOptions.hpp"
 
 #include <iostream>
 #include <random>
@@ -192,7 +191,7 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     const bool shouldAddRandomWalks = startAddingRandomWalksAtBeginning || (simulationState.saturationsWater.diagonal(-1).array() > 0).any();
 
     if (shouldAddRandomWalks) {
-        addNewRandomWalks(numberOfRows, numberOfCols, numberOfParameters, currentTimelevel, numberOfRandomWalksToAdd, b, c, randomWalks, antitheticRandomWalks,
+        addNewRandomWalks(numberOfRows, numberOfCols, numberOfParameters, currentTimelevel, numberOfRandomWalksToAdd, params.enableAntitheticSampling, b, c, randomWalks, antitheticRandomWalks,
                           rng);
     }
 
@@ -223,49 +222,57 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     auto randomWalkIterator = randomWalks.begin();
     const auto endRandomWalk = randomWalks.end();
     auto antitheticRandomWalkIterator = antitheticRandomWalks.begin();
+    const auto endAntitheticRandomWalk = antitheticRandomWalks.end();
 
-    while (randomWalkIterator != endRandomWalk) {
-        bool stillInTheSameTimestep = true;
-        bool stillInTheSameTimestepAntithetic = enableAntitheticSampling;
-        do {
-            standardUniformNumber = standardUniformDistribution(rng);
+    bool regularRandomWalksFinished = randomWalkIterator == endRandomWalk;
+    bool antitheticRandomWalksFinished = implies(params.enableAntitheticSampling, antitheticRandomWalkIterator == endAntitheticRandomWalk);
 
-            if (stillInTheSameTimestep) {
+    for (;;) {
+        standardUniformNumber = standardUniformDistribution(rng);
 
-                stillInTheSameTimestep = transitionState(*randomWalkIterator, b, correctedPressureResidualsByPressures,
-                                                         correctedPressureResidualsBySaturationsWater,
-                                                         correctedSaturationsWaterResidualsByPressures,
-                                                         correctedSaturationsWaterResidualsBySaturationsWater,
-                                                         numberOfRows,
-                                                         numberOfCols, standardUniformNumber);
+
+        if (!regularRandomWalksFinished) {
+            const bool stillInTheSameTimestep = transitionState(*randomWalkIterator, b, correctedPressureResidualsByPressures,
+                                                          correctedPressureResidualsBySaturationsWater,
+                                                          correctedSaturationsWaterResidualsByPressures,
+                                                          correctedSaturationsWaterResidualsBySaturationsWater,
+                                                          numberOfRows,
+                                                          numberOfCols, standardUniformNumber);
+            if (!stillInTheSameTimestep) {
+                 ++randomWalkIterator;
+                regularRandomWalksFinished = randomWalkIterator == endRandomWalk;
             }
-
-            if (stillInTheSameTimestepAntithetic) {
-                stillInTheSameTimestepAntithetic = transitionState(*antitheticRandomWalkIterator, b, correctedPressureResidualsByPressures,
-                                                           correctedPressureResidualsBySaturationsWater,
-                                                           correctedSaturationsWaterResidualsByPressures,
-                                                           correctedSaturationsWaterResidualsBySaturationsWater,
-                                                           numberOfRows,
-                                                           numberOfCols, 1.0 - standardUniformNumber);
-            }
-
-        } while (stillInTheSameTimestep || stillInTheSameTimestepAntithetic);
-
-        ++randomWalkIterator;
-        if (enableAntitheticSampling) {
-            ++antitheticRandomWalkIterator;
         }
 
-        ++advancedRandomWalks;
+        if (!antitheticRandomWalksFinished) {
+            const bool stillInTheSameTimestepAntithetic = transitionState(*antitheticRandomWalkIterator, b,
+                                                               correctedPressureResidualsByPressures,
+                                                               correctedPressureResidualsBySaturationsWater,
+                                                               correctedSaturationsWaterResidualsByPressures,
+                                                               correctedSaturationsWaterResidualsBySaturationsWater,
+                                                               numberOfRows,
+                                                               numberOfCols, 1.0 - standardUniformNumber);
+            if (!stillInTheSameTimestepAntithetic) {
+                ++antitheticRandomWalkIterator;
+                antitheticRandomWalksFinished = antitheticRandomWalkIterator == endAntitheticRandomWalk;
+            }
+        }
 
-        if (outputProgressTransitioning) {
-            log()->info("Random walk {} / {}", advancedRandomWalks, randomWalks.size());
+        if (antitheticRandomWalksFinished && regularRandomWalksFinished) {
+            ++advancedRandomWalks;
+
+            if (outputProgressTransitioning) {
+                log()->info("Random walk {} / {}", advancedRandomWalks, randomWalks.size());
+            }
+
+            break;
         }
     }
 
+
     logStatisticsAboutRandomWalks(randomWalks);
 
-    if (enableAntitheticSampling) {
+    if (params.enableAntitheticSampling) {
         logStatisticsAboutRandomWalks(antitheticRandomWalks);
     }
 

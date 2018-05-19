@@ -9,7 +9,6 @@
 #include "forward.hpp"
 #include "pressure.hpp"
 #include "derivativesForAdjoint.hpp"
-#include "antitheticOptions.hpp"
 #include "adjoint.hpp"
 #include "logging.hpp"
 #include "regularization.hpp"
@@ -112,15 +111,14 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
         log()->info("time = {}", simulationState.time);
         breakthroughHappened = stepForwardAndAdjointProblem(params, permeabilities, currentTimeLevel, params.numberOfRandomWalksToAdd, simulationState,
                                                             randomWalks, antitheticRandomWalks, rng);
-        if (enableAntitheticSampling) {
+        removeAbsorbedStates(randomWalks, numberOfRandomWalksPerParameter, sensitivities);
+        if (params.enableAntitheticSampling) {
             log()->info("Antithetic sampling enabled");
+            removeAbsorbedStates(antitheticRandomWalks, numberOfRandomWalksPerParameterAntithetic, sensitivitiesAntithetic);
         } else {
             log()->info("Antithetic sampling disabled");
         }
 
-        if (true) {
-            removeAbsorbedStates(randomWalks, numberOfRandomWalksPerParameter, sensitivities);
-        }
 
         const Real contributionToCost = computeContributionToCost(params, simulationState);
         cost += contributionToCost;
@@ -133,13 +131,17 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
     RandomWalkIterator randomWalkIterator = randomWalks.begin();
     RandomWalkIterator antitheticRandomWalkIterator = antitheticRandomWalks.begin();
     const RandomWalkIterator randomWalkEnd = randomWalks.end();
+    const RandomWalkIterator antitheticRandomWalkEnd = antitheticRandomWalks.end();
 
 
     while (randomWalkIterator != randomWalkEnd) {
         sensitivities(randomWalkIterator->parameterIndex) += randomWalkIterator->D;
         ++numberOfRandomWalksPerParameter(randomWalkIterator->parameterIndex);
         ++randomWalkIterator;
-        if (enableAntitheticSampling) {
+    }
+
+    if (params.enableAntitheticSampling) {
+        while (antitheticRandomWalkIterator != antitheticRandomWalkEnd) {
             sensitivitiesAntithetic(antitheticRandomWalkIterator->parameterIndex) += antitheticRandomWalkIterator->D;
             ++numberOfRandomWalksPerParameterAntithetic(antitheticRandomWalkIterator->parameterIndex);
             ++antitheticRandomWalkIterator;
@@ -147,17 +149,18 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
     }
 
 
+
     sensitivities.array() /= numberOfRandomWalksPerParameter.array().cwiseMax(1).cast<long double>();
     sensitivities.array() *= currentTimeLevel;
 
-    if (enableAntitheticSampling) {
+    if (params.enableAntitheticSampling) {
         sensitivitiesAntithetic.array() /= numberOfRandomWalksPerParameterAntithetic.array().cwiseMax(1).cast<long double>();
         sensitivitiesAntithetic.array() *= currentTimeLevel;
     }
 
 
     Real antitheticPart = 0;
-    if (enableAntitheticSampling) {
+    if (params.enableAntitheticSampling) {
         antitheticPart = 0.5;
     }
 
@@ -169,7 +172,7 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
     log()->info("sensitivities norm = {}", sensitivities.norm());
 
 
-    if (enableAntitheticSampling) {
+    if (params.enableAntitheticSampling) {
         sensitivityAndCost.sensitivity =
               ((1.0 - antitheticPart) * sensitivities + antitheticPart * sensitivitiesAntithetic).cast<Real>();
 

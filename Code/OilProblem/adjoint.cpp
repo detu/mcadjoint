@@ -4,7 +4,6 @@
 
 #include "adjoint.hpp"
 #include "adjointOptions.hpp"
-#include "antitheticOptions.hpp"
 #include "specialCells.hpp"
 #include "fast_discrete_distribution.hpp"
 #include <stefCommonHeaders/assert.h>
@@ -262,9 +261,8 @@ static inline void addCopiesOfState(const RandomWalkState& toAdd, const Real pro
 }
 
 void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int numberOfParameters,
-                       const int currentTimelevel, const int numberOfRandomWalksToAdd, ConstVectorRef b, SparseMatrix c,
+                       const int currentTimelevel, const int numberOfRandomWalksToAdd, const bool enableAntitheticSampling, ConstVectorRef b, SparseMatrix c,
                        std::list<RandomWalkState>& randomWalks, std::list<RandomWalkState>& antitheticRandomWalks, Rng& rng) {
-    ASSERT(!enableAntitheticSampling ||antitheticRandomWalks.size() == randomWalks.size());
 
 
 
@@ -293,6 +291,8 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
     } else {
         log()->info("Not preferring saturations over pressures");
     }
+
+    const Real minimumProbabilityToBeAdded = 0.5 / Real(numberOfRandomWalksToAdd);
 
 
 
@@ -329,7 +329,9 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
 
 
                 const long double prob = std::abs(cValue) / cNorm;
-
+                if (prob < minimumProbabilityToBeAdded) {
+                    continue;
+                }
 
                 RandomWalkState initialState;
                 initialState.cell = neighborOrMyself;
@@ -353,8 +355,6 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
 
     }
 
-    ASSERT(!enableAntitheticSampling ||antitheticRandomWalks.size() == randomWalks.size());
-
 
     if (initializeJustAtBeginning) {
         log()->info("Finished initializing {} random walks", randomWalks.size());
@@ -367,10 +367,6 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
 
 void removeAbsorbedStates(std::list<RandomWalkState>& randomWalks, Eigen::VectorXi& numberOfRemovedAbsorbedStates, PreciseVector& sumOfDValuesOfAbsorbedStates) {
 
-    if (enableAntitheticSampling) {
-        log()->info("Not clearing absorbed states for antithetic sampling because the the numbering would be off");
-        return;
-    }
 
     log()->info("Clearing absorbed states");
     auto currentState = randomWalks.begin();

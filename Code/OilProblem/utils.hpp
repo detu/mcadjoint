@@ -26,3 +26,7 @@ bool allFinite(ConstMatrixRef matrix);
 bool allFinite(const SparseMatrix& matrix);
 SparseMatrix concatVertically(const SparseMatrix& above,
                               const SparseMatrix& below);
+
+static inline bool implies(const bool antecedens, const bool consequens) {
+    return !antecedens || consequens;
+}

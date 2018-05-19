@@ -19,13 +19,18 @@ int maxNumberOfTimesteps = -1;
 bool compareSensitivities;
 int numberOfRandomWalksToAdd = -1;
 
+bool enableAntitheticSampling = false;
+
 void parseCommandLine(const int argc, const char** argv) {
     argh::parser cmdl;
     cmdl.parse(argc, argv, argh::parser::PREFER_PARAM_FOR_UNREG_OPTION);
 
     std::string levelName = "info";
     std::string matFileName = "fieldsQuarterFiveSpotAdjoint.mat";
+
     compareSensitivities = bool(cmdl[{"-s"}]);
+    enableAntitheticSampling = bool(cmdl[{"-a", "--antithetic-sampling"}]);
+
 
     cmdl({"-r", "--random-walks"}) >> numberOfRandomWalksToAdd;
     cmdl({"-n", "--dimension"}) >> n;
@@ -87,6 +92,7 @@ int main(const int argc, const char** argv) {
     params.initialSaturationsWater.setConstant(0);
     params.maxNumberOfTimesteps = maxNumberOfTimesteps;
     params.numberOfRandomWalksToAdd = numberOfRandomWalksToAdd;
+    params.enableAntitheticSampling = enableAntitheticSampling;
 
     const Real milliDarcy = 1;
     params.initialPermeabilities.resizeLike(params.initialSaturationsWater);
@@ -134,9 +140,22 @@ int main(const int argc, const char** argv) {
 
         const SensitivityAndCost sensitivityAndCostTrad = computeSensitivityAndCostTraditional(params, permeabilitiesToTest, logPermeabilitiesToTest);
 
+        const Vector sensitivityDiscrepancies = (sensitivityAndCostMC.sensitivity - sensitivityAndCostTrad.sensitivity).cwiseAbs();
+        int sensitivityMaxAbsDiffLoc = -1;
+        const Real sensitivityMaxAbsDiff = sensitivityDiscrepancies.maxCoeff(&sensitivityMaxAbsDiffLoc);
+        const Real sensitivityAvgAbsDiff = sensitivityDiscrepancies.mean();
         log()->info("Cost traditional = {}, cost MC = {} (should be equal!)", sensitivityAndCostTrad.cost, sensitivityAndCostMC.cost);
 
-        log()->info("Sensitivities traditional =\n{}\n\nSensitivities MC =\n{}\n\n", sensitivityAndCostTrad.sensitivity, sensitivityAndCostMC.sensitivity);
+        log()->info("Sensitivities traditional =\n{}\n\nSensitivities MC =\n{}\n\nSensitivity avg abs diff = {}\nSensitivity max abs diff = {} at index {} between {} for traditional and {} for MC",
+                    sensitivityAndCostTrad.sensitivity, sensitivityAndCostMC.sensitivity, sensitivityAvgAbsDiff, sensitivityMaxAbsDiff, sensitivityMaxAbsDiffLoc,
+                    sensitivityAndCostTrad.sensitivity(sensitivityMaxAbsDiffLoc), sensitivityAndCostMC.sensitivity(sensitivityMaxAbsDiffLoc));
+
+
+        dumpThis("sensitivityDiscrepancies", sensitivityDiscrepancies);
+        dumpThis("sensitivityMaxAbsDiffLoc", Real(sensitivityMaxAbsDiffLoc));
+        dumpThis("sensitivityMaxAbsDiff", sensitivityMaxAbsDiff);
+        dumpThis("sensitivityAvgAbsDiff", sensitivityAvgAbsDiff);
+        writeToMatFile();
     } else {
         (void) matchWithPermeabilities(params, 1e-6, 10000);
 
