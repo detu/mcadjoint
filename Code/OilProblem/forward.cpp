@@ -187,7 +187,6 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
 
     dumpThis("c", c);
 
-    constexpr bool startAddingRandomWalksAtBeginning = true;
     const bool shouldAddRandomWalks = startAddingRandomWalksAtBeginning || (simulationState.saturationsWater.diagonal(-1).array() > 0).any();
 
     if (shouldAddRandomWalks) {
@@ -384,7 +383,7 @@ bool stepForwardAndAdjointProblemTraditional(const FixedParameters& params, cons
     dumpThis("saturationsWaterResidualsByPressuresTrad", saturationsWaterResidualsByPressures);
     dumpThis("pressureResidualsBySaturationsWaterTrad", pressureResidualsBySaturationsWater);
     dumpThis("pressureResidualsByPressuresTrad", pressureResidualsByPressures);
-    writeToMatFile();
+    //writeToMatFile();
 
     const int stateSize = 2 * numberOfRows * numberOfCols;
     const int fromDiagRow = stateSize * currentTimelevel;
@@ -398,7 +397,7 @@ bool stepForwardAndAdjointProblemTraditional(const FixedParameters& params, cons
     densePressureResidualsByPressure = pressureResidualsByPressures;
 
     dumpThis("densePressureResidualsByPressure", densePressureResidualsByPressure);
-    writeToMatFile();
+    //writeToMatFile();
     ASSERT(allFinite(densePressureResidualsByPressure));
 
     ASSERT(allFinite(adjointMatrix.block(fromDiagRow, fromDiagCol, stateSize/2, stateSize/2)));

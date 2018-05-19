@@ -34,6 +34,7 @@ Real computeContributionToCost(const FixedParameters& parameters, const Simulati
 
 SensitivityAndCost computeSensitivityAndCostTraditional(const FixedParameters& params, ConstMatrixRef permeabilities,
                           ConstMatrixRef logPermeabilities) {
+    log()->info("Computing sensitivity by directly solving the traditional system");
     const int numberOfRows = params.initialPermeabilities.rows();
     const int numberOfCols = params.initialPermeabilities.cols();
     const int numberOfParameters = numberOfRows * numberOfCols;
@@ -52,7 +53,8 @@ SensitivityAndCost computeSensitivityAndCostTraditional(const FixedParameters& p
         brokeThrough = stepForwardAndAdjointProblemTraditional(params, params.initialPermeabilities, currentTimelevel, simulationState, adjointMatrix, adjointRhs, completeC);
 
         cost += computeContributionToCost(params, simulationState);
-        if (!brokeThrough) {
+        log()->info("time = {}", simulationState.time);
+        if (!brokeThrough && (currentTimelevel % 10 == 0)) {
 
             dumpThis("adjointMatrixTrad", adjointMatrix);
             dumpThis("adjointRhsTrad", adjointRhs);
@@ -87,6 +89,8 @@ SensitivityAndCost computeSensitivityAndCostTraditional(const FixedParameters& p
 
 SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, ConstMatrixRef permeabilities,
                                              ConstMatrixRef logPermeabilities, Rng& rng) {
+    log()->info("Computing sensitivity using MC");
+
     const int numberOfCols = permeabilities.cols();
     const int numberOfRows = permeabilities.rows();
     const int numberOfParameters = permeabilities.size();

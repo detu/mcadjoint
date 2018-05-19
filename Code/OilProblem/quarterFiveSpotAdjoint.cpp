@@ -97,8 +97,8 @@ int main(const int argc, const char** argv) {
     const Real milliDarcy = 1;
     params.initialPermeabilities.resizeLike(params.initialSaturationsWater);
 
-    constexpr bool useLognormal = false;
-    constexpr bool constant = true;
+    constexpr bool useLognormal = true;
+    constexpr bool constant = false;
     constexpr bool channel = false;
     if (useLognormal) {
         std::lognormal_distribution<Real> lognormalDistribution(milliDarcy, 1);

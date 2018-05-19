@@ -71,9 +71,12 @@ void preconditionMatrices(
 
             SparseMatrix inverseDiagonal = SparseMatrix(extractInverseDiagonalMatrix(pressuresByPressures));
             ASSERT(allFinite(inverseDiagonal));
-            for (int colIndex = 0; colIndex < inverseDiagonal.cols(); ++colIndex) {
-                inverseDiagonal.coeffRef(colIndex, colIndex) /= std::max(1.0,
-                                                                         pressuresByPressures.col(colIndex).cwiseAbs().sum());
+            if (false) {
+                for (int colIndex = 0; colIndex < inverseDiagonal.cols(); ++colIndex) {
+                    inverseDiagonal.coeffRef(colIndex, colIndex) /= std::max(1.0,
+                                                                             pressuresByPressures.col(
+                                                                                   colIndex).cwiseAbs().sum());
+                }
             }
             pressuresByPressures = (pressuresByPressures * inverseDiagonal).eval();
 
