@@ -337,7 +337,8 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
                 initialState.cell = neighborOrMyself;
                 initialState.isAPressure = wantAPressure;
                 initialState.currentTimelevel = currentTimelevel;
-                initialState.W =  ((WiderReal) cValue) / prob;
+                initialState.startingTimeLevel = currentTimelevel;
+                initialState.W = ((WiderReal) cValue) / prob;
 
                 initialState.D = initialState.W * b(cellIndexToBIndex(neighborOrMyself, wantAPressure, numberOfRows, numberOfCols));
                 initialState.parameterIndex = parameterIndex;

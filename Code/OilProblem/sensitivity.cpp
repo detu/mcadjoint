@@ -152,6 +152,9 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
         }
     }
 
+    dumpThis("numberOfRandomWalksPerParameter", numberOfRandomWalksPerParameter.cast<Real>());
+    dumpThis("numberOfRandomWalksPerParameterAntithetic", numberOfRandomWalksPerParameterAntithetic.cast<Real>());
+
 
 
     sensitivities.array() /= numberOfRandomWalksPerParameter.array().cwiseMax(1).cast<WiderReal>();
