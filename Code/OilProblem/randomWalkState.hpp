@@ -8,7 +8,7 @@ struct RandomWalkState {
     CellIndex cell;
     bool isAPressure;
     int currentTimelevel;
-    long double W;
-    long double D;
+    WiderReal W;
+    WiderReal D;
     int parameterIndex;
 };

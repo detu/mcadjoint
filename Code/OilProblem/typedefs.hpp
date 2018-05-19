@@ -11,6 +11,7 @@
 #include <functional>
 
 using Real = double;
+using WiderReal = Real;
 
 using Vector = Eigen::Matrix<Real, Eigen::Dynamic, 1>;
 using VectorRef = Eigen::Ref<Vector>;
@@ -18,7 +19,7 @@ using ConstVectorRef = const Eigen::Ref<const Vector>&;
 
 using SignalHandler = void (*)(int);
 
-using PreciseVector = Eigen::Matrix<long double, Eigen::Dynamic, 1>;
+using PreciseVector = Eigen::Matrix<WiderReal, Eigen::Dynamic, 1>;
 
 
 using Matrix = Eigen::Matrix<Real, Eigen::Dynamic, Eigen::Dynamic>;

@@ -75,7 +75,7 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
     const SparseMatrix& saturationWaterResidualsDerived = currentState.isAPressure? saturationsWaterResidualsByPressure: saturationsWaterResidualsBySaturationsWater;
 
 
-    long double sumOfUnnormalizedProbabilities = 0;
+    WiderReal sumOfUnnormalizedProbabilities = 0;
 
 
     for (const CellIndex& target: currentState.cell.neighborsAndMyself(numberOfRows, numberOfCols)) {
@@ -187,7 +187,7 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
     ASSERT(std::isfinite(sumOfUnnormalizedProbabilities));
     ASSERT(std::isfinite(chosenCandidate.correspondingEntryOfAMatrix));
 
-    const long double  probabilityOfChoosingThisCandidate = candidateUnnormalizedProbabilities[nextIndex] / sumOfUnnormalizedProbabilities;
+    const WiderReal  probabilityOfChoosingThisCandidate = candidateUnnormalizedProbabilities[nextIndex] / sumOfUnnormalizedProbabilities;
     ASSERT(sumOfUnnormalizedProbabilities > 0);
     ASSERT(probabilityOfChoosingThisCandidate > 0);
     currentState.W *= chosenCandidate.correspondingEntryOfAMatrix / probabilityOfChoosingThisCandidate;
@@ -328,7 +328,7 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
                 const Real cValue = cellIndexToCIndex(neighborOrMyself, cell, wantAPressure, numberOfRows, numberOfCols)(c);
 
 
-                const long double prob = std::abs(cValue) / cNorm;
+                const WiderReal prob = std::abs(cValue) / cNorm;
                 if (prob < minimumProbabilityToBeAdded) {
                     continue;
                 }
@@ -337,7 +337,7 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
                 initialState.cell = neighborOrMyself;
                 initialState.isAPressure = wantAPressure;
                 initialState.currentTimelevel = currentTimelevel;
-                initialState.W =  ((long double) cValue) / prob;
+                initialState.W =  ((WiderReal) cValue) / prob;
 
                 initialState.D = initialState.W * b(cellIndexToBIndex(neighborOrMyself, wantAPressure, numberOfRows, numberOfCols));
                 initialState.parameterIndex = parameterIndex;
