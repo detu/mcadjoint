@@ -49,17 +49,17 @@ int main(const int argc, const char** argv) {
 
     spdlog::register_logger(stefCommonHeaders::setUpLog<stefCommonHeaders::NoMutex>(level));
 
-    if (n < 0) {
+    if (n <= 0) {
         log()->error("Didn't specify a positive n. Are you sure you passed a positive value with the -n flag?");
         std::exit(1);
     }
 
-    if (maxNumberOfTimesteps < 0) {
+    if (maxNumberOfTimesteps <= 0) {
         log()->error("Didn't specify a positive maximum number of timesteps. Are you sure you passed a positive value with the -M flag?");
         std::exit(1);
     }
 
-    if (numberOfRandomWalksToAdd < 0) {
+    if (numberOfRandomWalksToAdd <= 0) {
         log()->error("Didn't specify a positive maximum number of random walks to add. Are you sure you passed a positive value with the -r flag?");
         std::exit(1);
     }
@@ -86,7 +86,7 @@ int main(const int argc, const char** argv) {
     params.initialSaturationsWater.resize(n, n);
     params.initialSaturationsWater.setConstant(0);
     params.maxNumberOfTimesteps = maxNumberOfTimesteps;
-
+    params.numberOfRandomWalksToAdd = numberOfRandomWalksToAdd;
 
     const Real milliDarcy = 1;
     params.initialPermeabilities.resizeLike(params.initialSaturationsWater);

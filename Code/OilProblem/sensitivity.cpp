@@ -148,10 +148,11 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
 
 
     sensitivities.array() /= numberOfRandomWalksPerParameter.array().cwiseMax(1).cast<long double>();
+    sensitivities.array() *= currentTimeLevel;
 
     if (enableAntitheticSampling) {
         sensitivitiesAntithetic.array() /= numberOfRandomWalksPerParameterAntithetic.array().cwiseMax(1).cast<long double>();
-
+        sensitivitiesAntithetic.array() *= currentTimeLevel;
     }
 
 

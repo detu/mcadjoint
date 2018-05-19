@@ -126,7 +126,7 @@ matchWithPermeabilities(const FixedParameters& params, const Real tolerance, con
 
 
 
-    LbfgsbSolver<PermeabilitiesProblem> solver;
+    GradientDescentSolver<PermeabilitiesProblem> solver;
     const Vector initialPermeabilitiesAsVector = Eigen::Map<const Vector>(params.initialPermeabilities.data(), params.initialPermeabilities.size());
     Vector logPermeabilitiesAsVector = initialPermeabilitiesAsVector.array().log().matrix();
 

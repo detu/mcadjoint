@@ -279,7 +279,7 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     drillCell(simulationState.saturationsWater) = 1;
 
     const CellIndex wellCell = findWellCell(numberOfRows, numberOfCols);
-    const bool breakthroughHappened = std::abs(wellCell(simulationState.saturationsWater)) > 1e-16;
+    const bool breakthroughHappened = std::abs(wellCell(simulationState.saturationsWater)) > 0.9;
 
     if (currentTimelevel % 10 == 0) {
         writeToMatFile();
@@ -455,7 +455,7 @@ bool stepForwardAndAdjointProblemTraditional(const FixedParameters& params, cons
     drillCell(simulationState.saturationsWater) = 1;
 
     const CellIndex wellCell = findWellCell(numberOfRows, numberOfCols);
-    const bool breakthroughHappened = std::abs(wellCell(simulationState.saturationsWater)) > 1e-16;
+    const bool breakthroughHappened = std::abs(wellCell(simulationState.saturationsWater)) > 0.9;
 
     if (currentTimelevel % 10 == 0) {
         writeToMatFile();
