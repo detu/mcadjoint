@@ -21,6 +21,7 @@ int numberOfRandomWalksToAdd = -1;
 
 bool enableAntitheticSampling = false;
 Real regularizationParameter = 0;
+std::string logFileName = "log.log";
 
 void parseCommandLine(const int argc, const char** argv) {
     argh::parser cmdl;
@@ -39,6 +40,7 @@ void parseCommandLine(const int argc, const char** argv) {
     cmdl({"-m", "--matfile"}) >> matFileName;
     cmdl({"-M", "--max-timesteps"}) >> maxNumberOfTimesteps;
     cmdl({"-p", "--regularization-parameter"}) >> regularizationParameter;
+    cmdl({"-l", "--log"}) >> logFileName;
 
     level = spdlog::level::from_str(levelName);
 
@@ -54,7 +56,7 @@ int main(const int argc, const char** argv) {
 
 
 
-    spdlog::register_logger(stefCommonHeaders::setUpLog<stefCommonHeaders::NoMutex>(level));
+    spdlog::register_logger(stefCommonHeaders::setUpLog<stefCommonHeaders::NoMutex>(level, false, logFileName.c_str()));
 
     if (n <= 0) {
         log()->error("Didn't specify a positive n. Are you sure you passed a positive value with the -n flag?");

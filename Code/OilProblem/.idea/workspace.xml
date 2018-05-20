@@ -80,8 +80,18 @@
       <file leaf-file-name="quarterFiveSpotAdjoint.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/quarterFiveSpotAdjoint.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="468">
-              <caret line="164" column="56" lean-forward="false" selection-start-line="164" selection-start-column="56" selection-end-line="164" selection-end-column="56" />
+            <state relative-caret-position="562">
+              <caret line="58" column="119" lean-forward="false" selection-start-line="58" selection-start-column="119" selection-end-line="58" selection-end-column="119" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="minimizer.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/minimizer.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="153">
+              <caret line="128" column="16" lean-forward="false" selection-start-line="128" selection-start-column="16" selection-end-line="128" selection-end-column="16" />
               <folding />
             </state>
           </provider>
@@ -132,16 +142,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="405">
               <caret line="29" column="42" lean-forward="true" selection-start-line="29" selection-start-column="42" selection-end-line="29" selection-end-column="42" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="adjointOptions.hpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/adjointOptions.hpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="5" column="49" lean-forward="false" selection-start-line="5" selection-start-column="49" selection-end-line="5" selection-end-column="49" />
               <folding />
             </state>
           </provider>
@@ -512,7 +512,7 @@
       <workItem from="1526396145626" duration="1575000" />
       <workItem from="1526574137705" duration="12228000" />
       <workItem from="1526586416155" duration="5989000" />
-      <workItem from="1526722380888" duration="26711000" />
+      <workItem from="1526722380888" duration="27299000" />
     </task>
     <task id="LOCAL-00001" summary="TODO mainloop">
       <created>1524994887598</created>
@@ -532,7 +532,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="521732000" />
+    <option name="totallyTimeSpent" value="522320000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -880,14 +880,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/minimizer.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="369">
-          <caret line="128" column="16" lean-forward="false" selection-start-line="128" selection-start-column="16" selection-end-line="128" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/regularizationOptions.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
@@ -1004,10 +996,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/minimizer.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="128" column="16" lean-forward="false" selection-start-line="128" selection-start-column="16" selection-end-line="128" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/quarterFiveSpotAdjoint.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="468">
-          <caret line="164" column="56" lean-forward="false" selection-start-line="164" selection-start-column="56" selection-end-line="164" selection-end-column="56" />
+        <state relative-caret-position="562">
+          <caret line="58" column="119" lean-forward="false" selection-start-line="58" selection-start-column="119" selection-end-line="58" selection-end-column="119" />
           <folding />
         </state>
       </provider>
