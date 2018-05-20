@@ -162,7 +162,7 @@ int main(const int argc, const char** argv) {
         dumpThis("sensitivityAvgAbsDiff", sensitivityAvgAbsDiff);
         writeToMatFile();
     } else {
-        (void) matchWithPermeabilities(params, 1e-6, 10000);
+        (void) matchWithPermeabilities(params, 1e-6, 100);
 
     }
 
