@@ -40,7 +40,7 @@ void parseCommandLine(const int argc, const char** argv) {
     cmdl({"-m", "--matfile"}) >> matFileName;
     cmdl({"-M", "--max-timesteps"}) >> maxNumberOfTimesteps;
     cmdl({"-p", "--regularization-parameter"}) >> regularizationParameter;
-    cmdl({"-l", "--log"}) >> logFileName;
+    cmdl({"-L", "--log"}) >> logFileName;
 
     level = spdlog::level::from_str(levelName);
 
