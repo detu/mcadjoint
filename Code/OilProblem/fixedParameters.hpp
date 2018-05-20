@@ -17,6 +17,8 @@ struct FixedParameters {
 
     int maxNumberOfTimesteps;
 
+    Real regularizationParameter;
+
 
     WellFunction inflowPerUnitDepthWater;
 

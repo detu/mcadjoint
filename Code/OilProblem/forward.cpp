@@ -161,7 +161,7 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
     log()->debug("b = {}", b);
     dumpThis("b", b);
     ASSERT(allFinite(b));
-    preconditionMatrices(correctedPressureResidualsByPressures, correctedSaturationsWaterResidualsByPressures,
+    preconditionMatrices(numberOfRows, numberOfCols, correctedPressureResidualsByPressures, correctedSaturationsWaterResidualsByPressures,
                          correctedPressureResidualsBySaturationsWater, correctedSaturationsWaterResidualsBySaturationsWater, b,
                          pressureSolver, preconditionerToUse);
 

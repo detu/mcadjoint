@@ -20,6 +20,7 @@ bool compareSensitivities;
 int numberOfRandomWalksToAdd = -1;
 
 bool enableAntitheticSampling = false;
+Real regularizationParameter = 0;
 
 void parseCommandLine(const int argc, const char** argv) {
     argh::parser cmdl;
@@ -37,6 +38,7 @@ void parseCommandLine(const int argc, const char** argv) {
     cmdl({"-l", "--level"}) >> levelName;
     cmdl({"-m", "--matfile"}) >> matFileName;
     cmdl({"-M", "--max-timesteps"}) >> maxNumberOfTimesteps;
+    cmdl({"-p", "--regularization-parameter"}) >> regularizationParameter;
 
     level = spdlog::level::from_str(levelName);
 
@@ -70,6 +72,7 @@ int main(const int argc, const char** argv) {
     }
 
 
+
     FixedParameters params;
     const Real atmosphericPressure = 1;
     params.overPressureDrill = [=] (const Real time) {
@@ -84,6 +87,8 @@ int main(const int argc, const char** argv) {
         return 1;
     };
 
+    params.regularizationParameter = regularizationParameter;
+
     params.dynamicViscosityOil = 1;//0.630; // SAE motor oil 20°C
     params.dynamicViscosityWater = 1;//0.0010518; // Water 20°C
 
@@ -97,8 +102,8 @@ int main(const int argc, const char** argv) {
     const Real milliDarcy = 1;
     params.initialPermeabilities.resizeLike(params.initialSaturationsWater);
 
-    constexpr bool useLognormal = true;
-    constexpr bool constant = false;
+    constexpr bool useLognormal = false;
+    constexpr bool constant = true;
     constexpr bool channel = false;
     if (useLognormal) {
         std::lognormal_distribution<Real> lognormalDistribution(milliDarcy, 1);

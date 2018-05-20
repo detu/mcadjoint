@@ -14,7 +14,7 @@ inline static bool preconditionerLeavesJustOnesOnDiagonal(const WhichPreconditio
     return whichPreconditioner != WhichPreconditioner::NONE;
 }
 
-void preconditionMatrices(
+void preconditionMatrices(const int numberOfRows, const int numberOfCols,
       SparseMatrix& pressuresByPressures, SparseMatrix& saturationsByPressures,
       SparseMatrix& pressuresBySaturations, SparseMatrix& saturationsBySaturations,
       VectorRef b, const PressureSolver& pressureSolver, const WhichPreconditioner whichPreconditioner);

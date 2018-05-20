@@ -12,7 +12,6 @@
 #include "adjoint.hpp"
 #include "logging.hpp"
 #include "regularization.hpp"
-#include "regularizationOptions.hpp"
 #include "dumpToMatFile.hpp"
 #include "utils.hpp"
 

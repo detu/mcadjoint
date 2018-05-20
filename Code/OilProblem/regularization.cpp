@@ -9,7 +9,6 @@
 #include "logging.hpp"
 #include "specialCells.hpp"
 #include <Eigen/Dense>
-#include "regularizationOptions.hpp"
 #include "sensitivity.hpp"
 
 //#error "Referenzwert (k - kref)^2 pore volume injected = qDeltat/(Vol * Phi)"
@@ -53,7 +52,7 @@ Real computeReferenceLogPermeability(const FixedParameters& params) {
 }
 
 void applyRegularizationIfEnabled(const FixedParameters& params, ConstMatrixRef logPermeabilities, SensitivityAndCost& sensitivityAndCost) {
-    if (enableRegularization) {
+    if (params.regularizationParameter > 0) {
         log()->info("Regularization enabled");
 
         const Real referenceLogPermeability = computeReferenceLogPermeability(params);

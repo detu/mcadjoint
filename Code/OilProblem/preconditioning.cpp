@@ -7,9 +7,28 @@
 #include "logging.hpp"
 #include "utils.hpp"
 #include "preconditioningOptions.hpp"
+#include "specialCells.hpp"
+
+static SparseMatrix computeTargetPressureByPressureMatrix(const SparseMatrix& pressuresByPressures,
+                                                          const SparseMatrix& saturationsByPressures,
+                                                          const int numberOfRows, const int numberOfCols) {
 
 
-void preconditionMatrices(
+
+    SparseMatrixRowMajor target(pressuresByPressures.rows(), pressuresByPressures.cols());
+    target.setIdentity();
+
+    if (false) {
+        for (int colIndex = 0; colIndex < target.cols() - 1; ++colIndex) {
+            target.coeffRef(colIndex + 1, colIndex) = 0.05;
+        }
+    }
+
+    return target;
+}
+
+
+void preconditionMatrices(const int numberOfRows, const int numberOfCols,
       SparseMatrix& pressuresByPressures, SparseMatrix& saturationsByPressures,
       SparseMatrix& pressuresBySaturations, SparseMatrix& saturationsBySaturations,
       VectorRef b, const PressureSolver& pressureSolver, const WhichPreconditioner whichPreconditioner) {
@@ -42,13 +61,17 @@ void preconditionMatrices(
 
 
         case WhichPreconditioner::PRESSURE_BY_PRESSURE: {
+
+            const SparseMatrix targetPressureByPressureMatrix = computeTargetPressureByPressureMatrix(pressuresByPressures, saturationsByPressures, numberOfRows, numberOfCols);
+
             log()->info("Preconditioner: full inverse of  pressure by pressure");
             SparseMatrix saturationsWaterResidualsByPressuresTransposed = saturationsByPressures.transpose();
             log()->debug("nonzeros in saturationsByPressures = {}", saturationsByPressures.nonZeros());
-            pressuresByPressures.setIdentity();
+            pressuresByPressures.setZero();
+            pressuresByPressures = targetPressureByPressureMatrix;
 
 
-            const SparseMatrix  saturationsByPressuresPreconditioned = pressureSolver.solve(saturationsWaterResidualsByPressuresTransposed).transpose();
+            const SparseMatrix  saturationsByPressuresPreconditioned = targetPressureByPressureMatrix * pressureSolver.solve(saturationsWaterResidualsByPressuresTransposed).transpose();
             ASSERT(pressureSolver.info() == Eigen::Success);
 
             saturationsByPressures = saturationsByPressuresPreconditioned;
@@ -56,7 +79,7 @@ void preconditionMatrices(
 
             saturationsByPressures.makeCompressed();
             ASSERT(saturationsByPressures.valuePtr() != nullptr);
-            pressurePartOfB = pressureSolver.solve(pressurePartOfB);
+            pressurePartOfB = targetPressureByPressureMatrix * pressureSolver.solve(pressurePartOfB);
 
             break;
         }
