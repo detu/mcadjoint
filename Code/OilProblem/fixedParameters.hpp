@@ -30,6 +30,7 @@ struct FixedParameters {
     int numberOfRandomWalksToAdd;
 
     bool enableAntitheticSampling;
+    bool symmetrizeGradient;
 
 
 };

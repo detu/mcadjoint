@@ -86,6 +86,15 @@ SensitivityAndCost computeSensitivityAndCostTraditional(const FixedParameters& p
 
 }
 
+static inline CellIndex getSymmetricCounterpart(const CellIndex& cellIndex, const int numberOfRows, const int numberOfCols) {
+    return {numberOfCols - 1 - cellIndex.j, numberOfRows - 1 - cellIndex.i};
+}
+
+static inline int getSymmetricCounterpart(const int linearIndex, const int numberOfRows, const int numberOfCols) {
+    return getSymmetricCounterpart(CellIndex::fromLinearIndex(linearIndex, numberOfRows), numberOfRows, numberOfCols).linearIndex(numberOfRows);
+}
+
+
 SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, ConstMatrixRef permeabilities,
                                              ConstMatrixRef logPermeabilities, Rng& rng) {
     log()->info("Computing sensitivity using MC");
@@ -189,7 +198,31 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
 
     sensitivityAndCost.sensitivity *= -1;
 
+    if (params.symmetrizeGradient) {
+        log()->info("Symmetrizing gradient");
+
+        for (int linearIndex = 0; linearIndex < sensitivityAndCost.sensitivity.size()/2; ++linearIndex) {
+            const Real myValue = sensitivityAndCost.sensitivity(linearIndex);
+            const int counterpartIndex = getSymmetricCounterpart(linearIndex, numberOfRows, numberOfCols);
+            const Real counterpartValue = sensitivityAndCost.sensitivity(counterpartIndex);
+
+            const Real meanValue = 0.5 * (counterpartValue + myValue);
+            sensitivityAndCost.sensitivity(linearIndex) = meanValue;
+            sensitivityAndCost.sensitivity(counterpartIndex) = meanValue;
+        }
+    } else {
+        log()->info("Not symmetrizing gradient");
+    }
+
+//    const Real sensitivitiesNorm = sensitivityAndCost.sensitivity.lpNorm<1>();
+//
+//    if (sensitivitiesNorm > 10) {
+//        sensitivityAndCost.sensitivity /= sensitivitiesNorm;
+//    }
+
     applyRegularizationIfEnabled(params, logPermeabilities, sensitivityAndCost);
+
+
 
     log()->debug("Sensitivities =\n{}", sensitivityAndCost.sensitivity);
 

@@ -22,6 +22,7 @@ int numberOfRandomWalksToAdd = -1;
 bool enableAntitheticSampling = false;
 Real regularizationParameter = 0;
 std::string logFileName = "log.log";
+bool symmetrizeGradient = false;
 
 void parseCommandLine(const int argc, const char** argv) {
     argh::parser cmdl;
@@ -32,7 +33,7 @@ void parseCommandLine(const int argc, const char** argv) {
 
     compareSensitivities = bool(cmdl[{"-s"}]);
     enableAntitheticSampling = bool(cmdl[{"-a", "--antithetic-sampling"}]);
-
+    symmetrizeGradient = bool(cmdl[{"-S", "-symmetrize-gradient"}]);
 
     cmdl({"-r", "--random-walks"}) >> numberOfRandomWalksToAdd;
     cmdl({"-n", "--dimension"}) >> n;
@@ -56,7 +57,7 @@ int main(const int argc, const char** argv) {
 
 
 
-    spdlog::register_logger(stefCommonHeaders::setUpLog<stefCommonHeaders::NoMutex>(level, false, logFileName.c_str()));
+    spdlog::register_logger(stefCommonHeaders::setUpLog<stefCommonHeaders::NoMutex>(level, true, logFileName.c_str()));
 
     if (n <= 0) {
         log()->error("Didn't specify a positive n. Are you sure you passed a positive value with the -n flag?");
@@ -100,6 +101,7 @@ int main(const int argc, const char** argv) {
     params.maxNumberOfTimesteps = maxNumberOfTimesteps;
     params.numberOfRandomWalksToAdd = numberOfRandomWalksToAdd;
     params.enableAntitheticSampling = enableAntitheticSampling;
+    params.symmetrizeGradient = symmetrizeGradient;
 
     const Real milliDarcy = 1;
     params.initialPermeabilities.resizeLike(params.initialSaturationsWater);
