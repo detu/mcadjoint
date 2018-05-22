@@ -1,0 +1,7 @@
+problem matchdatawithinitial
+sparsedata linearoffdiagonal
+relax       0.01
+m           100
+q_per_dof   10
+nopt        50
+

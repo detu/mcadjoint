@@ -197,14 +197,41 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
     if (params.symmetrizeGradient) {
         log()->info("Symmetrizing gradient");
 
+        Vector copyOfSensitivities = sensitivityAndCost.sensitivity;
+        std::nth_element(copyOfSensitivities.data(), copyOfSensitivities.data() + copyOfSensitivities.size()/2, copyOfSensitivities.data() + copyOfSensitivities.size());
+        const Real median = copyOfSensitivities(copyOfSensitivities.size() / 2);
+        const Real mean = sensitivityAndCost.sensitivity.mean();
+        const Real stdDev = std::sqrt(1.0 /(sensitivityAndCost.sensitivity.size() - 1) * (sensitivityAndCost.sensitivity.array() - mean).square().sum());
         for (int linearIndex = 0; linearIndex < sensitivityAndCost.sensitivity.size()/2; ++linearIndex) {
             const Real myValue = sensitivityAndCost.sensitivity(linearIndex);
             const int counterpartIndex = getSymmetricCounterpart(linearIndex, numberOfRows, numberOfCols);
             const Real counterpartValue = sensitivityAndCost.sensitivity(counterpartIndex);
 
-            const Real meanValue = 0.5 * (counterpartValue + myValue);
-            sensitivityAndCost.sensitivity(linearIndex) = meanValue;
-            sensitivityAndCost.sensitivity(counterpartIndex) = meanValue;
+
+
+            const Real myDistance = std::abs(myValue - median);
+            const Real counterpartDistance = std::abs(counterpartValue - median);
+
+            Real moreRealisticValue = NAN;
+            Real smallerDistance = NAN;
+            if (myDistance < counterpartDistance) {
+                moreRealisticValue = myValue;
+                smallerDistance = myDistance;
+            } else {
+                moreRealisticValue = counterpartValue;
+                smallerDistance = counterpartDistance;
+            }
+
+
+            Real smootherValue = NAN;
+
+            if (smallerDistance < stdDev) {
+                smootherValue = moreRealisticValue;
+            } else {
+                smootherValue = 0.5 * median + 0.5 * moreRealisticValue;
+            }
+            sensitivityAndCost.sensitivity(linearIndex) = smootherValue;
+            sensitivityAndCost.sensitivity(counterpartIndex) = smootherValue;
         }
     } else {
         log()->info("Not symmetrizing gradient");
