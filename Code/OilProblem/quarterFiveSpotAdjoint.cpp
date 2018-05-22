@@ -92,8 +92,8 @@ int main(const int argc, const char** argv) {
 
     params.regularizationParameter = regularizationParameter;
 
-    params.dynamicViscosityOil = 1;//0.630; // SAE motor oil 20°C
-    params.dynamicViscosityWater = 1;//0.0010518; // Water 20°C
+    params.dynamicViscosityOil = 0.630; // SAE motor oil 20°C
+    params.dynamicViscosityWater = 0.0010518; // Water 20°C
 
     params.porosity = 1;
     params.initialSaturationsWater.resize(n, n);

@@ -88,10 +88,7 @@ Real getFirstTimestep() {
 
 
 Real computeTimestep(ConstMatrixRef fluxFunctionFactors, ConstMatrixRef darcyVelocitiesX, ConstMatrixRef darcyVelocitiesY, const Real meshWidth, const Real finalTime, const Real time) {
-    if (useFixedTimestep) {
-        log()->info("Using fixed timestep of {}", getFirstTimestep());
-        return getFirstTimestep();
-    }
+
 
     const Matrix advectionVelocitiesX = computeXDerivative(fluxFunctionFactors, meshWidth).cwiseProduct(darcyVelocitiesX);
     const Matrix advectionVelocitiesY = computeYDerivative(fluxFunctionFactors, meshWidth).cwiseProduct(darcyVelocitiesY);
@@ -110,9 +107,14 @@ Real computeTimestep(ConstMatrixRef fluxFunctionFactors, ConstMatrixRef darcyVel
     log()->debug("max advection speed x = {}", maximumAdvectionSpeedX);
     log()->debug("max advection speed y = {}", maximumAdvectionSpeedY);
 
-    log()->info("Using variable timestep of {}", timestep);
+    if (useFixedTimestep) {
+        log()->info("Using fixed timestep of {}, variable timestep would be {}", getFirstTimestep(), timestep);
+        return getFirstTimestep();
+    } else {
 
-    return timestep;
+        log()->info("Using variable timestep of {}", timestep);
+        return timestep;
+    }
 }
 
 bool advanceSaturationsInTime(const FixedParameters& params, MatrixRef saturationsWater,

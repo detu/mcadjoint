@@ -9,9 +9,11 @@
 #include "saturation.hpp"
 #include <stefCommonHeaders/logging.hpp>
 #include "logging.hpp"
+#include <random>
+#include <ctime>
 
 int main() {
-    const int n = 2;
+    const int n = 10;
 
     auto logger = stefCommonHeaders::setUpLog<stefCommonHeaders::NoMutex>(spdlog::level::level_enum::debug, true, "fd.log");
 
@@ -20,12 +22,22 @@ int main() {
 
     logger->debug("pressure =\n{}", pressures);
 
-    ASSERT(n == 2);
     Matrix saturationsWater(n, n);
-    saturationsWater << 0.7, 0.1,
-                        0.01, 0.8;
 
-    const Matrix permeabilities(Matrix::Ones(n, n));
+    Rng rng(std::time(nullptr));
+
+    std::uniform_real_distribution<Real> standardUniformDistribution;
+    std::lognormal_distribution<Real> lognormalDistribution;
+
+    Matrix permeabilities(n, n);
+
+
+    for (int j = 0; j < n; ++j) {
+        for (int i = 0; i < n; ++i) {
+            saturationsWater(i, j) = standardUniformDistribution(rng);
+            permeabilities(i, j) = lognormalDistribution(rng);
+        }
+    }
     const Matrix logPermeabilities = permeabilities.array().log().matrix();
 
 

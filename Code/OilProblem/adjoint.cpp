@@ -55,6 +55,13 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
 
     bool stillInTheSameTimestep;
 
+    if (!currentState.isAPressure) {
+        const int 
+        const Real colSum = pressureResidualsBySaturationsWater.col()
+    }
+
+
+
 
     std::vector<Real> candidateUnnormalizedProbabilities;
     std::vector<Candidate> candidates;
@@ -96,7 +103,7 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
             //log()->debug("from ({}, {}) to ({}, {})", currentState.cell, currentState.isAPressure, target, targetIsPressure);
             //log()->debug("corresponding entry of a matrix = {}", correspondingEntryOfAMatrix);
             ASSERT(std::isfinite(correspondingEntryOfAMatrix));
-            const Real  correspondingEntryOfBVector = b(cellIndexToBIndex(target, targetIsPressure, numberOfRows, numberOfCols));
+            const Real  correspondingEntryOfBVector =  * b(cellIndexToBIndex(target, targetIsPressure, numberOfRows, numberOfCols));
             ASSERT(std::isfinite(correspondingEntryOfBVector));
 
             const Real candidateUnnormalizedProbability = std::abs(correspondingEntryOfAMatrix);

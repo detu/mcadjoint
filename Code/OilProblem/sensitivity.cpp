@@ -214,12 +214,6 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
         log()->info("Not symmetrizing gradient");
     }
 
-//    const Real sensitivitiesNorm = sensitivityAndCost.sensitivity.lpNorm<1>();
-//
-//    if (sensitivitiesNorm > 10) {
-//        sensitivityAndCost.sensitivity /= sensitivitiesNorm;
-//    }
-
     applyRegularizationIfEnabled(params, logPermeabilities, sensitivityAndCost);
 
 
