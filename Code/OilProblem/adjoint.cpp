@@ -43,9 +43,10 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
         const bool isAPressure;
         const Real correspondingEntryOfAMatrix;
         const Real correspondingEntryOfBVector;
+        const bool advancesTime;
     };
 
-    static constexpr Candidate absorptionCandidate = {CellIndex::invalidCell(), false, 0, 0};
+    static constexpr Candidate absorptionCandidate = {CellIndex::invalidCell(), false, 0, 0, true};
 
 
 
@@ -55,16 +56,14 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
 
     bool stillInTheSameTimestep;
 
-    if (!currentState.isAPressure) {
-        const int 
-        const Real colSum = pressureResidualsBySaturationsWater.col()
-    }
 
 
 
 
     std::vector<Real> candidateUnnormalizedProbabilities;
     std::vector<Candidate> candidates;
+    WiderReal sumOfUnnormalizedProbabilities = 0;
+
 
 
     ASSERT(std::isfinite(currentState.W));
@@ -81,8 +80,36 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
     const SparseMatrix& pressureResidualsDerived = (currentState.isAPressure? pressureResidualsByPressures: pressureResidualsBySaturationsWater);
     const SparseMatrix& saturationWaterResidualsDerived = currentState.isAPressure? saturationsWaterResidualsByPressure: saturationsWaterResidualsBySaturationsWater;
 
+    Real correctionFactorForGamma = 1;
 
-    WiderReal sumOfUnnormalizedProbabilities = 0;
+    if (correctForGamma) {
+        Real colSum = 0;
+        const int myLinearIndex = currentState.cell.linearIndex(numberOfRows);
+        if (currentState.isAPressure) {
+            colSum = saturationWaterResidualsDerived.col(myLinearIndex).cwiseAbs().sum();
+        } else {
+            colSum = pressureResidualsDerived.col(myLinearIndex).cwiseAbs().sum() +
+                     saturationWaterResidualsDerived.col(myLinearIndex).cwiseAbs().sum();
+        }
+
+        correctionFactorForGamma = std::max(1.0, colSum);
+
+        const Real correspondingEntryOfA = 1.0 - 1.0 / correctionFactorForGamma;
+        const Real correspondingEntryOfB = b(cellIndexToBIndex(currentState.cell, currentState.isAPressure, numberOfRows, numberOfCols)) / correctionFactorForGamma;
+        const bool advancesTime = false;
+
+        const Real candidateUnnormalizedProbability = std::abs(correspondingEntryOfA);
+        sumOfUnnormalizedProbabilities += candidateUnnormalizedProbability;
+
+        if (candidateUnnormalizedProbability > 0.0) {
+            candidateUnnormalizedProbabilities.push_back(candidateUnnormalizedProbability);
+            candidates.push_back({currentState.cell, currentState.isAPressure, correspondingEntryOfA, correspondingEntryOfB, advancesTime});
+        }
+
+
+    }
+
+
 
 
     for (const CellIndex& target: currentState.cell.neighborsAndMyself(numberOfRows, numberOfCols)) {
@@ -99,20 +126,25 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
 
             const CellIndex neighborToMe = pressureToTransmissibilityIndex(target, currentState.cell, numberOfRows);
 
-            const Real correspondingEntryOfAMatrix = Real(targetIsPressure && currentState.isAPressure && target == currentState.cell) - neighborToMe(correspondingDerivative);
+            if (targetIsPressure && currentState.isAPressure && currentState.cell == target) {
+                // handled above
+                continue;
+            }
+
+            const Real correspondingEntryOfAMatrix = -neighborToMe(correspondingDerivative) / correctionFactorForGamma;
             //log()->debug("from ({}, {}) to ({}, {})", currentState.cell, currentState.isAPressure, target, targetIsPressure);
             //log()->debug("corresponding entry of a matrix = {}", correspondingEntryOfAMatrix);
             ASSERT(std::isfinite(correspondingEntryOfAMatrix));
-            const Real  correspondingEntryOfBVector =  * b(cellIndexToBIndex(target, targetIsPressure, numberOfRows, numberOfCols));
+            const Real  correspondingEntryOfBVector =  b(cellIndexToBIndex(target, targetIsPressure, numberOfRows, numberOfCols)) / correctionFactorForGamma;
             ASSERT(std::isfinite(correspondingEntryOfBVector));
 
             const Real candidateUnnormalizedProbability = std::abs(correspondingEntryOfAMatrix);
 
 
             if (candidateUnnormalizedProbability > 0) {
-                Candidate candidatePressure = {target, targetIsPressure, correspondingEntryOfAMatrix,
-                                               correspondingEntryOfBVector};
-                candidates.push_back(std::move(candidatePressure));
+                Candidate candidate = {target, targetIsPressure, correspondingEntryOfAMatrix,
+                                               correspondingEntryOfBVector, !currentState.isAPressure};
+                candidates.push_back(std::move(candidate));
                 candidateUnnormalizedProbabilities.push_back(candidateUnnormalizedProbability);
             }
 
@@ -176,11 +208,11 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
     }
 
 
-    if (currentState.isAPressure) {
-        stillInTheSameTimestep = true;
-    } else {
+    if (chosenCandidate.advancesTime) {
         ++currentState.currentTimelevel;
         stillInTheSameTimestep = false;
+    } else {
+        stillInTheSameTimestep = true;
     }
 
 

@@ -53,15 +53,12 @@ SensitivityAndCost computeSensitivityAndCostTraditional(const FixedParameters& p
 
         cost += computeContributionToCost(params, simulationState);
         log()->info("time = {}", simulationState.time);
-        if (!brokeThrough && (currentTimelevel % 10 == 0)) {
 
-            dumpThis("adjointMatrixTrad", adjointMatrix);
-            dumpThis("adjointRhsTrad", adjointRhs);
-            dumpThis("completeCTrad", completeC);
-            writeToMatFile();
-            ASSERT(allFinite(adjointMatrix));
-            ASSERT(allFinite(adjointRhs));
-        }
+        dumpThis("adjointMatrixTrad", adjointMatrix);
+        dumpThis("adjointRhsTrad", adjointRhs);
+        dumpThis("completeCTrad", completeC);
+        ASSERT(allFinite(adjointMatrix));
+        ASSERT(allFinite(adjointRhs));
     }
     log()->debug("broke through? {}", brokeThrough);
 
@@ -79,7 +76,6 @@ SensitivityAndCost computeSensitivityAndCostTraditional(const FixedParameters& p
     applyRegularizationIfEnabled(params, logPermeabilities, sensitivityAndCost);
 
     dumpThis("sensitivityTrad", sensitivityAndCost.sensitivity);
-    writeToMatFile();
 
     return sensitivityAndCost;
 

@@ -9,4 +9,4 @@ static constexpr bool initializeJustAtBeginning = !enableAbsorption;
 
 static constexpr bool preferSaturations = false;
 static constexpr Real preferenceForSaturations = 2;
-
+static constexpr bool correctForGamma = true;
