@@ -14,6 +14,7 @@
 #include "regularization.hpp"
 #include "dumpToMatFile.hpp"
 #include "utils.hpp"
+#include "adjointOptions.hpp"
 
 #include <cmath>
 #include <list>
@@ -162,11 +163,15 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
 
 
     sensitivities.array() /= numberOfRandomWalksPerParameter.array().cwiseMax(1).cast<WiderReal>();
-    sensitivities.array() *= currentTimeLevel;
+    if (!initializeJustAtBeginning) {
+        sensitivities.array() *= currentTimeLevel;
+    }
 
     if (params.enableAntitheticSampling) {
         sensitivitiesAntithetic.array() /= numberOfRandomWalksPerParameterAntithetic.array().cwiseMax(1).cast<WiderReal>();
-        sensitivitiesAntithetic.array() *= currentTimeLevel;
+        if (!initializeJustAtBeginning) {
+            sensitivitiesAntithetic.array() *= currentTimeLevel;
+        }
     }
 
 

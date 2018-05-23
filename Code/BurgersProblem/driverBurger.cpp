@@ -547,6 +547,9 @@ void Driver::solve_Burger() {
          ******/
         FILE* file = fopen("out", "w");
 
+        std::vector<char> gnuPlotCommand(1000);
+        std::sprintf(gnuPlotCommand.data(), "set output 'adjointmc_frame%04d.png'", k);
+        g.cmd(gnuPlotCommand.data());
 
 
         switch (problem) {
