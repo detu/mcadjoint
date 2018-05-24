@@ -125,7 +125,6 @@ void preconditionMatrices(const int numberOfRows, const int numberOfCols,
 
             saturationsByPressures = saturationsWaterResidualsByPressuresTransposed.transpose();
             saturationsByPressures.makeCompressed();
-            ASSERT(saturationsByPressures.valuePtr());
             break;
         }
 
