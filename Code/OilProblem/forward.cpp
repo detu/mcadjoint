@@ -179,7 +179,7 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
         #pragma message "Just computing adjoint"
     SparseMatrix c(numberOfParameters*2, numberOfParameters);
     for (int j = 0; j < std::min(c.cols(), c.rows()); ++j) {
-            c.coeffRef(j, j) = -(currentTimelevel == 0);
+            c.coeffRef(j, j) = -(currentTimelevel == 1);
     }
 
     #else
