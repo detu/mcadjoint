@@ -163,16 +163,17 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
 
 
     sensitivities.array() /= numberOfRandomWalksPerParameter.array().cwiseMax(1).cast<WiderReal>();
-    if (!initializeJustAtBeginning) {
+    /*if (!initializeJustAtBeginning) {
         sensitivities.array() *= currentTimeLevel;
-    }
+    }*/
 
     if (params.enableAntitheticSampling) {
         sensitivitiesAntithetic.array() /= numberOfRandomWalksPerParameterAntithetic.array().cwiseMax(1).cast<WiderReal>();
-        if (!initializeJustAtBeginning) {
+        /*if (!initializeJustAtBeginning) {
             sensitivitiesAntithetic.array() *= currentTimeLevel;
-        }
+        }*/
     }
+
 
 
     Real antitheticPart = 0;
@@ -243,9 +244,13 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
     }
 
     applyRegularizationIfEnabled(params, logPermeabilities, sensitivityAndCost);
+    #define JUST_COMPUTE_ADJOINT
+    #ifdef JUST_COMPUTE_ADJOINT
+        #pragma message "Just computing adjoint"
 
-
-
+    dumpThis("adjointMC", sensitivityAndCost.sensitivity);
+        #endif
+    dumpThis("sensitivities", sensitivityAndCost.sensitivity);
     log()->debug("Sensitivities =\n{}", sensitivityAndCost.sensitivity);
 
     return sensitivityAndCost;
