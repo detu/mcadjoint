@@ -51,8 +51,8 @@ struct PermeabilitiesProblem: public BoundedProblem<Real> {
             const Eigen::Map<const Matrix> permeabilities(permeabilitiesAsVector.data(), numberOfRows, numberOfCols);
             const Eigen::Map<const Matrix> logPermeabilities(logPermeabilitiesAsRowVector.data(), numberOfRows, numberOfCols);
 
-            const auto computedSensitivityAndCost = computeSensitivityAndCost(params, permeabilities, logPermeabilities,
-                                                                              rng);
+            const auto computedSensitivityAndCost = (params.traditionalMinimization? computeSensitivityAndCostTraditional(params, permeabilities, logPermeabilities):
+                                                     computeSensitivityAndCost(params, permeabilities, logPermeabilities, rng));
 
             sensitivitiesAndCosts.insert(std::make_pair(logPermeabilitiesAsRowVector, computedSensitivityAndCost));
 
@@ -126,7 +126,7 @@ matchWithPermeabilities(const FixedParameters& params, const Real tolerance, con
 
 
 
-    LbfgsbSolver<PermeabilitiesProblem> solver;
+    GradientDescentSolver<PermeabilitiesProblem> solver;
     const Vector initialPermeabilitiesAsVector = Eigen::Map<const Vector>(params.initialPermeabilities.data(), params.initialPermeabilities.size());
     Vector logPermeabilitiesAsVector = initialPermeabilitiesAsVector.array().log().matrix();
 

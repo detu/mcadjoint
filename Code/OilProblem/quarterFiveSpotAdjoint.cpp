@@ -23,6 +23,7 @@ bool enableAntitheticSampling = false;
 Real regularizationParameter = 0;
 std::string logFileName = "log.log";
 bool symmetrizeGradient = false;
+bool traditionalMinimization = false;
 
 void parseCommandLine(const int argc, const char** argv) {
     argh::parser cmdl;
@@ -34,7 +35,7 @@ void parseCommandLine(const int argc, const char** argv) {
     compareSensitivities = bool(cmdl[{"-s"}]);
     enableAntitheticSampling = bool(cmdl[{"-a", "--antithetic-sampling"}]);
     symmetrizeGradient = bool(cmdl[{"-S", "-symmetrize-gradient"}]);
-
+    traditionalMinimization = bool(cmdl[{"-T", "--traditional"}]);
     cmdl({"-r", "--random-walks"}) >> numberOfRandomWalksToAdd;
     cmdl({"-n", "--dimension"}) >> n;
     cmdl({"-l", "--level"}) >> levelName;
@@ -98,10 +99,19 @@ int main(const int argc, const char** argv) {
     params.porosity = 1;
     params.initialSaturationsWater.resize(n, n);
     params.initialSaturationsWater.setConstant(0);
+    findDrillCell(n, n)(params.initialSaturationsWater) = 1;
     params.maxNumberOfTimesteps = maxNumberOfTimesteps;
     params.numberOfRandomWalksToAdd = numberOfRandomWalksToAdd;
     params.enableAntitheticSampling = enableAntitheticSampling;
     params.symmetrizeGradient = symmetrizeGradient;
+    params.traditionalMinimization = traditionalMinimization;
+
+
+    if (params.traditionalMinimization) {
+        log()->info("Traditional minimization");
+    } else {
+        log()->info("MC based minimization");
+    }
 
     const Real milliDarcy = 1;
     params.initialPermeabilities.resizeLike(params.initialSaturationsWater);

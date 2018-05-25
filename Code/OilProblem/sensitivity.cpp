@@ -54,17 +54,20 @@ SensitivityAndCost computeSensitivityAndCostTraditional(const FixedParameters& p
 
         cost += computeContributionToCost(params, simulationState);
         log()->info("time = {}", simulationState.time);
-
-        dumpThis("adjointMatrixTrad", adjointMatrix);
-        dumpThis("adjointRhsTrad", adjointRhs);
-        dumpThis("completeCTrad", completeC);
+        //if (!params.traditionalMinimization) {
+            dumpThis("adjointMatrixTrad", adjointMatrix);
+            dumpThis("adjointRhsTrad", adjointRhs);
+            dumpThis("completeCTrad", completeC);
+        //}
         ASSERT(allFinite(adjointMatrix));
         ASSERT(allFinite(adjointRhs));
     }
     log()->debug("broke through? {}", brokeThrough);
 
     const Vector adjoint = adjointMatrix.lu().solve(adjointRhs);
-    dumpThis("adjointTrad", adjoint);
+    //if (!params.traditionalMinimization) {
+        dumpThis("adjointTrad", adjoint);
+    //}
 
     const Vector sensitivities = -completeC.transpose() * adjoint;
 
@@ -244,7 +247,6 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
     }
 
     applyRegularizationIfEnabled(params, logPermeabilities, sensitivityAndCost);
-    #define JUST_COMPUTE_ADJOINT
     #ifdef JUST_COMPUTE_ADJOINT
         #pragma message "Just computing adjoint"
 
