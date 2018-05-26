@@ -94,9 +94,9 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
 
         correctionFactorForGamma = std::max(1.0, colSum);
 
-        const Real correspondingEntryOfA = 1.0 - 1.0 / correctionFactorForGamma;
+        const Real correspondingEntryOfA = 1 - 1 / correctionFactorForGamma;
         const Real correspondingEntryOfB = b(cellIndexToBIndex(currentState.cell, currentState.isAPressure, numberOfRows, numberOfCols)) / correctionFactorForGamma;
-        log()->debug("Col sum = {}, corrected col sum = {}", colSum, (colSum > 1? 2.0 * (1 - 1.0 / colSum): colSum));
+        //log()->info("Col sum = {}, corrected col sum = {}", colSum, (colSum > 1? 2.0 * (1 - 1.5 / colSum): colSum));
         const bool advancesTime = false;
 
         const Real candidateUnnormalizedProbability = std::abs(correspondingEntryOfA);

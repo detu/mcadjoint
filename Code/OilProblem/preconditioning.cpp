@@ -17,13 +17,7 @@ static SparseMatrix computeTargetPressureByPressureMatrix(const SparseMatrix& pr
 
     SparseMatrixRowMajor target(pressuresByPressures.rows(), pressuresByPressures.cols());
     target.setIdentity();
-    target *= 0.5;
 
-    if (false) {
-        for (int colIndex = 0; colIndex < target.cols() - 1; ++colIndex) {
-            target.coeffRef(colIndex + 1, colIndex) = 0.05;
-        }
-    }
 
     return target;
 }
