@@ -50,7 +50,7 @@ SensitivityAndCost computeSensitivityAndCostTraditional(const FixedParameters& p
     bool brokeThrough = false;
     Real cost = 0;
     for (int currentTimelevel = 0; currentTimelevel < numberOfTimesteps && !brokeThrough; ++currentTimelevel) {
-        brokeThrough = stepForwardAndAdjointProblemTraditional(params, params.initialPermeabilities, currentTimelevel, simulationState, adjointMatrix, adjointRhs, completeC);
+        brokeThrough = stepForwardAndAdjointProblemTraditional(params, permeabilities, currentTimelevel, simulationState, adjointMatrix, adjointRhs, completeC);
 
         cost += computeContributionToCost(params, simulationState);
         log()->info("time = {}", simulationState.time);
@@ -64,7 +64,7 @@ SensitivityAndCost computeSensitivityAndCostTraditional(const FixedParameters& p
     }
     log()->debug("broke through? {}", brokeThrough);
 
-    const Vector adjoint = adjointMatrix.lu().solve(adjointRhs);
+    const Vector adjoint = adjointMatrix.householderQr().solve(adjointRhs);
     //if (!params.traditionalMinimization) {
         dumpThis("adjointTrad", adjoint);
     //}
