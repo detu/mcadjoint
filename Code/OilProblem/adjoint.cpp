@@ -86,22 +86,23 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
         Real colSum = 0;
         const int myLinearIndex = currentState.cell.linearIndex(numberOfRows);
         if (currentState.isAPressure) {
-            colSum = saturationWaterResidualsDerived.col(myLinearIndex).cwiseAbs().sum();
+            colSum = saturationWaterResidualsDerived.col(myLinearIndex).cwiseAbs().sum() + pressureResidualsDerived.col(myLinearIndex).cwiseAbs().sum() ;
         } else {
             colSum = pressureResidualsDerived.col(myLinearIndex).cwiseAbs().sum() +
-                     saturationWaterResidualsDerived.col(myLinearIndex).cwiseAbs().sum();
+                     saturationWaterResidualsDerived.col(myLinearIndex).cwiseAbs().sum() + 1;
         }
 
         correctionFactorForGamma = std::max(1.0, colSum);
 
-        const Real correspondingEntryOfA = 1.0 - 1.0 / correctionFactorForGamma;
+        const Real correspondingEntryOfA = 1 - 0.5 / correctionFactorForGamma;
         const Real correspondingEntryOfB = b(cellIndexToBIndex(currentState.cell, currentState.isAPressure, numberOfRows, numberOfCols)) / correctionFactorForGamma;
+        //log()->info("Col sum = {}, corrected col sum = {}", colSum, (colSum > 1? 2.0 * (1 - 1.5 / colSum): colSum));
         const bool advancesTime = false;
 
-        const Real candidateUnnormalizedProbability = std::abs(correspondingEntryOfA);
+        const Real candidateUnnormalizedProbability = std::abs(1 - 1/correctionFactorForGamma);
         sumOfUnnormalizedProbabilities += candidateUnnormalizedProbability;
 
-        if (candidateUnnormalizedProbability > 0.0) {
+        if (false && candidateUnnormalizedProbability > 0.0) {
             candidateUnnormalizedProbabilities.push_back(candidateUnnormalizedProbability);
             candidates.push_back({currentState.cell, currentState.isAPressure, correspondingEntryOfA, correspondingEntryOfB, advancesTime});
         }
@@ -369,7 +370,7 @@ void addNewRandomWalks(const int numberOfRows, const int numberOfCols, const int
 
                 const WiderReal prob = std::abs(cValue) / cNorm;
                 if (prob < minimumProbabilityToBeAdded) {
-                    continue;
+                        continue;
                 }
 
                 RandomWalkState initialState;

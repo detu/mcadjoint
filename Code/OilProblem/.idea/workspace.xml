@@ -2,18 +2,18 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true" buildAllGenerated="true">
     <generated>
-      <config projectName="stefCommonHeaders" targetName="DerivativesForAdjointTest" />
-      <config projectName="stefCommonHeaders" targetName="copyZlibToMatioDir" />
       <config projectName="stefCommonHeaders" targetName="simplematio" />
       <config projectName="stefCommonHeaders" targetName="check" />
-      <config projectName="stefCommonHeaders" targetName="matio" />
+      <config projectName="stefCommonHeaders" targetName="copyZlibToMatioDir" />
       <config projectName="stefCommonHeaders" targetName="EigenSimplematioTest" />
       <config projectName="stefCommonHeaders" targetName="Test" />
-      <config projectName="stefCommonHeaders" targetName="simplematiof" />
+      <config projectName="stefCommonHeaders" targetName="matio" />
       <config projectName="stefCommonHeaders" targetName="zlib" />
       <config projectName="stefCommonHeaders" targetName="EigenSimplematioTestFloat" />
       <config projectName="stefCommonHeaders" targetName="QuarterFiveSpot" />
+      <config projectName="stefCommonHeaders" targetName="DerivativesForAdjointTest" />
       <config projectName="stefCommonHeaders" targetName="QuarterFiveSpotAdjoint" />
+      <config projectName="stefCommonHeaders" targetName="simplematiof" />
       <config projectName="stefCommonHeaders" targetName="TestVerbose" />
     </generated>
   </component>
@@ -26,7 +26,113 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="243856ce-78f7-4963-8ee2-7f94acac5c1e" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../BurgersProblem/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0000.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0000.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0001.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0001.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0002.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0002.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0003.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0003.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0004.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0004.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0005.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0005.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0006.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0006.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0007.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0007.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0008.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0008.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0009.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0009.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0010.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0010.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0011.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0011.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0012.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0012.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0013.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0013.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0014.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0014.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0015.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0015.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0016.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0016.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0017.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0017.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0018.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0018.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0019.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0019.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0020.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0020.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0021.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0021.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0022.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0022.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0023.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0023.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0024.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0024.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0025.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0025.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0026.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0026.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0027.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0027.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0028.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0028.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0029.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0029.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0030.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0030.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0031.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0031.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0032.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0032.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0033.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0033.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0034.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0034.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0035.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0035.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0036.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0036.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0037.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0037.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0038.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0038.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0039.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0039.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0040.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0040.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0041.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0041.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0042.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0042.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0043.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0043.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0044.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0044.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0045.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0045.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0046.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0046.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0047.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0047.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0048.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0048.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0049.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0049.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0050.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0050.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0051.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0051.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0052.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0052.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0053.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0053.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0054.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0054.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0055.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0055.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0056.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0056.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0057.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0057.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0058.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0058.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0059.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0059.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0060.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0060.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0061.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0061.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0062.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0062.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0063.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0063.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0064.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0064.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0065.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0065.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0066.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0066.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0067.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0067.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0068.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0068.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0069.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0069.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0070.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0070.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0071.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0071.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0072.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0072.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0073.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0073.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0074.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0074.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0075.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0075.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0076.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0076.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0077.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0077.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0078.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0078.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0079.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0079.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0080.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0080.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0081.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0081.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0082.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0082.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0083.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0083.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0084.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0084.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0085.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0085.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0086.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0086.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0087.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0087.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0088.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0088.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0089.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0089.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0090.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0090.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0091.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0091.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0092.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0092.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0093.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0093.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0094.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0094.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0095.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0095.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0096.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0096.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0097.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0097.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0098.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0098.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0099.png" afterPath="$PROJECT_DIR$/../BurgersProblem/adjointmc_frame0099.png" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/control" afterPath="$PROJECT_DIR$/../BurgersProblem/control" />
+      <change beforePath="$PROJECT_DIR$/../BurgersProblem/out" afterPath="$PROJECT_DIR$/../BurgersProblem/out" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/adjoint.cpp" afterPath="$PROJECT_DIR$/adjoint.cpp" />
+      <change beforePath="$PROJECT_DIR$/preconditioning.cpp" afterPath="$PROJECT_DIR$/preconditioning.cpp" />
+      <change beforePath="$PROJECT_DIR$/sensitivity.cpp" afterPath="$PROJECT_DIR$/sensitivity.cpp" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/cmake-build-release/" />
@@ -48,11 +154,19 @@
       <file leaf-file-name="sensitivity.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sensitivity.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="146">
-              <caret line="93" column="20" lean-forward="false" selection-start-line="93" selection-start-column="20" selection-end-line="93" selection-end-column="20" />
-              <folding>
-                <element signature="e#42#68#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="445">
+              <caret line="59" column="51" lean-forward="true" selection-start-line="59" selection-start-column="51" selection-end-line="59" selection-end-column="51" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SparseMatrix.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../thirdParty/eigen/Eigen/src/SparseCore/SparseMatrix.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="225">
+              <caret line="195" column="0" lean-forward="false" selection-start-line="195" selection-start-column="0" selection-end-line="195" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -60,8 +174,18 @@
       <file leaf-file-name="quarterFiveSpotAdjoint.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/quarterFiveSpotAdjoint.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="752">
-              <caret line="125" column="50" lean-forward="false" selection-start-line="125" selection-start-column="50" selection-end-line="125" selection-end-column="50" />
+            <state relative-caret-position="-428">
+              <caret line="101" column="60" lean-forward="false" selection-start-line="101" selection-start-column="60" selection-end-line="101" selection-end-column="60" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="cellindex.hpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cellindex.hpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="300">
+              <caret line="61" column="0" lean-forward="false" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -70,38 +194,18 @@
       <file leaf-file-name="preconditioning.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/preconditioning.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="287">
-              <caret line="42" column="25" lean-forward="false" selection-start-line="42" selection-start-column="25" selection-end-line="42" selection-end-column="25" />
+            <state relative-caret-position="205">
+              <caret line="19" column="6" lean-forward="false" selection-start-line="19" selection-start-column="6" selection-end-line="19" selection-end-column="6" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="preconditioning.hpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/preconditioning.hpp">
+      <file leaf-file-name="darcyVelocity.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/darcyVelocity.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="15" lean-forward="false" selection-start-line="9" selection-start-column="15" selection-end-line="9" selection-end-column="15" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="forward.hpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/forward.hpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="14" column="7" lean-forward="false" selection-start-line="14" selection-start-column="7" selection-end-line="14" selection-end-column="7" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="forwardOptions.hpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/forwardOptions.hpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -110,8 +214,32 @@
       <file leaf-file-name="forward.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/forward.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="411">
-              <caret line="261" column="0" lean-forward="false" selection-start-line="261" selection-start-column="0" selection-end-line="261" selection-end-column="0" />
+            <state relative-caret-position="3540">
+              <caret line="251" column="0" lean-forward="false" selection-start-line="251" selection-start-column="0" selection-end-line="251" selection-end-column="0" />
+              <folding>
+                <element signature="e#8932#9158#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="adjoint.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/adjoint.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="571">
+              <caret line="129" column="16" lean-forward="false" selection-start-line="129" selection-start-column="16" selection-end-line="129" selection-end-column="16" />
+              <folding>
+                <element signature="e#6784#7029#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="derivativesForAdjoint.cpp" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/derivativesForAdjoint.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-4186">
+              <caret line="36" column="21" lean-forward="false" selection-start-line="36" selection-start-column="21" selection-end-line="36" selection-end-column="21" />
               <folding />
             </state>
           </provider>
@@ -120,30 +248,8 @@
       <file leaf-file-name="adjointOptions.hpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/adjointOptions.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="adjoint.cpp" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/adjoint.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1047">
-              <caret line="112" column="0" lean-forward="false" selection-start-line="112" selection-start-column="0" selection-end-line="112" selection-end-column="0" />
-              <folding>
-                <element signature="e#6581#6826#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="adjoint.hpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/adjoint.hpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="9" column="77" lean-forward="false" selection-start-line="9" selection-start-column="77" selection-end-line="9" selection-end-column="77" />
+            <state relative-caret-position="165">
+              <caret line="11" column="44" lean-forward="false" selection-start-line="11" selection-start-column="44" selection-end-line="11" selection-end-column="44" />
               <folding />
             </state>
           </provider>
@@ -156,9 +262,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>absorb</find>
-      <find>trad</find>
-      <find>adjointMatrixTrad</find>
       <find>corre</find>
       <find>fullPivLu</find>
       <find>ifdef</find>
@@ -185,7 +288,10 @@
       <find>addNew</find>
       <find>addR</find>
       <find>write</find>
-      <find>preconditionMa</find>
+      <find>transitionS</find>
+      <find>add</find>
+      <find>JUST</find>
+      <find>transition</find>
     </findStrings>
     <replaceStrings>
       <replace>int</replace>
@@ -246,19 +352,19 @@
         <option value="$PROJECT_DIR$/pickAnIndex.cpp" />
         <option value="$PROJECT_DIR$/typedefs.hpp" />
         <option value="$PROJECT_DIR$/randomWalkState.hpp" />
-        <option value="$PROJECT_DIR$/minimizer.cpp" />
         <option value="$PROJECT_DIR$/regularization.cpp" />
         <option value="$PROJECT_DIR$/preconditioning.hpp" />
         <option value="$PROJECT_DIR$/preconditioningOptions.hpp" />
-        <option value="$PROJECT_DIR$/fixedParameters.hpp" />
         <option value="$PROJECT_DIR$/saturation.cpp" />
-        <option value="$PROJECT_DIR$/quarterFiveSpotAdjoint.cpp" />
         <option value="$PROJECT_DIR$/derivativesForAdjointTest.cpp" />
-        <option value="$PROJECT_DIR$/preconditioning.cpp" />
         <option value="$PROJECT_DIR$/forwardOptions.hpp" />
+        <option value="$PROJECT_DIR$/fixedParameters.hpp" />
+        <option value="$PROJECT_DIR$/forward.cpp" />
+        <option value="$PROJECT_DIR$/quarterFiveSpotAdjoint.cpp" />
+        <option value="$PROJECT_DIR$/minimizer.cpp" />
         <option value="$PROJECT_DIR$/adjointOptions.hpp" />
         <option value="$PROJECT_DIR$/adjoint.cpp" />
-        <option value="$PROJECT_DIR$/forward.cpp" />
+        <option value="$PROJECT_DIR$/preconditioning.cpp" />
         <option value="$PROJECT_DIR$/sensitivity.cpp" />
       </list>
     </option>
@@ -270,11 +376,9 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="OCFindUsagesOptions" text="false" ivars="false" properties="true" derivedClasses="false" />
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="203" />
-    <option name="y" value="30" />
-    <option name="width" value="1680" />
-    <option name="height" value="1046" />
+  <component name="ProjectFrameBounds">
+    <option name="width" value="1280" />
+    <option name="height" value="796" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Default">
@@ -403,11 +507,11 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.CompareSensitivities">
+  <component name="RunManager" selected="Application.QuarterFiveSpotAdjoint">
     <configuration name="Build All" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="QuarterFiveSpotAdjoint" EXPLICIT_BUILD_TARGET_NAME="all">
       <envs />
     </configuration>
-    <configuration name="CompareSensitivities" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-n 10 --level info -s -m compareSensitivities.mat -M 100 -r 10" WORKING_DIR="file://$PROJECT_DIR$/../../Run" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="QuarterFiveSpotAdjoint" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="QuarterFiveSpotAdjoint">
+    <configuration name="CompareSensitivities" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-n 3 --level info -m compareSensitivities.mat -M 50 -r 100 -s" WORKING_DIR="file://$PROJECT_DIR$/../../Run" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="QuarterFiveSpotAdjoint" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="QuarterFiveSpotAdjoint">
       <envs />
     </configuration>
     <configuration name="DerivativesForAdjointTest" type="CMakeRunConfiguration" factoryName="Application" WORKING_DIR="file://$PROJECT_DIR$/../../Run" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="DerivativesForAdjointTest" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="DerivativesForAdjointTest">
@@ -427,7 +531,7 @@
     <configuration name="QuarterFiveSpot" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-n 100 --level info" WORKING_DIR="file://$PROJECT_DIR$/../../Run" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="QuarterFiveSpot" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="QuarterFiveSpotAdjoint">
       <envs />
     </configuration>
-    <configuration name="QuarterFiveSpotAdjoint" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-n 10 --level info -r 30000 -M 10 -m adjoint.mat -a -s" WORKING_DIR="file://$PROJECT_DIR$/../../Run" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="QuarterFiveSpotAdjoint" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="QuarterFiveSpotAdjoint">
+    <configuration name="QuarterFiveSpotAdjoint" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-n 10 --level info -r 100 -M 50 -m adjointMC50Trad.mat -T" WORKING_DIR="file://$PROJECT_DIR$/../../Run" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="QuarterFiveSpotAdjoint" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="QuarterFiveSpotAdjoint">
       <envs />
     </configuration>
     <configuration name="Test" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="--exec=never" PASS_PARENT_ENVS_2="true" PROJECT_NAME="stefCommonHeaders" TARGET_NAME="Test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="stefCommonHeaders" RUN_TARGET_NAME="Test">
@@ -516,6 +620,7 @@
       <workItem from="1526586416155" duration="5989000" />
       <workItem from="1526722380888" duration="38517000" />
       <workItem from="1526925169266" duration="6151000" />
+      <workItem from="1526993921310" duration="10327000" />
     </task>
     <task id="LOCAL-00001" summary="TODO mainloop">
       <created>1524994887598</created>
@@ -535,7 +640,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="539966000" />
+    <option name="totallyTimeSpent" value="576960000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -547,20 +652,19 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1280" height="796" extended-state="6" />
+    <frame x="93" y="0" width="1920" height="1075" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.49642575" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.21116377" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32912722" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2981455" sideWeight="0.6099034" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24500526" sideWeight="0.83272946" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.21020408" sideWeight="0.6099034" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24489796" sideWeight="0.83272946" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32536975" sideWeight="0.3900966" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4550642" sideWeight="0.4853058" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22681883" sideWeight="0.2652899" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22653061" sideWeight="0.2652899" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32912722" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24960506" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32912722" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32912722" sideWeight="0.4813344" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3265306" sideWeight="0.4813344" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32912722" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -630,68 +734,10 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../thirdParty/eigen/Eigen/src/Core/DenseBase.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="330" column="4" lean-forward="false" selection-start-line="330" selection-start-column="4" selection-end-line="330" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../thirdParty/eigen/Eigen/src/Core/PlainObjectBase.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="147">
-          <caret line="311" column="0" lean-forward="false" selection-start-line="311" selection-start-column="0" selection-end-line="311" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../thirdParty/CppNumericalSolvers/include/cppoptlib/boundedproblem.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="212">
-          <caret line="44" column="0" lean-forward="false" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/minimizer.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/specialCells.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pressure.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="4" column="7" lean-forward="false" selection-start-line="4" selection-start-column="7" selection-end-line="4" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/saturationOptions.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="39" lean-forward="false" selection-start-line="5" selection-start-column="39" selection-end-line="5" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/saturation.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="5" column="5" lean-forward="false" selection-start-line="5" selection-start-column="5" selection-end-line="5" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/quarterFiveSpot.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -732,8 +778,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../thirdParty/eigen/Eigen/src/SparseCore/SparseMatrix.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="147">
-          <caret line="151" column="0" lean-forward="false" selection-start-line="151" selection-start-column="0" selection-end-line="151" selection-end-column="0" />
+        <state relative-caret-position="225">
+          <caret line="195" column="0" lean-forward="false" selection-start-line="195" selection-start-column="0" selection-end-line="195" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -773,13 +820,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/quarterFiveSpotTraditional.cpp" />
-    <entry file="file://$PROJECT_DIR$/sensitivity.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="19" lean-forward="false" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/utils.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="435">
@@ -802,39 +842,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/derivativesForAdjointFD.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/derivativesForAdjoint.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../Build/Release/OilProblem/simplematio/libmatio/src/matio/src/mat5.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
           <caret line="4068" column="40" lean-forward="false" selection-start-line="4068" selection-start-column="40" selection-end-line="4068" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forward.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="14" column="7" lean-forward="false" selection-start-line="14" selection-start-column="7" selection-end-line="14" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/randomWalkState.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="26" lean-forward="false" selection-start-line="10" selection-start-column="26" selection-end-line="10" selection-end-column="26" />
         </state>
       </provider>
     </entry>
@@ -853,21 +864,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/preconditioning.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="15" lean-forward="false" selection-start-line="9" selection-start-column="15" selection-end-line="9" selection-end-column="15" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/regularization.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="158">
-          <caret line="11" column="0" lean-forward="false" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pickAnIndex.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -882,42 +878,97 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/fixedParameters.hpp">
+    <entry file="file://$PROJECT_DIR$/derivativesForAdjointTest.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="32" column="28" lean-forward="false" selection-start-line="32" selection-start-column="28" selection-end-line="32" selection-end-column="28" />
+        <state relative-caret-position="1620">
+          <caret line="108" column="52" lean-forward="false" selection-start-line="108" selection-start-column="52" selection-end-line="108" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/regularization.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="158">
+          <caret line="11" column="0" lean-forward="false" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/randomWalkState.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="13" column="23" lean-forward="false" selection-start-line="13" selection-start-column="23" selection-end-line="13" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/quarterFiveSpot.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pressure.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/saturation.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1740">
+        <state relative-caret-position="421">
           <caret line="116" column="5" lean-forward="false" selection-start-line="116" selection-start-column="5" selection-end-line="116" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forward.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="14" column="7" lean-forward="false" selection-start-line="14" selection-start-column="7" selection-end-line="14" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/adjoint.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="13" column="125" lean-forward="false" selection-start-line="13" selection-start-column="125" selection-end-line="13" selection-end-column="125" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/preconditioning.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="15" lean-forward="false" selection-start-line="9" selection-start-column="15" selection-end-line="9" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/derivativesForAdjointFD.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fixedParameters.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="495">
+          <caret line="33" column="33" lean-forward="false" selection-start-line="33" selection-start-column="33" selection-end-line="33" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sensitivity.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="12" column="19" lean-forward="false" selection-start-line="12" selection-start-column="19" selection-end-line="12" selection-end-column="19" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/minimizer.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1920">
-          <caret line="128" column="16" lean-forward="false" selection-start-line="128" selection-start-column="16" selection-end-line="128" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/derivativesForAdjointTest.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="424">
-          <caret line="108" column="52" lean-forward="false" selection-start-line="108" selection-start-column="52" selection-end-line="108" selection-end-column="52" />
-          <folding>
-            <element signature="e#51#89#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/preconditioning.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="287">
-          <caret line="42" column="25" lean-forward="false" selection-start-line="42" selection-start-column="25" selection-end-line="42" selection-end-column="25" />
-          <folding />
+        <state relative-caret-position="615">
+          <caret line="53" column="126" lean-forward="false" selection-start-line="53" selection-start-column="126" selection-end-line="53" selection-end-column="126" />
         </state>
       </provider>
     </entry>
@@ -930,51 +981,116 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/forwardOptions.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+        <state relative-caret-position="90">
+          <caret line="6" column="89" lean-forward="false" selection-start-line="6" selection-start-column="89" selection-end-line="6" selection-end-column="89" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forward.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3540">
+          <caret line="251" column="0" lean-forward="false" selection-start-line="251" selection-start-column="0" selection-end-line="251" selection-end-column="0" />
+          <folding>
+            <element signature="e#8932#9158#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../thirdParty/eigen/Eigen/src/Core/PlainObjectBase.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="206">
+          <caret line="150" column="0" lean-forward="false" selection-start-line="150" selection-start-column="0" selection-end-line="150" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/quarterFiveSpotAdjoint.cpp">
+    <entry file="file:///opt/local/include/gcc7/c++/bits/stl_tree.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="752">
-          <caret line="125" column="50" lean-forward="false" selection-start-line="125" selection-start-column="50" selection-end-line="125" selection-end-column="50" />
+        <state relative-caret-position="210">
+          <caret line="1186" column="0" lean-forward="false" selection-start-line="1186" selection-start-column="0" selection-end-line="1186" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/adjointOptions.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+        <state relative-caret-position="165">
+          <caret line="11" column="44" lean-forward="false" selection-start-line="11" selection-start-column="44" selection-end-line="11" selection-end-column="44" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/adjoint.hpp">
+    <entry file="file://$PROJECT_DIR$/adjoint.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="9" column="77" lean-forward="false" selection-start-line="9" selection-start-column="77" selection-end-line="9" selection-end-column="77" />
+        <state relative-caret-position="571">
+          <caret line="129" column="16" lean-forward="false" selection-start-line="129" selection-start-column="16" selection-end-line="129" selection-end-column="16" />
+          <folding>
+            <element signature="e#6784#7029#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/darcyVelocity.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/forward.cpp">
+    <entry file="file://$PROJECT_DIR$/cellindex.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="411">
-          <caret line="261" column="0" lean-forward="false" selection-start-line="261" selection-start-column="0" selection-end-line="261" selection-end-column="0" />
+        <state relative-caret-position="300">
+          <caret line="61" column="0" lean-forward="false" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/preconditioning.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="205">
+          <caret line="19" column="6" lean-forward="false" selection-start-line="19" selection-start-column="6" selection-end-line="19" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///opt/local/include/gcc7/c++/bits/stl_map.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="1233" column="0" lean-forward="false" selection-start-line="1233" selection-start-column="0" selection-end-line="1233" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/quarterFiveSpotAdjoint.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-428">
+          <caret line="101" column="60" lean-forward="false" selection-start-line="101" selection-start-column="60" selection-end-line="101" selection-end-column="60" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../thirdParty/eigen/Eigen/src/Core/Ref.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="18">
+          <caret line="247" column="0" lean-forward="false" selection-start-line="247" selection-start-column="0" selection-end-line="247" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sensitivity.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="146">
-          <caret line="93" column="20" lean-forward="false" selection-start-line="93" selection-start-column="20" selection-end-line="93" selection-end-column="20" />
-          <folding>
-            <element signature="e#42#68#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="445">
+          <caret line="59" column="51" lean-forward="true" selection-start-line="59" selection-start-column="51" selection-end-line="59" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/derivativesForAdjoint.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-4186">
+          <caret line="36" column="21" lean-forward="false" selection-start-line="36" selection-start-column="21" selection-end-line="36" selection-end-column="21" />
+          <folding />
         </state>
       </provider>
     </entry>

@@ -49,7 +49,7 @@ using namespace Eigen;
 
 
 void Driver::solve_Burger() {
-    StefFenv_CrashOnFPEs(FE_ALL_EXCEPT & ~FE_INEXACT);
+    //StefFenv_CrashOnFPEs(FE_ALL_EXCEPT & ~FE_INEXACT);
     const int n = 100;
     // dx: meshwidth for 1D Burger
     const double dx = 1.0 / double(n);
@@ -307,9 +307,11 @@ void Driver::solve_Burger() {
                                     break;
                                 }
 
+
+
                                 case SparseData::LINEAR_OFFDIAGONAL: {
                                     b_loc(i) = 0;
-                                    if (i == jm) {
+                                    if (i+1 == jm) {
                                         const double x = dx * i;
                                         b_loc(i) = 2 * (x - u(i));
                                     }
@@ -545,6 +547,9 @@ void Driver::solve_Burger() {
          ******/
         FILE* file = fopen("out", "w");
 
+        std::vector<char> gnuPlotCommand(1000);
+        std::sprintf(gnuPlotCommand.data(), "set output 'adjointmc_frame%04d.png'", k);
+        g.cmd(gnuPlotCommand.data());
 
 
         switch (problem) {

@@ -17,12 +17,7 @@ static SparseMatrix computeTargetPressureByPressureMatrix(const SparseMatrix& pr
 
     SparseMatrixRowMajor target(pressuresByPressures.rows(), pressuresByPressures.cols());
     target.setIdentity();
-
-    if (false) {
-        for (int colIndex = 0; colIndex < target.cols() - 1; ++colIndex) {
-            target.coeffRef(colIndex + 1, colIndex) = 0.05;
-        }
-    }
+    //target *= 0.5;
 
     return target;
 }
@@ -106,6 +101,7 @@ void preconditionMatrices(const int numberOfRows, const int numberOfCols,
 
 
             SparseMatrix saturationsWaterResidualsByPressuresTransposed = saturationsByPressures.transpose();
+            SparseMatrix result(saturationsWaterResidualsByPressuresTransposed.rows(), saturationsWaterResidualsByPressuresTransposed.cols());
             saturationsWaterResidualsByPressuresTransposed.makeCompressed();
 
             Vector denseCol(numberOfCells);
@@ -118,14 +114,13 @@ void preconditionMatrices(const int numberOfRows, const int numberOfCols,
                         sparseCol.coeffRef(elementIndex) = denseCol(elementIndex);
                     }
                 }
-                saturationsWaterResidualsByPressuresTransposed.col(colIndex) = sparseCol;
+                result.col(colIndex) = sparseCol;
             }
             pressurePartOfB = (inverseDiagonal * (qrSolver.matrixQ().transpose() * pressurePartOfB)).eval();
 
 
-            saturationsByPressures = saturationsWaterResidualsByPressuresTransposed.transpose();
+            saturationsByPressures = result.transpose();
             saturationsByPressures.makeCompressed();
-            ASSERT(saturationsByPressures.valuePtr());
             break;
         }
 

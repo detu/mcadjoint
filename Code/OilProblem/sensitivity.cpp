@@ -14,6 +14,7 @@
 #include "regularization.hpp"
 #include "dumpToMatFile.hpp"
 #include "utils.hpp"
+#include "adjointOptions.hpp"
 
 #include <cmath>
 #include <list>
@@ -49,21 +50,24 @@ SensitivityAndCost computeSensitivityAndCostTraditional(const FixedParameters& p
     bool brokeThrough = false;
     Real cost = 0;
     for (int currentTimelevel = 0; currentTimelevel < numberOfTimesteps && !brokeThrough; ++currentTimelevel) {
-        brokeThrough = stepForwardAndAdjointProblemTraditional(params, params.initialPermeabilities, currentTimelevel, simulationState, adjointMatrix, adjointRhs, completeC);
+        brokeThrough = stepForwardAndAdjointProblemTraditional(params, permeabilities, currentTimelevel, simulationState, adjointMatrix, adjointRhs, completeC);
 
         cost += computeContributionToCost(params, simulationState);
         log()->info("time = {}", simulationState.time);
-
-        dumpThis("adjointMatrixTrad", adjointMatrix);
-        dumpThis("adjointRhsTrad", adjointRhs);
-        dumpThis("completeCTrad", completeC);
+        //if (!params.traditionalMinimization) {
+//            dumpThis("adjointMatrixTrad", adjointMatrix);
+//            dumpThis("adjointRhsTrad", adjointRhs);
+//            dumpThis("completeCTrad", completeC);
+        //}
         ASSERT(allFinite(adjointMatrix));
         ASSERT(allFinite(adjointRhs));
     }
     log()->debug("broke through? {}", brokeThrough);
 
-    const Vector adjoint = adjointMatrix.lu().solve(adjointRhs);
-    dumpThis("adjointTrad", adjoint);
+    const Vector adjoint = adjointMatrix.householderQr().solve(adjointRhs);
+    //if (!params.traditionalMinimization) {
+//        dumpThis("adjointTrad", adjoint);
+    //}
 
     const Vector sensitivities = -completeC.transpose() * adjoint;
 
@@ -75,7 +79,7 @@ SensitivityAndCost computeSensitivityAndCostTraditional(const FixedParameters& p
     sensitivityAndCost.sensitivity = sensitivities;
     applyRegularizationIfEnabled(params, logPermeabilities, sensitivityAndCost);
 
-    dumpThis("sensitivityTrad", sensitivityAndCost.sensitivity);
+//    dumpThis("sensitivityTrad", sensitivityAndCost.sensitivity);
 
     return sensitivityAndCost;
 
@@ -162,12 +166,17 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
 
 
     sensitivities.array() /= numberOfRandomWalksPerParameter.array().cwiseMax(1).cast<WiderReal>();
-    sensitivities.array() *= currentTimeLevel;
+    /*if (!initializeJustAtBeginning) {
+        sensitivities.array() *= currentTimeLevel;
+    }*/
 
     if (params.enableAntitheticSampling) {
         sensitivitiesAntithetic.array() /= numberOfRandomWalksPerParameterAntithetic.array().cwiseMax(1).cast<WiderReal>();
-        sensitivitiesAntithetic.array() *= currentTimeLevel;
+        /*if (!initializeJustAtBeginning) {
+            sensitivitiesAntithetic.array() *= currentTimeLevel;
+        }*/
     }
+
 
 
     Real antitheticPart = 0;
@@ -197,23 +206,53 @@ SensitivityAndCost computeSensitivityAndCost(const FixedParameters& params, Cons
     if (params.symmetrizeGradient) {
         log()->info("Symmetrizing gradient");
 
+        Vector copyOfSensitivities = sensitivityAndCost.sensitivity;
+        std::nth_element(copyOfSensitivities.data(), copyOfSensitivities.data() + copyOfSensitivities.size()/2, copyOfSensitivities.data() + copyOfSensitivities.size());
+        const Real median = copyOfSensitivities(copyOfSensitivities.size() / 2);
+        const Real mean = sensitivityAndCost.sensitivity.mean();
+        const Real stdDev = std::sqrt(1.0 /(sensitivityAndCost.sensitivity.size() - 1) * (sensitivityAndCost.sensitivity.array() - mean).square().sum());
         for (int linearIndex = 0; linearIndex < sensitivityAndCost.sensitivity.size()/2; ++linearIndex) {
             const Real myValue = sensitivityAndCost.sensitivity(linearIndex);
             const int counterpartIndex = getSymmetricCounterpart(linearIndex, numberOfRows, numberOfCols);
             const Real counterpartValue = sensitivityAndCost.sensitivity(counterpartIndex);
 
-            const Real meanValue = 0.5 * (counterpartValue + myValue);
-            sensitivityAndCost.sensitivity(linearIndex) = meanValue;
-            sensitivityAndCost.sensitivity(counterpartIndex) = meanValue;
+
+
+            const Real myDistance = std::abs(myValue - median);
+            const Real counterpartDistance = std::abs(counterpartValue - median);
+
+            Real moreRealisticValue = NAN;
+            Real smallerDistance = NAN;
+            if (myDistance < counterpartDistance) {
+                moreRealisticValue = myValue;
+                smallerDistance = myDistance;
+            } else {
+                moreRealisticValue = counterpartValue;
+                smallerDistance = counterpartDistance;
+            }
+
+
+            Real smootherValue = NAN;
+
+            if (smallerDistance < stdDev) {
+                smootherValue = moreRealisticValue;
+            } else {
+                smootherValue = 0.5 * median + 0.5 * moreRealisticValue;
+            }
+            sensitivityAndCost.sensitivity(linearIndex) = smootherValue;
+            sensitivityAndCost.sensitivity(counterpartIndex) = smootherValue;
         }
     } else {
         log()->info("Not symmetrizing gradient");
     }
 
     applyRegularizationIfEnabled(params, logPermeabilities, sensitivityAndCost);
+    #ifdef JUST_COMPUTE_ADJOINT
+        #pragma message "Just computing adjoint"
 
-
-
+    dumpThis("adjointMC", sensitivityAndCost.sensitivity);
+        #endif
+    dumpThis("sensitivities", sensitivityAndCost.sensitivity);
     log()->debug("Sensitivities =\n{}", sensitivityAndCost.sensitivity);
 
     return sensitivityAndCost;

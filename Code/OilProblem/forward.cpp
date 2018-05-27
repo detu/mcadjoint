@@ -174,11 +174,11 @@ bool stepForwardAndAdjointProblem(const FixedParameters& params, const Eigen::Re
              correctedSaturationsWaterResidualsBySaturationsWater);
 
 
-
     #ifdef JUST_COMPUTE_ADJOINT
+        #pragma message "Just computing adjoint"
     SparseMatrix c(numberOfParameters*2, numberOfParameters);
     for (int j = 0; j < std::min(c.cols(), c.rows()); ++j) {
-            c.coeffRef(j + numberOfParameters, j) = -1;
+            c.coeffRef(j, j) = -(currentTimelevel == 1);
     }
 
     #else
@@ -391,12 +391,6 @@ bool stepForwardAndAdjointProblemTraditional(const FixedParameters& params, cons
     log()->debug("Saturations water residuals by pressure =\n{}", saturationsWaterResidualsByPressures);
     adjointMatrix.block(fromDiagRow, fromDiagCol, stateSize/2, stateSize/2) = pressureResidualsByPressures.transpose();
 
-    Matrix densePressureResidualsByPressure = Matrix::Zero(stateSize/2, stateSize/2);
-    densePressureResidualsByPressure = pressureResidualsByPressures;
-
-    dumpThis("densePressureResidualsByPressure", densePressureResidualsByPressure);
-    //writeToMatFile();
-    ASSERT(allFinite(densePressureResidualsByPressure));
 
     ASSERT(allFinite(adjointMatrix.block(fromDiagRow, fromDiagCol, stateSize/2, stateSize/2)));
 

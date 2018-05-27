@@ -164,12 +164,12 @@ The saturation $S$ is not assumed constant but instead is transported according 
 \end{equation}
 The term
 \begin{equation}
-q_\text{w} := Q_\text{w}\delta(\vec{x} - \begin{pmatrix}1\\1\end{pmatrix})
+q_\text{w} := Q_\text{w}\delta(\vec{x} - \vec{x}_\text{well})
 \end{equation}
 describes a line sink of water located at the well.
 Similarly, we use
 \begin{align}
-q_\text{o} &:= Q_\text{o}\delta(\vec{x} - \begin{pmatrix}1\\1\end{pmatrix}) \\
+q_\text{o} &:= Q_\text{o}\delta(\vec{x} - \vec{x}_\text{well}) \\
 q_\text{tot} &:= q_\text{o} + q_\text{w}.
 \end{align}
 $\phi$ is the porosity of the rock which is assumed to be constant over the domain.
@@ -350,7 +350,10 @@ where
 \end{align}
 and $\Delta t$ is the timestep.
 
-\section{Computing the quantities for the Monte-Carlo adjoint solver}
+
+\appendix
+
+\subsection{Computing the quantities for the Monte-Carlo adjoint solver}
 
 First, we define the pressure residuals
 \begin{multline}
@@ -436,12 +439,11 @@ where
 On the other hand, the saturation residuals $\Sigma_K$ lead to the following derivatives
 
 \begin{align}
-INVALID \\
-%\pdiff{\Sigma_K}{\ln(k)_K} &= \lambda_{\text{tot}}^{(i-1)}\lvert_K \frac{\Delta t}{h} \biggr(\\&(f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_E\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_E, \lambda_\text{tot}^{(i-1)}\lvert_K)  \nonumber\\&- (f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_W\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_W, \lambda_\text{tot}^{(i-1)}\lvert_K) \nonumber\\&+ (f(S_\text{w}^{(i-1)})v_{\text{tot }, y}^{(i-1)})\lvert_N\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_N, \lambda_\text{tot}^{(i-1)}\lvert_K) \nonumber\\&- (f(S_\text{w}^{(i-1)})v_{\text{tot }, y}^{(i-1)})\lvert_S\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_E, \lambda_\text{tot}^{(i-1)}\lvert_S)\nonumber\\&\biggr) \nonumber \\
-%\pdiff{\Sigma_K}{\ln(K)_R} &= \lambda_{\text{tot}}^{(i-1)}\lvert_R \frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_E\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_E) \\
-%\pdiff{\Sigma_K}{\ln(K)_L} &= -\lambda_{\text{tot}}^{(i-1)}\lvert_L\frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_W\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_L) \\
-%\pdiff{\Sigma_K}{\ln(K)_U} &= \lambda_{\text{tot}}^{(i-1)}\lvert_U \frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_N\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_U) \\
-%\pdiff{\Sigma_K}{\ln(K)_D} &= -\lambda_{\text{tot}}^{(i-1)}\lvert_D\frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_S\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_D)
+\pdiff{\Sigma_K}{\ln(k)_K} &= \lambda_{\text{tot}}^{(i-1)}\lvert_K \frac{\Delta t}{h} \biggr(\\&(f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_E\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_E, \lambda_\text{tot}^{(i-1)}\lvert_K) (-\ddiff{p}{x}\rvert_E)  \nonumber\\&- (f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_W\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_W, \lambda_\text{tot}^{(i-1)}\lvert_K)(-\ddiff{p}{x}\rvert_W) \nonumber\\&+ (f(S_\text{w}^{(i-1)})v_{\text{tot }, y}^{(i-1)})\lvert_N\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_N, \lambda_\text{tot}^{(i-1)}\lvert_K) (-\ddiff{p}{y}\rvert_N)\nonumber\\&- (f(S_\text{w}^{(i-1)})v_{\text{tot }, y}^{(i-1)})\lvert_S\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_E, \lambda_\text{tot}^{(i-1)}\lvert_S)(-\ddiff{p}{y}\rvert_S)\nonumber\\&\biggr) \nonumber \\
+\pdiff{\Sigma_K}{\ln(K)_R} &= \lambda_{\text{tot}}^{(i-1)}\lvert_R \frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_E\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_E) (-\ddiff{p}{x}\rvert_E)\\
+\pdiff{\Sigma_K}{\ln(K)_L} &= -\lambda_{\text{tot}}^{(i-1)}\lvert_L\frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_W\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_L) (-\ddiff{p}{x}\rvert_W)\\
+\pdiff{\Sigma_K}{\ln(K)_U} &= \lambda_{\text{tot}}^{(i-1)}\lvert_U \frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_N\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_U) (-\ddiff{p}{y}\rvert_N)\\
+\pdiff{\Sigma_K}{\ln(K)_D} &= -\lambda_{\text{tot}}^{(i-1)}\lvert_D\frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_S\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_D)(-\ddiff{p}{y}\rvert_S)
 \end{align}
 %\bibliographystyle{IEEEtran}
 %\bibliography{references}

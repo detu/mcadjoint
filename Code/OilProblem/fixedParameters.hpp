@@ -31,6 +31,7 @@ struct FixedParameters {
 
     bool enableAntitheticSampling;
     bool symmetrizeGradient;
+    bool traditionalMinimization;
 
 
 };

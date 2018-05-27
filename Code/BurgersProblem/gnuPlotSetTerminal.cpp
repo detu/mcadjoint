@@ -8,6 +8,8 @@
 
 
 void setTerminal(Gnuplot& g) {
+    g.cmd("set term png");
+    return;
     static char hostname[66];
     gethostname(hostname, sizeof(hostname) / sizeof(hostname[0]));
     if (std::strcmp(hostname, "swmb") == 0) {
