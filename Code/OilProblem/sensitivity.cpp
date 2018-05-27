@@ -55,9 +55,9 @@ SensitivityAndCost computeSensitivityAndCostTraditional(const FixedParameters& p
         cost += computeContributionToCost(params, simulationState);
         log()->info("time = {}", simulationState.time);
         //if (!params.traditionalMinimization) {
-            dumpThis("adjointMatrixTrad", adjointMatrix);
-            dumpThis("adjointRhsTrad", adjointRhs);
-            dumpThis("completeCTrad", completeC);
+//            dumpThis("adjointMatrixTrad", adjointMatrix);
+//            dumpThis("adjointRhsTrad", adjointRhs);
+//            dumpThis("completeCTrad", completeC);
         //}
         ASSERT(allFinite(adjointMatrix));
         ASSERT(allFinite(adjointRhs));
@@ -66,7 +66,7 @@ SensitivityAndCost computeSensitivityAndCostTraditional(const FixedParameters& p
 
     const Vector adjoint = adjointMatrix.householderQr().solve(adjointRhs);
     //if (!params.traditionalMinimization) {
-        dumpThis("adjointTrad", adjoint);
+//        dumpThis("adjointTrad", adjoint);
     //}
 
     const Vector sensitivities = -completeC.transpose() * adjoint;
@@ -79,7 +79,7 @@ SensitivityAndCost computeSensitivityAndCostTraditional(const FixedParameters& p
     sensitivityAndCost.sensitivity = sensitivities;
     applyRegularizationIfEnabled(params, logPermeabilities, sensitivityAndCost);
 
-    dumpThis("sensitivityTrad", sensitivityAndCost.sensitivity);
+//    dumpThis("sensitivityTrad", sensitivityAndCost.sensitivity);
 
     return sensitivityAndCost;
 
