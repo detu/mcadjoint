@@ -253,9 +253,8 @@ An overview of the discretization technique is given in the following procedure:
 \begin{enumerate}
 	\item Solve the pressure equation \eqref{pressurePoisson} as detailed in subsection \ref{discPressurePoisson}
 	\item Compute the total Darcy velocity as in \eqref{flowrateTotal}, using the same approximation of the gradient as in the first step
-	\item Consider the total Darcy velocity to be independent of the saturation $S_\text{w}.$
-	\item With this assumption, solve the saturation equation \eqref{saturationEquation} as in subsection \ref{discSaturationEquation}
-	\item Update the relative permeabilities according to \eqref{relativePermeabilityModel} and repeat.
+	\item Solve the saturation equation \eqref{saturationEquation} as in subsection \ref{discSaturationEquation}
+	\item Update the relative permeabilities according to \eqref{relativePermeabilityModel} and repeat
 \end{enumerate}
 
 \subsection{Discretizing the pressure Poisson equation}

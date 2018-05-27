@@ -82,7 +82,7 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
 
     Real correctionFactorForGamma = 1;
 
-    if (correctForGamma) {
+    if (correctForGamma && !currentState.isAPressure) {
         Real colSum = 0;
         const int myLinearIndex = currentState.cell.linearIndex(numberOfRows);
         if (currentState.isAPressure) {
@@ -92,17 +92,19 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
                      saturationWaterResidualsDerived.col(myLinearIndex).cwiseAbs().sum() + 1;
         }
 
+        //log()->info("Pressure residuals norm = {}, sat water residuals norm = {}", pressureResidualsDerived.col(myLinearIndex).cwiseAbs().sum(),
+        //            saturationWaterResidualsDerived.col(myLinearIndex).cwiseAbs().sum());
         correctionFactorForGamma = std::max(1.0, colSum);
 
-        const Real correspondingEntryOfA = 1 - 0.5 / correctionFactorForGamma;
+        const Real correspondingEntryOfA = 1.0 - 1.0/ correctionFactorForGamma;
         const Real correspondingEntryOfB = b(cellIndexToBIndex(currentState.cell, currentState.isAPressure, numberOfRows, numberOfCols)) / correctionFactorForGamma;
         //log()->info("Col sum = {}, corrected col sum = {}", colSum, (colSum > 1? 2.0 * (1 - 1.5 / colSum): colSum));
         const bool advancesTime = false;
 
-        const Real candidateUnnormalizedProbability = std::abs(1 - 1/correctionFactorForGamma);
+        const Real candidateUnnormalizedProbability = std::abs(1 - 1.0/correctionFactorForGamma);
         sumOfUnnormalizedProbabilities += candidateUnnormalizedProbability;
 
-        if (false && candidateUnnormalizedProbability > 0.0) {
+        if ( candidateUnnormalizedProbability > 0.0) {
             candidateUnnormalizedProbabilities.push_back(candidateUnnormalizedProbability);
             candidates.push_back({currentState.cell, currentState.isAPressure, correspondingEntryOfA, correspondingEntryOfB, advancesTime});
         }
@@ -159,6 +161,8 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
 
 
 
+
+
     {
 
 
@@ -172,6 +176,9 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
             candidateUnnormalizedProbabilities.push_back(unnormalizedAbsorptionProbability);
         }
     }
+
+    //log()->info("Sum of probs = {}, isAPressure = {}", sumOfUnnormalizedProbabilities, currentState.isAPressure);
+
 
     #ifndef NDEBUG
     for (const auto& candidate: candidates) {

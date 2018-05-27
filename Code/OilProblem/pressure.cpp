@@ -105,9 +105,7 @@ SparseMatrix assemblePressureSystemWithBC(ConstMatrixRef totalMobilities) {
 
 Vector computeRhsForPressureSystem(const Real sourceAtDrillNow, const int numberOfRows, const int numberOfCols) {
     const CellIndex drillCell = findDrillCell(numberOfRows, numberOfCols);
-
     const int drillCellIndex = drillCell.linearIndex(numberOfRows);
-
 
     Vector rhs(Vector::Zero(numberOfRows*numberOfCols));
     rhs(drillCellIndex) = +std::abs(sourceAtDrillNow);
