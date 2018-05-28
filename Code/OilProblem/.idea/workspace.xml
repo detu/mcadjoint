@@ -25,9 +25,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="243856ce-78f7-4963-8ee2-7f94acac5c1e" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/../../Presentation/Presentation AdjointMC.pptx" afterPath="$PROJECT_DIR$/../../Presentation/Presentation AdjointMC.pptx" />
-    </list>
+    <list default="true" id="243856ce-78f7-4963-8ee2-7f94acac5c1e" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/cmake-build-release/" />
     <ignored path="$PROJECT_DIR$/../../Build/Debug/OilProblem/" />

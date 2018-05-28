@@ -13,6 +13,7 @@
 \usepackage{empheq}
 \usepackage{etoolbox}
 \usepackage{hyperref}
+\usepackage{attachfile}
 
 
 
@@ -79,7 +80,7 @@
 \title{Report for the semester thesis ``Development of a Monte Carlo algorithm for optimal control problems''}
 
 \author{\IEEEauthorblockN{Stefano Weidmann}
-\IEEEauthorblockA{\textit{Institute of fluid dynamics} \\
+\IEEEauthorblockA{\textit{Institute of Fluid Dynamics} \\
 \textit{ETH Zurich}\\
 Zurich, Switzerland \\
 \href{mailto:stefanow@student.ethz.ch}{stefanow@student.ethz.ch}}}
@@ -118,17 +119,18 @@ Zurich, Switzerland \\
 \maketitle
 
 \begin{abstract}
-TODO *CRITICAL: Do Not Use Symbols, Special Characters, Footnotes, 
-or Math in Paper Title or Abstract.
+The Monte-Carlo adjoint algorithm described in \cite{unsteady} has been applied to a variant of the \emph{quarter five spot configuration} found in petroleum engineering literature \cite{quarterFiveSpot}.
+Results have been unsatisfactory due to lack of an appropriate preconditioner.
 \end{abstract}
 
-\begin{IEEEkeywords}
-a, b, c
-\end{IEEEkeywords}
+
+\section{Introduction}
+This report aims to apply the Monte-Carlo adjoint algorithm described in \cite{unsteady} to a variant of problem known as \emph{quarter five spot configuration} in petroleum engineering literature \cite{quarterFiveSpot}. The set up is described in section \ref{problemDescription}.
+Numerical experiments and a discussion follow in section \ref{experiments}. Quantities needed for the implementation of the Monte-Carlo adjoint algorithm are given in the appendix in subsection \ref{quantitiesNeeded}.
 
 \section{Problem description}
-The problem we want to solve is a variant of the \emph{quarter five spot problem} in literature.
-We model a cross section of an oil field as a two dimensional square $\Omega := [0, 1]^2.$ In the oilfield, there are two phases: water and oil. 
+\label{problemDescription}
+We model a cross section of an oil field as a two dimensional square $\Omega := [0, 1]^2.$ In the field, there are two phases: water and oil. 
 At the lower left corner $\vec{x}_\text{drill} := (0, 0)$, we know the pressure $p_\text{drill}(t)$ . Opposite of that, at $\vec{x}_\text{well} := (1, 1)$ a well is located.
 There we can measure the pressure $p_\text{well}(t)$ as well as the total volumetric outflow \[{Q}_\text{tot}(t) := {Q}_\text{o}(t) + {Q}_\text{w}(t)\] per unit depth.
 
@@ -349,12 +351,16 @@ where
 \end{align}
 and $\Delta t$ is the timestep.
 
-\section{
+\section{Numerical experiments}
+\label{experiments}
+
 
 \appendix
-
+\subsection{Source code}
+The source code can be obtained by visiting the repository at
+\href{https://gitlab.ethz.ch/stefanow/mcadjoint}{https://gitlab.ethz.ch/stefanow/mcadjoint}
 \subsection{Computing the quantities for the Monte-Carlo adjoint solver}
-
+\label{quantitiesNeeded}
 First, we define the pressure residuals
 \begin{multline}
 \Pi_K^{(i)} := \begin{cases} p_K^{(i)} - p_\text{well}(i\Delta t), & \text{if } K \text{ is the cell}\\&\text{nearest to the well}\\T_E^{(i-1)} (p_K^{(i)} - p_R^{(i)}) \\+ T_W^{(i-1)} (p_K^{(i)} - p_L^{(i)}) \\+ T_N ( p_K^{(i)} - p_U^{(i)}) \\+ T_S^{(i-1)} (p_K^{(i)} - p_D^{(i)}) - Q_\text{tot, K}^{(i-1)}, & \text{else}\end{cases}, 
@@ -445,6 +451,11 @@ On the other hand, the saturation residuals $\Sigma_K$ lead to the following der
 \pdiff{\Sigma_K}{\ln(K)_U} &= \lambda_{\text{tot}}^{(i-1)}\lvert_U \frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_N\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_U) (-\ddiff{p}{y}\rvert_N)\\
 \pdiff{\Sigma_K}{\ln(K)_D} &= -\lambda_{\text{tot}}^{(i-1)}\lvert_D\frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_S\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_D)(-\ddiff{p}{y}\rvert_S)
 \end{align}
-%\bibliographystyle{IEEEtran}
-%\bibliography{references}
+
+
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+
 \end{document}
