@@ -126,7 +126,10 @@ Results have been unsatisfactory due to lack of an appropriate preconditioner.
 
 \section{Introduction}
 This report aims to apply the Monte-Carlo adjoint algorithm described in \cite{unsteady} to a variant of problem known as \emph{quarter five spot configuration} in petroleum engineering literature \cite{quarterFiveSpot}. The set up is described in section \ref{problemDescription}.
-Numerical experiments and a discussion follow in section \ref{experiments}. Quantities needed for the implementation of the Monte-Carlo adjoint algorithm are given in the appendix in subsection \ref{quantitiesNeeded}.
+Numerical experiments and a discussion follow in section \ref{experiments}. Derivatives needed for the implementation of the Monte-Carlo adjoint algorithm are given in the appendix in subsection \ref{quantitiesNeeded}.
+
+The main advantage of the Monte-Carlo adjoint algorithm in comparison to the better known \emph{checkpointing} scheme proposed by Griewank and Walter \cite{checkpointing} lies in its forward-in-time nature. Instead of having to store or recompute solutions, the adjoint equation can be solved in lockstep with the forward one.
+In principle, it is an application of the classic Monte-Carlo linear solver developed in \cite{forsythe} applied to the adjoint linear system of equations.
 
 \section{Problem description}
 \label{problemDescription}
@@ -351,16 +354,7 @@ where
 \end{align}
 and $\Delta t$ is the timestep.
 
-\section{Numerical experiments}
-\label{experiments}
-
-
-\appendix
-\subsection{Source code}
-The source code can be obtained by visiting the repository at
-\href{https://gitlab.ethz.ch/stefanow/mcadjoint}{https://gitlab.ethz.ch/stefanow/mcadjoint}
-\subsection{Computing the quantities for the Monte-Carlo adjoint solver}
-\label{quantitiesNeeded}
+\subsection{Formal definition of the residuals for the Monte-Carlo adjoint solver}
 First, we define the pressure residuals
 \begin{multline}
 \Pi_K^{(i)} := \begin{cases} p_K^{(i)} - p_\text{well}(i\Delta t), & \text{if } K \text{ is the cell}\\&\text{nearest to the well}\\T_E^{(i-1)} (p_K^{(i)} - p_R^{(i)}) \\+ T_W^{(i-1)} (p_K^{(i)} - p_L^{(i)}) \\+ T_N ( p_K^{(i)} - p_U^{(i)}) \\+ T_S^{(i-1)} (p_K^{(i)} - p_D^{(i)}) - Q_\text{tot, K}^{(i-1)}, & \text{else}\end{cases}, 
@@ -374,6 +368,19 @@ The saturation residuals are given by
 \begin{multline}
 \Sigma_K^{(i)} := S_\text{w}^{(i)}\lvert_K - S_\text{w}^{(i-1)}\lvert_{K} \\+ \frac{\Delta t}{h} \biggr((f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i)})\lvert_E - (f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i)})\lvert_W \\+ (f(S_\text{w}^{(i-1)})v_{\text{tot }, y}^{(i)})\lvert_N - (f(S_\text{w}^{(i-1)})v_{\text{tot }, y}^{(i-1)})\lvert_S\biggr) - \Delta t Q_\text{tot, K}^{(i)}.
 \end{multline}
+
+The required derivatives are lengthy to write out an can be found in subsection \ref{quantitiesNeeded}
+
+\section{Numerical experiments}
+\label{experiments}
+
+
+\appendix
+\subsection{Source code}
+The source code can be obtained by visiting the repository at
+\href{https://gitlab.ethz.ch/stefanow/mcadjoint}{https://gitlab.ethz.ch/stefanow/mcadjoint}
+\subsection{Computing the derivatives for the Monte-Carlo adjoint solver}
+\label{quantitiesNeeded}
 
 The nonzero derivatives for the diagonal blocks are given by
 \begin{align}
