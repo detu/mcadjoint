@@ -2,6 +2,7 @@
 \IEEEoverridecommandlockouts
 % The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
 \usepackage{cite}
+\usepackage[utf8]{inputenc}
 \usepackage[dvipsnames]{xcolor}
 \usepackage{varwidth}
 \usepackage{amsmath,amssymb,amsfonts}
@@ -60,6 +61,7 @@
 \renewcommand*{\vec}[1]{\ensuremath{{\bm{#1}}}}
 \newcommand*{\mat}[1]{\vec{#1}}
 \newcommand*{\transpose}[1]{{#1}^{\mkern-1.5mu\mathsf{T}}}
+\newcommand*{\transposeinvert}[1]{{#1}^{\mkern-1.5mu\mathsf{-T}}}
 \newcommand*{\invert}[1]{{#1}^{-1}}
 \newcommand*{\tvec}[1]{\transpose{\vec{#1}}}
 \newcommand*{\tmat}[1]{\tvec{#1}}
@@ -126,7 +128,8 @@ Results have been unsatisfactory due to lack of an appropriate preconditioner.
 
 \section{Introduction}
 This report aims to apply the Monte-Carlo adjoint algorithm described in \cite{unsteady} to a variant of problem known as \emph{quarter five spot configuration} in petroleum engineering literature \cite{quarterFiveSpot}. The set up is described in section \ref{problemDescription}.
-Numerical experiments and a discussion follow in section \ref{experiments}. Derivatives needed for the implementation of the Monte-Carlo adjoint algorithm are given in the appendix in subsection \ref{quantitiesNeeded}.
+Numerical experiments and a discussion follow in section \ref{experiments}. Possible ways how to proceed are given in section \ref{possibleSolutions}. Derivatives needed for the implementation of the Monte-Carlo adjoint algorithm are given in the appendix in subsection \ref{quantitiesNeeded}. The source code can be obtained by visiting the repository at
+\href{https://gitlab.ethz.ch/stefanow/mcadjoint}{https://gitlab.ethz.ch/stefanow/mcadjoint}.
 
 The main advantage of the Monte-Carlo adjoint algorithm in comparison to the better known \emph{checkpointing} scheme proposed by Griewank and Walter \cite{checkpointing} lies in its forward-in-time nature. Instead of having to store or recompute solutions, the adjoint equation can be solved in lockstep with the forward one.
 In principle, it is an application of the classic Monte-Carlo linear solver developed in \cite{forsythe} applied to the adjoint linear system of equations.
@@ -134,8 +137,11 @@ In principle, it is an application of the classic Monte-Carlo linear solver deve
 \section{Problem description}
 \label{problemDescription}
 We model a cross section of an oil field as a two dimensional square $\Omega := [0, 1]^2.$ In the field, there are two phases: water and oil. 
-At the lower left corner $\vec{x}_\text{drill} := (0, 0)$, we know the pressure $p_\text{drill}(t)$ . Opposite of that, at $\vec{x}_\text{well} := (1, 1)$ a well is located.
-There we can measure the pressure $p_\text{well}(t)$ as well as the total volumetric outflow \[{Q}_\text{tot}(t) := {Q}_\text{o}(t) + {Q}_\text{w}(t)\] per unit depth.
+At the lower left corner $\vec{x}_\text{drill} := (0, 0)$, we know the pressure $p_\text{drill}(t)$ and the water inflow $Q_\text{w, drill}(t).$ Opposite of that, at $\vec{x}_\text{well} := (1, 1)$ a well is located.
+There we can measure the pressure $p_\text{well}(t)$ as well as the total volumetric outflow \begin{equation}
+{Q}_\text{tot}(t) := {Q}_\text{o}(t) + {Q}_\text{w}(t) = Q_\text{w, drill}(t)
+\end{equation} per unit depth.
+There is no flow through the boundary of the domain except at the drill location $\vec{x}_\text{drill}$ and the well location $\vec{x}_\text{well}.$
 
 The flow rates for both phases are described by Darcy's law
 \begin{equation}
@@ -241,15 +247,16 @@ where we choose $p_0$ such that the compatibility condition
 is satisfied.
 
 \subsection{What to optimize?}
-To test the Monte-Carlo adjoint method, we want to match the pressure difference between drill and well, which is 
+To test the Monte-Carlo adjoint method, we want to match the pressure at the drill, i.e.
 \begin{equation}
 \label{costFunction}
-c(T) := \int_0^T \biggr(\big(p_\text{drill}(t) - p_\text{well}(t)\big) - \big(\tilde{p}_\text{drill}(t) - \tilde{p}_\text{well}(t)\big)\biggr)^2 \d{t},
+c(T) := \int_0^T \biggr(p_\text{drill}(t) - \tilde{p}_\text{drill}(t)\biggr)^2 \d{t},
 \end{equation}
 where the variables with a tilde denote computed quantities and $T$ is a final time.
 
 \subsection{What do we control?}
 We control the log-permeabilities $\ln(k)$, as these are hard to measure.
+Controlling the logarithms $\ln(k)$ instead of just the permeabilities $k$ has the added advantage of being able to cover a wider range of permeabilities and implicitly making sure that the permeabilities are always positive regardless of the choice of optimizer.
 
 \section{Discretization}
 We discretize the square domain $\Omega$ with $n \times n$ square finite volumes, thus getting a mesh width of $h := 1/n$.
@@ -298,7 +305,20 @@ The total mobilities $\lambda_\text{tot}$ at the boundaries are approximated by 
 where \begin{equation}
 \hmean(a, b) = 2ab/(a+b).
 \end{equation}
-\important{Explain why the harmonic mean}
+We take the harmonic average instead of the arithmetic average for the following reasons as is detailed also in \cite{perminc}.
+The total pressure drop over two adjacent cells is given as
+\begin{equation}
+\Delta p_\text{tot} = \Delta p_1 + \Delta p_2,
+\end{equation}
+plugging in a simplified version of Darcy's law which reads
+\begin{equation}
+\Delta p  = \frac{-v\mu h}{k},
+\end{equation}
+and canceling terms we have that
+\begin{equation}
+\frac{1}{k_\text{avg}} = \frac{1}{2}\left(\frac{1}{k_1} + \frac{1}{k_2}\right),
+\end{equation}
+which is a harmonic average for $k$ and so also for $\lambda.$
 
 The discretized pressure Poisson equation reads
 \begin{multline}
@@ -342,17 +362,12 @@ We remember that this requires fixing the total Darcy velocity $\vec{v}_\text{to
 For timestepping of the saturation equation \eqref{saturationEquationFV} , we use explicit Euler, as this simplifies the Jacobian used in the Monte-Carlo adjoint.
 
 \subsection{Discretizing the cost function}
-The cost function \eqref{costFunction} is discretized as a sum of squares over the timesteps, where the computed quantities with a tilde are taken to be the quantities in the volumes nearest to the well and the drill.
+The cost function \eqref{costFunction} is discretized as a sum of squares over the timesteps, i.e.
 
 \begin{equation}
-\sum_{i=1}^{n} (\Delta p(i\Delta t) - \tilde{\Delta p}^{(i)})^2,
+F := \sum_{i=1}^{n} (p_\text{drill}(i\Delta t) - p_\text{drill cell}^{(i)})^2,
 \end{equation}
-where
-\begin{align}
-\Delta_p(t) &:= p_\text{well}(t) - p_\text{drill}(t) \\
-\tilde{\Delta p}^{(i)} &:= p_\text{well cell}^{(i)} - p_\text{drill cell}^{(i)}
-\end{align}
-and $\Delta t$ is the timestep.
+where $p_\text{drill cell}$ is the computed pressure at the drill cell, $p_\text{drill}$ is the provided pressure at the drill in the $i$-th timelevel, and $\Delta t$ is the timestep.
 
 \subsection{Formal definition of the residuals for the Monte-Carlo adjoint solver}
 First, we define the pressure residuals
@@ -369,16 +384,120 @@ The saturation residuals are given by
 \Sigma_K^{(i)} := S_\text{w}^{(i)}\lvert_K - S_\text{w}^{(i-1)}\lvert_{K} \\+ \frac{\Delta t}{h} \biggr((f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i)})\lvert_E - (f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i)})\lvert_W \\+ (f(S_\text{w}^{(i-1)})v_{\text{tot }, y}^{(i)})\lvert_N - (f(S_\text{w}^{(i-1)})v_{\text{tot }, y}^{(i-1)})\lvert_S\biggr) - \Delta t Q_\text{tot, K}^{(i)}.
 \end{multline}
 
-The required derivatives are lengthy to write out an can be found in subsection \ref{quantitiesNeeded}
+Here a superscript of $(i)$ denotes the values in the $i$-th timelevel and a subscript of $K$ the values in the cell $K$.
+
+
+\subsection{The adjoint system of equations}
+The full adjoint system of equations then has the following form:
+
+\begin{equation}
+\underbrace{\begin{pmatrix}
+\tmat{J}_{11} & \tmat{J}_{21} & & &  \\
+& \tmat{J}_{22} & \tmat{J}_{32} & &  \\
+& & \ddots & \ddots &  \\
+& & &  \tmat{J}_{(n-1)(n-1)} &  \tmat{J}_{n(n-1)}  \\
+& & &                                         & \mat{J}_{nn}
+\end{pmatrix}}_{ := \mat{A}}\vec{\psi} = \underbrace{\begin{pmatrix} \vec{b}^{(1)} \\ \vec{b}^{(2)} \\ \vdots \\ \vec{b}^{(n-1)} \\ \vec{b}^{(n)} \end{pmatrix}}_{:= \vec{b}}.
+\end{equation}
+
+We defined the jacobian block matrices
+\begin{align}
+\mat{J}_{ii} &:= \begin{pmatrix}\pdiff{\vec{\Pi}^{(i)}}{\vec{p}^{(i)}} & \mat{0}\\ \pdiff{\vec{\Sigma}^{(i)}}{\vec{p}^{(i)}} & \pdiff{\vec{\Sigma}^{(i)}}{\vec{S_\text{w}}^{(i)}}\end{pmatrix} \\
+\mat{J}_{i(i-1)} &:= \begin{pmatrix} \mat{0} & \pdiff{\mat{\Pi}^{(i)}}{\vec{S}_\text{w}^{(i-1)}}\\ \mat{0} & \pdiff{\vec{\Sigma}^{(i)}}{\vec{S_\text{w}}^{(i-1)}}\end{pmatrix},
+\end{align}
+where the expressions for the jacobians of the residuals at timelevel $(i)$, $\mat{\Pi}^{(i)}, \mat{\Sigma}^{(i)},$ can be found in the appendix in subsection \ref{quantitiesNeeded}.
+
+Also,
+\begin{equation}
+\vec{b}^{(i)} := \begin{pmatrix} \transpose{\left(\pdiff{F}{\vec{p}^{(i)}}\right)} \\ \vec{0} \end{pmatrix},
+\end{equation}
+where $F$ is the discretized cost function and 
+\begin{equation}
+\pdiff{F}{{p}^{(i)}_K} = \begin{cases} 2(p_K^{(i)} - p_\text{drill}(i\Delta t)) & \text{if $K$ is next to the drill} \\ 0 & \text{otherwise.} \end{cases}
+\end{equation}
 
 \section{Numerical experiments}
 \label{experiments}
+\subsection{Preconditioning}
+The Monte-Carlo adjoint solver relies on a Neumann series representation of the adjoint system matrix $A$.
+For this series to converge, the spectral radius (maximum magnitude of eigenvalues) of the iteration matrix
+\begin{equation}
+\mat{I} - \mat{PA},
+\end{equation}
+has to be less than one. $\mat{P}$ stands for a freely choosable invertible matrix, a preconditioner.
+This condition has been achieved by setting
+\begin{equation}
+\label{preconditioner}
+\mat{P} := \mat{D}\operatorname{diag}(\transposeinvert{\left(\pdiff{\vec{\Pi}^{(1)}}{\vec{p}^{(1)}}\right)}, \ldots, \transposeinvert{\left(\pdiff{\vec{\Pi}^{(n)}}{\vec{p}^{(n)}}\right)}).
+\end{equation}
+The $\operatorname{diag}$ denotes a (here block-) diagonal matrix where the blocks on the diagonal are given in order by its arguments.
+By virtue of the discretization,
+\begin{equation}
+\transposeinvert{\left(\pdiff{\vec{\Pi}^{(i)}}{\vec{p}^{(i)}}\right)}
+\end{equation}
+is the same system matrix as the one used to solve the pressure Poisson matrix and thus a  factorization is already available.
+However, the resulting matrices 
+\begin{equation}
+\transposeinvert{\left(\pdiff{\vec{\Pi}^{(1)}}{\vec{p}^{(1)}}\right)}\transpose{\left(\pdiff{\vec{\Sigma}^{(i)}}{\vec{p}^{(i)}}\right)}
+\end{equation}
+are dense at least at later timesteps, where the water saturations are higher.
+This requires a certain additional amount of storage which limits the usefulness of the preconditioner.
+
+The $\mat{D}$ matrices is diagonal too and serves to reduce the $1$-norms of the row vectors of the adjoint matrix $\mat{A}$.
+This is necessary because of a central result in the original paper \cite{unsteady}:
+If any of the row sum norms 
+\begin{equation}
+\lVert{\mat{A}_{i, :}}\rVert_1 = \sum_{j} \lvert A_{ij} \rvert,
+\end{equation}
+is greater than one, the variance of the random walks can grow exponentially.
+Thus we choose
+\begin{equation}
+D_{ll} := \frac{1}{\max\{1, \lVert{\mat{A}_{l, :}}\rVert_1\}}.
+\end{equation}
+
+This however doesn't fulfill the required condition of 
+\begin{equation}
+\lVert \mat{I} - \mat{PA} \lVert_\infty < 1,
+\end{equation}
+where $\lVert \cdot \lVert_\infty$ is the maximum row sum norm.
+Instead, we have
+\begin{equation}
+\lVert (\mat{I} - \mat{PA})_{l, :} \lVert_1 = \lvert 1 - \frac{1}{D_{ll}} \rvert + \sum_{j \neq l} \frac{\lvert (PA)_{(il)}\rvert}{D_{ll}} \leq  2(\lvert 1 - \frac{1}{D_{ll}} \rvert) < 2, 
+\end{equation}
+which is not the required value of $1$.
+However, the Neumann series surely converges, because 
+$\mat{I} - \mat{PA}$ is upper triangular with positive entries on the diagonal, which are all smaller than one. This means that all eigenvalues lie inside the unit circle and thus the spectral radius is smaller than one.
+
+\subsection{Sample optimization run}
+A sample optimization run with just $50$ timesteps and a $3 \times 3$ and $10^6$ random walks per time step and mesh cell reveals that the Monte-Carlo adjoint optimizer is not up to the task, as can be seen in figure \ref{sampleRun}.
+The optimizer used was a gradient descent with a Moré-Thuente line search \cite{morethuente},
+As birth and transition probabilities we used the almost optimal values described by \cite{unsteady}, which amounts to setting them to be proportional to the magnitude of corresponding matrix entries in a given row.
+Other parameters as for instance the dynamic viscosities $\mu$ are given directly in the source code available at \href{https://gitlab.ethz.ch/stefanow/mcadjoint}{https://gitlab.ethz.ch/stefanow/mcadjoint}.
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{mctrad50}
+	\caption{Sample run of the Monte-Carlo based optimizer, in orange (lower line) the optimization using the exact adjoint, in blue (upper line) the one approximating the gradient with Monte-Carlo.}
+	\label{sampleRun}
+\end{figure}
+The Monte-Carlo based optimization stopped early because of a small gradient.
+Another noteworthy characteristic is that the optimization problem seems to be hard:
+The difference between Monte-Carlo and exact optimal costs is just one.
+In conclusion, the preconditioner given by \eqref{preconditioner} is not satisfactory.
+
+\section{Possible solutions}
+\label{possibleSolutions}
+A possible solution of the preconditioning dilemma could lie in using \emph{sequential Monte Carlo}
+as described in \cite{sequential}. This variant requires the eigenvalues of 
+\begin{equation}
+\lvert \mat{I} - \mat{PA} \rvert,
+\end{equation}
+to lie inside the unit circle where $\lvert \cdot \rvert$ denotes a componentwise magnitude.
+This is fulfilled for our choice of preconditioner $\mat{P}$.
+Moreover, sequential Monte-Carlo guarantees the variance of the random walks to be exponentially decreasing with the number of iterations, as long as the number of random walks per iteration is high enough.
 
 
 \appendix
-\subsection{Source code}
-The source code can be obtained by visiting the repository at
-\href{https://gitlab.ethz.ch/stefanow/mcadjoint}{https://gitlab.ethz.ch/stefanow/mcadjoint}
+
 \subsection{Computing the derivatives for the Monte-Carlo adjoint solver}
 \label{quantitiesNeeded}
 
@@ -452,11 +571,11 @@ where
 On the other hand, the saturation residuals $\Sigma_K$ lead to the following derivatives
 
 \begin{align}
-\pdiff{\Sigma_K}{\ln(k)_K} &= \lambda_{\text{tot}}^{(i-1)}\lvert_K \frac{\Delta t}{h} \biggr(\\&(f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_E\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_E, \lambda_\text{tot}^{(i-1)}\lvert_K) (-\ddiff{p}{x}\rvert_E)  \nonumber\\&- (f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_W\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_W, \lambda_\text{tot}^{(i-1)}\lvert_K)(-\ddiff{p}{x}\rvert_W) \nonumber\\&+ (f(S_\text{w}^{(i-1)})v_{\text{tot }, y}^{(i-1)})\lvert_N\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_N, \lambda_\text{tot}^{(i-1)}\lvert_K) (-\ddiff{p}{y}\rvert_N)\nonumber\\&- (f(S_\text{w}^{(i-1)})v_{\text{tot }, y}^{(i-1)})\lvert_S\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_E, \lambda_\text{tot}^{(i-1)}\lvert_S)(-\ddiff{p}{y}\rvert_S)\nonumber\\&\biggr) \nonumber \\
-\pdiff{\Sigma_K}{\ln(K)_R} &= \lambda_{\text{tot}}^{(i-1)}\lvert_R \frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_E\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_E) (-\ddiff{p}{x}\rvert_E)\\
-\pdiff{\Sigma_K}{\ln(K)_L} &= -\lambda_{\text{tot}}^{(i-1)}\lvert_L\frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_W\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_L) (-\ddiff{p}{x}\rvert_W)\\
-\pdiff{\Sigma_K}{\ln(K)_U} &= \lambda_{\text{tot}}^{(i-1)}\lvert_U \frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_N\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_U) (-\ddiff{p}{y}\rvert_N)\\
-\pdiff{\Sigma_K}{\ln(K)_D} &= -\lambda_{\text{tot}}^{(i-1)}\lvert_D\frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_S\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_D)(-\ddiff{p}{y}\rvert_S)
+\pdiff{\Sigma_K}{\ln(k)_K} &= \lambda_{\text{tot}}^{(i-1)}\lvert_K \frac{\Delta t}{h} \biggr(\\&(f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_E\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_E, \lambda_\text{tot}^{(i-1)}\lvert_K) \nonumber\\&\cdot(-\ddiff{p}{x}\rvert_E)  \nonumber\\&- (f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_W\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_W, \lambda_\text{tot}^{(i-1)}\lvert_K)\nonumber\\&\cdot(-\ddiff{p}{x}\rvert_W) \nonumber\\&+ (f(S_\text{w}^{(i-1)})v_{\text{tot }, y}^{(i-1)})\lvert_N\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_N, \lambda_\text{tot}^{(i-1)}\lvert_K)\nonumber\\&\cdot(-\ddiff{p}{y}\rvert_N)\nonumber\\&- (f(S_\text{w}^{(i-1)})v_{\text{tot }, y}^{(i-1)})\lvert_S\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_E, \lambda_\text{tot}^{(i-1)}\lvert_S)\nonumber\\&\cdot(-\ddiff{p}{y}\rvert_S)\nonumber\\&\biggr) \nonumber \\
+\pdiff{\Sigma_K}{\ln(K)_R} &= \lambda_{\text{tot}}^{(i-1)}\lvert_R \frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_E\nonumber\\&\cdot\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_E)(-\ddiff{p}{x}\rvert_E)\\
+\pdiff{\Sigma_K}{\ln(K)_L} &= -\lambda_{\text{tot}}^{(i-1)}\lvert_L\frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_W\nonumber\\&\cdot\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_L)\cdot(-\ddiff{p}{x}\rvert_W)\\
+\pdiff{\Sigma_K}{\ln(K)_U} &= \lambda_{\text{tot}}^{(i-1)}\lvert_U \frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_N\nonumber\\&\cdot\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_U)\cdot(-\ddiff{p}{y}\rvert_N)\\
+\pdiff{\Sigma_K}{\ln(K)_D} &= -\lambda_{\text{tot}}^{(i-1)}\lvert_D\frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_S\nonumber\\&\cdot\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_D)(-\ddiff{p}{y}\rvert_S)
 \end{align}
 
 

@@ -165,7 +165,6 @@ bool transitionState(RandomWalkState& currentState, ConstVectorRef b,
 
     {
 
-
         const Real unnormalizedAbsorptionProbability = alwaysAbsorbAtDrill && currentState.isAPressure &&
                                                        currentState.cell == findDrillCell(numberOfRows, numberOfCols)
                                                        ? 1e8: std::abs(b(cellIndexToBIndex(currentState.cell, currentState.isAPressure, numberOfRows, numberOfCols)));
