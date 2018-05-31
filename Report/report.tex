@@ -127,12 +127,24 @@ Results have been unsatisfactory due to lack of an appropriate preconditioner.
 
 
 \section{Introduction}
-This report aims to apply the Monte-Carlo adjoint algorithm described in \cite{unsteady} to a variant of problem known as \emph{quarter five spot configuration} in petroleum engineering literature \cite{quarterFiveSpot}. The set up is described in section \ref{problemDescription}.
+This report aims to apply the Monte-Carlo adjoint algorithm described in \cite{unsteady} to a variant of problem known as \emph{quarter five spot configuration} in petroleum engineering literature \cite{quarterFiveSpot}. The set up is described in section \ref{problemDescription}, which is discretized in section \ref{disc}
 Numerical experiments and a discussion follow in section \ref{experiments}. Possible ways how to proceed are given in section \ref{possibleSolutions}. Derivatives needed for the implementation of the Monte-Carlo adjoint algorithm are given in the appendix in subsection \ref{quantitiesNeeded}. The source code can be obtained by visiting the repository at
 \href{https://gitlab.ethz.ch/stefanow/mcadjoint}{https://gitlab.ethz.ch/stefanow/mcadjoint}.
 
+
 The main advantage of the Monte-Carlo adjoint algorithm in comparison to the better known \emph{checkpointing} scheme proposed by Griewank and Walter \cite{checkpointing} lies in its forward-in-time nature. Instead of having to store or recompute solutions, the adjoint equation can be solved in lockstep with the forward one.
-In principle, it is an application of the classic Monte-Carlo linear solver developed in \cite{forsythe} applied to the adjoint linear system of equations.
+
+In principle, it is an application of the classic Monte-Carlo linear solver developed in \cite{forsythe} applied to the adjoint linear system of equations: Through a Neumann series expansion of the inverse adjoint matrix, the necessary abstract gradient for doing optimization (a column vector)
+\begin{equation}
+\transpose{\diff{\text{cost function}}{\text{ vector of parameters}}}
+\end{equation}
+is written as the expectation of a random walk over the indices $1, \ldots, M, \ast$, where $M$ is the matrix dimension of the adjoint matrix.
+The random walks accumulate values from the adjoint matrix and its right hand side as they transition through the indices.
+In this way, in expectation they build up the Neumann series leading to the desired gradient entries.
+A special absorbing state $\ast$ has been introduced to cut off the Neumann series after a finite number of terms, as
+a random walk visiting $k$ indices before being absorbed is associated with the first $k$ terms of the Neumann series and simulated random walks are always finite.
+When all random walks have reached indices belonging to the successive timelevel, the forward problem is advanced to that same timelevel.
+This is how the lockstep solution mentioned before is achieved.
 
 \section{Problem description}
 \label{problemDescription}
@@ -259,6 +271,7 @@ We control the log-permeabilities $\ln(k)$, as these are hard to measure.
 Controlling the logarithms $\ln(k)$ instead of just the permeabilities $k$ has the added advantage of being able to cover a wider range of permeabilities and implicitly making sure that the permeabilities are always positive regardless of the choice of optimizer.
 
 \section{Discretization}
+\label{disc}
 We discretize the square domain $\Omega$ with $N \times N$ square finite volumes, thus getting a mesh width of $h := 1/N$.
 
 An overview of the discretization technique is given in the following procedure:
@@ -372,7 +385,7 @@ where $p_\text{drill cell}$ is the computed pressure at the drill cell, $p_\text
 \subsection{Formal definition of the residuals for the Monte-Carlo adjoint solver}
 First, we define the pressure residuals
 \begin{multline}
-\Pi_K^{(i)} := \begin{cases} p_K^{(i)} - p_\text{well}(i\Delta t), & \text{if } K \text{ is the cell}\\&\text{nearest to the well}\\T_E^{(i-1)} (p_K^{(i)} - p_R^{(i)}) \\+ T_W^{(i-1)} (p_K^{(i)} - p_L^{(i)}) \\+ T_N ( p_K^{(i)} - p_U^{(i)}) \\+ T_S^{(i-1)} (p_K^{(i)} - p_D^{(i)}) - Q_\text{tot, K}^{(i-1)}, & \text{else}\end{cases}, 
+\Pi_K^{(i)} := \begin{cases} p_K^{(i)} - p_\text{well}(i\Delta t), & \text{if } K \text{ is at well}\\T_E^{(i-1)} (p_K^{(i)} - p_R^{(i)}) \\+ T_W^{(i-1)} (p_K^{(i)} - p_L^{(i)}) \\+ T_N ( p_K^{(i)} - p_U^{(i)}) \\+ T_S^{(i-1)} (p_K^{(i)} - p_D^{(i)}) - Q_\text{tot, K}^{(i-1)}, & \text{else}\end{cases}
 \end{multline}
 where
 \begin{equation}
@@ -526,7 +539,7 @@ to lie inside the unit circle where $\lvert \cdot \rvert$ denotes a componentwis
 This is fulfilled for our choice of preconditioner $\mat{P}$.
 Moreover, sequential Monte-Carlo guarantees the variance of the random walks to be exponentially decreasing with the number of iterations, as long as the number of random walks per iteration is high enough.
 
-A recent alternative seems to be \cite{multiway}, where the transition matrix of the random walks can vary over time. 
+A recent alternative seems to be \emph{multiway Monte-Carlo} \cite{multiway}, where the transition matrix of the random walks can vary over time. 
 This approach requires the same prerequisites as sequential Monte-Carlo, but needs to have the full iteration matrix $\mat{I} - \mat{PA}$ to build the transition hypermatrix.
 This is not feasible for the adjoint system of equations and would need a workaround.
 
