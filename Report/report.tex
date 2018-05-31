@@ -259,7 +259,7 @@ We control the log-permeabilities $\ln(k)$, as these are hard to measure.
 Controlling the logarithms $\ln(k)$ instead of just the permeabilities $k$ has the added advantage of being able to cover a wider range of permeabilities and implicitly making sure that the permeabilities are always positive regardless of the choice of optimizer.
 
 \section{Discretization}
-We discretize the square domain $\Omega$ with $n \times n$ square finite volumes, thus getting a mesh width of $h := 1/n$.
+We discretize the square domain $\Omega$ with $N \times N$ square finite volumes, thus getting a mesh width of $h := 1/N$.
 
 An overview of the discretization technique is given in the following procedure:
 \begin{enumerate}
@@ -468,10 +468,41 @@ which is not the required value of $1$.
 However, the Neumann series surely converges, because 
 $\mat{I} - \mat{PA}$ is upper triangular with positive entries on the diagonal, which are all smaller than one. This means that all eigenvalues lie inside the unit circle and thus the spectral radius is smaller than one.
 
+\subsection{Regularization}
+To avoid huge jumps in the permeabilities $k$, a regularization penalty has been added to the 
+cost function. This term has the form
+\begin{equation}
+\label{regularizationTerm}
+\alpha \sum_{\text{cell } K} (k_\text{ref} - k\rvert_K)^2.
+\end{equation}
+$\alpha$ is a tunable positive parameter and $k_\text{ref}$ is a reference permeability.
+This reference permeability is the value it should have so that the prescribed and computed pressures at the drill match, assuming that the permeabilities were homogeneous across the whole domain $\Omega$ and if there was no water in the field, just oil.
+However, this regularization turned out not to be necessary in the tested cases.
+
+\subsection{Smoothing the gradient}
+Another technique to improve optimization is by smoothing the noisy gradient which Monte-Carlo yields, as is done in the original paper \cite{unsteady}. This can be done by noticing the symmetry of the problem. The diagonal from the drill cell to the well cell serves as mirror line.
+When we start the optimizer with an initial permeability field respecting this symmetry, all subsequently calculated gradients $\transpose{\left(\diff{F}{\ln(\vec{k})}\right)}$ should also be symmetric.
+
+This can be exploited if one of the two symmetric gradient entries is way off the mean gradient entry, for instance because the corresponding random walks suffered from exponentially increasing variance. Then we can just replace it with its symmetric counterpart or a combination of too.
+However, this technique wasn't found to be useful because either both components were found to be off in experiments or none.
+
+Also exponential smoothing of the form
+\begin{equation}
+\diff{F}{\ln(k)\rvert_K} := \beta \cdot \diff{F}{\ln(k)\rvert_K} + (1 - \beta)\mu
+\end{equation}
+has been tried.
+Here, $\beta \in [0, 1]$ is a smoothing parameter and
+\begin{equation}
+\mu = \frac{1}{N^2 - 1}\sum_{K^\prime \neq K} \diff{F}{\ln(k)\rvert_K^\prime}
+\end{equation}
+is the mean gradient entry over the other cells.
+This proved to be more effective than symmetrizing the gradient but not sufficient for a better optimization.
+
 \subsection{Sample optimization run}
 A sample optimization run with just $50$ timesteps and a $3 \times 3$ and $10^6$ random walks per time step and mesh cell reveals that the Monte-Carlo adjoint optimizer is not up to the task, as can be seen in figure \ref{sampleRun}.
 The optimizer used was a gradient descent with a Moré-Thuente line search \cite{morethuente},
 As birth and transition probabilities we used the almost optimal values described by \cite{unsteady}, which amounts to setting them to be proportional to the magnitude of corresponding matrix entries in a given row.
+No regularization has been used in this case.
 Other parameters as for instance the dynamic viscosities $\mu$ are given directly in the source code available at \href{https://gitlab.ethz.ch/stefanow/mcadjoint}{https://gitlab.ethz.ch/stefanow/mcadjoint}.
 \begin{figure}
 	\centering
@@ -487,7 +518,7 @@ In conclusion, the preconditioner given by \eqref{preconditioner} is not satisfa
 \section{Possible solutions}
 \label{possibleSolutions}
 A possible solution of the preconditioning dilemma could lie in using \emph{sequential Monte Carlo}
-as described in \cite{sequential}. This variant requires the eigenvalues of 
+as described in \cite{sequential}, which relies on repeated application of the \emph{control variates} technique \cite{handbook} known for reducing the variance in Monte-Carlo simulations. This variant requires the eigenvalues of 
 \begin{equation}
 \lvert \mat{I} - \mat{PA} \rvert,
 \end{equation}
@@ -495,6 +526,9 @@ to lie inside the unit circle where $\lvert \cdot \rvert$ denotes a componentwis
 This is fulfilled for our choice of preconditioner $\mat{P}$.
 Moreover, sequential Monte-Carlo guarantees the variance of the random walks to be exponentially decreasing with the number of iterations, as long as the number of random walks per iteration is high enough.
 
+A recent alternative seems to be \cite{multiway}, where the transition matrix of the random walks can vary over time. 
+This approach requires the same prerequisites as sequential Monte-Carlo, but needs to have the full iteration matrix $\mat{I} - \mat{PA}$ to build the transition hypermatrix.
+This is not feasible for the adjoint system of equations and would need a workaround.
 
 \appendix
 
