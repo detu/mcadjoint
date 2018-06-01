@@ -1,4 +1,4 @@
-\documentclass[conference]{IEEEtran}
+\documentclass[twoside]{IEEEtran}
 \IEEEoverridecommandlockouts
 % The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
 \usepackage{cite}
@@ -15,7 +15,7 @@
 \usepackage{etoolbox}
 \usepackage{hyperref}
 \usepackage{attachfile}
-
+\usepackage{pdfpages}
 
 
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
@@ -148,10 +148,10 @@ This is how the lockstep solution mentioned before is achieved.
 
 \section{Problem description}
 \label{problemDescription}
-We model a cross section of an oil field as a two dimensional square $\Omega := [0, 1]^2.$ In the field, there are two phases: water and oil. 
+We model a cross section of an oil field as a two dimensional square $\Omega := [0, 1]^2.$ In the field, there are two incompressible phases: water and oil. 
 At the lower left corner $\vec{x}_\text{drill} := (0, 0)$, we know the pressure $p_\text{drill}(t)$ and the water inflow $Q_\text{w, drill}(t).$ Opposite of that, at $\vec{x}_\text{well} := (1, 1)$ a well is located.
 There we can measure the pressure $p_\text{well}(t)$ as well as the total volumetric outflow \begin{equation}
-{Q}_\text{tot}(t) := {Q}_\text{o}(t) + {Q}_\text{w}(t) = Q_\text{w, drill}(t)
+{Q}_\text{tot}(t) := {Q}_\text{o}(t) + {Q}_\text{w}(t) = -Q_\text{w, drill}(t)
 \end{equation} per unit depth.
 There is no flow through the boundary of the domain except at the drill location $\vec{x}_\text{drill}$ and the well location $\vec{x}_\text{well}.$
 
@@ -195,7 +195,7 @@ Similarly, we use
 q_\text{o} &:= Q_\text{o}\delta(\vec{x} - \vec{x}_\text{well}) \\
 q_\text{tot} &:= q_\text{o} + q_\text{w}.
 \end{align}
-$\phi$ is the porosity of the rock which is assumed to be constant over the domain.
+$\phi \in [0, 1]$ is the porosity of the rock which is assumed to be constant over the domain.
 
 Conservation of the total mass then reads
 \begin{equation}
@@ -234,7 +234,7 @@ Comparing the total Darcy's law \eqref{flowrateTotal} and the Darcy's law for wa
 \vec{v}_\text{w} = \frac{\lambda_\text{w}}{\lambda_\text{tot}} \vec{v}_\text{tot}.
 \end{equation}
 
-We then plug in the model for the relative permeabilities in terms of the saturations \eqref{relativePermeabilityModel}, to get the final for of saturation transport equation
+We then plug in the model for the relative permeabilities in terms of the saturations \eqref{relativePermeabilityModel}, to get the final form of the saturation transport equation
 
 \begin{empheq}[box=\fbox]{equation}
 \label{saturationEquation}
@@ -362,20 +362,11 @@ with the saturation at the center of the volume $S_K$. This is legit, as our sch
 For the total Darcy velocity $\vec{v}_\text{tot}$ we use the same discretization of the pressure gradients as in the pressure equation, \eqref{differenceQuotients}.
 This makes it available at the boundaries ($N$, $S$, $E$, $W$), as required by \eqref{saturationEquationFV}.
 
-For the flux function $f$ at the boundaries, we use an upwind discretization. The standard formulation can be simplified by noting that \begin{equation}
-\diff{f}{S_\text{w}} > 0
-\end{equation}
-and so instead of the advection velocity
-\begin{equation}
-\pdiff{(f \cdot \vec{v}_\text{tot})}{S_\text{w}}
-\end{equation}
-we can use the Darcy velocity $\vec{v}_\text{tot}.$
-We remember that this requires fixing the total Darcy velocity $\vec{v}_\text{tot}$ to be independent of the saturation $S_\text{w}$
-
+For the flux function $f$ at the boundaries, we use an upwind discretization.
 For timestepping of the saturation equation \eqref{saturationEquationFV} , we use explicit Euler, as this simplifies the Jacobian used in the Monte-Carlo adjoint.
 
 \subsection{Discretizing the cost function}
-The cost function \eqref{costFunction} is discretized as a sum of squares over the timesteps, i.e.
+The cost function \eqref{costFunction} is discretized as a sum of squares over the timelevels, i.e.
 
 \begin{equation}
 F := \sum_{i=1}^{n} (p_\text{drill}(i\Delta t) - p_\text{drill cell}^{(i)})^2,
@@ -432,7 +423,7 @@ where $F$ is the discretized cost function and
 \section{Numerical experiments}
 \label{experiments}
 \subsection{Preconditioning}
-The Monte-Carlo adjoint solver relies on a Neumann series representation of the adjoint system matrix $A$.
+The Monte-Carlo adjoint solver relies on a Neumann series representation of the adjoint system matrix $\mat{A}$.
 For this series to converge, the spectral radius (maximum magnitude of eigenvalues) of the iteration matrix
 \begin{equation}
 \mat{I} - \mat{PA},
@@ -456,7 +447,7 @@ However, the resulting matrices
 are dense at least at later timesteps, where the water saturations are higher.
 This requires a certain additional amount of storage which limits the usefulness of the preconditioner.
 
-The $\mat{D}$ matrices is diagonal too and serves to reduce the $1$-norms of the row vectors of the adjoint matrix $\mat{A}$.
+The $\mat{D}$ matrix is diagonal too and serves to reduce the $1$-norms of the row vectors of the adjoint matrix $\mat{A}$.
 This is necessary because of a central result in the original paper \cite{unsteady}:
 If any of the row sum norms 
 \begin{equation}
@@ -475,7 +466,7 @@ This however doesn't fulfill the required condition of
 where $\lVert \cdot \lVert_\infty$ is the maximum row sum norm.
 Instead, we have
 \begin{equation}
-\lVert (\mat{I} - \mat{PA})_{l, :} \lVert_1 = \lvert 1 - \frac{1}{D_{ll}} \rvert + \sum_{j \neq l} \frac{\lvert (PA)_{(il)}\rvert}{D_{ll}} \leq  2(\lvert 1 - \frac{1}{D_{ll}} \rvert) < 2, 
+\lVert (\mat{I} - \mat{PA})_{l, :} \lVert_1 = \lvert 1 - \frac{1}{D_{ll}} \rvert + \sum_{j \neq l} \frac{\lvert (PA)_{(il)}\rvert}{D_{ll}} \leq  2\lvert 1 - \frac{1}{D_{ll}} \rvert < 2, 
 \end{equation}
 which is not the required value of $1$.
 However, the Neumann series surely converges, because 
@@ -496,7 +487,7 @@ However, this regularization turned out not to be necessary in the tested cases.
 Another technique to improve optimization is by smoothing the noisy gradient which Monte-Carlo yields, as is done in the original paper \cite{unsteady}. This can be done by noticing the symmetry of the problem. The diagonal from the drill cell to the well cell serves as mirror line.
 When we start the optimizer with an initial permeability field respecting this symmetry, all subsequently calculated gradients $\transpose{\left(\diff{F}{\ln(\vec{k})}\right)}$ should also be symmetric.
 
-This can be exploited if one of the two symmetric gradient entries is way off the mean gradient entry, for instance because the corresponding random walks suffered from exponentially increasing variance. Then we can just replace it with its symmetric counterpart or a combination of too.
+This can be exploited if one of the two symmetric gradient entries is way off the mean gradient entry, for instance because the corresponding random walks suffered from exponentially increasing variance. Then we can just replace it with its symmetric counterpart or a combination of the two.
 However, this technique wasn't found to be useful because either both components were found to be off in experiments or none.
 
 Also exponential smoothing of the form
@@ -520,29 +511,40 @@ Other parameters as for instance the dynamic viscosities $\mu$ are given directl
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{mctrad50}
-	\caption{Sample run of the Monte-Carlo based optimizer, in orange (lower line) the optimization using the exact adjoint, in blue (upper line) the one approximating the gradient with Monte-Carlo.}
+	\caption{Sample run of the Monte-Carlo based optimizer with $50$ timelevels, in orange (lower line) the optimization using the exact adjoint, in blue (upper line) the one approximating the gradient with Monte-Carlo.}
 	\label{sampleRun}
 \end{figure}
 The Monte-Carlo based optimization stopped early because of a small gradient.
 Another noteworthy characteristic is that the optimization problem seems to be hard:
 The difference between Monte-Carlo and exact optimal costs is just one.
-In conclusion, the preconditioner given by \eqref{preconditioner} is not satisfactory.
 
+Doing the same optimization run but with just $5$ timelevels instead of $50$ in figure \ref{sampleRun5}, we see that Monte-Carlo fares better; It can even reach the cost of the optimization with the exact gradient, although it needs more optimization steps.
+On the other hand, an optimization step is cheaper for Monte-Carlo so that in the end we have a net reduction in time to solution.
+Of course, few real problems consist of just $5$ or $50$ timelevels, confirming the verdict that a better preconditioner is needed.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{mctrad5}
+	\caption{Sample run of the Monte-Carlo based optimizer with $5$ timelevels, in orange (lower line) the optimization using the exact adjoint, in blue (upper line) the one approximating the gradient with Monte-Carlo.}
+	\label{sampleRun5}
+\end{figure} 
+\newpage
 \section{Possible solutions}
 \label{possibleSolutions}
-A possible solution of the preconditioning dilemma could lie in using \emph{sequential Monte Carlo}
+A possible solution of the preconditioning dilemma could be found in using \emph{sequential Monte Carlo}
 as described in \cite{sequential}, which relies on repeated application of the \emph{control variates} technique \cite{handbook} known for reducing the variance in Monte-Carlo simulations. This variant requires the eigenvalues of 
 \begin{equation}
 \lvert \mat{I} - \mat{PA} \rvert,
 \end{equation}
-to lie inside the unit circle where $\lvert \cdot \rvert$ denotes a componentwise magnitude.
+to lie inside the unit circle, where $\lvert \cdot \rvert$ denotes a componentwise magnitude.
 This is fulfilled for our choice of preconditioner $\mat{P}$.
 Moreover, sequential Monte-Carlo guarantees the variance of the random walks to be exponentially decreasing with the number of iterations, as long as the number of random walks per iteration is high enough.
 
-A recent alternative seems to be \emph{multiway Monte-Carlo} \cite{multiway}, where the transition matrix of the random walks can vary over time. 
+A recent alternative seems to be \emph{multiway Monte-Carlo} \cite{multiway}, where there is not a single transition matrix for the random walks, but several matrices bound together in a hypermatrix.
 This approach requires the same prerequisites as sequential Monte-Carlo, but needs to have the full iteration matrix $\mat{I} - \mat{PA}$ to build the transition hypermatrix.
 This is not feasible for the adjoint system of equations and would need a workaround.
 
+\newpage
 \appendix
 
 \subsection{Computing the derivatives for the Monte-Carlo adjoint solver}
@@ -598,7 +600,7 @@ where
 \begin{align}
 \pdiff{\lambda_\text{tot}}{S_\text{w}} &= 2k\left(\frac{S_\text{w} - 1}{\mu_\text{o}} + \frac{S_\text{w}}{\mu_\text{w}}\right).
 \end{align}
-
+\newpage
 For solving the adjoint equations, we also need the derivatives of the residuals with respect to the parameters, in our case $\ln(k).$
 
 For the pressure residuals and if $K$ is not the cell at the well, those read\\
@@ -614,11 +616,11 @@ where
 \begin{equation}
 \pdiff{\hmean}{b}(a, b) := \frac{2a^2}{(a+b)^2}.
 \end{equation}
-
 On the other hand, the saturation residuals $\Sigma_K$ lead to the following derivatives
-
 \begin{align}
-\pdiff{\Sigma_K}{\ln(k)_K} &= \lambda_{\text{tot}}^{(i-1)}\lvert_K \frac{\Delta t}{h} \biggr(\\&(f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_E\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_E, \lambda_\text{tot}^{(i-1)}\lvert_K) \nonumber\\&\cdot(-\ddiff{p}{x}\rvert_E)  \nonumber\\&- (f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_W\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_W, \lambda_\text{tot}^{(i-1)}\lvert_K)\nonumber\\&\cdot(-\ddiff{p}{x}\rvert_W) \nonumber\\&+ (f(S_\text{w}^{(i-1)})v_{\text{tot }, y}^{(i-1)})\lvert_N\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_N, \lambda_\text{tot}^{(i-1)}\lvert_K)\nonumber\\&\cdot(-\ddiff{p}{y}\rvert_N)\nonumber\\&- (f(S_\text{w}^{(i-1)})v_{\text{tot }, y}^{(i-1)})\lvert_S\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_E, \lambda_\text{tot}^{(i-1)}\lvert_S)\nonumber\\&\cdot(-\ddiff{p}{y}\rvert_S)\nonumber\\&\biggr) \nonumber \\
+\pdiff{\Sigma_K}{\ln(k)_K} &= \lambda_{\text{tot}}^{(i-1)}\lvert_K \frac{\Delta t}{h} \biggr(\\&(f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_E\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_E, \lambda_\text{tot}^{(i-1)}\lvert_K) \nonumber\\&\cdot(-\ddiff{p}{x}\rvert_E)  \nonumber\\&- (f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_W\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_W, \lambda_\text{tot}^{(i-1)}\lvert_K)\nonumber\\&\cdot(-\ddiff{p}{x}\rvert_W) \nonumber\\&+ (f(S_\text{w}^{(i-1)})v_{\text{tot }, y}^{(i-1)})\lvert_N\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_N, \lambda_\text{tot}^{(i-1)}\lvert_K)\nonumber\\&\cdot(-\ddiff{p}{y}\rvert_N)\nonumber\\&- (f(S_\text{w}^{(i-1)})v_{\text{tot }, y}^{(i-1)})\lvert_S\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_E, \lambda_\text{tot}^{(i-1)}\lvert_S)\nonumber\\&\cdot(-\ddiff{p}{y}\rvert_S)\nonumber\\&\biggr) \nonumber
+\end{align}
+\begin{align}
 \pdiff{\Sigma_K}{\ln(K)_R} &= \lambda_{\text{tot}}^{(i-1)}\lvert_R \frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_E\nonumber\\&\cdot\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_E)(-\ddiff{p}{x}\rvert_E)\\
 \pdiff{\Sigma_K}{\ln(K)_L} &= -\lambda_{\text{tot}}^{(i-1)}\lvert_L\frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_W\nonumber\\&\cdot\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_L)\cdot(-\ddiff{p}{x}\rvert_W)\\
 \pdiff{\Sigma_K}{\ln(K)_U} &= \lambda_{\text{tot}}^{(i-1)}\lvert_U \frac{\Delta t}{h} f(S_\text{w}^{(i-1)})v_{\text{tot }, x}^{(i-1)})\lvert_N\nonumber\\&\cdot\pdiff{\hmean}{b}(\lambda_\text{tot}^{(i-1)}\lvert_K, \lambda_\text{tot}^{(i-1)}\lvert_U)\cdot(-\ddiff{p}{y}\rvert_N)\\
@@ -626,9 +628,8 @@ On the other hand, the saturation residuals $\Sigma_K$ lead to the following der
 \end{align}
 
 
-
 \bibliographystyle{IEEEtran}
 \bibliography{references}
-
+\includepdf{EigenstaendigkeitserklaerungUnterschrieben}
 
 \end{document}
